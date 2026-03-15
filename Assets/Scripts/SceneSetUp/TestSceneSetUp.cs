@@ -10,7 +10,7 @@ public class TestSceneSetUp : MonoBehaviour
         gameRoot.RegisterScene_MonoManager<TestManager>();
        
         //gameRoot.RegisterGlobal_MonoManager<TestCSManager>();
-        //gameRoot.RegisterGlobal_CSManager(new TestCSManager());
+        gameRoot.RegisterGlobal_CSManager(new TestCSManager());
     }
     IEnumerator Wait() {
         yield return new WaitForSeconds(1);
@@ -22,9 +22,9 @@ public class TestSceneSetUp : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            StartCoroutine(Wait());
+            //StartCoroutine(Wait());
             //gameRoot.GetManager<TestManager>().Test();
-            //gameRoot.GetManager<TestCSManager>().GGG();
+            gameRoot.GetManager<TestCSManager>().GGG();
         }
     }
 }

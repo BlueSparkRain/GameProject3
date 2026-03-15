@@ -49,6 +49,7 @@ namespace Core
         #region 对外场景切换API
         /// <summary>
         /// 同步切换场景（核心API）
+        /// 
         /// </summary>
         /// <param name="sceneName">场景名称（需在Build Settings中注册）</param>
         /// <param name="mode">加载模式</param>
@@ -71,6 +72,7 @@ namespace Core
             {
                 Debug.LogError($"[SceneSwitchManager] 场景 {sceneName} 加载失败：{e.Message}");
             }
+
         }
 
         /// <summary>

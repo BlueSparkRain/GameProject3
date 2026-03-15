@@ -91,8 +91,10 @@ namespace Core
             RegisterGlobal_CSManager(new EventCenterManager());
             GetManager<EventCenterManager>().EventCenterTest();
 
-
+            //场景切换管理器
             RegisterGlobal_MonoManager<SceneSwitchManager>();
+            //异步动画管理器
+            RegisterGlobal_MonoManager<MagicAnimationManager>();
 
         }
 

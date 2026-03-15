@@ -5,17 +5,20 @@ public class TestCSManager : IGlobalManager
 {
     public void MgrDispose()
     {
-        throw new System.NotImplementedException();
+        UnityEngine.Debug.Log("TestCSManager-Dispose");
     }
 
     public void MgrInit(GameRoot gameRoot)
     {
-        throw new System.NotImplementedException();
+        UnityEngine.Debug.Log("TestCSManager-Init");
+
     }
 
     public void MgrUpdate(float deltatime)
     {
-        throw new System.NotImplementedException();
+
     }
-    public void GGG() { }
+    public void GGG() {
+        UnityEngine.Debug.Log("wox-GGG");
+    }
 }
