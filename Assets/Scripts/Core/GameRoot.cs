@@ -13,15 +13,15 @@ namespace Core
         private static GameRoot instance;
         public static GameRoot Instance => instance;
 
-        private List<ISceneManager> sceneManagers = new();  //局内管理器列表
-        private List<IGlobalManager> globalManagers = new();//全局管理器列表
+        private static List<ISceneManager> sceneManagers = new();  //局内管理器列表
+        private static List<IGlobalManager> globalManagers = new();//全局管理器列表
 
         /// <summary>
         /// [推荐使用-对外查询懒人接口]查询目标管理器
         /// </summary>
         /// <typeparam name="T">目标管理器</typeparam>
         /// <returns>匹配的管理器实例，无则返回null</returns>
-        public T GetManager<T>() where T :class, IManager
+        public static T GetManager<T>() where T :class, IManager
         {
             var manager = sceneManagers.OfType<T>().FirstOrDefault();
             if (manager != null) return manager;
@@ -39,7 +39,7 @@ namespace Core
         T GetGlobalManager<T>() where T : class, IGlobalManager{
             var manager = globalManagers.OfType<T>().FirstOrDefault();
             if (manager == null)
-                Debug.LogWarning($"[GameRoot] 未找到GlobalManager：{typeof(T).Name}。");
+                Debug.LogWarning($"[GameRoot]---未找到或未创建GlobalManager：{typeof(T).Name}。");
             return manager;
         }
 
@@ -49,7 +49,7 @@ namespace Core
         T GetSceneManager<T>() where T : class, ISceneManager{
             var manager = sceneManagers.OfType<T>().FirstOrDefault();
             if (manager == null)
-                Debug.LogWarning($"[GameRoot] 未找到SceneManager：{typeof(T).Name}，请确认是否已注册。");
+                Debug.LogWarning($"[GameRoot]---未找到或未创建SceneManager：{typeof(T).Name}，请确认是否已注册。");
             return manager;
         }
 
@@ -58,7 +58,7 @@ namespace Core
         /// </summary>
         public IGlobalManager GetGlobalManager(System.Type type){
             if (!typeof(IGlobalManager).IsAssignableFrom(type)){
-                Debug.LogError($"[GameRoot] 类型 {type.Name} 未实现 IGlobalManager 接口，无法获取全局管理器。");
+                Debug.LogError($"[GameRoot]---类型 {type.Name} 未实现 IGlobalManager 接口，无法获取全局管理器。");
                 return null;
             }
             return globalManagers.FirstOrDefault(m => type.IsInstanceOfType(m));
@@ -69,7 +69,7 @@ namespace Core
         /// </summary>
         public ISceneManager GetSceneManager(System.Type type){
             if (!typeof(ISceneManager).IsAssignableFrom(type)){
-                Debug.LogError($"[GameRoot] 类型 {type.Name} 未实现 ISceneManager 接口，无法获取局内管理器。");
+                Debug.LogError($"[GameRoot]---类型 {type.Name} 未实现 ISceneManager 接口，无法获取局内管理器。");
                 return null;
             }
             return sceneManagers.FirstOrDefault(m => type.IsInstanceOfType(m));
@@ -95,7 +95,8 @@ namespace Core
             RegisterGlobal_MonoManager<SceneSwitchManager>();
             //异步动画管理器
             RegisterGlobal_MonoManager<MagicAnimationManager>();
-
+            //协程管理器
+            RegisterGlobal_MonoManager<CoroutineManager>();
         }
 
         void Update()
@@ -115,7 +116,7 @@ namespace Core
             DisposeGlobalManagers();
             DisposeSceneManagers();
             instance = null;
-            Debug.Log("[GameRoot] 应用退出，所有管理器已清理！");
+            Debug.Log("[GameRoot]---应用退出，所有管理器已清理！");
         }
         #endregion
 
@@ -129,7 +130,7 @@ namespace Core
             globalManagers.Add(new_manager);
             new_manager.MgrInit(this);
             //日志打印
-            Debug.Log($"[GameRoot] 全局非Mono管理器注册成功：{new_manager.GetType().Name}");
+            Debug.Log($"[GameRoot]---全局非Mono管理器注册成功：{new_manager.GetType().Name}");
         }
 
         /// <summary>
@@ -146,7 +147,7 @@ namespace Core
                 RegisterGlobal_CSManager(sceneInstance);
                 DontDestroyOnLoad(sceneInstance.gameObject);
                 //日志打印
-                Debug.Log($"[GameRoot] 全局Mono管理器（场景已有）注册成功：{typeof(T).Name}");
+                Debug.Log($"[GameRoot]---全局Mono管理器（场景已有）注册成功：{typeof(T).Name}");
                 return sceneInstance;
             }
 
@@ -156,7 +157,7 @@ namespace Core
             RegisterGlobal_CSManager(newManager);
             DontDestroyOnLoad(MgrObj);
             //日志打印
-            Debug.Log($"[GameRoot] 全局Mono管理器（新建）注册成功：{typeof(T).Name}");
+            Debug.Log($"[GameRoot]---全局Mono管理器（新建）注册成功：{typeof(T).Name}");
             return newManager;
         }
 
@@ -171,7 +172,7 @@ namespace Core
             sceneManagers.Add(new_manager);
             new_manager.MgrInit(this);
             //日志打印
-            Debug.Log($"[GameRoot] 局内非Mono管理器注册成功：{new_manager.GetType().Name}");
+            Debug.Log($"[GameRoot]---局内非Mono管理器注册成功：{new_manager.GetType().Name}");
         }
 
         /// <summary>
@@ -187,7 +188,7 @@ namespace Core
             if (sceneInstance != null){
                 RegisterScene_CSManager(sceneInstance);
                 //日志打印
-                Debug.Log($"[GameRoot] 局内Mono管理器（场景已有）注册成功：{typeof(T).Name}");
+                Debug.Log($"[GameRoot]---局内Mono管理器（场景已有）注册成功：{typeof(T).Name}");
                 return sceneInstance;
             }
 
@@ -196,7 +197,7 @@ namespace Core
             var newManager = MgrObj.AddComponent<T>();
             RegisterScene_CSManager(newManager);
             //日志打印
-            Debug.Log($"[GameRoot] 局内Mono管理器（新建）注册成功：{typeof(T).Name}");
+            Debug.Log($"[GameRoot]---局内Mono管理器（新建）注册成功：{typeof(T).Name}");
             return newManager;
         }
 
@@ -208,7 +209,7 @@ namespace Core
             foreach (var manager in globalManagers){
                 manager.MgrDispose();
                 //日志打印
-                Debug.Log($"[GameRoot] 全局管理器已回收：{manager.GetType().Name}");
+                Debug.Log($"[GameRoot]---全局管理器已回收：{manager.GetType().Name}");
             }
             globalManagers.Clear();
         }
@@ -222,10 +223,10 @@ namespace Core
             {
                 manager.MgrDispose();
                 //日志打印
-                Debug.Log($"[GameRoot] 局内管理器已回收：{manager.GetType().Name}");
+                Debug.Log($"[GameRoot]---局内管理器已回收：{manager.GetType().Name}");
             }
             sceneManagers.Clear();
-            Debug.Log("[GameRoot] 当前所有局内管理器已清空！");
+            Debug.Log("[GameRoot]---当前所有局内管理器已清空！");
         }
 
 

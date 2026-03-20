@@ -15,16 +15,17 @@ public class TestSceneSetUp : MonoBehaviour
     IEnumerator Wait() {
         yield return new WaitForSeconds(1);
         Debug.Log("异步切换场景");
-        gameRoot.GetManager<SceneSwitchManager>().SwitchSceneAsync("UI_Scene");
+        GameRoot.GetManager<SceneSwitchManager>().SwitchSceneAsync("UI_Scene");
 
     }
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            //StartCoroutine(Wait());
+            StartCoroutine(Wait());
+            
             //gameRoot.GetManager<TestManager>().Test();
-            gameRoot.GetManager<TestCSManager>().GGG();
+            GameRoot.GetManager<TestCSManager>().GGG();
         }
     }
 }

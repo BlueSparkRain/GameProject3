@@ -21,7 +21,7 @@ public class MapSceneSetUp : MonoBehaviour
         gameRoot.RegisterGlobal_CSManager(new GameMapManager(x_Offset,y_Offset,roomPrefab,MapRow,MapCol,MapPivot.position));
         gameRoot.RegisterGlobal_MonoManager<HexGridClickManager>();
         gameRoot.RegisterGlobal_MonoManager<HexRoomObjectPool>();
-        gameMapManager = gameRoot.GetManager<GameMapManager>();
+        gameMapManager = GameRoot.GetManager<GameMapManager>();
     }
 
     private void Update()

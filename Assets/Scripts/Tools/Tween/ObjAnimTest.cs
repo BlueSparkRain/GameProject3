@@ -1,5 +1,6 @@
 using Core;
 using DG.Tweening;
+using System.Collections;
 using System.Net;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -15,47 +16,43 @@ public class ObjAnimTest : MonoBehaviour
     public float swingDuration = 1f;
     MagicAnimationManager animManager;
 
-    private async void Start(){
+    CoroutineManager coroutineManager;
+
+    private  void Start(){
         // 空值校验
         if (nonSOTarget == null){
             Debug.LogError("请拖入测试物体！");
             return;
         }
-        animManager = GameRoot.Instance.GetManager<MagicAnimationManager>();
+        animManager = GameRoot.GetManager<MagicAnimationManager>();
+        coroutineManager = GameRoot.GetManager<CoroutineManager>();
+        //延迟
+        //coroutineManager.StartDelayedCoroutine(5,PlaySwingAnim());
+        //重复
+        coroutineManager.StartRepeatingCoroutine(1, 4, PlaySwingAnim,this);
+        //coroutineManager.StartCoroutine(PlaySwingAnim());
 
     }
 
-    private async void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.O)) {
-            await PlayNonSOSwingAnim();
-        }
-    }
-
-    /// <summary>
-    /// 一个物体摆动委托
-    /// </summary>
-    private async Task PlayNonSOSwingAnim(){
+    IEnumerator PlaySwingAnim() {
         //制定动画参数
-        var swingParams = new AnimParams{
+        var swingParams = new AnimParams
+        {
             Duration = swingDuration,
-
             Ease = nonSOEase,
             LoopMode = AnimationLoopType.Yoyo,
-            LoopCount = 2, // 无限循环
+            LoopCount = 2, 
             Interruptible = true
         };
-        //
-        await animManager.PlayAnimationAsync(
+        yield return animManager.PlayAnimation(
             MagicAnimationManager.GetAnimID(E_TweenType.Swing_Box),
             nonSOTarget.transform,
-
-            (p) => nonSOTarget.transform.DOLocalMoveY(
-                nonSOTarget.transform.localPosition.y + swingDistance,
-                p.Duration
-            ).SetRelative(false),
+            (p) => nonSOTarget.transform.DOLocalMoveY(nonSOTarget.transform.localPosition.y + swingDistance, p.Duration)
+            .SetRelative(false),
             swingParams
-        );
+            );
+        Debug.Log("gangangan");
+    
     }
 
     // 可选：快速停止所有动画（可绑定UI按钮）
@@ -64,8 +61,7 @@ public class ObjAnimTest : MonoBehaviour
         Debug.Log("已停止所有摆动动画");
     }
 
-    private void OnDestroy()
-    {
+    void OnDestroy(){
         // 自动清理动画
         StopAllAnims();
     }

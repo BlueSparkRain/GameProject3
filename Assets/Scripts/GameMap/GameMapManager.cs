@@ -26,7 +26,7 @@ public class GameMapManager : IGlobalManager
 
     public void CreateMap()
     {
-        HexGridClickManager hexGridClickManager = GameRoot.Instance.GetManager<HexGridClickManager>();
+        HexGridClickManager hexGridClickManager = GameRoot.GetManager<HexGridClickManager>();
         HexRoom newRoom = null;
         for (int i = 0; i < MapRow; i++)
         {

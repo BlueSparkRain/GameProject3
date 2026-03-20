@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Threading.Tasks;
 using Core;
 using DG.Tweening;
@@ -19,12 +20,14 @@ public class UIImageAnimTest : MonoBehaviour
     // 动画状态+ID
     private bool _isNonSOShowing = false;
     private string _nonSOAnimId;
-    private MagicAnimationManager _animManager;
+    MagicAnimationManager _animManager;
+    CoroutineManager _coroutineManager;
 
     private void Start()
     {
         // 初始化管理器
-        _animManager = GameRoot.Instance?.GetManager<MagicAnimationManager>();
+        _animManager = GameRoot.GetManager<MagicAnimationManager>();
+        _coroutineManager = GameRoot.GetManager<CoroutineManager>();
         if (_animManager == null)
         {
             Debug.LogError("未找到MagicAnimationManager！");
@@ -62,22 +65,17 @@ public class UIImageAnimTest : MonoBehaviour
     {
         // 步骤1：立即打断旧动画（核心：传false=不强制完成，不跳终点）
         if (!string.IsNullOrEmpty(_nonSOAnimId))
-        {
             _animManager.InterruptAnimation(_nonSOAnimId, false);
-        }
-
+        
         // 步骤2：切换状态
         _isNonSOShowing = !_isNonSOShowing;
-
-        // 步骤3：生成新ID并启动动画（异步无阻塞）
-        _nonSOAnimId = _animManager.GenerateUniqueAnimId("NonSO_UI_");
-        _ = PlayNonSOAnim(_isNonSOShowing, _nonSOAnimId);
+        _ =_coroutineManager.StartCoroutine(PlayUIAnim(_isNonSOShowing), this);
+        //_ =_coroutineManager.StartDelayedCoroutine(1, PlayUIAnim(_isNonSOShowing));
     }
 
-    private async Task PlayNonSOAnim(bool isShow, string animId)
-    {
+    IEnumerator PlayUIAnim(bool isShow) {
         // 构建参数
-        var nonSOParams = new AnimParams
+        var ui_animParams = new AnimParams
         {
             Duration = nonSOAnimDuration,
             Ease = nonSOEase,
@@ -86,52 +84,95 @@ public class UIImageAnimTest : MonoBehaviour
             TargetType = AnimationTargetType.UI,
             SpaceMode = AnimationSpaceMode.Local
         };
+        yield return _animManager.PlayAnimation(
+            MagicAnimationManager.GetAnimID(E_TweenType.Image_UpMove),
+            imageNonSO.rectTransform,
+            (p) => {
+                // 核心：移除所有OnKill回调，避免空引用报错
+                float targetY = isShow ? nonSOEnterLocalY : nonSOExitLocalY;
+                float targetAlpha = isShow ? 1f : 0f;
 
-        try
-        {
-            await _animManager.PlayAnimationAsync(
-                animId,
-                imageNonSO.rectTransform,
+                // 仅Y轴移动Tween（保留X/Z）
+                var moveTween = imageNonSO.rectTransform.DOLocalMoveY(targetY, p.Duration)
+                    .SetEase(p.Ease)
+                    .SetAutoKill(false); // 由管理器控制生命周期
 
-                (p) =>
-                {
-                    // 核心：移除所有OnKill回调，避免空引用报错
-                    float targetY = isShow ? nonSOEnterLocalY : nonSOExitLocalY;
-                    float targetAlpha = isShow ? 1f : 0f;
+                // 透明度Tween（移除OnKill回调，无报错）
+                var fadeTween = imageNonSO.DOFade(targetAlpha, p.Duration)
+                    .SetEase(p.Ease)
+                    .SetAutoKill(false);
 
-                    // 仅Y轴移动Tween（保留X/Z）
-                    var moveTween = imageNonSO.rectTransform.DOLocalMoveY(targetY, p.Duration)
-                        .SetEase(p.Ease)
-                        .SetAutoKill(false); // 由管理器控制生命周期
+                // 合并为Sequence
+                var seq = DOTween.Sequence();
+                seq.Append(moveTween);
+                seq.Join(fadeTween);
+                seq.SetAutoKill(false);
 
-                    // 透明度Tween（移除OnKill回调，无报错）
-                    var fadeTween = imageNonSO.DOFade(targetAlpha, p.Duration)
-                        .SetEase(p.Ease)
-                        .SetAutoKill(false);
+                return seq;
+            },
+            ui_animParams
 
-                    // 合并为Sequence
-                    var seq = DOTween.Sequence();
-                    seq.Append(moveTween);
-                    seq.Join(fadeTween);
-                    seq.SetAutoKill(false);
-
-                    return seq;
-                },
-                nonSOParams
             );
-
-            //// 仅动画正常完成时更新射线检测
-            //if (_nonSOAnimId == animId)
-            //{
-            //    imageNonSO.raycastTarget = isShow;
-            //}
-        }
-        catch (System.Exception ex)
-        {
-            Debug.LogError($"非SO动画失败：{ex.Message}");
-            _nonSOAnimId = null;
-        }
     }
+
+    //private async Task PlayNonSOAnim(bool isShow, string animId)
+    //{
+    //    // 构建参数
+    //    var nonSOParams = new AnimParams
+    //    {
+    //        Duration = nonSOAnimDuration,
+    //        Ease = nonSOEase,
+    //        LoopMode = AnimationLoopType.None,
+    //        Interruptible = true,
+    //        TargetType = AnimationTargetType.UI,
+    //        SpaceMode = AnimationSpaceMode.Local
+    //    };
+
+    //    try
+    //    {
+    //        await _animManager.PlayAnimationAsync(
+    //            animId,
+    //            imageNonSO.rectTransform,
+
+    //            (p) =>
+    //            {
+    //                // 核心：移除所有OnKill回调，避免空引用报错
+    //                float targetY = isShow ? nonSOEnterLocalY : nonSOExitLocalY;
+    //                float targetAlpha = isShow ? 1f : 0f;
+
+    //                // 仅Y轴移动Tween（保留X/Z）
+    //                var moveTween = imageNonSO.rectTransform.DOLocalMoveY(targetY, p.Duration)
+    //                    .SetEase(p.Ease)
+    //                    .SetAutoKill(false); // 由管理器控制生命周期
+
+    //                // 透明度Tween（移除OnKill回调，无报错）
+    //                var fadeTween = imageNonSO.DOFade(targetAlpha, p.Duration)
+    //                    .SetEase(p.Ease)
+    //                    .SetAutoKill(false);
+
+    //                // 合并为Sequence
+    //                var seq = DOTween.Sequence();
+    //                seq.Append(moveTween);
+    //                seq.Join(fadeTween);
+    //                seq.SetAutoKill(false);
+
+    //                return seq;
+    //            },
+    //            nonSOParams
+    //        );
+
+    //        //// 仅动画正常完成时更新射线检测
+    //        //if (_nonSOAnimId == animId)
+    //        //{
+    //        //    imageNonSO.raycastTarget = isShow;
+    //        //}
+    //    }
+    //    catch (System.Exception ex)
+    //    {
+    //        Debug.LogError($"非SO动画失败：{ex.Message}");
+    //        _nonSOAnimId = null;
+    //    }
+    //}
     #endregion
 
     #region 辅助方法（极简+无突变）
