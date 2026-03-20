@@ -29,7 +29,7 @@ public class ObjAnimTest : MonoBehaviour
         //—”≥Ÿ
         //coroutineManager.StartDelayedCoroutine(5,PlaySwingAnim());
         //÷ÿ∏¥
-        coroutineManager.StartRepeatingCoroutine(1, 4, PlaySwingAnim,this);
+        //coroutineManager.StartRepeatingCoroutine(1, 4, PlaySwingAnim,this);
         //coroutineManager.StartCoroutine(PlaySwingAnim());
 
     }

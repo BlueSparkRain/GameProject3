@@ -1,25 +1,39 @@
 using Core;
+using DG.Tweening;
+using System.Xml;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 
-/// <summary>
-/// UI面板类型枚举（可根据项目拓展）
-/// </summary>
-public enum UIPanelType
-{
-    TestPanel,    // 测试面板
-    MessagePanel, // 提示面板
-    ShopPanel,    // 商店面板
-    // 新增面板类型直接在这里添加即可
-}
 
 
+[RequireComponent(typeof(Canvas),typeof(CanvasGroup),typeof(GraphicRaycaster))]
 /// <summary>
 /// UI面板基类，所有面板需继承此类
 /// </summary>
 public class UIPanelBase : MonoBehaviour
 {
+    [SerializeField][Header("面板根")]
+    protected RectTransform panelRoot;
+
+    [Space(10)]
+    [Header("AnimInfo")]
+    [SerializeField][Header("动画-时长")]
+    protected float Anim_Duration = 0.8f;
+    [SerializeField][Header("动画-Dotween缓动类型")]
+    protected Ease Anim_EaseType = Ease.OutBack;
+    [SerializeField][Header("动画-出生位置")]
+    protected Vector3 Anim_BornPos = new Vector3(0, -1000, 0);
+    [SerializeField][Header("动画-过渡位移")]
+    protected Vector3 Anim_TargetTrans = new Vector3(0, 1000, 0);
+
+    [SerializeField][Header("动画-入场状态标识")]
+    protected bool Anim_DoFadeIn = true;
+
+    [SerializeField][Header("动画-需要透明渐变")]
+    protected bool Anim_NeedAlphaFadeIn = false;
+
     /// <summary>
     /// 面板唯一标识（类型+序号，如TestPanel_1）
     /// </summary>
@@ -28,7 +42,11 @@ public class UIPanelBase : MonoBehaviour
     /// <summary>
     /// 面板类型
     /// </summary>
+ 
     public UIPanelType PanelType { get; protected set; }
+
+
+    public string PanelID { get; private set; }
 
     /// <summary>
     /// 面板的Canvas组件（用于控制层级）
@@ -46,31 +64,20 @@ public class UIPanelBase : MonoBehaviour
     /// </summary>
     /// <param name="panelType">面板类型</param>
     /// <param name="uniqueID">唯一标识</param>
-    public virtual void Init(UIPanelType panelType, string uniqueID)
+    public virtual void Init(UIPanelType type, string uniqueID)
     {
-        PanelType = panelType;
-        PanelUniqueID = uniqueID;
+        PanelType = type;
+        PanelID = uniqueID;
 
-        // 获取核心组件（预制件需提前挂载Canvas和CanvasGroup）
-        panelCanvas = GetComponent<Canvas>();
+        panelRoot = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
 
-        // 初始化Canvas（合批优化：启用RenderMode=ScreenSpace-Overlay，禁用PixelPerfect）
-        if (panelCanvas == null)
-        {
-            panelCanvas = gameObject.AddComponent<Canvas>();
-            panelCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            panelCanvas.pixelPerfect = false;
-            panelCanvas.overrideSorting = true; // 启用自定义层级
-        }
 
-        if (canvasGroup == null)
-        {
-            canvasGroup = gameObject.AddComponent<CanvasGroup>();
-            canvasGroup.alpha = 0;
-            canvasGroup.interactable = false;
-            canvasGroup.blocksRaycasts = false;
-        }
+        // 初始状态：隐藏
+        canvasGroup.alpha = 0;
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = false;
+        MagicAnimExtens.ResetRecTransPos(panelRoot, Anim_BornPos);
 
         // 子类重写此方法实现自定义初始化
         OnInit();
@@ -80,44 +87,40 @@ public class UIPanelBase : MonoBehaviour
     /// 显示面板（每次打开时调用）
     /// </summary>
     /// <param name="sortingOrder">面板层级</param>
-    public virtual void Show(int sortingOrder)
-    {
+    public virtual void Show(){
         gameObject.SetActive(true);
-        panelCanvas.sortingOrder = sortingOrder;
-
+        canvasGroup.alpha = 1;
         canvasGroup.interactable = true;
         canvasGroup.blocksRaycasts = true;
-
         // 执行入场动画
         PlayEnterAnimation();
-
         // 子类重写此方法实现自定义显示逻辑
-        OnShow();
+        EnterAnimCallBack();
+        UnitAnimCallBack();
     }
 
     /// <summary>
     /// 隐藏面板（可复用，不销毁）
     /// </summary>
-    public virtual void Hide()
-    {
+    public virtual void Hide(){
         canvasGroup.interactable = false;
         canvasGroup.blocksRaycasts = false;
 
         // 执行出场动画，动画结束后隐藏
-        PlayExitAnimation(() =>
-        {
+        PlayExitAnim(() =>{
             gameObject.SetActive(false);
-            OnHide();
+            ExitAnimCallBack();
         });
+        UnitAnimCallBack();
     }
 
     /// <summary>
-    /// 关闭面板（销毁/回收到对象池）
+    /// 关闭面板（回收到对象池,不是直接销毁）
     /// </summary>
-    public virtual void Close()
-    {
+    public virtual void Close(){
+        Hide();
         OnClose();
-        GameRoot.GetManager<UIManager>().RecyclePanel(this);
+        Destroy(gameObject);
     }
     #endregion
 
@@ -125,18 +128,17 @@ public class UIPanelBase : MonoBehaviour
     /// <summary>
     /// 播放入场动画
     /// </summary>
-    protected virtual void PlayEnterAnimation()
-    {
+    protected virtual void PlayEnterAnimation(){
         // 默认简单淡入动画（子类可重写为缩放、位移等动画）
         //LeanTween.alphaCanvas(canvasGroup, 1, 0.2f).setEase(LeanTweenType.easeOutQuad);
+        
     }
 
     /// <summary>
     /// 播放出场动画
     /// </summary>
     /// <param name="onComplete">动画完成回调</param>
-    protected virtual void PlayExitAnimation(System.Action onComplete)
-    {
+    protected virtual void PlayExitAnim(System.Action onComplete){
         //// 默认简单淡出动画（子类可重写为缩放、位移等动画）
         //LeanTween.alphaCanvas(canvasGroup, 0, 0.2f)
         //    .setEase(LeanTweenType.easeInQuad)
@@ -148,22 +150,26 @@ public class UIPanelBase : MonoBehaviour
     /// <summary>
     /// 自定义初始化逻辑
     /// </summary>
-    protected virtual void OnInit() { }
+    protected virtual void OnInit() {}
 
     /// <summary>
-    /// 自定义显示逻辑
+    /// 入场动画后回调
     /// </summary>
-    protected virtual void OnShow() { }
+    protected virtual void EnterAnimCallBack() {}
 
     /// <summary>
-    /// 自定义隐藏逻辑
+    /// 离场动画后回调
     /// </summary>
-    protected virtual void OnHide() { }
+    protected virtual void ExitAnimCallBack() {}
 
+
+    protected virtual void UnitAnimCallBack() {
+        Anim_DoFadeIn = !Anim_DoFadeIn;
+    }
     /// <summary>
     /// 自定义关闭逻辑
     /// </summary>
-    protected virtual void OnClose() { }
+    protected virtual void OnClose() {}
     #endregion
 
     #region 层级控制
@@ -171,8 +177,7 @@ public class UIPanelBase : MonoBehaviour
     /// 更新面板层级（置顶时调用）
     /// </summary>
     /// <param name="newSortingOrder">新层级</param>
-    public void UpdateSortingOrder(int newSortingOrder)
-    {
+    public void UpdateSortingOrder(int newSortingOrder){
         panelCanvas.sortingOrder = newSortingOrder;
     }
     #endregion

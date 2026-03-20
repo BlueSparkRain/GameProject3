@@ -97,6 +97,8 @@ namespace Core
             RegisterGlobal_MonoManager<MagicAnimationManager>();
             //协程管理器
             RegisterGlobal_MonoManager<CoroutineManager>();
+            //UI管理器
+            RegisterGlobal_MonoManager<UIManager>();
         }
 
         void Update()

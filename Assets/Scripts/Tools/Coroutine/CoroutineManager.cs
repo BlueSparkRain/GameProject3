@@ -113,8 +113,7 @@ public class CoroutineManager : MonoGlobalManager
     #endregion
 
     #region 生命周期（保证单例+自动清理）
-    protected override void Awake()
-    {
+    protected override void Awake(){
         base.Awake();
         // 设为不销毁，保证全局唯一
         DontDestroyOnLoad(gameObject);
@@ -126,8 +125,7 @@ public class CoroutineManager : MonoGlobalManager
         CleanupInvalidCoroutines();
     }
 
-    public override void MgrDispose()
-    {
+    public override void MgrDispose(){
         base.MgrDispose();
         // 销毁时停止所有协程
         StopAllCoroutines();
@@ -147,14 +145,10 @@ public class CoroutineManager : MonoGlobalManager
     /// 初始化协程池
     /// </summary>
     /// <param name="initCount">初始池大小</param>
-    private void InitCoroutinePool(int initCount)
-    {
-        lock (_lockObj)
-        {
-            for (int i = 0; i < initCount; i++)
-            {
-                _coroutinePool.Push(new CoroutineHandle
-                {
+    void InitCoroutinePool(int initCount){
+        lock (_lockObj){
+            for (int i = 0; i < initCount; i++){
+                _coroutinePool.Push(new CoroutineHandle{
                     CoroutineId = string.Empty,
                     Coroutine = null,
                     Target = null,
@@ -189,10 +183,8 @@ public class CoroutineManager : MonoGlobalManager
     /// 将句柄归还到池中（复用）
     /// </summary>
     /// <param name="handle">要归还的句柄</param>
-    private void ReturnCoroutineHandleToPool(CoroutineHandle handle)
-    {
-        lock (_lockObj)
-        {
+    void ReturnCoroutineHandleToPool(CoroutineHandle handle){
+        lock (_lockObj){
             // 清空关键信息，重置状态（新增：清空子协程列表）
             handle.CoroutineId = string.Empty;
             handle.Coroutine = null;
@@ -201,13 +193,9 @@ public class CoroutineManager : MonoGlobalManager
             handle.State = CoroutineState.Idle;
             handle.IsCancelled = false;
             handle.ChildCoroutineIds?.Clear(); // 重置子协程列表
-                                               // 归还到池
             _coroutinePool.Push(handle);
         }
     }
-
-
-
     #endregion
 
     #region 对外核心接口（极简、无脑调用）
@@ -269,35 +257,6 @@ public class CoroutineManager : MonoGlobalManager
         return StartCoroutine(DelayedCoroutineLogic(delayTime, enumerator), target);
     }
 
-    ///// <summary>
-    ///// 启动重复执行的协程（常用快捷接口）
-    ///// </summary>
-    ///// <param name="interval">执行间隔（秒）</param>
-    ///// <param name="repeatCount">重复次数（-1=无限）</param>
-    ///// <param name="action">每次执行的方法</param>
-    ///// <param name="target">关联的目标对象</param>
-    ///// <returns>协程ID</returns>
-    //public string StartRepeatingCoroutine(float interval, int repeatCount, Action action, UnityEngine.Object target = null){
-    //    return StartCoroutine(RepeatingCoroutineLogic(interval, repeatCount, action), target);
-    //}
-
-    ///// <summary>
-    ///// 启动重复执行的协程（重载2：接收方法引用，每次重复重新生成迭代器，语法合法）
-    ///// </summary>
-    ///// <param name="interval">执行间隔（秒）</param>
-    ///// <param name="repeatCount">重复次数（-1=无限）</param>
-    ///// <param name="enumeratorFunc">返回迭代器的方法引用</param>
-    ///// <param name="target">关联的目标对象</param>
-    ///// <returns>协程ID</returns>
-    //public string StartRepeatingCoroutine(float interval, int repeatCount, Func<IEnumerator> enumeratorFunc, UnityEngine.Object target = null){
-    //    if (enumeratorFunc == null){
-    //        Debug.LogError("[CoroutineManager]---重复协程的方法引用不能为空！");
-    //        return string.Empty;
-    //    }
-    //    // 每次重复时，先执行enumeratorFunc生成新的迭代器，再执行
-    //    return StartCoroutine(RepeatingCoroutineLogic(interval, repeatCount, enumeratorFunc), target);
-    //}
-
     /// <summary>
     /// 启动重复执行的协程（重载2：接收方法引用，子协程也注册到字典）
     /// </summary>
@@ -306,17 +265,14 @@ public class CoroutineManager : MonoGlobalManager
     /// <param name="enumeratorFunc">返回迭代器的方法引用</param>
     /// <param name="target">关联的目标对象</param>
     /// <returns>外层协程ID（用于后续控制）</returns>
-    public string StartRepeatingCoroutine(float interval, int repeatCount, Func<IEnumerator> enumeratorFunc, UnityEngine.Object target = null)
-    {
-        if (enumeratorFunc == null)
-        {
+    public string StartRepeatingCoroutine(float interval, int repeatCount, Func<IEnumerator> enumeratorFunc, UnityEngine.Object target = null){
+        if (enumeratorFunc == null){
             Debug.LogError("[CoroutineManager]---重复协程的方法引用不能为空！");
             return string.Empty;
         }
 
-        // 1. 生成外层协程ID，并注册外层协程（原有逻辑）
-        lock (_lockObj)
-        {
+        // 1. 生成外层协程ID，并注册外层协程
+        lock (_lockObj){
             string outerCorId = GenerateCoroutineId();
             var outerHandle = GetCoroutineHandleFromPool();
             outerHandle.CoroutineId = outerCorId;
@@ -328,34 +284,25 @@ public class CoroutineManager : MonoGlobalManager
             outerHandle.State = CoroutineState.Running;
             outerHandle.Coroutine = base.StartCoroutine(outerHandle.CoroutineEnumerator);
             _activeCoroutines[outerCorId] = outerHandle;
-
             return outerCorId;
         }
     }
-
 
     /// <summary>
     /// 停止指定ID的协程(包括子协程)
     /// </summary>
     /// <param name="coroutineId">协程ID</param>
-    public void StopGlobalCoroutine(string coroutineId)
-    {
+    public void StopGlobalCoroutine(string coroutineId){
         if (string.IsNullOrEmpty(coroutineId))
             return;
-        
-
-        lock (_lockObj)
-        {
-            if (_activeCoroutines.TryGetValue(coroutineId, out var handle))
-            {
+        lock (_lockObj){
+            if (_activeCoroutines.TryGetValue(coroutineId, out var handle)){
                 // 第一步：停止当前协程
                 handle.IsCancelled = true;
                 handle.State = CoroutineState.Cancelled;
                 if (handle.Coroutine != null)
-                {
                     StopCoroutine(handle.Coroutine);
-                }
-
+                
                 // 第二步：递归停止所有子协程（核心修复）
                 if (handle.ChildCoroutineIds != null && handle.ChildCoroutineIds.Count > 0)
                     foreach (var childId in handle.ChildCoroutineIds)
@@ -384,7 +331,6 @@ public class CoroutineManager : MonoGlobalManager
             foreach (var kvp in _activeCoroutines)
                 if (kvp.Value.Target == target)
                     toStopIds.Add(kvp.Key);
-            
             // 批量停止
             foreach (var id in toStopIds)
                 StopGlobalCoroutine(id);
@@ -392,31 +338,22 @@ public class CoroutineManager : MonoGlobalManager
     }
 
     // 新增：清理指定场景的所有协程
-    public IEnumerator CleanupCoroutinesByScene(Scene targetScene)
-    {
-        lock (_lockObj)
-        {
+    public IEnumerator CleanupCoroutinesByScene(Scene targetScene){
+        lock (_lockObj){
             var toStopIds = new List<string>();
-            foreach (var kvp in _activeCoroutines)
-            {
+            foreach (var kvp in _activeCoroutines){
                 var handle = kvp.Value;
                 // 仅处理场景内的对象（排除全局对象）
                 if (handle.Target is GameObject go && go.scene == targetScene)
-                {
                     toStopIds.Add(kvp.Key);
-                }
                 else if (handle.Target is Component comp && comp.gameObject.scene == targetScene)
-                {
                     toStopIds.Add(kvp.Key);
-                }
             }
-
             // 批量停止并清理
             foreach (var id in toStopIds)
                 StopGlobalCoroutine(id);
-            
             yield return null;
-            Debug.Log($"[666CoroutineManager]---已停止{targetScene.name}（上一个场景）内所有协程");
+            Debug.Log($"[CoroutineManager]---已停止{targetScene.name}（上一个场景）内所有协程");
         }
     }
 
@@ -427,7 +364,6 @@ public class CoroutineManager : MonoGlobalManager
     public void PauseGlobalCoroutine(string coroutineId){
         if (string.IsNullOrEmpty(coroutineId))
             return;
-
         lock (_lockObj){
             if (_activeCoroutines.TryGetValue(coroutineId, out var handle) && handle.State == CoroutineState.Running){
                 handle.State = CoroutineState.Paused;
@@ -436,7 +372,6 @@ public class CoroutineManager : MonoGlobalManager
             }
         }
     }
-
     /// <summary>
     /// 恢复暂停的协程
     /// </summary>
@@ -444,7 +379,6 @@ public class CoroutineManager : MonoGlobalManager
     public void ResumeGlobalCoroutine(string coroutineId){
         if (string.IsNullOrEmpty(coroutineId))
             return;
-        
         lock (_lockObj){
             if (_activeCoroutines.TryGetValue(coroutineId, out var handle) && handle.State == CoroutineState.Paused){
                 handle.State = CoroutineState.Running;
@@ -540,87 +474,55 @@ public class CoroutineManager : MonoGlobalManager
         yield return enumerator;
     }
 
-
-    ///// <summary>
-    ///// 重复执行的协程逻辑
-    ///// </summary>
-    ///// <param name="interval">间隔</param>
-    ///// <param name="repeatCount">重复次数</param>
-    ///// <param name="action">执行方法</param>
-    ///// <returns>迭代器</returns>
-    //IEnumerator RepeatingCoroutineLogic(float interval, int repeatCount, Action action){
-    //    int count = 0;
-    //    while (true){
-    //        yield return new WaitForSeconds(interval);
-    //        action?.Invoke();
-    //        count++;
-    //        // 达到次数则停止
-    //        if (repeatCount > 0 && count >= repeatCount)
-    //            break;
-    //    }
-    //}
-
-
     // 配套修正内部逻辑：接收Func<IEnumerator>，每次循环重新生成迭代器
     // 重构内部重复逻辑：增加外层ID和target，子协程注册到字典
-    private IEnumerator RepeatingCoroutineLogic(float interval, int repeatCount, Func<IEnumerator> enumeratorFunc, string outerCorId, UnityEngine.Object target)
-    {
+    IEnumerator RepeatingCoroutineLogic(float interval, int repeatCount, Func<IEnumerator> enumeratorFunc, string outerCorId, UnityEngine.Object target){
         int count = 0;
         Debug.Log($"【重复协程外层】开始循环（外层ID：{outerCorId}，间隔：{interval}秒，重复次数：{repeatCount}）");
 
         // 核心修复1：延迟1帧再执行第一次检查（等外层协程完全注册到_activeCoroutines）
         yield return null;
 
-        while (true)
-        {
+        while (true){
             // 核心修复2：优化检查逻辑——先检查是否存在，再检查是否被取消，避免误判
             bool isOuterCorValid = false;
-            lock (_lockObj) // 加锁保证线程安全，避免读写冲突
-            {
+            lock (_lockObj) {
                 isOuterCorValid = _activeCoroutines.ContainsKey(outerCorId)
                                   && _activeCoroutines[outerCorId].State != CoroutineState.Cancelled;
             }
 
-            if (!isOuterCorValid)
-            {
-                Debug.LogError($"【重复协程外层】外层协程无效（ID：{outerCorId}），当前_activeCoroutines是否包含该ID：{_activeCoroutines.ContainsKey(outerCorId)}");
+            if (!isOuterCorValid){
+                //Debug.LogError($"【重复协程外层】外层协程无效（ID：{outerCorId}），当前_activeCoroutines是否包含该ID：{_activeCoroutines.ContainsKey(outerCorId)}");
                 // 仅当明确被取消时才终止，避免误终止
                 if (_activeCoroutines.ContainsKey(outerCorId) && _activeCoroutines[outerCorId].State == CoroutineState.Cancelled)
-                {
                     yield break;
-                }
-                else
-                {
-                    Debug.LogWarning($"【重复协程外层】外层协程未注册，等待1帧重试（ID：{outerCorId}）");
+                else{
+                    //Debug.LogWarning($"【重复协程外层】外层协程未注册，等待1帧重试（ID：{outerCorId}）");
                     yield return null; // 等待1帧，让外层协程完成注册
-                    continue; // 跳过本次循环，重新检查
+                    continue; 
                 }
             }
 
-            if (target != null && target == null)
-            {
-                Debug.LogError($"【重复协程外层】目标对象已销毁（ID：{outerCorId}）");
+            if (target != null && target == null){
+                //Debug.LogError($"【重复协程外层】目标对象已销毁（ID：{outerCorId}）");
                 yield break;
             }
 
-            Debug.Log($"【重复协程外层】等待{interval}秒后执行第{count + 1}次子协程（外层ID：{outerCorId}）");
+            //Debug.Log($"【重复协程外层】等待{interval}秒后执行第{count + 1}次子协程（外层ID：{outerCorId}）");
             yield return new WaitForSeconds(interval);
 
             IEnumerator enumerator = enumeratorFunc.Invoke();
-            if (enumerator == null)
-            {
-                Debug.LogError($"【重复协程外层】子协程迭代器为空（外层ID：{outerCorId}）");
+            if (enumerator == null){
+                //Debug.LogError($"【重复协程外层】子协程迭代器为空（外层ID：{outerCorId}）");
                 count++;
                 continue;
             }
 
             string childCorId = StartCoroutine(enumerator, target);
-            Debug.Log($"【重复协程外层】启动第{count + 1}次子协程（外层ID：{outerCorId}，子ID：{childCorId}）");
+            //Debug.Log($"【重复协程外层】启动第{count + 1}次子协程（外层ID：{outerCorId}，子ID：{childCorId}）");
 
-            lock (_lockObj)
-            {
-                if (_activeCoroutines.TryGetValue(outerCorId, out var outerHandle))
-                {
+            lock (_lockObj){
+                if (_activeCoroutines.TryGetValue(outerCorId, out var outerHandle)){
                     outerHandle.ChildCoroutineIds.Add(childCorId);
                     _activeCoroutines[outerCorId] = outerHandle;
                 }
@@ -628,10 +530,9 @@ public class CoroutineManager : MonoGlobalManager
 
             yield return enumerator;
             count++;
-            Debug.Log($"【重复协程外层】第{count}次子协程执行完成（外层ID：{outerCorId}）");
+            //Debug.Log($"【重复协程外层】第{count}次子协程执行完成（外层ID：{outerCorId}）");
 
-            if (repeatCount > 0 && count >= repeatCount)
-            {
+            if (repeatCount > 0 && count >= repeatCount){
                 Debug.Log($"【重复协程外层】达到重复次数，终止循环（外层ID：{outerCorId}，总次数：{count}）");
                 break;
             }
@@ -641,36 +542,26 @@ public class CoroutineManager : MonoGlobalManager
     /// <summary>
     /// 自动清理无效协程（每帧调用）
     /// </summary>
-    private void CleanupInvalidCoroutines()
-    {
-        lock (_lockObj)
-        {
+    void CleanupInvalidCoroutines(){
+        lock (_lockObj){
             var toCleanIds = new List<string>();
-            foreach (var kvp in _activeCoroutines)
-            {
+            foreach (var kvp in _activeCoroutines){
                 var handle = kvp.Value;
                 // 清理1：目标对象已销毁（核心）
                 if (handle.Target != null && handle.Target == null)
-                
                     toCleanIds.Add(kvp.Key);
-                
                 // 清理2：目标对象属于非当前激活场景（新增）
                 else if (handle.Target is Component comp && comp.gameObject.scene != SceneManager.GetActiveScene())
-               
                     toCleanIds.Add(kvp.Key);
-                
                 // 清理3：协程已完成/取消但未清理
                 else if (handle.State is CoroutineState.Completed or CoroutineState.Cancelled)
-                
-                    toCleanIds.Add(kvp.Key);
-                
+        
+                toCleanIds.Add(kvp.Key);
             }
 
             // 批量清理
-            foreach (var id in toCleanIds)
-            {
-                if (_activeCoroutines.TryGetValue(id, out var handle))
-                { 
+            foreach (var id in toCleanIds){
+                if (_activeCoroutines.TryGetValue(id, out var handle)){ 
                     ReturnCoroutineHandleToPool(handle);
                     _activeCoroutines.Remove(id);
                 }
