@@ -119,7 +119,7 @@ public class CRTRenderFeature : ScriptableRendererFeature
     {
         if (settings.crtShader == null || crtPass == null || !renderingData.cameraData.postProcessEnabled)
         {
-            Debug.LogWarning("[CRT] 跳过CRT效果：着色器未指定或后处理未启用");
+            //Debug.LogWarning("[CRT] 跳过CRT效果：着色器未指定或后处理未启用");
             return;
         }
 

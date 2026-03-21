@@ -1,8 +1,6 @@
 using Core;
 using DG.Tweening;
 using System.Collections;
-using System.Net;
-using System.Threading.Tasks;
 using UnityEngine;
 
 public class ObjAnimTest : MonoBehaviour
@@ -18,9 +16,11 @@ public class ObjAnimTest : MonoBehaviour
 
     CoroutineManager coroutineManager;
 
-    private  void Start(){
+    private void Start()
+    {
         // 空值校验
-        if (nonSOTarget == null){
+        if (nonSOTarget == null)
+        {
             Debug.LogError("请拖入测试物体！");
             return;
         }
@@ -34,14 +34,15 @@ public class ObjAnimTest : MonoBehaviour
 
     }
 
-    IEnumerator PlaySwingAnim() {
+    IEnumerator PlaySwingAnim()
+    {
         //制定动画参数
         var swingParams = new AnimParams
         {
             Duration = swingDuration,
             Ease = nonSOEase,
             LoopMode = AnimationLoopType.Yoyo,
-            LoopCount = 2, 
+            LoopCount = 2,
             Interruptible = true
         };
         yield return animManager.PlayAnimation(
@@ -52,16 +53,18 @@ public class ObjAnimTest : MonoBehaviour
             swingParams
             );
         Debug.Log("gangangan");
-    
+
     }
 
     // 可选：快速停止所有动画（可绑定UI按钮）
-    public void StopAllAnims(){
+    public void StopAllAnims()
+    {
         animManager.InterruptAnimation(MagicAnimationManager.GetAnimID(E_TweenType.Swing_Box));
         Debug.Log("已停止所有摆动动画");
     }
 
-    void OnDestroy(){
+    void OnDestroy()
+    {
         // 自动清理动画
         StopAllAnims();
     }

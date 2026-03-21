@@ -28,14 +28,17 @@ public class GameMapManager : IGlobalManager
     {
         HexGridClickManager hexGridClickManager = GameRoot.GetManager<HexGridClickManager>();
         HexRoom newRoom = null;
+        var RoomParent= new GameObject("RoomParent").transform;
         for (int i = 0; i < MapRow; i++)
         {
             for (int j = 0; j < MapCol; j++)
             {
                 if (i % 2 == 0)
-                    newRoom = GameObject.Instantiate(roomPrefab, MapPivotPos + new Vector3(y_Offset * j, 0, x_Offset * i), Quaternion.Euler(-90, 0, 0)).GetComponent<HexRoom>();
+                    newRoom = GameObject.Instantiate(roomPrefab, MapPivotPos + new Vector3(y_Offset * j, 0, x_Offset * i), 
+                        Quaternion.Euler(-90, 0, 0), RoomParent).GetComponent<HexRoom>();
                 else
-                    newRoom = GameObject.Instantiate(roomPrefab, MapPivotPos + new Vector3(y_Offset * (j + 0.5f), 0, x_Offset * i), Quaternion.Euler(-90, 0, 0)).GetComponent<HexRoom>();
+                    newRoom = GameObject.Instantiate(roomPrefab, MapPivotPos + new Vector3(y_Offset * (j + 0.5f), 0, x_Offset * i), 
+                        Quaternion.Euler(-90, 0, 0), RoomParent).GetComponent<HexRoom>();
 
                 if (newRoom)
                 {

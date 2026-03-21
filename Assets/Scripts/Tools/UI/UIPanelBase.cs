@@ -1,5 +1,6 @@
 using Core;
 using DG.Tweening;
+using System.Collections;
 using System.Xml;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -64,14 +65,12 @@ public class UIPanelBase : MonoBehaviour
     /// </summary>
     /// <param name="panelType">面板类型</param>
     /// <param name="uniqueID">唯一标识</param>
-    public virtual void Init(UIPanelType type, string uniqueID)
-    {
+    public virtual void Init(UIPanelType type, string uniqueID){
         PanelType = type;
         PanelID = uniqueID;
 
         panelRoot = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
-
 
         // 初始状态：隐藏
         canvasGroup.alpha = 0;
@@ -115,12 +114,14 @@ public class UIPanelBase : MonoBehaviour
     }
 
     /// <summary>
-    /// 关闭面板（回收到对象池,不是直接销毁）
+    /// 关闭面板
     /// </summary>
     public virtual void Close(){
         Hide();
         OnClose();
-        Destroy(gameObject);
+        GameRoot.GetManager<UIManager>().ClosePanel(PanelType);
+        GameRoot.GetManager<CoroutineManager>().StartDelayedCoroutine(Anim_Duration,
+            () => DestroyImmediate(gameObject));
     }
     #endregion
 
@@ -131,7 +132,7 @@ public class UIPanelBase : MonoBehaviour
     protected virtual void PlayEnterAnimation(){
         // 默认简单淡入动画（子类可重写为缩放、位移等动画）
         //LeanTween.alphaCanvas(canvasGroup, 1, 0.2f).setEase(LeanTweenType.easeOutQuad);
-        
+     
     }
 
     /// <summary>
@@ -169,7 +170,9 @@ public class UIPanelBase : MonoBehaviour
     /// <summary>
     /// 自定义关闭逻辑
     /// </summary>
-    protected virtual void OnClose() {}
+    protected virtual void OnClose() {
+   
+    }
     #endregion
 
     #region 层级控制

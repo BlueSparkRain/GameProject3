@@ -15,22 +15,18 @@ public static class MagicAnimExtens
     public static Tween CreateMoveTween(this Transform target, Vector3 endPos, float duration)
         => target.DOMove(endPos, duration);
 
-
     // 本地坐标移动
     public static Tween CreateLocalMoveTween(this Transform target, Vector3 endPos, float duration)
         => target.DOLocalMove(endPos, duration);
-
 
     // 缩放
     public static Tween CreateScaleTween(this Transform target, Vector3 endScale, float duration)
         => target.DOScale(endScale, duration);
 
-
     // 旋转
     public static Tween CreateRotateTween(this Transform target, Vector3 endEuler, float duration, RotateMode mode = RotateMode.Fast)
         => target.DORotate(endEuler, duration, mode);
     #endregion
-
 
     #region UI动画
     // CanvasGroup透明度
@@ -131,7 +127,6 @@ public static class MagicAnimExtens
                 if (_needAlphaFadeInOut)
                     targetAlpha = _doFadeIn ? 1 : 0;
 
-                Debug.Log("xuxuuxxuxuuxuxuxu---"+ _targetTrans * (_doFadeIn ? 1 : -1));
                 //移动Tween
                 var moveTween = _rectTransform.DOLocalMove(_startPos+_targetTrans * (_doFadeIn?1:-1), p.Duration)
                     .SetEase(p.Ease)

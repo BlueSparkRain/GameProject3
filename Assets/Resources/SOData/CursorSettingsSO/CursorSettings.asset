@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00e05ced3a0697c489b151f0f0baa665, type: 3}
+  m_Name: CursorSettings
+  m_EditorClassIdentifier: 
+  defaultShowCursor: 1
+  defaultCursorStyle: 0
+  isDebugMode: 1
+  cursorStyles:
+  - style: 0
+    cursorTexture: {fileID: 2800000, guid: a260c080f9d2e8c44ba5639b51bc21e8, type: 3}
+    hotSpot: {x: 0, y: 0}
+  - style: 1
+    cursorTexture: {fileID: 2800000, guid: 8dd1fd9850e179a43827ae2de41de787, type: 3}
+    hotSpot: {x: 0, y: 0}

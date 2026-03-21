@@ -17,7 +17,7 @@ public class HexRoomObjectPool : MonoGlobalManager
 
     void Start()
     {
-        roomObject = Resources.Load<GameObject>("Prefabs/MapRoom");
+        roomObject = Resources.Load<GameObject>("Prefab/MapRoom");
         // 启动异步填充池子的协程
         StartCoroutine(StartFillPool());
         Debug.Log("开启协程创建房间");

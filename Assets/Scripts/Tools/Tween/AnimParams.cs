@@ -9,7 +9,6 @@ public class AnimParams
     [Header("ª˘¥°≈‰÷√")]
     public float Duration = 1f;
     public float Delay = 0f;
-    //public AnimationCurve Curve = AnimationCurve.Linear(0, 0, 1, 1);
     public Ease Ease = Ease.Linear;
     [Header("—≠ª∑≈‰÷√")]
     public AnimationLoopType LoopMode = AnimationLoopType.None;

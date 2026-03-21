@@ -117,7 +117,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
-    pixelSize: 5
+    pixelSize: 10
     saturation: 1
     contrast: 1
     crtShader: {fileID: 4800000, guid: d1932b84349337446834e7abbd85aba5, type: 3}

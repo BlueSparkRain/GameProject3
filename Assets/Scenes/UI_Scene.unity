@@ -131,8 +131,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 714738181}
-  - component: {fileID: 714738180}
   - component: {fileID: 714738179}
+  - component: {fileID: 714738182}
   m_Layer: 0
   m_Name: AnimTest
   m_TagString: Untagged
@@ -152,22 +152,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cf6b4fa15f243a458c3004a2b3ffd82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &714738180
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 714738178}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c66715c6ef8bc6344865ea07a11ada12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nonSOTarget: {fileID: 1907717775}
-  nonSOEase: 35
-  swingDistance: 1
-  swingDuration: 0.3
 --- !u!4 &714738181
 Transform:
   m_ObjectHideFlags: 0
@@ -183,6 +167,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &714738182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 714738178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f591e02003cb4049864d0718aaf7bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bgmMain: {fileID: 8300000, guid: e8d9e78a70df6ae43829840ebd5c4661, type: 3}
+  bgmAmbient: {fileID: 8300000, guid: 337db4000496170418e3ddf20ae20053, type: 3}
 --- !u!1 &801223507
 GameObject:
   m_ObjectHideFlags: 0

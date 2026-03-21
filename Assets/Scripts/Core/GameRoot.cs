@@ -1,5 +1,4 @@
 using Core.Interfaces;
-using Core.Managers;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -38,8 +37,8 @@ namespace Core
         /// <returns>匹配实例，无则打印警告并返回null</returns>
         T GetGlobalManager<T>() where T : class, IGlobalManager{
             var manager = globalManagers.OfType<T>().FirstOrDefault();
-            if (manager == null)
-                Debug.LogWarning($"[GameRoot]---未找到或未创建GlobalManager：{typeof(T).Name}。");
+            //if (manager == null)
+                //Debug.LogWarning($"[GameRoot]---未找到或未创建GlobalManager：{typeof(T).Name}。");
             return manager;
         }
 
@@ -48,8 +47,8 @@ namespace Core
         /// </summary>
         T GetSceneManager<T>() where T : class, ISceneManager{
             var manager = sceneManagers.OfType<T>().FirstOrDefault();
-            if (manager == null)
-                Debug.LogWarning($"[GameRoot]---未找到或未创建SceneManager：{typeof(T).Name}，请确认是否已注册。");
+            //if (manager == null)
+                //Debug.LogWarning($"[GameRoot]---未找到或未创建SceneManager：{typeof(T).Name}，请确认是否已注册。");
             return manager;
         }
 
@@ -77,8 +76,7 @@ namespace Core
         #endregion
 
         #region Unity生命周期（仅用于初始化和Update驱动）
-        void Awake()
-        {
+        void Awake(){
             //GameRoot唯一单例初始化
             if (instance != null && instance != this){
                 Destroy(gameObject);
@@ -99,10 +97,13 @@ namespace Core
             RegisterGlobal_MonoManager<CoroutineManager>();
             //UI管理器
             RegisterGlobal_MonoManager<UIManager>();
+            //Audio管理器
+            RegisterGlobal_MonoManager<AudioManager>();
+            //光标管理器
+            RegisterGlobal_MonoManager<CursorManager>();
         }
 
-        void Update()
-        {
+        void Update(){
             float deltaTime = Time.deltaTime;
             //遍历帧更新
             foreach (var manager in globalManagers) manager.MgrUpdate(deltaTime);
@@ -112,8 +113,7 @@ namespace Core
         /// <summary>
         /// OnApplicationQuit(生命周期回调函数)在应用程序退出前调用。适用于所有激活的游戏对象，常用于保存数据或清理资源。
         /// </summary>
-        void OnApplicationQuit()
-        {
+        void OnApplicationQuit(){
             //游戏进程退出，清理所有管理器
             DisposeGlobalManagers();
             DisposeSceneManagers();
@@ -149,7 +149,7 @@ namespace Core
                 RegisterGlobal_CSManager(sceneInstance);
                 DontDestroyOnLoad(sceneInstance.gameObject);
                 //日志打印
-                Debug.Log($"[GameRoot]---全局Mono管理器（场景已有）注册成功：{typeof(T).Name}");
+                //Debug.Log($"[GameRoot]---全局Mono管理器（场景已有）注册成功：{typeof(T).Name}");
                 return sceneInstance;
             }
 
@@ -159,7 +159,7 @@ namespace Core
             RegisterGlobal_CSManager(newManager);
             DontDestroyOnLoad(MgrObj);
             //日志打印
-            Debug.Log($"[GameRoot]---全局Mono管理器（新建）注册成功：{typeof(T).Name}");
+            //Debug.Log($"[GameRoot]---全局Mono管理器（新建）注册成功：{typeof(T).Name}");
             return newManager;
         }
 
@@ -219,10 +219,8 @@ namespace Core
         /// <summary>
         /// 回收所有局内管理器（对外暴露，供场景切换时调用）
         /// </summary>
-        public void DisposeSceneManagers()
-        {
-            foreach (var manager in sceneManagers)
-            {
+        public void DisposeSceneManagers(){
+            foreach (var manager in sceneManagers){
                 manager.MgrDispose();
                 //日志打印
                 Debug.Log($"[GameRoot]---局内管理器已回收：{manager.GetType().Name}");
@@ -230,7 +228,6 @@ namespace Core
             sceneManagers.Clear();
             Debug.Log("[GameRoot]---当前所有局内管理器已清空！");
         }
-
 
         #endregion
     }

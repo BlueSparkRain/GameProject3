@@ -22,7 +22,6 @@ public class TestPanel : UIPanelBase
     protected override void OnInit()
     {
         base.OnInit();
-        Debug.Log("woojaddadaddwd");
        
         closeButton.onClick.AddListener(OnClickCloseButton);
         hideButton.onClick.AddListener(OnClickHideButton);
@@ -31,8 +30,7 @@ public class TestPanel : UIPanelBase
     void OnClickHideButton()=>Hide();
     void OnClickCloseButton()=>Close();
 
-    protected override void EnterAnimCallBack()
-    {
+    protected override void EnterAnimCallBack(){
         base.EnterAnimCallBack();
     }
 

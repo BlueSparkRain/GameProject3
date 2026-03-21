@@ -1,6 +1,5 @@
 using Core;
 using Core.Interfaces;
-using Core.Managers;
 using UnityEngine;
 
 public class TestManager :MonoSceneManager
