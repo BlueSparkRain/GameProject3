@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
+using UnityEngine.UI;
 
 /// <summary>
 /// UI面板类型枚举（可根据项目拓展）
@@ -13,8 +14,9 @@ using UnityEngine.InputSystem.UI;
 public enum UIPanelType
 {
     TestTPanel,    // 测试面板
-    MessagePanel, // 提示面板
-    ShopPanel,    // 商店面板
+    MessagePanel,  // 提示面板
+    ShopPanel,     // 商店面板
+    BattlePanel,   //战斗面板
     // 新增面板类型直接在这里添加即可
 }
 
@@ -86,6 +88,8 @@ public class UIManager : MonoGlobalManager
         _panelModeConfig[UIPanelType.TestTPanel] = PanelInstanceMode.Single;
         _panelModeConfig[UIPanelType.MessagePanel] = PanelInstanceMode.Multiple; // 多实例
         _panelModeConfig[UIPanelType.ShopPanel] = PanelInstanceMode.Single;
+        _panelModeConfig[UIPanelType.BattlePanel]= PanelInstanceMode.Single;
+
 
         // 初始化多实例ID计数器
         foreach (var type in Enum.GetValues(typeof(UIPanelType)))
@@ -117,7 +121,7 @@ public class UIManager : MonoGlobalManager
     /// <typeparam name="T">面板类型</typeparam>
     /// <param name="type">面板枚举</param>
     /// <returns>面板实例（多实例返回新建的，单实例返回复用的）</returns>
-    public T OpenPanel<T>(UIPanelType type) where T : UIPanelBase{
+    public T OpenPanel<T>(UIPanelType type, UnityAction<T> unityAction = null) where T : UIPanelBase{
         // 1. 获取面板模式
         if (!_panelModeConfig.TryGetValue(type, out PanelInstanceMode mode))
             mode = PanelInstanceMode.Single; // 默认单实例
@@ -126,17 +130,19 @@ public class UIManager : MonoGlobalManager
         if (mode == PanelInstanceMode.Single){
             if (_singlePanelCache.TryGetValue(type, out UIPanelBase existPanel)){
                 existPanel.transform.SetAsLastSibling();
+                unityAction?.Invoke(existPanel as T);
                 existPanel.Show();
                 return existPanel as T;
             }
-
             // 单实例首次创建
-            return CreateNewPanel<T>(type, GetSinglePanelID(type));
+            var panel = CreateNewPanel<T>(type, GetSinglePanelID(type),unityAction);
+
+            return panel;
         }
 
         // 3. 多实例逻辑（新建）
         string uniqueID = GetMultiPanelUniqueID(type);
-        T newPanel = CreateNewPanel<T>(type, uniqueID);
+        T newPanel = CreateNewPanel<T>(type, uniqueID,unityAction);
 
         // 加入多实例缓存
         if (!_multiPanelCache.ContainsKey(type))
@@ -224,7 +230,7 @@ public class UIManager : MonoGlobalManager
     /// <summary>
     /// 创建新面板（内部复用）
     /// </summary>
-    T CreateNewPanel<T>(UIPanelType type, string uniqueID) where T : UIPanelBase{
+    T CreateNewPanel<T>(UIPanelType type, string uniqueID,UnityAction<T> action=null) where T : UIPanelBase{
         GameObject prefab = LoadPanelPrefab(type);
         if (prefab == null){
             Debug.LogError($"面板预制件不存在：{loadPath}{type}");
@@ -242,6 +248,7 @@ public class UIManager : MonoGlobalManager
         // 初始化面板
         panel.Init(type, uniqueID);
         panel.transform.SetAsLastSibling();
+        action?.Invoke(panel);
         panel.Show();
 
         // 加入缓存

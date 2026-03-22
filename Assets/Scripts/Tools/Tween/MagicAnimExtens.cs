@@ -128,7 +128,7 @@ public static class MagicAnimExtens
                     targetAlpha = _doFadeIn ? 1 : 0;
 
                 //移动Tween
-                var moveTween = _rectTransform.DOLocalMove(_startPos+_targetTrans * (_doFadeIn?1:-1), p.Duration)
+                var moveTween = _rectTransform.DOLocalMove(_startPos + _targetTrans * (_doFadeIn?1:-1), p.Duration)
                     .SetEase(p.Ease)
                     .SetAutoKill(false); // 由管理器控制生命周期
 

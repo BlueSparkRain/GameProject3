@@ -1,3 +1,4 @@
+using Core;
 using UnityEngine;
 
 /// <summary>
@@ -11,10 +12,14 @@ public class HexRoom : MonoBehaviour
     public void InitRoomID(int _row,int _col) { 
         row= _row; col = _col;
     }
-    public void ResetSelf() {
-    
-    
+    public void ResetSelf(){
+
     }
 
-   
+    public void CallBattle() {
+        Debug.Log("Go");
+        GameRoot.GetManager<UIManager>().OpenPanel<BattlePanel>(UIPanelType.BattlePanel);
+        //panel => panel.SetTragetPos(0.5f* Camera.main.WorldToScreenPoint(transform.position)));
+        //panel => panel.SetTragetPos(new Vector3(-1000,500),new Vector3(500,-500)));
+    }
 }

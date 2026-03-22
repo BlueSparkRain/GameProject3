@@ -37,8 +37,16 @@ public class UIImageAnimTest : MonoBehaviour
         //        bornPos, targetTrans,_doFadeIn,true);
         //}
 
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            GameRoot.GetManager<UIManager>().OpenPanel<TestPanel>(UIPanelType.TestTPanel);   
-        }
+            //GameRoot.GetManager<UIManager>().OpenPanel<TestPanel>(UIPanelType.TestTPanel);
+
+        //if (Input.GetKeyDown(KeyCode.U)) {
+        //    GameRoot.GetManager<UIManager>().OpenPanel<BattlePanel>(UIPanelType.BattlePanel,
+        //        panel => panel.SetTragetPos(new Vector3(500, 0, 0)));
+        //}
+        //if (Input.GetKeyDown(KeyCode.I))
+        //{
+        //    GameRoot.GetManager<UIManager>().OpenPanel<BattlePanel>(UIPanelType.BattlePanel,
+        //        panel => panel.SetTragetPos(new Vector3(-1500, 0, 0)));
+        //}
     }
 }

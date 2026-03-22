@@ -1,38 +1,41 @@
 using Core;
 using DG.Tweening;
-using System.Collections;
-using System.Xml;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 
-
-
-[RequireComponent(typeof(Canvas),typeof(CanvasGroup),typeof(GraphicRaycaster))]
+[RequireComponent(typeof(Canvas), typeof(CanvasGroup), typeof(GraphicRaycaster))]
 /// <summary>
 /// UI面板基类，所有面板需继承此类
 /// </summary>
 public class UIPanelBase : MonoBehaviour
 {
-    [SerializeField][Header("面板根")]
+    [SerializeField]
+    [Header("面板根")]
     protected RectTransform panelRoot;
 
     [Space(10)]
     [Header("AnimInfo")]
-    [SerializeField][Header("动画-时长")]
+    [SerializeField]
+    [Header("动画-时长")]
     protected float Anim_Duration = 0.8f;
-    [SerializeField][Header("动画-Dotween缓动类型")]
+    [SerializeField]
+    [Header("动画-Dotween缓动类型")]
     protected Ease Anim_EaseType = Ease.OutBack;
-    [SerializeField][Header("动画-出生位置")]
+    [SerializeField]
+    [Header("动画-出生位置")]
     protected Vector3 Anim_BornPos = new Vector3(0, -1000, 0);
-    [SerializeField][Header("动画-过渡位移")]
+    [SerializeField]
+    [Header("动画-过渡位移")]
     protected Vector3 Anim_TargetTrans = new Vector3(0, 1000, 0);
 
-    [SerializeField][Header("动画-入场状态标识")]
+    [SerializeField]
+    [Header("动画-入场状态标识")]
     protected bool Anim_DoFadeIn = true;
 
-    [SerializeField][Header("动画-需要透明渐变")]
+    [SerializeField]
+    [Header("动画-需要透明渐变")]
     protected bool Anim_NeedAlphaFadeIn = false;
 
     /// <summary>
@@ -43,7 +46,7 @@ public class UIPanelBase : MonoBehaviour
     /// <summary>
     /// 面板类型
     /// </summary>
- 
+
     public UIPanelType PanelType { get; protected set; }
 
 
@@ -65,7 +68,8 @@ public class UIPanelBase : MonoBehaviour
     /// </summary>
     /// <param name="panelType">面板类型</param>
     /// <param name="uniqueID">唯一标识</param>
-    public virtual void Init(UIPanelType type, string uniqueID){
+    public virtual void Init(UIPanelType type, string uniqueID)
+    {
         PanelType = type;
         PanelID = uniqueID;
 
@@ -86,7 +90,9 @@ public class UIPanelBase : MonoBehaviour
     /// 显示面板（每次打开时调用）
     /// </summary>
     /// <param name="sortingOrder">面板层级</param>
-    public virtual void Show(){
+    public virtual void Show()
+    {
+
         gameObject.SetActive(true);
         canvasGroup.alpha = 1;
         canvasGroup.interactable = true;
@@ -101,12 +107,14 @@ public class UIPanelBase : MonoBehaviour
     /// <summary>
     /// 隐藏面板（可复用，不销毁）
     /// </summary>
-    public virtual void Hide(){
+    public virtual void Hide()
+    {
         canvasGroup.interactable = false;
         canvasGroup.blocksRaycasts = false;
 
         // 执行出场动画，动画结束后隐藏
-        PlayExitAnim(() =>{
+        PlayExitAnim(() =>
+        {
             gameObject.SetActive(false);
             ExitAnimCallBack();
         });
@@ -116,7 +124,8 @@ public class UIPanelBase : MonoBehaviour
     /// <summary>
     /// 关闭面板
     /// </summary>
-    public virtual void Close(){
+    public virtual void Close()
+    {
         Hide();
         OnClose();
         GameRoot.GetManager<UIManager>().ClosePanel(PanelType);
@@ -129,17 +138,18 @@ public class UIPanelBase : MonoBehaviour
     /// <summary>
     /// 播放入场动画
     /// </summary>
-    protected virtual void PlayEnterAnimation(){
+    protected virtual void PlayEnterAnimation()
+    {
         // 默认简单淡入动画（子类可重写为缩放、位移等动画）
         //LeanTween.alphaCanvas(canvasGroup, 1, 0.2f).setEase(LeanTweenType.easeOutQuad);
-     
     }
 
     /// <summary>
     /// 播放出场动画
     /// </summary>
     /// <param name="onComplete">动画完成回调</param>
-    protected virtual void PlayExitAnim(System.Action onComplete){
+    protected virtual void PlayExitAnim(System.Action onComplete)
+    {
         //// 默认简单淡出动画（子类可重写为缩放、位移等动画）
         //LeanTween.alphaCanvas(canvasGroup, 0, 0.2f)
         //    .setEase(LeanTweenType.easeInQuad)
@@ -151,27 +161,29 @@ public class UIPanelBase : MonoBehaviour
     /// <summary>
     /// 自定义初始化逻辑
     /// </summary>
-    protected virtual void OnInit() {}
+    protected virtual void OnInit() { }
 
     /// <summary>
     /// 入场动画后回调
     /// </summary>
-    protected virtual void EnterAnimCallBack() {}
+    protected virtual void EnterAnimCallBack() { }
 
     /// <summary>
     /// 离场动画后回调
     /// </summary>
-    protected virtual void ExitAnimCallBack() {}
+    protected virtual void ExitAnimCallBack() { }
 
 
-    protected virtual void UnitAnimCallBack() {
+    protected virtual void UnitAnimCallBack()
+    {
         Anim_DoFadeIn = !Anim_DoFadeIn;
     }
     /// <summary>
     /// 自定义关闭逻辑
     /// </summary>
-    protected virtual void OnClose() {
-   
+    protected virtual void OnClose()
+    {
+
     }
     #endregion
 
@@ -180,7 +192,8 @@ public class UIPanelBase : MonoBehaviour
     /// 更新面板层级（置顶时调用）
     /// </summary>
     /// <param name="newSortingOrder">新层级</param>
-    public void UpdateSortingOrder(int newSortingOrder){
+    public void UpdateSortingOrder(int newSortingOrder)
+    {
         panelCanvas.sortingOrder = newSortingOrder;
     }
     #endregion

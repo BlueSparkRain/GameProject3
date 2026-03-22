@@ -58,8 +58,9 @@ public class HexGridClickManager : MonoGlobalManager
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             HexRoom clickedRoom = hit.collider.GetComponent<HexRoom>();
-            if (clickedRoom != null)
-            {
+
+            if (clickedRoom != null){
+                //clickedRoom.CallBattle();
                 // 触发半径内的所有房间跳动
                 TriggerRadiusJump(clickedRoom.row, clickedRoom.col);
             }
