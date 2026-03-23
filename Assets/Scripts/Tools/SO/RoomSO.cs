@@ -9,7 +9,7 @@ public class RoomSO :ScriptableObject
     /// <summary>
     /// 房间类型
     /// </summary>
-    public E_RoomType roomType=E_RoomType.None_无;
+    public E_HexRoomType roomType=E_HexRoomType.None_无;
 
     /// <summary>
     /// 房间图标
@@ -22,7 +22,7 @@ public class RoomSO :ScriptableObject
 
 
 
-public enum E_RoomType {
+public enum E_HexRoomType {
     None_无,
     Battle_战斗,
     NPC_特定交互,

@@ -10,7 +10,6 @@ public class TestSceneSetUp : MonoBehaviour
         gameRoot.RegisterScene_MonoManager<TestManager>();
         //gameRoot.RegisterGlobal_MonoManager<TestCSManager>();
         gameRoot.RegisterGlobal_CSManager(new TestCSManager());
-        gameRoot.RegisterScene_MonoManager<OrthoCameraNavigator>();
     }
     IEnumerator Wait() {
         yield return new WaitForSeconds(1);

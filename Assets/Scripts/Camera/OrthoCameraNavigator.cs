@@ -41,13 +41,13 @@ public class OrthoCameraNavigator : MonoSceneManager
     [Tooltip("是否启用地图边界限制")]
     public bool enableMapBounds = true;
     [Tooltip("地图左边界（世界坐标X）")]
-    public float mapLeftBound = -50f;
+    public float mapLeftBound = -500f;
     [Tooltip("地图右边界（世界坐标X）")]
-    public float mapRightBound = 50f;
+    public float mapRightBound = 500f;
     [Tooltip("地图下边界（世界坐标Y）")]
-    public float mapBottomBound = -30f;
+    public float mapBottomBound = -300f;
     [Tooltip("地图上边界（世界坐标Y）")]
-    public float mapTopBound = 30f;
+    public float mapTopBound = 300f;
     #endregion
 
     #region 私有缓存变量（性能核心，零冗余访问）

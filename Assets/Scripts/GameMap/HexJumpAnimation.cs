@@ -38,7 +38,7 @@ public class HexJumpAnimation : MonoBehaviour
         if (actualHeight < 0.01f) actualHeight = 0.01f; // 避免高度为0
 
         float rand_Height = Random.Range(0.7f, 1.3f);
-        float rand_Duration = Random.Range(0.7f,1.3f);
+        float rand_Duration = Random.Range(0.5f,1f);
 
         // 执行跳动动画
         _selfTrans.DOLocalMoveY(_originalPos.y + actualHeight* rand_Height, baseDuration*rand_Duration * 0.5f)
@@ -46,8 +46,35 @@ public class HexJumpAnimation : MonoBehaviour
             .SetDelay(delay)
             .OnComplete(() =>{
                 // 回落动画
-                _selfTrans.DOLocalMoveY(_originalPos.y, baseDuration * 0.5f)
+                _selfTrans.DOLocalMoveY(_originalPos.y, baseDuration * 0.4f)
                     .SetEase(jumpEase);
+            });
+    }
+
+    public void BornAnim() {
+        //_selfTrans.localPosition = _originalPos + new Vector3(0, -3, 0);
+        _selfTrans.DOLocalMoveY(3, 1f
+            ).SetEase(jumpEase)
+            .OnComplete(() => {
+
+                float distanceRatio = 0.7f;
+                // 计算实际跳动高度（距离越远，高度越小）
+                float actualHeight = baseJumpHeight * (1 - distanceRatio);
+                if (actualHeight < 0.01f) actualHeight = 0.01f; // 避免高度为0
+
+                float rand_Height = Random.Range(0.5f, 0.8f);
+                float rand_Duration = Random.Range(0.5f, 1f);
+
+                // 执行跳动动画
+                _selfTrans.DOLocalMoveY(_originalPos.y + actualHeight * rand_Height, baseDuration * rand_Duration)
+                    .SetEase(jumpEase)
+                    .OnComplete(() => {
+                        // 回落动画
+                        _selfTrans.DOLocalMoveY(_originalPos.y, baseDuration * 0.5f)
+                            .SetEase(jumpEase);
+                    });
+
+
             });
     }
 }

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6839757233468937266}
   - component: {fileID: 3912208504342783024}
   - component: {fileID: 4675135034000106259}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: MapRoom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 3702633034361400875}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.5, y: 0, z: 0.5}
+  m_LocalPosition: {x: 0.5, y: -0.0868, z: 0.5}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -101,6 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   row: 0
   col: 0
+  roomType: 0
 --- !u!114 &3912208504342783024
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,8 +136,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.0063039768, y: 0.006067128, z: 0.009456124}
-  m_Center: {x: 0, y: -1.1611756e-17, z: 0.0053541046}
+  m_Size: {x: 0.009195403, y: 0.009263176, z: 0.0020373089}
+  m_Center: {x: 0, y: -3.9675447e-16, z: 0.009063527}
 --- !u!1 &4254898028958694203
 GameObject:
   m_ObjectHideFlags: 0
@@ -149,7 +150,7 @@ GameObject:
   - component: {fileID: 3134301558767840926}
   - component: {fileID: 8437158235440525580}
   - component: {fileID: 4659791359102634648}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Quad
   m_TagString: Untagged
   m_Icon: {fileID: 0}

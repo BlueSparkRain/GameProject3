@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 六边形网格点击管理器（单例，统一处理点击、区域计算、动画触发 + 悬浮材质替换）
+/// 六边形网格交互管理器（单例，统一处理点击、区域计算、动画触发 + （不同条件）悬浮材质替换）
 /// </summary>
-public class HexGridClickManager : MonoGlobalManager
+public class HexGridInteractManager : MonoGlobalManager
 {
     [Header("检索配置")]
     [Tooltip("点击后触发跳动的半径")]
@@ -14,7 +14,7 @@ public class HexGridClickManager : MonoGlobalManager
 
     Material hoverMaterial;
 
-    string  hoverMatPath= "Material/HexRoom/Hover_HexRoom";
+    string  hoverMatPath= "Material/HexRoom/NPC__HexRoom";
 
     // 坐标到房间的映射表（高效查找）
     Dictionary<Vector2Int, HexRoom> _hexRoomMap = new Dictionary<Vector2Int, HexRoom>();
@@ -24,43 +24,39 @@ public class HexGridClickManager : MonoGlobalManager
     // 当前悬浮的房间（避免每帧重复检测/替换材质）
     HexRoom _currentHoverRoom;
 
-    public override void MgrUpdate(float deltaTime)
-    {
+    /// <summary>
+    /// 对外暴露房间字典（供寻路管理器访问，解耦核心）
+    /// </summary>
+    public Dictionary<Vector2Int, HexRoom> GetHexRoomMap(){
+        return _hexRoomMap;
+    }
+
+    public override void MgrUpdate(float deltaTime){
         // 检测鼠标左键点击（原有逻辑保留）
         if (Input.GetMouseButtonDown(0))
-        {
             CheckClickHexRoom();
-        }
-
-        // 新增：检测鼠标悬浮（仅在房间变化时处理材质，性能高效）
+        // 检测鼠标悬浮（仅在房间变化时处理材质，性能高效）
         CheckHoverHexRoom();
     }
 
     /// <summary>
     /// 注册一个六边形房间到映射表
     /// </summary>
-    public void RegisterHexRoom(HexRoom room)
-    {
+    public void RegisterHexRoom(HexRoom room){
         Vector2Int key = new Vector2Int(room.row, room.col);
         if (!_hexRoomMap.ContainsKey(key))
-        {
             _hexRoomMap.Add(key, room);
-        }
     }
 
     /// <summary>
-    /// 检测点击的六边形房间（原有逻辑保留）
+    /// 检测点击的六边形房间
     /// </summary>
-    private void CheckClickHexRoom()
-    {
+    void CheckClickHexRoom(){
         // 射线检测（正交相机适配）
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit))
-        {
+        if (Physics.Raycast(ray, out RaycastHit hit)){
             HexRoom clickedRoom = hit.collider.GetComponent<HexRoom>();
-
             if (clickedRoom != null){
-                //clickedRoom.CallBattle();
                 // 触发半径内的所有房间跳动
                 TriggerRadiusJump(clickedRoom.row, clickedRoom.col);
             }
@@ -70,16 +66,13 @@ public class HexGridClickManager : MonoGlobalManager
     /// <summary>
     /// 触发指定坐标半径内的所有房间跳动（原有逻辑保留）
     /// </summary>
-    private void TriggerRadiusJump(int centerRow, int centerCol)
-    {
+    void TriggerRadiusJump(int centerRow, int centerCol){
         // 1. 生成正六边形范围的行+列坐标（无冗余、不遗漏）
         List<Vector2Int> radiusRowCols = HexCoordinateUtility.GetRowColsInRadius(centerRow, centerCol, jumpRadius);
 
         // 2. 遍历仅触发存在的房间
-        foreach (Vector2Int rowCol in radiusRowCols)
-        {
-            if (_hexRoomMap.TryGetValue(rowCol, out HexRoom room))
-            {
+        foreach (Vector2Int rowCol in radiusRowCols){
+            if (_hexRoomMap.TryGetValue(rowCol, out HexRoom room)){
                 // 2.1 计算距离（直接用行+列，无需HexRoom提供轴向坐标）
                 int distance = HexCoordinateUtility.GetDistanceByRowCol(centerRow, centerCol, room.row, room.col);
 
@@ -90,50 +83,39 @@ public class HexGridClickManager : MonoGlobalManager
                 // 2.3 触发动画（动画组件无修改）
                 HexJumpAnimation jumpAnim = room.GetComponent<HexJumpAnimation>();
                 if (jumpAnim != null)
-                {
                     jumpAnim.TriggerJump(distanceRatio, delay);
-                }
             }
         }
     }
 
-    #region 新增：鼠标悬浮材质替换核心逻辑
+    #region 鼠标悬浮材质替换核心逻辑
     /// <summary>
     /// 检测鼠标悬浮的六边形房间（性能优化：仅房间变化时处理）
     /// </summary>
-    private void CheckHoverHexRoom()
-    {
-
-
-        // 1. 射线检测获取当前悬浮房间
+    private void CheckHoverHexRoom(){
+        //射线检测获取当前悬浮房间
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         HexRoom newHoverRoom = null;
         if (Physics.Raycast(ray, out RaycastHit hit))
-        {
             newHoverRoom = hit.collider.GetComponent<HexRoom>();
-        }
 
-        // 2. 悬浮房间无变化 → 直接返回（避免每帧重复操作）
+        //悬浮房间无变化 → 直接返回（避免每帧重复操作）
         if (newHoverRoom == _currentHoverRoom) return;
 
-        // 3. 恢复上一个悬浮房间的原始材质
+        //恢复上一个悬浮房间的原始材质
         if (_currentHoverRoom != null)
-        {
             RestoreOriginMaterial(_currentHoverRoom);
-        }
 
-        // 4. 给新悬浮房间设置hover材质
+        //新悬浮房间设置hover材质
         if (newHoverRoom != null)
-        {
             SetHoverMaterial(newHoverRoom);
-        }
-
-        // 5. 更新当前悬浮房间缓存
+        
+        //更新当前悬浮房间缓存
         _currentHoverRoom = newHoverRoom;
     }
 
     /// <summary>
-    /// 给房间设置悬浮材质（创建实例，不影响原材质和其他房间）
+    /// 给房间设置(判断路径是否可行)悬浮材质（创建实例，不影响原材质和其他房间）
     /// </summary>
     void SetHoverMaterial(HexRoom room){
         hoverMaterial = Resources.Load<Material>(hoverMatPath);

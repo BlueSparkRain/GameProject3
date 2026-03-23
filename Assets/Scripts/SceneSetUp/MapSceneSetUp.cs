@@ -6,8 +6,8 @@ public class MapSceneSetUp : MonoBehaviour
 {
    GameRoot gameRoot;
 
-    public float x_Offset=1;//每行内的偏移
-    public float y_Offset=0.7f;//相邻行的偏移
+    public float x_Offset=0.5f;//每行内的偏移
+    public float y_Offset=0.35f;//相邻行的偏移
     public GameObject roomPrefab;
     public int MapRow = 50;
     public int MapCol = 50;
@@ -15,19 +15,25 @@ public class MapSceneSetUp : MonoBehaviour
     public Transform MapPivot;
 
     GameMapManager gameMapManager;
+
+    HexPathFindingManager hexPathFindingManager;
+
+
+    public PlayerCharacter PlayerCharacter;
     private void Start()
     {
         gameRoot = GameRoot.Instance;
         gameRoot.RegisterGlobal_CSManager(new GameMapManager(x_Offset,y_Offset,roomPrefab,MapRow,MapCol,MapPivot.position));
-        gameRoot.RegisterGlobal_MonoManager<HexGridClickManager>();
-        gameRoot.RegisterGlobal_MonoManager<HexRoomObjectPool>();
+
+        gameRoot.RegisterScene_MonoManager<OrthoCameraNavigator>();
+
         gameMapManager = GameRoot.GetManager<GameMapManager>();
+        hexPathFindingManager = GameRoot.GetManager<HexPathFindingManager>();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L)) {
-            Debug.Log("创建期");
+        if (Input.GetKeyDown(KeyCode.G)) {
             gameMapManager.CreateMap();
         }
     }

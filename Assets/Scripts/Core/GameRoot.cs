@@ -101,6 +101,12 @@ namespace Core
             RegisterGlobal_MonoManager<AudioManager>();
             //光标管理器
             RegisterGlobal_MonoManager<CursorManager>();
+            //地图房间交互管理器
+            RegisterGlobal_MonoManager<HexGridInteractManager>();
+            //房间对象池管理器
+            RegisterGlobal_MonoManager<HexRoomObjectPool>();
+            //地图寻路管理器
+            RegisterGlobal_MonoManager<HexPathFindingManager>();
         }
 
         void Update(){
