@@ -48,7 +48,8 @@ public class MapSaveSOData : ScriptableObject
         for (int row = 0; row < mapSize; row++)
         {
             int offset = Mathf.Abs(row - center);
-            int startCol = offset / 2;
+            //int startCol = offset / 2;
+            int startCol = 0;
             int endCol = startCol + (mapSize - offset) - 1;
 
             for (int col = startCol; col <= endCol; col++)
