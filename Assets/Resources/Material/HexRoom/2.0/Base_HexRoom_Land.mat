@@ -38,6 +38,6 @@ Material:
     - _BaseColor: {r: 0.90132046, g: 1, b: 0, a: 1}
     - _GradientCenter: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _GradientColor: {r: 0, g: 0.9213741, b: 1, a: 1}
-    - _MainColor: {r: 0.9611671, g: 1, b: 0, a: 1}
-    - _ShadowColor: {r: 1, g: 0.59034526, b: 0, a: 1}
+    - _MainColor: {r: 1, g: 0.9628359, b: 0.79559743, a: 1}
+    - _ShadowColor: {r: 1, g: 0.44105512, b: 0.20392156, a: 1}
   m_BuildTextureStacks: []

@@ -15,10 +15,15 @@ public class GameMapManager : MonoGlobalManager
     [Header("=== 地块材质配置（新增） ===")]
     public Material oceanMat;        // 海洋材质
     public Material landMat;         // 陆地材质
-    public Material obstacle_TreeMat;    // 障碍1材质
-    public Material obstacle_StoneMat;    // 障碍2材质
-    public Material obstacle_MountainMat;    // 障碍3材质
-    public Material obstacle_4Mat;    // 障碍4材质
+    public Material obstacle_TreeMat;   
+    public Material obstacle_StoneMat;    
+    public Material obstacle_MountainMat;    
+
+    public Material walkable_BattleRoomMat;  
+    public Material walkable_EventRoomMat;  
+    public Material walkable_RewardRoomMat;  
+    public Material walkable_CityRoomMat;
+
 
     MapSaveSOData mapSaveData;
     float rowBatchInterval = 0.05f;
@@ -57,7 +62,11 @@ public class GameMapManager : MonoGlobalManager
         obstacle_TreeMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_Tree");
         obstacle_StoneMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_Stone");
         obstacle_MountainMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_Mountain");
-
+        
+        walkable_BattleRoomMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_Battle");
+        walkable_EventRoomMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_Event");
+        walkable_RewardRoomMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_Reward");
+        walkable_CityRoomMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_City");
         coroutineManager = GameRoot.GetManager<CoroutineManager>();
         hexGridClickManager = GameRoot.GetManager<HexMapInteractManager>();
 
@@ -129,7 +138,7 @@ public class GameMapManager : MonoGlobalManager
         }
 
         // 判断是否可行走（新增）
-        bool isWalkable = cellType == E_HexTerrainType.Land;
+        bool isWalkable = cellType == E_HexTerrainType.Walkable_EmptyLand;
 
         var newHexRoom = CreateHexRoom(_row, _col, isWalkable);
         allCells[_row, _col] = newHexRoom; // 缓存地块（新增）
@@ -152,10 +161,15 @@ public class GameMapManager : MonoGlobalManager
         switch (type)
         {
             case E_HexTerrainType.Obstacle__Ocean : renderer.material = oceanMat; break;
-            case E_HexTerrainType.Land: renderer.material = landMat; break;
+            case E_HexTerrainType.Walkable_EmptyLand: renderer.material = landMat; break;
             case E_HexTerrainType.Obstacle_Tree: renderer.material = obstacle_TreeMat; break;
             case E_HexTerrainType.Obstacle_Stone: renderer.material = obstacle_StoneMat; break;
             case E_HexTerrainType.Obstacle_Mountain: renderer.material = obstacle_MountainMat; break;
+            
+            case E_HexTerrainType.Walkable_BattleRoom: renderer.material = walkable_BattleRoomMat; break;
+            case E_HexTerrainType.Walkable_EventRoom: renderer.material = walkable_EventRoomMat; break;
+            case E_HexTerrainType.Walkable_RewardRoom: renderer.material = walkable_RewardRoomMat; break;
+            case E_HexTerrainType.Walkable_CityRoom: renderer.material = walkable_CityRoomMat; break;
         }
     }
 
@@ -188,7 +202,7 @@ public class GameMapManager : MonoGlobalManager
         if (allCells[pos.x, pos.y] == null) return;
 
         // 更新行走状态
-        bool isWalkable = type == E_HexTerrainType.Land;
+        bool isWalkable = type == E_HexTerrainType.Walkable_EmptyLand;
         allCells[pos.x, pos.y].SetCellState(isWalkable);
         hexGridClickManager.RegisterHexRoom(allCells[pos.x, pos.y], isWalkable);
         Debug.Log("更新材质！");

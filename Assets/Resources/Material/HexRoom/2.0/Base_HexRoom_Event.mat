@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Base_HexRoom_Tree
+  m_Name: Base_HexRoom_Event
   m_Shader: {fileID: 4800000, guid: 7ba4ce75b9c596f4ebd9f2240fb7cb80, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -38,6 +38,6 @@ Material:
     - _BaseColor: {r: 0.90132046, g: 1, b: 0, a: 1}
     - _GradientCenter: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _GradientColor: {r: 0, g: 0.9213741, b: 1, a: 1}
-    - _MainColor: {r: 0.42156157, g: 0.9245283, b: 0.65271187, a: 1}
-    - _ShadowColor: {r: 0, g: 0.44654083, b: 0.25857142, a: 1}
+    - _MainColor: {r: 0.6351522, g: 0.5251572, b: 1, a: 1}
+    - _ShadowColor: {r: 0, g: 0.27353498, b: 0.44705883, a: 1}
   m_BuildTextureStacks: []

@@ -20,6 +20,15 @@ public class MapTerrainEditorPanel : UIPanelBase
     [Header("山脉标记按钮")]
     public Button MountainButton;
 
+    [Header("战斗标记按钮")]
+    public Button BattleButton;
+    [Header("事件标记按钮")]
+    public Button EventButton;
+    [Header("奖励标记按钮")]
+    public Button RewardButton;
+    [Header("城镇标记按钮")]
+    public Button CityButton;
+
     private HexTerrainTag currentTag;
     private HexRoomData roomData;
     public GameObject ArrowPrefab;
@@ -60,7 +69,7 @@ public class MapTerrainEditorPanel : UIPanelBase
         OceanButton.onClick.AddListener(() =>
             SetButtonTag(E_HexTerrainType.Obstacle__Ocean));
         LandButton.onClick.AddListener(() =>
-                   SetButtonTag(E_HexTerrainType.Land));
+                   SetButtonTag(E_HexTerrainType.Walkable_EmptyLand));
         TreeButton.onClick.AddListener(() =>
                    SetButtonTag(E_HexTerrainType.Obstacle_Tree));
         StoneButton.onClick.AddListener(() =>
@@ -68,11 +77,18 @@ public class MapTerrainEditorPanel : UIPanelBase
         MountainButton.onClick.AddListener(() =>
                    SetButtonTag(E_HexTerrainType.Obstacle_Mountain));
 
+        BattleButton.onClick.AddListener(() =>
+                   SetButtonTag(E_HexTerrainType.Walkable_BattleRoom));
+        EventButton.onClick.AddListener(() =>
+                   SetButtonTag(E_HexTerrainType.Walkable_EventRoom));
+        RewardButton.onClick.AddListener(() =>
+                   SetButtonTag(E_HexTerrainType.Walkable_RewardRoom));
+        CityButton.onClick.AddListener(() =>
+                   SetButtonTag(E_HexTerrainType.Walkable_CityRoom));
+
         hideButton.onClick.AddListener(() => Hide());
         EventCenter.AddEventListener(E_EventType.Editor_Terrain_ExitEdit, ExitEdit);
-
     }
-
 
     protected override void BeforeFadeInAnimCallBack()
     {
