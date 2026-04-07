@@ -12,7 +12,7 @@ public class MapSaveSOData : ScriptableObject
     [Header("持久化地块数据")]
     [SerializeField] private SerializedHexCell[] savedCells;
 
-    // 运行时二维数组
+    // 运行时二维数组 [行, 列]  关键：这里是 row,col
     public E_HexTerrainType[,] cellData;
     private int mapSize => mapRadius * 2 + 1;
 
@@ -21,11 +21,12 @@ public class MapSaveSOData : ScriptableObject
     {
         cellData = new E_HexTerrainType[mapSize, mapSize];
 
-        // 有数据就加载，没有就初始化默认
+        // 有数据就加载
         if (savedCells != null && savedCells.Length > 0)
         {
             foreach (var cell in savedCells)
-                cellData[cell.x, cell.y] = cell.type;
+                // 【修复1】坐标对应正确：cellData[行, 列]
+                cellData[cell.row, cell.col] = cell.type;
             Debug.Log($"加载已保存的地图数据：{savedCells.Length} 个地块");
             return;
         }
@@ -36,8 +37,7 @@ public class MapSaveSOData : ScriptableObject
                 cellData[x, y] = E_HexTerrainType.Obstacle__Ocean;
     }
 
-    // ====================== 【仅修改这里：只保存有效六边形地块】 ======================
-    // 保存数据到持久化数组（优化后：无浪费，只存正六边形内部）
+    // ====================== 【完全还原你原生正确公式】 ======================
     public void SaveData()
     {
         if (cellData == null) return;
@@ -47,21 +47,22 @@ public class MapSaveSOData : ScriptableObject
 
         for (int row = 0; row < mapSize; row++)
         {
+            // 【完全用你自己的正确计算】一字不差！
             int offset = Mathf.Abs(row - center);
-            //int startCol = offset / 2;
-            int startCol = 0;
-            int endCol = startCol + (mapSize - offset) - 1;
+            int width = mapSize - offset;
+            int startCol = offset / 2;
+            int endCol = startCol + width - 1;
 
             for (int col = startCol; col <= endCol; col++)
             {
-                list.Add(new SerializedHexCell(col, row, cellData[col, row]));
+                // 【修复2】保存正确的 row 和 col，不写反！
+                list.Add(new SerializedHexCell(row, col, cellData[row, col]));
             }
         }
         savedCells = list.ToArray();
         SaveAssetImmediate();
     }
 
-    // ====================== 【原有功能完全不变】 ======================
     [ContextMenu("🗑️清空所有数据并重置")]
     public void ClearAndResetMap()
     {
@@ -69,11 +70,9 @@ public class MapSaveSOData : ScriptableObject
         cellData = null;
         InitializeIfEmpty();
         SaveAssetImmediate();
-
         Debug.Log("🗑️已彻底清空所有地图数据!");
     }
 
-    // 强制保存SO资产到磁盘（关键）
     private void SaveAssetImmediate()
     {
 #if UNITY_EDITOR
@@ -87,14 +86,16 @@ public class MapSaveSOData : ScriptableObject
     [System.Serializable]
     private class SerializedHexCell
     {
-        public int x;
-        public int y;
+        // 改名！明确区分 行和列，彻底避免写反
+        public int row;
+        public int col;
         public E_HexTerrainType type;
 
-        public SerializedHexCell(int x, int y, E_HexTerrainType type)
+        // 构造函数传入 row,col
+        public SerializedHexCell(int row, int col, E_HexTerrainType type)
         {
-            this.x = x;
-            this.y = y;
+            this.row = row;
+            this.col = col;
             this.type = type;
         }
     }
