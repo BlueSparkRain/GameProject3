@@ -1,5 +1,6 @@
 using Core;
 using DG.Tweening;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -36,7 +37,11 @@ public class UIPanelBase : MonoBehaviour
 
     [SerializeField]
     [Header("动画-需要透明渐变")]
-    protected bool Anim_NeedAlphaFadeIn = false;
+    protected bool Anim_NeedAlphaFadeIn;
+
+
+    public bool canOpen=true;
+
 
     /// <summary>
     /// 面板唯一标识（类型+序号，如TestPanel_1）
@@ -47,7 +52,7 @@ public class UIPanelBase : MonoBehaviour
     /// 面板类型
     /// </summary>
 
-    public UIPanelType PanelType { get; protected set; }
+    public E_UIPanelType PanelType { get; protected set; }
 
 
     public string PanelID { get; private set; }
@@ -62,17 +67,19 @@ public class UIPanelBase : MonoBehaviour
     /// </summary>
     protected CanvasGroup canvasGroup;
 
+    WaitForSeconds animDelay;
+
     #region 生命周期方法
     /// <summary>
     /// 初始化面板（仅第一次创建时调用）
     /// </summary>
     /// <param name="panelType">面板类型</param>
     /// <param name="uniqueID">唯一标识</param>
-    public virtual void Init(UIPanelType type, string uniqueID)
+    public virtual void Init(E_UIPanelType type, string uniqueID)
     {
         PanelType = type;
         PanelID = uniqueID;
-
+        animDelay = new WaitForSeconds(Anim_Duration);
         panelRoot = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
 
@@ -92,16 +99,23 @@ public class UIPanelBase : MonoBehaviour
     /// <param name="sortingOrder">面板层级</param>
     public virtual void Show()
     {
-
         gameObject.SetActive(true);
         canvasGroup.alpha = 1;
         canvasGroup.interactable = true;
         canvasGroup.blocksRaycasts = true;
+        
+        if (!Anim_DoFadeIn)
+            BeforeFadeOutAnimCallBack();
+        else
+            BeforeFadeInAnimCallBack();
+
+        UnitBeforeAnimCallBack();
+        
         // 执行入场动画
-        PlayEnterAnimation();
-        // 子类重写此方法实现自定义显示逻辑
+        PlayEnterAnim(()=>{ 
         EnterAnimCallBack();
-        UnitAnimCallBack();
+        });
+        UnitEndAnimCallBack();
     }
 
     /// <summary>
@@ -111,14 +125,20 @@ public class UIPanelBase : MonoBehaviour
     {
         canvasGroup.interactable = false;
         canvasGroup.blocksRaycasts = false;
+        if (!Anim_DoFadeIn)
+            BeforeFadeOutAnimCallBack();
+        else
+            BeforeFadeInAnimCallBack();
 
-        // 执行出场动画，动画结束后隐藏
+        UnitBeforeAnimCallBack();
+
         PlayExitAnim(() =>
         {
             gameObject.SetActive(false);
             ExitAnimCallBack();
         });
-        UnitAnimCallBack();
+
+        UnitEndAnimCallBack();
     }
 
     /// <summary>
@@ -129,6 +149,7 @@ public class UIPanelBase : MonoBehaviour
         Hide();
         OnClose();
         GameRoot.GetManager<UIManager>().ClosePanel(PanelType);
+
         GameRoot.GetManager<CoroutineManager>().StartDelayedCoroutine(Anim_Duration,
             () => DestroyImmediate(gameObject));
     }
@@ -138,10 +159,18 @@ public class UIPanelBase : MonoBehaviour
     /// <summary>
     /// 播放入场动画
     /// </summary>
-    protected virtual void PlayEnterAnimation()
+    protected virtual void PlayEnterAnim(System.Action onComplete)
     {
-        // 默认简单淡入动画（子类可重写为缩放、位移等动画）
-        //LeanTween.alphaCanvas(canvasGroup, 1, 0.2f).setEase(LeanTweenType.easeOutQuad);
+        StartCoroutine(WaitCallBack(onComplete));
+
+        MagicAnimExtens.DoLocal_UIAnim(
+         panelRoot, Anim_Duration, Anim_EaseType,
+         Anim_BornPos, Anim_TargetTrans,
+         Anim_DoFadeIn, Anim_NeedAlphaFadeIn);
+    }
+    IEnumerator WaitCallBack(System.Action onComplete) {
+        yield return animDelay;
+        onComplete?.Invoke();
     }
 
     /// <summary>
@@ -150,10 +179,12 @@ public class UIPanelBase : MonoBehaviour
     /// <param name="onComplete">动画完成回调</param>
     protected virtual void PlayExitAnim(System.Action onComplete)
     {
-        //// 默认简单淡出动画（子类可重写为缩放、位移等动画）
-        //LeanTween.alphaCanvas(canvasGroup, 0, 0.2f)
-        //    .setEase(LeanTweenType.easeInQuad)
-        //    .setOnComplete(onComplete);
+        StartCoroutine(WaitCallBack(onComplete));
+
+        MagicAnimExtens.DoLocal_UIAnim(
+       panelRoot, Anim_Duration, Anim_EaseType,
+       Anim_BornPos, Anim_TargetTrans,
+       Anim_DoFadeIn, Anim_NeedAlphaFadeIn);
     }
     #endregion
 
@@ -166,16 +197,29 @@ public class UIPanelBase : MonoBehaviour
     /// <summary>
     /// 入场动画后回调
     /// </summary>
-    protected virtual void EnterAnimCallBack() { }
+    protected virtual void EnterAnimCallBack() {
+    }
 
     /// <summary>
     /// 离场动画后回调
     /// </summary>
     protected virtual void ExitAnimCallBack() { }
 
+    /// <summary>
+    /// 淡出前执行的委托
+    /// </summary>
+    protected virtual void BeforeFadeInAnimCallBack() { }
 
-    protected virtual void UnitAnimCallBack()
+    /// <summary>
+    /// 淡出前执行的委托
+    /// </summary>
+    protected virtual void BeforeFadeOutAnimCallBack(){}
+    protected virtual void UnitBeforeAnimCallBack()
     {
+ 
+    }
+
+    protected virtual void UnitEndAnimCallBack() {
         Anim_DoFadeIn = !Anim_DoFadeIn;
     }
     /// <summary>

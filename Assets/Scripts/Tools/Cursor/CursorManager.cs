@@ -11,7 +11,7 @@ public class CursorManager : MonoGlobalManager{
 
         // 禁用Update（零空轮询消耗）
         this.enabled = false;
-        LogInfo("[CursorManager]---光标管理器初始化完成");
+        //LogInfo("[CursorManager]---光标管理器初始化完成");
     }
   
     CursorSettingsSO cursorSettings;
@@ -63,7 +63,7 @@ public class CursorManager : MonoGlobalManager{
 
         // 容错：配置不存在则用默认样式
         if (config == null){
-            LogError($"样式{style}未配置，切换为默认样式");
+            //LogError($"样式{style}未配置，切换为默认样式");
             config = cursorSettings.GetStyleConfig(cursorSettings.defaultCursorStyle);
 
             // 极端容错：默认样式也不存在则用系统光标
@@ -81,7 +81,7 @@ public class CursorManager : MonoGlobalManager{
                 CursorMode.Auto // 硬件光标优先，零性能消耗
             );
             _currentStyle = style;
-            LogInfo($"切换光标样式：{style}");
+            //LogInfo($"切换光标样式：{style}");
         }
     }
 
@@ -106,7 +106,7 @@ public class CursorManager : MonoGlobalManager{
 
         _baseStyle = style;
         if (!_isMousePressed) ApplyCursorStyle(style);
-        LogInfo($"设置基础样式：{style}");
+        //LogInfo($"设置基础样式：{style}");
     }
 
     /// <summary>
@@ -118,7 +118,7 @@ public class CursorManager : MonoGlobalManager{
         _isCursorVisible = true;
         Cursor.visible = true;
         ApplyCursorStyle(_isMousePressed ? CursorStyle.Press : _baseStyle);
-        LogInfo("显示光标");
+        //LogInfo("显示光标");
     }
 
     /// <summary>
@@ -129,7 +129,7 @@ public class CursorManager : MonoGlobalManager{
 
         _isCursorVisible = false;
         Cursor.visible = false;
-        LogInfo("隐藏光标");
+        //LogInfo("隐藏光标");
     }
 
     /// <summary>
@@ -152,7 +152,7 @@ public class CursorManager : MonoGlobalManager{
     /// </summary>
     public void EnableAutoMouseDetection(){
         this.enabled = true;
-        LogInfo("启用自动鼠标检测");
+        //LogInfo("启用自动鼠标检测");
     }
 
     /// <summary>
@@ -160,7 +160,7 @@ public class CursorManager : MonoGlobalManager{
     /// </summary>
     public void DisableAutoMouseDetection(){
         this.enabled = false;
-        LogInfo("禁用自动鼠标检测");
+        //LogInfo("禁用自动鼠标检测");
     }
 
     /// <summary>
@@ -190,7 +190,7 @@ public class CursorManager : MonoGlobalManager{
         // 恢复系统默认光标
         Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
         Cursor.visible = true;
-        LogInfo("销毁：恢复系统默认光标");
+        //LogInfo("销毁：恢复系统默认光标");
     }
 
     public override void MgrUpdate(float deltaTime){

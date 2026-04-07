@@ -283,12 +283,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panelRoot: {fileID: 0}
-  Anim_Duration: 2
-  Anim_EaseType: 27
-  Anim_BornPos: {x: -1000, y: 500, z: 0}
-  Anim_TargetTrans: {x: 500, y: -500, z: 0}
+  Anim_Duration: 0.8
+  Anim_EaseType: 35
+  Anim_BornPos: {x: -1500, y: 50, z: 0}
+  Anim_TargetTrans: {x: 1500, y: 0, z: 0}
   Anim_DoFadeIn: 1
-  Anim_NeedAlphaFadeIn: 0
+  Anim_NeedAlphaFadeIn: 1
   ambushButton: {fileID: 1286132596524030490}
   battleButton: {fileID: 3249457949288191147}
   guitButton: {fileID: 6925177799576760644}

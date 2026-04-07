@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.UI;
 
 public class TestPanel : UIPanelBase
@@ -22,36 +19,35 @@ public class TestPanel : UIPanelBase
     protected override void OnInit()
     {
         base.OnInit();
-       
+
         closeButton.onClick.AddListener(OnClickCloseButton);
         hideButton.onClick.AddListener(OnClickHideButton);
     }
 
-    void OnClickHideButton()=>Hide();
-    void OnClickCloseButton()=>Close();
+    void OnClickHideButton() => Hide();
+    void OnClickCloseButton() => Close();
 
-    protected override void EnterAnimCallBack(){
+    protected override void EnterAnimCallBack()
+    {
         base.EnterAnimCallBack();
     }
 
-    protected override void PlayEnterAnimation()
+    protected override void PlayEnterAnim(System.Action onComplete)
     {
-        base.PlayEnterAnimation();
-
+        base.PlayEnterAnim( onComplete);
         MagicAnimExtens.DoLocal_UIAnim(
-               panelRoot,Anim_Duration,Anim_EaseType,
-               Anim_BornPos, Anim_TargetTrans,
-               Anim_DoFadeIn, Anim_NeedAlphaFadeIn);
+panelRoot, Anim_Duration, Anim_EaseType,
+Anim_BornPos, Anim_TargetTrans,
+Anim_DoFadeIn, Anim_NeedAlphaFadeIn);
     }
 
     protected override void PlayExitAnim(Action onComplete)
     {
         base.PlayExitAnim(onComplete);
-
         MagicAnimExtens.DoLocal_UIAnim(
-              panelRoot, Anim_Duration, Anim_EaseType,
-              Anim_BornPos, Anim_TargetTrans,
-              Anim_DoFadeIn, Anim_NeedAlphaFadeIn);
+panelRoot, Anim_Duration, Anim_EaseType,
+Anim_BornPos, Anim_TargetTrans,
+Anim_DoFadeIn, Anim_NeedAlphaFadeIn);
     }
 
 }

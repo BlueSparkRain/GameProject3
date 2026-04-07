@@ -86,25 +86,34 @@ namespace Core
             DontDestroyOnLoad(gameObject);
 
             //添加全局单例管理器
-            RegisterGlobal_CSManager(new EventCenterManager());
-            GetManager<EventCenterManager>().EventCenterTest();
 
+            //事件中心管理器
+            //RegisterGlobal_CSManager(new EventCenterManager());
+
+            //协程管理器
+            RegisterGlobal_MonoManager<CoroutineManager>();
+
+            //对象池管理器
+            RegisterGlobal_MonoManager<ObjectPoolManager>();
+            //FPS显示器
+            RegisterGlobal_MonoManager<FPSManager>();
             //场景切换管理器
             RegisterGlobal_MonoManager<SceneSwitchManager>();
             //异步动画管理器
             RegisterGlobal_MonoManager<MagicAnimationManager>();
-            //协程管理器
-            RegisterGlobal_MonoManager<CoroutineManager>();
+
             //UI管理器
             RegisterGlobal_MonoManager<UIManager>();
             //Audio管理器
             RegisterGlobal_MonoManager<AudioManager>();
             //光标管理器
             RegisterGlobal_MonoManager<CursorManager>();
+            //六边形区块管理器
+            RegisterGlobal_MonoManager<HexRoomChunkManager>();
+            //地图生成管理器
+            RegisterGlobal_MonoManager<GameMapManager>();
             //地图房间交互管理器
-            RegisterGlobal_MonoManager<HexGridInteractManager>();
-            //房间对象池管理器
-            RegisterGlobal_MonoManager<HexRoomObjectPool>();
+            RegisterGlobal_MonoManager<HexMapInteractManager>();
             //地图寻路管理器
             RegisterGlobal_MonoManager<HexPathFindingManager>();
         }

@@ -39,6 +39,7 @@ public enum E_CharacterPropertyType{
     /// </summary>
     Mana_Regeneration,
 
+
     /// <summary>
     /// 最大生命值：决定生命值的上限
     /// </summary>
@@ -78,4 +79,9 @@ public enum E_CharacterPropertyType{
     /// 护盾强化：获得护盾值的强化百分比
     /// </summary>
     Shield_Amplification,
+
+    /// <summary>
+    /// 初始最大ATB点数
+    /// </summary>
+    Maximum_ATB
 }

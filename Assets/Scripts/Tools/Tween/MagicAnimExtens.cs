@@ -1,74 +1,75 @@
-using Core;
+ï»¿using Core;
 using DG.Tweening;
 using DG.Tweening.Core;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEditor.Tilemaps;
 using UnityEngine;
 using UnityEngine.UI;
 /// <summary>
-/// ¶ÔDotweenº¯ÊıµÄ¶ş´Î·â×°
+/// å¯¹Dotweenå‡½æ•°çš„äºŒæ¬¡å°è£…
 /// </summary>
-public static class MagicAnimExtens 
+public static class MagicAnimExtens
 {
-    #region Transform¶¯»­£¨3D/2DÎïÌå£©
-    // ÊÀ½ç×ø±êÒÆ¶¯
+    #region TransformåŠ¨ç”»ï¼ˆ3D/2Dç‰©ä½“ï¼‰
+    // ä¸–ç•Œåæ ‡ç§»åŠ¨
     public static Tween CreateMoveTween(this Transform target, Vector3 endPos, float duration)
         => target.DOMove(endPos, duration);
 
-    // ±¾µØ×ø±êÒÆ¶¯
+    // æœ¬åœ°åæ ‡ç§»åŠ¨
     public static Tween CreateLocalMoveTween(this Transform target, Vector3 endPos, float duration)
         => target.DOLocalMove(endPos, duration);
 
-    // Ëõ·Å
+    // ç¼©æ”¾
     public static Tween CreateScaleTween(this Transform target, Vector3 endScale, float duration)
         => target.DOScale(endScale, duration);
 
-    // Ğı×ª
+    // æ—‹è½¬
     public static Tween CreateRotateTween(this Transform target, Vector3 endEuler, float duration, RotateMode mode = RotateMode.Fast)
         => target.DORotate(endEuler, duration, mode);
     #endregion
 
-    #region UI¶¯»­
-    // CanvasGroupÍ¸Ã÷¶È
+    #region UIåŠ¨ç”»
+    // CanvasGroupé€æ˜åº¦
     public static Tween CreateFadeTween(this CanvasGroup target, float endAlpha, float duration)
         => target.DOFade(endAlpha, duration);
 
-    // RectTransformÃªµãÒÆ¶¯
+    // RectTransformé”šç‚¹ç§»åŠ¨
     public static Tween CreateAnchorPosTween(this RectTransform target, Vector2 endPos, float duration)
         => target.DOAnchorPos(endPos, duration);
 
-    // RectTransformËõ·Å
+    // RectTransformç¼©æ”¾
     public static Tween CreateScaleTween(this RectTransform target, Vector2 endScale, float duration)
         => target.DOScale(endScale, duration);
     #endregion
 
 
-    #region SequenceĞòÁĞ¹¹½¨
-    // ´´½¨¿ÕĞòÁĞ
+    #region Sequenceåºåˆ—æ„å»º
+    // åˆ›å»ºç©ºåºåˆ—
     public static Sequence CreateEmptySequence() => DOTween.Sequence();
 
-    // ĞòÁĞÌí¼ÓÒÆ¶¯¶Î
+    // åºåˆ—æ·»åŠ ç§»åŠ¨æ®µ
     public static Sequence AddMoveSegment(this Sequence seq, Transform target, Vector3 endPos, float duration, Ease ease = Ease.Linear)
     {
         seq.Append(target.DOMove(endPos, duration).SetEase(ease));
         return seq;
     }
 
-    // ĞòÁĞÌí¼ÓÑÓ³Ù¶Î
+    // åºåˆ—æ·»åŠ å»¶è¿Ÿæ®µ
     public static Sequence AddDelaySegment(this Sequence seq, float delay)
     {
         seq.AppendInterval(delay);
         return seq;
     }
 
-    // ĞòÁĞÌí¼Ó²¢ĞĞ¶Î£¨Í¬Ê±²¥·Å£©
+    // åºåˆ—æ·»åŠ å¹¶è¡Œæ®µï¼ˆåŒæ—¶æ’­æ”¾ï¼‰
     public static Sequence AddParallelSegment(this Sequence seq, Tween tween)
     {
         seq.Join(tween);
         return seq;
     }
 
-    // ĞòÁĞÌí¼ÓËõ·Å¶Î
+    // åºåˆ—æ·»åŠ ç¼©æ”¾æ®µ
     public static Sequence AddScaleSegment(this Sequence seq, Transform target, Vector3 endScale, float duration, Ease ease = Ease.Linear)
     {
         seq.Append(target.DOScale(endScale, duration).SetEase(ease));
@@ -78,77 +79,123 @@ public static class MagicAnimExtens
 
 
     /// <summary>
-    /// ÖØÖÃTectransform
+    /// é‡ç½®Tectransform
     /// </summary>
     public static void ResetRecTransPos(RectTransform _rectTransform, Vector3 _bornPos)
     {
         if (_rectTransform == null) return;
-        // Ç¿ÖÆKill ImageÉÏµÄËùÓĞTween£¨²»Íê³É£©
-        _rectTransform.DOKill(false);
-        _rectTransform.DOKill(false);
+        // å¼ºåˆ¶Kill Imageä¸Šçš„æ‰€æœ‰Tweenï¼ˆä¸å®Œæˆï¼‰
+        //_rectTransform.DOKill(false);
+        //_rectTransform.DOKill(false);
 
         Vector3 pos = _rectTransform.localPosition;
         pos = _bornPos;
         _rectTransform.localPosition = pos;
     }
 
-    static MagicAnimationManager _animManager=null;
-    static CoroutineManager _coroutineManager=null;
+    static MagicAnimationManager _animManager = null;
+    static CoroutineManager _coroutineManager = null;
 
-    public static void DoLocal_UIAnim(RectTransform _rectTransform, float _animDuration, Ease _easeType, Vector3 _startPos, Vector3 _targetTrans,
-        bool _doFadeIn , bool _needAlphaFadeInOut = false)
+    //// 1. é™æ€ç¼“å­˜ç®¡ç†å™¨ï¼ˆä»…é¦–æ¬¡è°ƒç”¨åˆå§‹åŒ–ï¼‰
+    //if (_animManager == null)
+    //{
+    //    _animManager = GameRoot.GetManager<MagicAnimationManager>();
+    //    _coroutineManager = GameRoot.GetManager<CoroutineManager>();
+    //}
+    public static void DoLocal_UIAnim(RectTransform _rectTransform, float _animDuration, Ease _easeType,
+        Vector3 _startPos, Vector3 _targetTrans, bool _doFadeIn, bool _needAlphaFadeInOut = false)
     {
-        //¶¯»­×´Ì¬±êÖ¾
-        if (!_coroutineManager){
-            _animManager = GameRoot.GetManager<MagicAnimationManager>();
-            _coroutineManager = GameRoot.GetManager<CoroutineManager>();
+        if (_rectTransform == null) return;
+
+        DOTween.Kill(_rectTransform.GetInstanceID(), true);
+        _rectTransform.DOKill();
+        CanvasGroup img = _rectTransform.GetComponent<CanvasGroup>();
+        
+        Vector2 currentAnchoredPos = _rectTransform.anchoredPosition;
+
+        Vector2 finalTargetPos = _doFadeIn
+            ? (Vector2)_startPos + (Vector2)_targetTrans
+            : (Vector2)_startPos - (Vector2)_targetTrans;
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(_rectTransform);
+
+        _rectTransform.anchoredPosition = currentAnchoredPos;
+
+        Tweener tween = _rectTransform.DOAnchorPos(finalTargetPos, _animDuration)
+            .SetEase(_easeType)
+            .SetUpdate(true)          
+            .SetAutoKill(true)      
+            .OnComplete(() => {
+                // ğŸš€ ç»æ€ï¼šåŠ¨ç”»ç»“æŸ ç¡¬èµ‹å€¼ é”å®šä½ç½®ï¼è¦†ç›–DOTweenå’ŒUIç³»ç»Ÿæ‰€æœ‰è®¡ç®—
+                _rectTransform.anchoredPosition = finalTargetPos;
+            });
+
+        if (img != null && _needAlphaFadeInOut)
+        {
+            float alphaTarget = _doFadeIn ? 1 : 0;
+            img.DOFade(alphaTarget, _animDuration*0.4f).From(img.alpha);
         }
-        _coroutineManager.StartCoroutine(PlayLocal_UIAnim(_rectTransform, _animDuration, _easeType, _startPos, _targetTrans,
-        _doFadeIn, _needAlphaFadeInOut));
     }
 
+
+
    
-    static IEnumerator PlayLocal_UIAnim(RectTransform _rectTransform ,float _animDuration, Ease _easeType,  Vector3 _startPos , Vector3 _targetTrans ,
-         bool _doFadeIn, bool _needAlphaFadeInOut){
-        // ¹¹½¨²ÎÊı
-        var ui_animParams = new AnimParams{
+
+    /// <summary>
+    /// ä¿®å¤ï¼šå¤šå®ä¾‹ç‹¬ç«‹åŠ¨ç”»ï¼Œäº’ä¸æ‰“æ–­ï¼Œæ¯ä¸ªåç¨‹éƒ½èƒ½æ‰§è¡Œå®Œæˆ
+    /// </summary>
+    static IEnumerator PlayLocal_UIAnim(RectTransform _rectTransform, float _animDuration, Ease _easeType, Vector3 _startPos, Vector3 _targetTrans,
+             bool _doFadeIn, bool _needAlphaFadeInOut)
+    {
+        // å…ˆæ¸…ç©ºå½“å‰ç‰©ä½“çš„æ‰€æœ‰æ—§åŠ¨ç”»
+        _rectTransform.DOKill(true);
+        Image img = _rectTransform.GetComponent<Image>();
+        if (img != null) img.DOKill(true);
+
+        var ui_animParams = new AnimParams
+        {
             Duration = _animDuration,
             Ease = _easeType,
             LoopMode = AnimationLoopType.None,
-            Interruptible = true,
+            Interruptible = false,
             TargetType = AnimationTargetType.UI,
             SpaceMode = AnimationSpaceMode.Local
         };
+
+        // ç”Ÿæˆã€å”¯ä¸€åŠ¨ç”»IDã€‘ï¼ˆåŸºäºå½“å‰ç‰©ä½“ï¼Œæ¯ä¸ªé¢æ¿ç‹¬ç«‹ï¼‰
+        string uniqueAnimID = MagicAnimationManager.GetAnimID(E_TweenType.Image_UpMove) + _rectTransform.GetInstanceID();
+
         yield return _animManager.PlayAnimation(
-            MagicAnimationManager.GetAnimID(E_TweenType.Image_UpMove),
+            uniqueAnimID,
             _rectTransform,
-            (p) => {
+            (p) =>
+            {
                 float targetAlpha = 1;
                 if (_needAlphaFadeInOut)
                     targetAlpha = _doFadeIn ? 1 : 0;
 
-                //ÒÆ¶¯Tween
-                var moveTween = _rectTransform.DOLocalMove(_startPos + _targetTrans * (_doFadeIn?1:-1), p.Duration)
+                var moveTween = _rectTransform.DOLocalMove(_startPos + _targetTrans * (_doFadeIn ? 1 : -1), p.Duration)
                     .SetEase(p.Ease)
-                    .SetAutoKill(false); // ÓÉ¹ÜÀíÆ÷¿ØÖÆÉúÃüÖÜÆÚ
+                    .SetId(_rectTransform);
 
-                // Í¸Ã÷¶ÈTween£¨ÒÆ³ıOnKill»Øµ÷£¬ÎŞ±¨´í£©
-                var fadeTween = _rectTransform.GetComponent<Image>().DOFade(targetAlpha, p.Duration * 1.5f)
-                  .SetEase(p.Ease)
-                  .SetAutoKill(false);
+                Tweener fadeTween = null;
+                if (img != null)
+                {
+                    fadeTween = img.DOFade(targetAlpha, p.Duration * 1.5f)
+                        .SetEase(p.Ease)
+                        .SetId(_rectTransform);
+                }
 
-                // ºÏ²¢ÎªSequence
+                // åºåˆ—ï¼šé»˜è®¤è‡ªåŠ¨é”€æ¯ï¼ˆåˆ é™¤SetAutoKill(false)ï¼‰? ä¿®å¤3
                 var seq = DOTween.Sequence();
                 seq.Append(moveTween);
+                if (fadeTween != null) seq.Join(fadeTween);
 
-                seq.Join(fadeTween);
-                seq.SetAutoKill(false);
                 return seq;
             },
             ui_animParams
-            );
+        );
     }
-
 
 
 }

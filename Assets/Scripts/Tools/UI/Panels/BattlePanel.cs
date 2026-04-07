@@ -12,10 +12,12 @@ public class BattlePanel : UIPanelBase
 
     void OnClickAmbushButton() {
         Debug.Log("伏击");
+        Hide();
     }
     void OnClickBattleButton() { 
         Debug.Log("战斗");
         GameRoot.GetManager<SceneSwitchManager>().SwitchSceneAsync("BattleScene");
+        Hide();
     }
     void OnClickQuitButton() {
         Hide();
@@ -31,8 +33,7 @@ public class BattlePanel : UIPanelBase
         base.ExitAnimCallBack();
     }
 
-    protected override void OnInit()
-    {
+    protected override void OnInit(){
         base.OnInit();
         ambushButton.onClick.AddListener(OnClickAmbushButton);
         battleButton.onClick.AddListener(OnClickBattleButton);
@@ -46,22 +47,21 @@ public class BattlePanel : UIPanelBase
         Debug.Log("设置新位置");
     }
 
-    protected override void PlayEnterAnimation()
+    protected override void PlayEnterAnim(System.Action onComplete)
     {
-        base.PlayEnterAnimation();
+        base.PlayEnterAnim(onComplete);
 
-        MagicAnimExtens.DoLocal_UIAnim(
-           panelRoot, Anim_Duration, Anim_EaseType,
-           Anim_BornPos, Anim_TargetTrans,
-           Anim_DoFadeIn, Anim_NeedAlphaFadeIn);
+        //MagicAnimExtens.DoLocal_UIAnim(
+        //   panelRoot, Anim_Duration, Anim_EaseType,
+        //   Anim_BornPos, Anim_TargetTrans,
+        //   Anim_DoFadeIn, Anim_NeedAlphaFadeIn);
     }
 
-    protected override void PlayExitAnim(Action onComplete)
-    {
+    protected override void PlayExitAnim(Action onComplete){
         base.PlayExitAnim(onComplete);
-        MagicAnimExtens.DoLocal_UIAnim(
-           panelRoot, Anim_Duration, Anim_EaseType,
-           Anim_BornPos, Anim_TargetTrans,
-           Anim_DoFadeIn, Anim_NeedAlphaFadeIn);
+        //MagicAnimExtens.DoLocal_UIAnim(
+        //   panelRoot, Anim_Duration, Anim_EaseType,
+        //   Anim_BornPos, Anim_TargetTrans,
+        //   Anim_DoFadeIn, Anim_NeedAlphaFadeIn);
     }
 }

@@ -16,18 +16,14 @@ public class RoomSO :ScriptableObject
     /// </summary>
     public Sprite roomIcon;
 
-
-
 }
-
-
 
 public enum E_HexRoomType {
     None_无,
     Battle_战斗,
     NPC_特定交互,
     Unknown_随机事件,
-    NewArea_锚点,
+    //NewArea_锚点,
 }
 
 

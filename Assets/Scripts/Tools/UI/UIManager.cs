@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -8,60 +9,64 @@ using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 
 /// <summary>
-/// UI面板类型枚举（可根据项目拓展）
-/// 枚举名应和实际的预制件名称保持一致
+/// UI面板类型枚举
 /// </summary>
-public enum UIPanelType
+public enum E_UIPanelType
 {
-    TestTPanel,    // 测试面板
-    MessagePanel,  // 提示面板
-    ShopPanel,     // 商店面板
-    BattlePanel,   //战斗面板
-    // 新增面板类型直接在这里添加即可
+    TestTPanel,
+    MessagePanel,
+    ShopPanel,
+    BattlePanel,
+    NPCPanel,
+    UnknownPanel,
+    SkillPanel,
+    MapTerrainEditorPanel,
 }
 
 /// <summary>
-/// 面板实例模式（单实例/多实例）
+/// 面板实例模式
 /// </summary>
 public enum PanelInstanceMode
 {
-    Single,   // 单实例（默认，复用）
-    Multiple  // 多实例（可同时存在多个）
+    Single,
+    Multiple
 }
 
 /// <summary>
-/// UI管理器（单例），负责面板的加载、创建、管理、回收
+/// UI管理器（单例）
 /// </summary>
 public class UIManager : MonoGlobalManager
 {
-    protected override void Awake(){
+    protected override void Awake()
+    {
         base.Awake();
         InitPanelRoot();
-        InitPanelModeConfig(); // 初始化面板模式配置
+        InitPanelModeConfig();
     }
 
     #region 混合(单多例)模式缓存
     Transform _panelRoot;
-    string loadPath = "Prefab/UIPanel/";
+    readonly string loadPath = "Prefab/UIPanel/";
 
-    // 1. 面板模式配置（关键：标记哪些是多实例）
-    Dictionary<UIPanelType, PanelInstanceMode> _panelModeConfig = new();
-    // 2. 单实例缓存（key=类型，value=单个面板）
-    Dictionary<UIPanelType, UIPanelBase> _singlePanelCache = new();
-    // 3. 多实例缓存（key=类型，value=面板列表+唯一ID）
-    Dictionary<UIPanelType, List<UIPanelBase>> _multiPanelCache = new();
-    // 4. 所有面板ID映射（通过ID快速找到面板）
+    // 🔥 修复1：全局预制体缓存（不再重复加载，杜绝实例异常）
+    Dictionary<E_UIPanelType, GameObject> _prefabCache = new();
+    // 面板模式配置
+    Dictionary<E_UIPanelType, PanelInstanceMode> _panelModeConfig = new();
+    // 单实例缓存
+    Dictionary<E_UIPanelType, UIPanelBase> _singlePanelCache = new();
+    // 多实例缓存
+    Dictionary<E_UIPanelType, List<UIPanelBase>> _multiPanelCache = new();
+    // 全局ID映射
     Dictionary<string, UIPanelBase> _allPanelIDMap = new();
-    // 5. 多实例ID计数器（保证ID唯一）
-    Dictionary<UIPanelType, int> _multiPanelIDCounter = new();
+    // 多实例ID计数器
+    Dictionary<E_UIPanelType, int> _multiPanelIDCounter = new();
     #endregion
 
     #region 初始化
-    void InitPanelRoot(){
-        // 创建全局EventSystem（不变）
+    void InitPanelRoot()
+    {
         CreateGlobalEventSystem();
 
-        // 创建全局Canvas（不变）
         GameObject canvasObj = new GameObject("GlobalUICanvas");
         Canvas canvas = canvasObj.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -80,25 +85,26 @@ public class UIManager : MonoGlobalManager
         _panelRoot.localScale = Vector3.one;
     }
 
-    /// <summary>
-    /// 初始化面板模式（你可以在这里配置哪些面板是多实例）
-    /// </summary>
-    void InitPanelModeConfig(){
-        // 配置规则：默认单实例，手动标记多实例
-        _panelModeConfig[UIPanelType.TestTPanel] = PanelInstanceMode.Single;
-        _panelModeConfig[UIPanelType.MessagePanel] = PanelInstanceMode.Multiple; // 多实例
-        _panelModeConfig[UIPanelType.ShopPanel] = PanelInstanceMode.Single;
-        _panelModeConfig[UIPanelType.BattlePanel]= PanelInstanceMode.Single;
+    void InitPanelModeConfig()
+    {
+        _panelModeConfig[E_UIPanelType.MessagePanel] = PanelInstanceMode.Multiple; // 多实例
+        _panelModeConfig[E_UIPanelType.TestTPanel] = PanelInstanceMode.Single;
+        _panelModeConfig[E_UIPanelType.ShopPanel] = PanelInstanceMode.Single;
+        _panelModeConfig[E_UIPanelType.BattlePanel] = PanelInstanceMode.Single;
+        _panelModeConfig[E_UIPanelType.NPCPanel]= PanelInstanceMode.Single;
+        _panelModeConfig[E_UIPanelType.UnknownPanel]= PanelInstanceMode.Single;
+        _panelModeConfig[E_UIPanelType.SkillPanel]= PanelInstanceMode.Single;
+        _panelModeConfig[E_UIPanelType.MapTerrainEditorPanel]= PanelInstanceMode.Single;
 
-
-        // 初始化多实例ID计数器
-        foreach (var type in Enum.GetValues(typeof(UIPanelType)))
-            _multiPanelIDCounter[(UIPanelType)type] = 0;
+        foreach (var type in Enum.GetValues(typeof(E_UIPanelType)))
+            _multiPanelIDCounter[(E_UIPanelType)type] = 0;
     }
 
-    void CreateGlobalEventSystem(){
+    void CreateGlobalEventSystem()
+    {
         EventSystem es = FindObjectOfType<EventSystem>();
-        if (es != null){
+        if (es != null)
+        {
             if (es.GetComponent<StandaloneInputModule>() != null)
                 DestroyImmediate(es.GetComponent<StandaloneInputModule>());
             if (es.GetComponent<InputSystemUIInputModule>() == null)
@@ -114,37 +120,42 @@ public class UIManager : MonoGlobalManager
     }
     #endregion
 
-    #region 核心：通用Open方法（自动判断单/多实例）
-    /// <summary>
-    /// 打开面板（自动适配单/多实例）
-    /// </summary>
-    /// <typeparam name="T">面板类型</typeparam>
-    /// <param name="type">面板枚举</param>
-    /// <returns>面板实例（多实例返回新建的，单实例返回复用的）</returns>
-    public T OpenPanel<T>(UIPanelType type, UnityAction<T> unityAction = null) where T : UIPanelBase{
-        // 1. 获取面板模式
-        if (!_panelModeConfig.TryGetValue(type, out PanelInstanceMode mode))
-            mode = PanelInstanceMode.Single; // 默认单实例
+    public T GetPanel<T>(E_UIPanelType type) where T : UIPanelBase
+    {
+        if (_singlePanelCache.ContainsKey(type))
+            return _singlePanelCache[type] as T;
+        else
+            return null;
+    }
 
-        // 2. 单实例逻辑（复用已有）
-        if (mode == PanelInstanceMode.Single){
-            if (_singlePanelCache.TryGetValue(type, out UIPanelBase existPanel)){
-                existPanel.transform.SetAsLastSibling();
-                unityAction?.Invoke(existPanel as T);
-                existPanel.Show();
+    #region 核心：Open面板（多实例绝对隔离，不干扰其他面板）
+    public T OpenPanel<T>(E_UIPanelType type, UnityAction<T> unityAction = null) where T : UIPanelBase
+    {
+        if (!_panelModeConfig.TryGetValue(type, out PanelInstanceMode mode))
+            mode = PanelInstanceMode.Single;
+
+        // 单实例逻辑（复用+置顶）
+        if (mode == PanelInstanceMode.Single)
+        {
+            if (_singlePanelCache.TryGetValue(type, out UIPanelBase existPanel))
+            {
+
+                if (existPanel.canOpen)
+                {
+                    unityAction?.Invoke(existPanel as T);
+                    existPanel.transform.SetAsLastSibling();
+                    existPanel.Show();
+                }
+                
                 return existPanel as T;
             }
-            // 单实例首次创建
-            var panel = CreateNewPanel<T>(type, GetSinglePanelID(type),unityAction);
-
-            return panel;
+            return CreateNewPanel<T>(type, GetSinglePanelID(type), unityAction);
         }
 
-        // 3. 多实例逻辑（新建）
+        // 🔥 修复2：多实例逻辑（纯新建，绝不操作已有面板，杜绝动画打断）
         string uniqueID = GetMultiPanelUniqueID(type);
-        T newPanel = CreateNewPanel<T>(type, uniqueID,unityAction);
+        T newPanel = CreateNewPanel<T>(type, uniqueID, unityAction);
 
-        // 加入多实例缓存
         if (!_multiPanelCache.ContainsKey(type))
             _multiPanelCache[type] = new List<UIPanelBase>();
         _multiPanelCache[type].Add(newPanel);
@@ -153,141 +164,112 @@ public class UIManager : MonoGlobalManager
     }
     #endregion
 
-    #region 多实例专属方法（单独操作某一个）
-    /// <summary>
-    /// 隐藏指定ID的多实例面板
-    /// </summary>
-    public void HidePanelByID(string panelID){
+    #region 多实例管理
+    public void HidePanelByID(string panelID)
+    {
         if (_allPanelIDMap.TryGetValue(panelID, out UIPanelBase panel))
             panel.Hide();
     }
 
-    /// <summary>
-    /// 关闭指定ID的多实例面板（销毁+移除缓存）
-    /// </summary>
-    public void ClosePanelByID(string panelID){
-        if (!_allPanelIDMap.TryGetValue(panelID, out UIPanelBase panel))
-            return;
+    public void ClosePanelByID(string panelID)
+    {
+        if (!_allPanelIDMap.TryGetValue(panelID, out UIPanelBase panel)) return;
 
-        // 从多实例列表移除
         if (_multiPanelCache.ContainsKey(panel.PanelType))
             _multiPanelCache[panel.PanelType].Remove(panel);
 
-        // 从ID映射移除
         _allPanelIDMap.Remove(panelID);
-
-        // 销毁面板
         panel.Close();
     }
 
-    /// <summary>
-    /// 隐藏某类型所有多实例面板
-    /// </summary>
-    public void HideAllMultiPanel(UIPanelType type){
+    public void HideAllMultiPanel(E_UIPanelType type)
+    {
         if (_multiPanelCache.TryGetValue(type, out List<UIPanelBase> panels))
             foreach (var p in panels) p.Hide();
     }
 
-    /// <summary>
-    /// 关闭某类型所有多实例面板
-    /// </summary>
-    public void CloseAllMultiPanel(UIPanelType type){
-        if (!_multiPanelCache.TryGetValue(type, out List<UIPanelBase> panels))
-            return;
+    public void CloseAllMultiPanel(E_UIPanelType type)
+    {
+        if (!_multiPanelCache.TryGetValue(type, out List<UIPanelBase> panels)) return;
 
-        // 销毁所有面板
-        foreach (var p in panels){
+        foreach (var p in panels)
+        {
             _allPanelIDMap.Remove(p.PanelID);
             p.Close();
         }
-        // 清空列表
         _multiPanelCache[type].Clear();
     }
     #endregion
 
-    #region 单实例专属方法（兼容旧逻辑）
-    /// <summary>
-    /// 隐藏单实例面板
-    /// </summary>
-    public void HidePanel(UIPanelType type){
+    #region 单实例管理
+    public void HidePanel(E_UIPanelType type)
+    {
         if (_singlePanelCache.TryGetValue(type, out UIPanelBase panel))
             panel.Hide();
     }
 
-    /// <summary>
-    /// 关闭单实例面板（销毁+移除缓存）
-    /// </summary>
-    public void ClosePanel(UIPanelType type){
-        if (_singlePanelCache.TryGetValue(type, out UIPanelBase panel)){
+    public void ClosePanel(E_UIPanelType type)
+    {
+        if (_singlePanelCache.TryGetValue(type, out UIPanelBase panel))
+        {
             _singlePanelCache.Remove(type);
-            Debug.Log("[UIManager]---已移除Remove面板"+type);
             _allPanelIDMap.Remove(panel.PanelID);
+            panel.Close();
         }
     }
     #endregion
 
-    #region 通用工具方法
-    /// <summary>
-    /// 创建新面板（内部复用）
-    /// </summary>
-    T CreateNewPanel<T>(UIPanelType type, string uniqueID,UnityAction<T> action=null) where T : UIPanelBase{
+    #region 工具方法
+    T CreateNewPanel<T>(E_UIPanelType type, string uniqueID, UnityAction<T> action = null) where T : UIPanelBase
+    {
         GameObject prefab = LoadPanelPrefab(type);
-        if (prefab == null){
+        if (prefab == null)
+        {
             Debug.LogError($"面板预制件不存在：{loadPath}{type}");
             return null;
         }
 
         GameObject go = Instantiate(prefab, _panelRoot);
         T panel = go.GetComponent<T>();
-        if (panel == null){
+        if (panel == null)
+        {
             Debug.LogError($"{type} 未挂载 UIPanelBase 子类");
             Destroy(go);
             return null;
         }
 
-        // 初始化面板
         panel.Init(type, uniqueID);
         panel.transform.SetAsLastSibling();
         action?.Invoke(panel);
         panel.Show();
 
-        // 加入缓存
         _allPanelIDMap[uniqueID] = panel;
         if (_panelModeConfig[type] == PanelInstanceMode.Single)
             _singlePanelCache[type] = panel;
+
         return panel;
     }
 
-    /// <summary>
-    /// 获取单实例面板ID
-    /// </summary>
-    string GetSinglePanelID(UIPanelType type){
-        return $"{type}_Single";
-    }
-
-    /// <summary>
-    /// 获取多实例面板唯一ID
-    /// </summary>
-    string GetMultiPanelUniqueID(UIPanelType type){
+    string GetSinglePanelID(E_UIPanelType type) => $"{type}_Single";
+    string GetMultiPanelUniqueID(E_UIPanelType type)
+    {
         _multiPanelIDCounter[type]++;
         return $"{type}_Multi_{_multiPanelIDCounter[type]}";
     }
 
-    /// <summary>
-    /// 加载预制件
-    /// </summary>
-    GameObject LoadPanelPrefab(UIPanelType type){
-        Dictionary<UIPanelType, GameObject> prefabCache = new Dictionary<UIPanelType, GameObject>();
-        if (prefabCache.TryGetValue(type, out GameObject prefab))
+    // 🔥 修复3：全局预制体缓存，只加载一次
+    GameObject LoadPanelPrefab(E_UIPanelType type)
+    {
+        if (_prefabCache.TryGetValue(type, out GameObject prefab))
             return prefab;
 
         prefab = Resources.Load<GameObject>(loadPath + type);
         if (prefab != null)
-            prefabCache[type] = prefab;
+            _prefabCache[type] = prefab;
+
         return prefab;
     }
     #endregion
 
     public override void MgrUpdate(float deltaTime) { }
 }
-

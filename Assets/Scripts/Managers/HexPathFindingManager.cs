@@ -1,24 +1,41 @@
 using Core;
 using System.Collections.Generic;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 /// <summary>
-/// 六边形路径绘制管理器（完整6邻居+鼠标绘制）
-/// 核心修复：
-/// 1. 完整识别六边形6个方向的邻居（上/下/左/右/左上/右下 或 上/下/左/右/右上/左下）
-/// 2. 适配奇偶行错开的六边形地图
-/// 3. 保留鼠标绘制/回退无突变的核心逻辑
+/// 六边形路径绘制管理器（完整6邻居+鼠标绘制+自动最短路径+不可行路径可视化）
+/// 新增功能：
+/// 1. 开关控制：是否记录/可视化超出行动点数的地块
+/// 2. 鼠标落点高亮：可行路径内/外使用不同材质
+/// 3. 障碍地块检测（基于外部walkableDic）
+/// 核心特性：解耦、高性能、不破坏原有逻辑
 /// </summary>
 public class HexPathFindingManager : MonoGlobalManager
 {
     [Header("核心配置")]
     [Tooltip("最大行动点数（路径最大长度）")]
-    public int maxActionPoints = 8;
+    public int currentActionPoints = 8;
     string walkableMatPath = "Material/HexRoom/Walkable_HexRoom";
-
     string playerRoomMatPath = "Material/HexRoom/Player_HexRoom";
+    string unreachableMatPath = "Material/HexRoom/Diswalkable_HexRoom";
+
+    /// <summary>
+    /// 鼠标落点在可行路径内终点的材质
+    /// </summary>
+    string endPointValidMatPath = "Material/HexRoom/EndPoint_Valid";
+
+    /// <summary>
+    /// 鼠标落点在不可行路径内终点的材质
+    /// </summary>
+    string endPointInvalidMatPath = "Material/HexRoom/EndPoint_Invalid";
+
     [Tooltip("射线检测层（仅检测六边形地块）")]
     public LayerMask hexRoomLayer;
+
+    [Tooltip("是否启用超出行动点数的路径记录+可视化")]
+    public bool enableUnreachablePath = false;
+
 
     [Header("六边形地图适配（关键！）")]
     [Tooltip("六边形地图行偏移规则：奇数行右移（true）/偶数行右移（false）")]
@@ -26,62 +43,99 @@ public class HexPathFindingManager : MonoGlobalManager
     [Tooltip("六边形邻居判断调试（开启后打印邻居信息）")]
     public bool debugNeighborCheck = true;
 
+    [Header("自动最短路径配置")]
+    [Tooltip("启用鼠标悬停自动最短路径预览")]
+    public bool enableAutoShortestPath = true;
+
     [Header("调试配置")]
     public bool enableDebugLog = false;
 
-    // 依赖管理
-    private HexGridInteractManager _gridManager;
+    
+    private HexMapInteractManager _gridManager;
+    private Dictionary<Vector2Int, bool> _walkableDic;
+
+    // 材质对象
     private Material _walkablePathMat;
     private Material _playerRoomMat;
+    private Material _unreachablePathMat;
+    private Material _endPointValidMat;
+    private Material _endPointInvalidMat;
     private Material _playerRoom_OriginMat;
 
     // 核心绘制数据
-    private HexRoom _playerStartRoom;    // 玩家起始地块（路径起点）
-    private HexRoom _currentDrawRoom;    // 鼠标当前指向的地块
-    private List<HexRoom> _drawnPath;    // 已绘制的路径
-    private Dictionary<HexRoom, Material> _originMatCache; // 原始材质缓存
+    private HexRoomData _playerStartRoom;
+    private HexRoomData _currentDrawRoom;
+    private List<HexRoomData> _walkablePath;
+    private List<HexRoomData> _diswalkablePath;
+    private Dictionary<HexRoomData, Material> _originMatCache;
+
+    // 自动路径模式数据
+    private bool _isManualDrawing;
+    private List<HexRoomData> _autoFullPath;
 
     #region 管理器生命周期
-    public override void MgrInit(GameRoot gameRoot){
+    public override void MgrInit(GameRoot gameRoot)
+    {
         base.MgrInit(gameRoot);
         InitDependencies();
         InitDrawData();
 
         if (enableDebugLog)
-            Debug.Log("[HexPathDrawMgr] 初始化完成（完整6邻居支持）");
-        
+            Debug.Log("[HexPathDrawMgr] 初始化完成（全功能版）");
     }
 
-    void InitDependencies(){
-        _gridManager = GameRoot.GetManager<HexGridInteractManager>();
-        if (_gridManager == null){
+    void InitDependencies()
+    {
+        _gridManager = GameRoot.GetManager<HexMapInteractManager>();
+        if (_gridManager == null)
+        {
             Debug.LogError("[HexPathDrawMgr] 未找到HexGridInteractManager，功能禁用！");
             enabled = false;
             return;
         }
 
+        // 获取障碍字典
+        _walkableDic = _gridManager.WalkableDic;
+
+        // 加载所有材质
         _walkablePathMat = Resources.Load<Material>(walkableMatPath);
-        _playerRoomMat= Resources.Load<Material>(playerRoomMatPath);
+        _playerRoomMat = Resources.Load<Material>(playerRoomMatPath);
+        _unreachablePathMat = Resources.Load<Material>(unreachableMatPath);
+        _endPointValidMat = Resources.Load<Material>(endPointValidMatPath);
+        _endPointInvalidMat = Resources.Load<Material>(endPointInvalidMatPath);
 
-        if (_walkablePathMat == null){
-            Debug.LogError($"[HexPathDrawMgr] 材质加载失败：Resources/{walkableMatPath}.mat");
-            enabled = false;
-            return;
-        }
+        // 材质校验
+        if (_walkablePathMat == null) Debug.LogError($"材质缺失：{walkableMatPath}");
+        if (_unreachablePathMat == null) Debug.LogError($"材质缺失：{unreachableMatPath}");
+        if (_endPointValidMat == null) Debug.LogError($"材质缺失：{endPointValidMatPath}");
+        if (_endPointInvalidMat == null) Debug.LogError($"材质缺失：{endPointInvalidMatPath}");
 
-        if (hexRoomLayer.value == 0)
-            hexRoomLayer = ~0;
-        
+        if (hexRoomLayer.value == 0) hexRoomLayer = ~0;
     }
 
-    void InitDrawData(){
-        _drawnPath = new List<HexRoom>();
-        _originMatCache = new Dictionary<HexRoom, Material>();
+    void InitDrawData()
+    {
+        _walkablePath = new List<HexRoomData>();
+        _originMatCache = new Dictionary<HexRoomData, Material>();
+        _diswalkablePath = new List<HexRoomData>();
+        _autoFullPath = new List<HexRoomData>();
+        _isManualDrawing = false;
         _playerStartRoom = null;
         _currentDrawRoom = null;
     }
 
-    public override void MgrUpdate(float deltaTime){
+    public  bool canPathFind=false;
+    public override void MgrUpdate(float deltaTime)
+    {
+        if (!canPathFind)
+            return;
+
+        //if (canPathFind) { 
+        
+        
+        
+        //}
+
         if (!enabled || _playerStartRoom == null) return;
 
         UpdateCurrentMouseRoom();
@@ -89,58 +143,91 @@ public class HexPathFindingManager : MonoGlobalManager
         RefreshPathVisual();
     }
 
-    public override void MgrDispose(){
+    public void SetPathFindState(bool _canPathFind,int remainActionPoints=0) { 
+        canPathFind = _canPathFind;
+        currentActionPoints = remainActionPoints;
+
+        if (!_canPathFind) {
+            //清空所有材质
+            ClearPathVisual();
+        }
+    }
+
+    public override void MgrDispose()
+    {
         base.MgrDispose();
         ClearPathVisual();
         _originMatCache.Clear();
+        _diswalkablePath.Clear();
+        _autoFullPath.Clear();
     }
     #endregion
 
     #region 外部接口
-    public void SetPlayerStartRoom(HexRoom room){
-        if (room == null){
-            Debug.LogWarning("[HexPathDrawMgr] 玩家起始地块为空！");
+    public void SetPlayerStartRoom(HexRoomData room)
+    {
+        if (room == null)
+        {
+            Debug.LogWarning("[HexPathDrawMgr]---玩家起始地块为空！");
+            return;
+        }
+
+        if (!IsRoomWalkable(room))
+        {
+            Debug.LogWarning("[HexPathDrawMgr]---玩家起始地块不可行走！");
             return;
         }
 
         _playerStartRoom = room;
-        _drawnPath.Clear();
+        _walkablePath.Clear();
+        _diswalkablePath.Clear();
+        _autoFullPath.Clear();
+        _isManualDrawing = false;
         _currentDrawRoom = null;
         ClearPathVisual();
 
-        if (debugNeighborCheck){
-            List<HexRoom> startNeighbors = GetAllHexNeighbors(room);
+        if (debugNeighborCheck)
+        {
+            List<HexRoomData> startNeighbors = GetAllHexNeighbors(room);
         }
 
         if (enableDebugLog)
             Debug.Log($"[HexPathDrawMgr] 玩家起始地块已设置：({room.row},{room.col})");
-        
     }
 
-    public void UpdateMaxActionPoints(int newPoints){
-        maxActionPoints = Mathf.Max(newPoints, 1);
-        if (_drawnPath.Count > maxActionPoints)
+    public void UpdateMaxActionPoints(int newPoints)
+    {
+        currentActionPoints = Mathf.Max(newPoints, 1);
+        RefreshPathOnActionPointChange();
 
-            _drawnPath.RemoveRange(maxActionPoints, _drawnPath.Count - maxActionPoints);
         if (enableDebugLog)
-            Debug.Log($"[HexPathDrawMgr] 最大行动点数更新为：{maxActionPoints}");
+            Debug.Log($"[HexPathDrawMgr] 最大行动点数更新为：{currentActionPoints}");
     }
 
-    public List<HexRoom> GetDrawnPath(){
-        return new List<HexRoom>(_drawnPath);
+    public List<HexRoomData> GetDrawnPath()
+    {
+        return new List<HexRoomData>(_walkablePath);
+    }
+
+    public List<HexRoomData> GetUnreachablePath()
+    {
+        return new List<HexRoomData>(_diswalkablePath);
     }
     #endregion
 
     #region 鼠标地块检测
-    private void UpdateCurrentMouseRoom(){
+    private void UpdateCurrentMouseRoom()
+    {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, hexRoomLayer)){
+        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, hexRoomLayer))
+        {
             _currentDrawRoom = null;
             return;
         }
 
-        HexRoom newMouseRoom = hit.collider.GetComponent<HexRoom>();
-        if (newMouseRoom != null && newMouseRoom != _currentDrawRoom){
+        HexRoomData newMouseRoom = hit.collider.GetComponent<HexRoomData>();
+        if (newMouseRoom != null && newMouseRoom != _currentDrawRoom)
+        {
             _currentDrawRoom = newMouseRoom;
 
             if (enableDebugLog)
@@ -149,44 +236,139 @@ public class HexPathFindingManager : MonoGlobalManager
     }
     #endregion
 
-    #region 核心修复：完整6邻居判断+路径绘制
     /// <summary>
-    /// 路径绘制/回退逻辑（无变化，保留原有体验）
+    /// 检测地块是否允许行走
     /// </summary>
-    void UpdateDrawPath() 
-    { 
-        if (_currentDrawRoom == null) return;
+    private bool IsRoomWalkable(HexRoomData room)
+    {
+        if (room == null || _walkableDic == null) return false;
+        return _walkableDic.TryGetValue(new Vector2Int(room.row, room.col), out bool isWalkable) && isWalkable;
+    }
 
-        // 指向起始地块 → 清空路径
-        if (_currentDrawRoom == _playerStartRoom){
-            _drawnPath.Clear();
-            return;
+    #region 高性能BFS最短路径算法
+    private List<HexRoomData> BFSFindShortestPath(HexRoomData start, HexRoomData target)
+    {
+        List<HexRoomData> path = new List<HexRoomData>();
+        if (start == null || target == null || start == target) return path;
+
+        Queue<HexRoomData> queue = new Queue<HexRoomData>();
+        Dictionary<HexRoomData, HexRoomData> pathMap = new Dictionary<HexRoomData, HexRoomData>();
+        HashSet<HexRoomData> visited = new HashSet<HexRoomData>();
+
+        queue.Enqueue(start);
+        visited.Add(start);
+
+        while (queue.Count > 0)
+        {
+            HexRoomData current = queue.Dequeue();
+            if (current == target) break;
+
+            foreach (HexRoomData neighbor in GetAllHexNeighbors(current))
+            {
+                if (!IsRoomWalkable(neighbor)) continue;
+
+                if (!visited.Contains(neighbor))
+                {
+                    visited.Add(neighbor);
+                    pathMap[neighbor] = current;
+                    queue.Enqueue(neighbor);
+                }
+            }
         }
 
-        // 回退操作：鼠标回到已绘制路径中
-        int backIndex = _drawnPath.IndexOf(_currentDrawRoom);
-        if (backIndex != -1){
-            _drawnPath.RemoveRange(backIndex + 1, _drawnPath.Count - (backIndex + 1));
-            if (enableDebugLog)
-                Debug.Log($"[HexPathDrawMgr] 路径回退到：({_currentDrawRoom.row},{_currentDrawRoom.col})，长度：{_drawnPath.Count}");
-            return;
+        HexRoomData temp = target;
+        while (pathMap.ContainsKey(temp))
+        {
+            path.Add(temp);
+            temp = pathMap[temp];
         }
-
-        // 追加操作：判断是否是6邻居之一 + 未超长度
-        HexRoom lastPathRoom = _drawnPath.Count > 0 ? _drawnPath[_drawnPath.Count - 1] : _playerStartRoom;
-        if (IsHexNeighbor(lastPathRoom, _currentDrawRoom) && _drawnPath.Count < maxActionPoints){
-            _drawnPath.Add(_currentDrawRoom);
-            GameRoot.GetManager<AudioManager>().PlaySFX("Music/SFX/mambo");
-            if (enableDebugLog)
-                Debug.Log($"[HexPathDrawMgr] 路径追加：({_currentDrawRoom.row},{_currentDrawRoom.col})，长度：{_drawnPath.Count}");
-        }
+        path.Reverse();
+        return path;
     }
 
     /// <summary>
-    /// 核心修复：完整判断六边形6个邻居（适配奇偶行）
-    /// 六边形6个方向：上、下、左、右、左上/右上、左下/右下
+    /// 拆分路径（受开关控制）
     /// </summary>
-    bool IsHexNeighbor(HexRoom a, HexRoom b){
+    private void SplitPath(List<HexRoomData> fullPath)
+    {
+        _walkablePath.Clear();
+        _diswalkablePath.Clear();
+        if (fullPath == null || fullPath.Count == 0) return;
+
+        int reachableCount = Mathf.Min(currentActionPoints, fullPath.Count);
+        _walkablePath.AddRange(fullPath.GetRange(0, reachableCount));
+
+        // 开关控制：是否记录不可行路径
+        if (enableUnreachablePath && fullPath.Count > currentActionPoints)
+            _diswalkablePath.AddRange(fullPath.GetRange(reachableCount, fullPath.Count - reachableCount));
+    }
+
+    private void RefreshPathOnActionPointChange()
+    {
+        if (!enableAutoShortestPath || _autoFullPath.Count == 0)
+        {
+            if (_walkablePath.Count > currentActionPoints)
+            {
+                int overflow = _walkablePath.Count - currentActionPoints;
+                if (enableUnreachablePath)
+                    _diswalkablePath.InsertRange(0, _walkablePath.GetRange(currentActionPoints, overflow));
+                _walkablePath.RemoveRange(currentActionPoints, overflow);
+            }
+            return;
+        }
+        SplitPath(_autoFullPath);
+    }
+    #endregion
+
+    #region 核心路径绘制逻辑
+    void UpdateDrawPath()
+    {
+        if (_currentDrawRoom == null) return;
+
+        // 回到起点 → 重置所有状态
+        if (_currentDrawRoom == _playerStartRoom)
+        {
+            _walkablePath.Clear();
+            _diswalkablePath.Clear();
+            _autoFullPath.Clear();
+            _isManualDrawing = false;
+            return;
+        }
+
+        // 自动最短路径模式
+        if (enableAutoShortestPath && !_isManualDrawing)
+        {
+            _autoFullPath = BFSFindShortestPath(_playerStartRoom, _currentDrawRoom);
+            SplitPath(_autoFullPath);
+            return;
+        }
+
+        // 手动绘制模式
+        //_isManualDrawing = true;
+        //_autoFullPath.Clear();
+
+        //HexRoomData lastRoom = _walkablePath.Count > 0 ? _walkablePath[^1] : _playerStartRoom;
+
+        //if (IsHexNeighbor(lastRoom, _currentDrawRoom) && IsRoomWalkable(_currentDrawRoom))
+        //{
+        //    if (_walkablePath.Count < currentActionPoints)
+        //    {
+        //        _walkablePath.Add(_currentDrawRoom);
+        //        GameRoot.GetManager<AudioManager>().PlaySFX("Music/SFX/mambo");
+        //    }
+        //    else
+        //    {
+        //        // 开关控制：是否添加到不可行列表
+        //        if (enableUnreachablePath)
+        //            _diswalkablePath.Add(_currentDrawRoom);
+        //    }
+        //}
+    }
+    #endregion
+
+    #region 六边形邻居判断
+    bool IsHexNeighbor(HexRoomData a, HexRoomData b)
+    {
         if (a == null || b == null) return false;
 
         int rowA = a.row;
@@ -194,144 +376,153 @@ public class HexPathFindingManager : MonoGlobalManager
         int rowB = b.row;
         int colB = b.col;
 
-        // 计算行差和列差
         int dRow = rowB - rowA;
         int dCol = colB - colA;
-
-        // 判断是否是6个邻居方向之一（核心修复）
         bool isNeighbor = false;
 
-        // 1. 上下邻居（行差±1，列差根据行奇偶调整）
-        if (dRow == 1 || dRow == -1){
-            // 判断当前行是否是奇数行（根据配置）
+        if (dRow is 1 or -1)
+        {
             bool isOddRow = (rowA % 2 == 1) == isOddRowStaggered;
-            if (isOddRow)
-                // 奇数行：下/上邻居的列差为 0 或 +1
-                isNeighbor = (dCol == 0) || (dCol == 1);
-            else
-                // 偶数行：下/上邻居的列差为 0 或 -1
-                isNeighbor = (dCol == 0) || (dCol == -1);
+            isNeighbor = isOddRow ? (dCol is 0 or 1) : (dCol is 0 or -1);
         }
-        // 2. 左右邻居（行差0，列差±1）
         else if (dRow == 0)
-        
-            isNeighbor = (dCol == 1) || (dCol == -1);
-       
-        // 调试：打印邻居判断结果
-        if (debugNeighborCheck && isNeighbor)
-            Debug.Log($"[HexPathDrawMgr] 地块({rowA},{colA}) ↔ ({rowB},{colB}) 是邻居（dRow:{dRow}, dCol:{dCol}）");
-        
+            isNeighbor = dCol is 1 or -1;
 
         return isNeighbor;
     }
 
-    /// <summary>
-    /// 辅助方法：获取一个地块的所有6个邻居（用于调试/验证）
-    /// </summary>
-    public List<HexRoom> GetAllHexNeighbors(HexRoom room)
+    public List<HexRoomData> GetAllHexNeighbors(HexRoomData room)
     {
-        List<HexRoom> neighbors = new List<HexRoom>();
+        List<HexRoomData> neighbors = new List<HexRoomData>();
         if (room == null || _gridManager == null) return neighbors;
 
         int row = room.row;
         int col = room.col;
         bool isOddRow = (row % 2 == 1) == isOddRowStaggered;
 
-        // 定义6个邻居的坐标偏移（完整覆盖）
-        List<Vector2Int> neighborOffsets = new List<Vector2Int>();
-        // 左右邻居
-        neighborOffsets.Add(new Vector2Int(row, col + 1)); // 右
-        neighborOffsets.Add(new Vector2Int(row, col - 1)); // 左
-        // 上下邻居（根据行奇偶调整）
+        List<Vector2Int> neighborOffsets = new List<Vector2Int>
+        {
+            new(row, col + 1), new(row, col - 1)
+        };
+
         if (isOddRow)
         {
-            neighborOffsets.Add(new Vector2Int(row + 1, col));   // 下1
-            neighborOffsets.Add(new Vector2Int(row + 1, col + 1));// 下2
-            neighborOffsets.Add(new Vector2Int(row - 1, col));   // 上1
-            neighborOffsets.Add(new Vector2Int(row - 1, col + 1));// 上2
+            neighborOffsets.AddRange(new List<Vector2Int>
+            {
+                new(row + 1, col), new(row + 1, col + 1),
+                new(row - 1, col), new(row - 1, col + 1)
+            });
         }
         else
         {
-            neighborOffsets.Add(new Vector2Int(row + 1, col));   // 下1
-            neighborOffsets.Add(new Vector2Int(row + 1, col - 1));// 下2
-            neighborOffsets.Add(new Vector2Int(row - 1, col));   // 上1
-            neighborOffsets.Add(new Vector2Int(row - 1, col - 1));// 上2
+            neighborOffsets.AddRange(new List<Vector2Int>
+            {
+                new(row + 1, col), new(row + 1, col - 1),
+                new(row - 1, col), new(row - 1, col - 1)
+            });
         }
 
-        // 从网格管理器获取有效邻居
         foreach (var offset in neighborOffsets)
         {
-            if (_gridManager.GetHexRoomMap().TryGetValue(offset, out HexRoom neighbor))
-            {
+            if (_gridManager.GetHexRoomMap().TryGetValue(offset, out HexRoomData neighbor))
                 neighbors.Add(neighbor);
-            }
         }
 
         return neighbors;
     }
     #endregion
 
-    #region 路径可视化（无变化）
+    #region 路径可视化（含终点高亮）
     private void RefreshPathVisual()
     {
         ClearPathVisual();
+        if (_walkablePathMat == null) return;
 
-        if (_drawnPath.Count == 0 || _walkablePathMat == null)
-        {
-            return;
-        }
-
+        // 渲染玩家起点
         if (_playerStartRoom)
         {
-            MeshRenderer player_renderer = _playerStartRoom.GetComponent<MeshRenderer>();
-            _playerRoom_OriginMat = player_renderer.material;//记录原始材质
-            player_renderer.material = _playerRoomMat;
-            player_renderer.enabled = true;
+            MeshRenderer renderer = _playerStartRoom.GetComponent<MeshRenderer>();
+            _playerRoom_OriginMat = renderer.material;
+            renderer.material = _playerRoomMat;
         }
-        foreach (HexRoom room in _drawnPath)
+
+        // 渲染可行路径
+        foreach (var room in _walkablePath)
+            ApplyMaterial(room, _walkablePathMat);
+
+        // 开关控制：渲染不可行路径
+        if (enableUnreachablePath && _unreachablePathMat != null)
+            foreach (var room in _diswalkablePath)
+                ApplyMaterial(room, _unreachablePathMat);
+
+        // 新增：渲染鼠标终点高亮
+        ApplyEndPointMaterial();
+    }
+
+    /// <summary>
+    /// 应用材质（缓存原始材质）
+    /// </summary>
+    private void ApplyMaterial(HexRoomData room, Material mat)
+    {
+        MeshRenderer renderer = room.GetComponent<MeshRenderer>();
+        if (renderer == null) return;
+
+        if (!_originMatCache.ContainsKey(room))
+            _originMatCache[room] = renderer.material;
+
+        if (mat != null)
         {
-            MeshRenderer renderer = room.GetComponent<MeshRenderer>();
-            if (renderer == null)
-            {
-                Debug.LogWarning($"[HexPathDrawMgr] 地块({room.row},{room.col}) 无MeshRenderer");
-                continue;
-            }
-
-            if (!_originMatCache.ContainsKey(room))
-            {
-                _originMatCache[room] = renderer.material;
-            }
-
-            renderer.material = _walkablePathMat;
+            renderer.material = mat;
             renderer.enabled = true;
-
-            if (enableDebugLog)
-            {
-                Debug.Log($"[HexPathDrawMgr] 可视化：({room.row},{room.col})");
-            }
         }
+    }
+
+    /// <summary>
+    /// 新增：鼠标落点高亮材质
+    /// </summary>
+    private void ApplyEndPointMaterial()
+    {
+        if (_currentDrawRoom == null || _endPointValidMat == null || _endPointInvalidMat == null)
+            return;
+
+        // 缓存原始材质
+        ApplyMaterial(_currentDrawRoom, null);
+
+        bool isInValidPath = _walkablePath.Contains(_currentDrawRoom);
+        MeshRenderer renderer = _currentDrawRoom.GetComponent<MeshRenderer>();
+        renderer.material = isInValidPath ? _endPointValidMat : _endPointInvalidMat;
+
+        canTriggerMover = isInValidPath ? true : false;
+        if (canTriggerMover)
+            TargetMoverPath = new List<HexRoomData>(_walkablePath);
+    }
+
+    //可以通过点击触发移动
+    public bool canTriggerMover;
+    public List<HexRoomData> TargetMoverPath;
+
+    public void EndOneTimeMove() {
+        canTriggerMover = false;
+        //TargetMoverPath.Clear();
     }
 
     private void ClearPathVisual()
     {
         foreach (var kvp in _originMatCache)
         {
-            HexRoom room = kvp.Key;
-            Material originMat = kvp.Value;
-
-            MeshRenderer renderer = room.GetComponent<MeshRenderer>();
-            if (renderer != null){
-                renderer.material = originMat;
-            }
+            MeshRenderer renderer = kvp.Key.GetComponent<MeshRenderer>();
+            if (renderer != null)
+                renderer.material = kvp.Value;
         }
         _originMatCache.Clear();
+        ResetPlayer_currentRoom();
     }
 
-    void ResetPlayer_currentRoom() {
-        if (_playerRoom_OriginMat != null)
+    void ResetPlayer_currentRoom()
+    {
+        if (_playerRoom_OriginMat != null && _playerStartRoom)
         {
-            MeshRenderer player_renderer = _playerStartRoom.GetComponent<MeshRenderer>();
-            player_renderer.material = _playerRoom_OriginMat;
+            _playerStartRoom.GetComponent<MeshRenderer>().material = _playerRoom_OriginMat;
         }
     }
     #endregion

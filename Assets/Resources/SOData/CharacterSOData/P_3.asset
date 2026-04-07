@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ba5b5473234d6b41bbf878ab1751d4e, type: 3}
+  m_Name: P_3
+  m_EditorClassIdentifier: 
+  characterType: 2
+  characterSprite: {fileID: 21300000, guid: 5cb87a0a3073a4a48beb7dc46126a9f6, type: 3}
+  characterName: "\u55B53"
+  Phy_Flat_Penetration: 0.5
+  Mag_Flat_Penetration: 0.5
+  Phy_Resistance: 1
+  Mag_Resistance: 1
+  Phy_Attack: 2
+  Magic_Attack: 2
+  Maximum_Mana: 200
+  Mana_Regeneration: 1
+  Maximum_Health: 100
+  Health_Regeneration: 0.8
+  Life_Steal: 0.2
+  Tenacity: 0.8
+  Endurance: 1
+  Dodge_Rate: 0.1
+  Heal_Amplification: 0
+  Shield_Amplification: 0
