@@ -62,11 +62,12 @@ public class SkillIconSpawner : MonoBehaviour
         {
             var slot = slots[i];
             slots.Remove(slot);
-
+            slot.transform.SetParent(transform);
             slot.transform.DOScale(0, 0.2f).From(1).SetEase(Ease.OutQuad);
             slot.transform.DORotate(new Vector3(0, 0, 360), 0.3f, RotateMode.FastBeyond360).SetEase(Ease.OutQuad)
                 .OnComplete(() => pool.ReturnPool(EPoolType.SkillSlot_技能槽位, slots[i].gameObject));
             yield return unloadDelay;
+            Debug.Log("wtf");
         }
         Debug.Log("卸载完毕大师的话hi无敌");
     }

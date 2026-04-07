@@ -869,7 +869,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1243377965}
-  - component: {fileID: 1243377964}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -877,26 +876,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1243377964
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1243377963}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7329ffccb0f62694981cb75caf590f8f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MapRadius: 20
-  oceanMat: {fileID: 0}
-  landMat: {fileID: 0}
-  obstacle_TreeMat: {fileID: 0}
-  obstacle_StoneMat: {fileID: 0}
-  obstacle_MountainMat: {fileID: 0}
-  obstacle_4Mat: {fileID: 0}
-  mapSaveData: {fileID: 11400000, guid: d601cd21fc06f2f4584c30c06d4f9bec, type: 2}
 --- !u!4 &1243377965
 Transform:
   m_ObjectHideFlags: 0

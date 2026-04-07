@@ -742,7 +742,7 @@ MonoBehaviour:
     type: 0
   - x: 15
     y: 7
-    type: 0
+    type: 1
   - x: 16
     y: 7
     type: 0
@@ -1090,7 +1090,7 @@ MonoBehaviour:
     type: 0
   - x: 13
     y: 10
-    type: 0
+    type: 1
   - x: 14
     y: 10
     type: 0
@@ -1216,7 +1216,7 @@ MonoBehaviour:
     type: 0
   - x: 13
     y: 11
-    type: 0
+    type: 1
   - x: 14
     y: 11
     type: 0
@@ -1333,7 +1333,7 @@ MonoBehaviour:
     type: 0
   - x: 10
     y: 12
-    type: 0
+    type: 1
   - x: 11
     y: 12
     type: 0
@@ -1342,7 +1342,7 @@ MonoBehaviour:
     type: 0
   - x: 13
     y: 12
-    type: 0
+    type: 2
   - x: 14
     y: 12
     type: 0
@@ -1459,7 +1459,7 @@ MonoBehaviour:
     type: 0
   - x: 8
     y: 13
-    type: 0
+    type: 3
   - x: 9
     y: 13
     type: 0
@@ -1594,10 +1594,10 @@ MonoBehaviour:
     type: 0
   - x: 9
     y: 14
-    type: 0
+    type: 2
   - x: 10
     y: 14
-    type: 0
+    type: 1
   - x: 11
     y: 14
     type: 0
@@ -1726,7 +1726,7 @@ MonoBehaviour:
     type: 0
   - x: 7
     y: 15
-    type: 0
+    type: 4
   - x: 8
     y: 15
     type: 0
@@ -1738,7 +1738,7 @@ MonoBehaviour:
     type: 0
   - x: 11
     y: 15
-    type: 0
+    type: 3
   - x: 12
     y: 15
     type: 0
@@ -1747,7 +1747,7 @@ MonoBehaviour:
     type: 0
   - x: 14
     y: 15
-    type: 0
+    type: 1
   - x: 15
     y: 15
     type: 0
@@ -1870,7 +1870,7 @@ MonoBehaviour:
     type: 0
   - x: 9
     y: 16
-    type: 0
+    type: 1
   - x: 10
     y: 16
     type: 0
@@ -2023,13 +2023,13 @@ MonoBehaviour:
     type: 0
   - x: 12
     y: 17
-    type: 0
+    type: 1
   - x: 13
     y: 17
-    type: 0
+    type: 1
   - x: 14
     y: 17
-    type: 0
+    type: 1
   - x: 15
     y: 17
     type: 0
@@ -2173,7 +2173,7 @@ MonoBehaviour:
     type: 0
   - x: 14
     y: 18
-    type: 0
+    type: 1
   - x: 15
     y: 18
     type: 0
@@ -3805,7 +3805,7 @@ MonoBehaviour:
     type: 0
   - x: 18
     y: 28
-    type: 0
+    type: 3
   - x: 19
     y: 28
     type: 0
@@ -3985,22 +3985,22 @@ MonoBehaviour:
     type: 0
   - x: 18
     y: 29
-    type: 0
+    type: 2
   - x: 19
     y: 29
-    type: 0
+    type: 3
   - x: 20
     y: 29
     type: 0
   - x: 21
     y: 29
-    type: 0
+    type: 1
   - x: 22
     y: 29
-    type: 0
+    type: 1
   - x: 23
     y: 29
-    type: 0
+    type: 1
   - x: 24
     y: 29
     type: 0
@@ -4165,13 +4165,13 @@ MonoBehaviour:
     type: 0
   - x: 18
     y: 30
-    type: 0
+    type: 1
   - x: 19
     y: 30
-    type: 0
+    type: 1
   - x: 20
     y: 30
-    type: 0
+    type: 1
   - x: 21
     y: 30
     type: 0
@@ -4183,16 +4183,16 @@ MonoBehaviour:
     type: 0
   - x: 24
     y: 30
-    type: 0
+    type: 1
   - x: 25
     y: 30
-    type: 0
+    type: 1
   - x: 26
     y: 30
-    type: 0
+    type: 2
   - x: 27
     y: 30
-    type: 0
+    type: 1
   - x: 28
     y: 30
     type: 0
@@ -4348,10 +4348,10 @@ MonoBehaviour:
     type: 0
   - x: 18
     y: 31
-    type: 0
+    type: 1
   - x: 19
     y: 31
-    type: 0
+    type: 1
   - x: 20
     y: 31
     type: 0
@@ -4372,10 +4372,10 @@ MonoBehaviour:
     type: 0
   - x: 26
     y: 31
-    type: 0
+    type: 1
   - x: 27
     y: 31
-    type: 0
+    type: 1
   - x: 28
     y: 31
     type: 0
@@ -4525,7 +4525,7 @@ MonoBehaviour:
     type: 0
   - x: 18
     y: 32
-    type: 0
+    type: 1
   - x: 19
     y: 32
     type: 0
@@ -4549,7 +4549,7 @@ MonoBehaviour:
     type: 0
   - x: 26
     y: 32
-    type: 0
+    type: 2
   - x: 27
     y: 32
     type: 0
@@ -5554,10 +5554,10 @@ MonoBehaviour:
     type: 0
   - x: 25
     y: 38
-    type: 0
+    type: 2
   - x: 26
     y: 38
-    type: 0
+    type: 1
   - x: 27
     y: 38
     type: 0

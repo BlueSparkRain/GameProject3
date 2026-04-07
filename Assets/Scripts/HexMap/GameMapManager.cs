@@ -20,9 +20,7 @@ public class GameMapManager : MonoGlobalManager
     public Material obstacle_MountainMat;    // 障碍3材质
     public Material obstacle_4Mat;    // 障碍4材质
 
-    [Header("=== 地图数据存档（新增，拖入SO） ===")]
-    public MapSaveSOData mapSaveData;
-
+    MapSaveSOData mapSaveData;
     float rowBatchInterval = 0.05f;
     float bornRoomInterval = 0.03f;
     Vector3 MapPivotPos;
@@ -34,7 +32,6 @@ public class GameMapManager : MonoGlobalManager
     CoroutineManager coroutineManager;
 
     public override void MgrUpdate(float deltaTime) { }
-
     public void GameMapManagerInit(float _x_offset, float _y_offset, int _MapRadius, Vector3 _MapPivotPos)
     {
         x_Offset = _x_offset;
@@ -43,11 +40,12 @@ public class GameMapManager : MonoGlobalManager
         MapRow = MapRadius * 2 + 1;
         maxCol = MapRow; // 最大列数=总行数
         MapPivotPos = _MapPivotPos;
-
+        mapSaveData = ResourcesLoader.FindMapSaveData();
+        mapSaveData.mapRadius = MapRadius;
+        mapSaveData.InitializeIfEmpty();
+        Debug.Log(mapSaveData + " --" + mapSaveData.cellData+ "??");
         // 初始化地块缓存数组（新增）
         allCells = new HexRoomData[MapRow, maxCol];
-
-
         EventCenter.AddEventListener<Vector2Int, E_HexTerrainType>(E_EventType.Editor_Terrain, UpdateHexTag);
     }
 
@@ -66,14 +64,12 @@ public class GameMapManager : MonoGlobalManager
         // 优先读取存档数据生成地图（新增）
         if (mapSaveData != null && mapSaveData.cellData != null)
         {
-            Debug.Log("耍我呢？");
             LoadMapFromSaveData();
         }
-        else
-        {
-            Debug.Log("老实人");
-            StartCoroutine(MapCreateCoro());
-        }
+        //else
+        //{
+        //    StartCoroutine(MapCreateCoro());
+        //}
     }
 
     #region 正六边形地图生成（你原有逻辑，无修改）
@@ -89,7 +85,6 @@ public class GameMapManager : MonoGlobalManager
         }
         EventCenter.EventTrigger(E_EventType.LoadMapEnd);
     }
-
     IEnumerator CreatRowRooms(int row, bool fromleft)
     {
         WaitForSeconds roomDealy = new WaitForSeconds(bornRoomInterval);

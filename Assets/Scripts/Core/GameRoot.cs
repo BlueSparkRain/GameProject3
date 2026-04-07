@@ -86,13 +86,8 @@ namespace Core
             DontDestroyOnLoad(gameObject);
 
             //添加全局单例管理器
-
-            //事件中心管理器
-            //RegisterGlobal_CSManager(new EventCenterManager());
-
             //协程管理器
             RegisterGlobal_MonoManager<CoroutineManager>();
-
             //对象池管理器
             RegisterGlobal_MonoManager<ObjectPoolManager>();
             //FPS显示器
@@ -101,7 +96,6 @@ namespace Core
             RegisterGlobal_MonoManager<SceneSwitchManager>();
             //异步动画管理器
             RegisterGlobal_MonoManager<MagicAnimationManager>();
-
             //UI管理器
             RegisterGlobal_MonoManager<UIManager>();
             //Audio管理器
@@ -109,7 +103,7 @@ namespace Core
             //光标管理器
             RegisterGlobal_MonoManager<CursorManager>();
             //六边形区块管理器
-            RegisterGlobal_MonoManager<HexRoomChunkManager>();
+            //RegisterGlobal_MonoManager<HexRoomChunkManager>();
             //地图生成管理器
             RegisterGlobal_MonoManager<GameMapManager>();
             //地图房间交互管理器

@@ -41,7 +41,7 @@ public class MapTerrainEditorPanel : UIPanelBase
         Arrow.transform.position = roomData.transform.position + Vector3.up * 2;
         arrowFree = false;
         currentTag = roomData.GetComponent<HexTerrainTag>();
-        currentRoomHasEditedText.text = currentTag.isEdited ? "已配置:" + currentTag.hexTerrainType : "尚未配置(默认Ocean):";
+        currentRoomHasEditedText.text = currentTag.isEdited ? "本次编辑已配置:" + currentTag.hexTerrainType : "本次编辑尚未配置(默认Ocean):";
     }
 
 

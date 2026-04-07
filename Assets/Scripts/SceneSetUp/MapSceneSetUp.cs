@@ -8,23 +8,16 @@ public class MapSceneSetUp : MonoBehaviour
 {
     GameRoot gameRoot;
 
-    public float x_Offset = 0.9f;//每行内的偏移
-    public float y_Offset = 0.8f;//相邻行的偏移
+    public float x_Offset = 0.88f;//每行内的偏移
+    public float y_Offset = 0.75f;//相邻行的偏移
     public GameObject roomPrefab;
-    //public int MapRow = 20;
-    //public int MapCol = 20;
+
 
     public int MapRadius=20;
-
-    //地图的左下角
     public Transform MapPivot;
-
     GameMapManager gameMapManager;
-
     public CharacterMapMover PlayerCharacter;
-
     public Button EndRoundButton;
-
     private void Awake()
     {
         ObjectPoolManager obj = GameRoot.GetManager<ObjectPoolManager>();

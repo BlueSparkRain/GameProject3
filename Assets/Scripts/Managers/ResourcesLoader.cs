@@ -20,6 +20,8 @@ public static class ResourcesLoader
     static string skillIconPath = "Prefab/Skill/SkillIcon";
 
 
+    static string mapSaveDataPath = "SOData/HexMapSOData/HexMapSOData";
+
     public static GameObject FindHexRoomObj() {
         return Resources.Load<GameObject>(hexRoomPath);
     }
@@ -43,4 +45,11 @@ public static class ResourcesLoader
     public static GameObject FindSkillSlotObj() {
         return Resources.Load<GameObject>(skillSlotPath);
     }
-}
+
+    public static MapSaveSOData FindMapSaveData()
+    {
+        return Resources.Load<MapSaveSOData>(mapSaveDataPath);
+
+    }
+}     
+

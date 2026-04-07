@@ -132,7 +132,7 @@ public class ObjectPoolManager : MonoGlobalManager
 
     public void ReturnPool(EPoolType poolType, GameObject obj)
     {
-        Debug.Log("会吃了！"+poolType);
+        Debug.Log("得吃了！"+poolType);
         obj.transform.SetParent(poolDataDic[poolType].parent);
         obj.SetActive(false);
     }

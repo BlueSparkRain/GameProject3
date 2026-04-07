@@ -590,7 +590,7 @@ MonoBehaviour:
   y_Offset: 0.8
   roomPrefab: {fileID: 3702633034361400875, guid: 486f7aeb145dc164ab92a609dab1c5da,
     type: 3}
-  MapRadius: 20
+  MapRadius: 30
   MapPivot: {fileID: 1110076308}
   PlayerCharacter: {fileID: 1953075655}
   EndRoundButton: {fileID: 225849066906647453}
@@ -1172,58 +1172,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aeb6d50d814560b4d9a59dc48bb09419, type: 3}
---- !u!1 &1785263353
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1785263355}
-  - component: {fileID: 1785263354}
-  m_Layer: 0
-  m_Name: MapManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1785263354
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1785263353}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7329ffccb0f62694981cb75caf590f8f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MapRadius: 30
-  oceanMat: {fileID: 0}
-  landMat: {fileID: 0}
-  obstacle_TreeMat: {fileID: 0}
-  obstacle_StoneMat: {fileID: 0}
-  obstacle_MountainMat: {fileID: 0}
-  obstacle_4Mat: {fileID: 0}
-  mapSaveData: {fileID: 11400000, guid: d601cd21fc06f2f4584c30c06d4f9bec, type: 2}
---- !u!4 &1785263355
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1785263353}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 20.393478, y: -14.599549, z: 14.37135}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1819255552
 GameObject:
   m_ObjectHideFlags: 0
@@ -1566,4 +1514,3 @@ SceneRoots:
   - {fileID: 1493106339}
   - {fileID: 225849066906647449}
   - {fileID: 1338569466}
-  - {fileID: 1785263355}

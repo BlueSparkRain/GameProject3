@@ -26,19 +26,15 @@ public class MapSettingSceneSetUp : MonoBehaviour
         gameRoot = GameRoot.Instance;
         gameRoot.RegisterScene_MonoManager<OrthoCameraNavigator>();
         gameMapManager = GameRoot.GetManager<GameMapManager>();
-
         //角色射线检测管理器
         gameRoot.RegisterScene_MonoManager<CharacterRayCaster>();
         gameMapManager.GameMapManagerInit(y_Offset, x_Offset, MapRadius, MapPivot.position);
         EventCenter.AddEventListener<Vector2Int, E_HexTerrainType>(E_EventType.Editor_Terrain, EditorOneRoomTexrrainTag);
         GameRoot.GetManager<HexMapInteractManager>().USEEditMode();
 
-        MapSOData.mapRadius = MapRadius;
-        MapSOData.InitializeIfEmpty();
     }
     void EditorOneRoomTexrrainTag(Vector2Int pos,E_HexTerrainType terrainType) {
         MapSOData.cellData[pos.x, pos.y] = terrainType;
-        // 核心2：修改后立即保存（永久写入SO）
         MapSOData.SaveData();
         Debug.Log("✅ HexMapSO已更新：" + pos + " → " + MapSOData.cellData[pos.x, pos.y]);
     }
