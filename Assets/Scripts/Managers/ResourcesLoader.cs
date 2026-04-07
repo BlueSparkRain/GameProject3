@@ -46,9 +46,9 @@ public static class ResourcesLoader
         return Resources.Load<GameObject>(skillSlotPath);
     }
 
-    public static MapSaveSOData FindMapSaveData()
+    public static MapSaveSOData FindMapSaveData(string mapdataBack)
     {
-        return Resources.Load<MapSaveSOData>(mapSaveDataPath);
+        return Resources.Load<MapSaveSOData>(mapSaveDataPath+mapdataBack);
 
     }
 }     

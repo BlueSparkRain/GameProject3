@@ -472,7 +472,7 @@ MonoBehaviour:
     type: 3}
   MapRadius: 30
   MapPivot: {fileID: 1110076308}
-  MapSOData: {fileID: 11400000, guid: d601cd21fc06f2f4584c30c06d4f9bec, type: 2}
+  MapSOData: {fileID: 11400000, guid: 12ce2fe71ded52c4394edbc48ae9b59e, type: 2}
 --- !u!1 &757892342
 GameObject:
   m_ObjectHideFlags: 0
@@ -869,6 +869,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1243377965}
+  - component: {fileID: 1243377966}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -891,6 +892,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1243377966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1243377963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7329ffccb0f62694981cb75caf590f8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MapRadius: 20
+  oceanMat: {fileID: 0}
+  landMat: {fileID: 0}
+  obstacle_TreeMat: {fileID: 0}
+  obstacle_StoneMat: {fileID: 0}
+  obstacle_MountainMat: {fileID: 0}
+  walkable_BattleRoomMat: {fileID: 0}
+  walkable_EventRoomMat: {fileID: 0}
+  walkable_RewardRoomMat: {fileID: 0}
+  walkable_CityRoomMat: {fileID: 0}
+  mapdataBack: _Xu
 --- !u!1 &1290934176
 GameObject:
   m_ObjectHideFlags: 0

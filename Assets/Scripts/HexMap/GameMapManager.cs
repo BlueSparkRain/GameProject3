@@ -36,6 +36,7 @@ public class GameMapManager : MonoGlobalManager
     HexMapInteractManager hexGridClickManager;
     CoroutineManager coroutineManager;
 
+    public string mapdataBack;
     public override void MgrUpdate(float deltaTime) { }
     public void GameMapManagerInit(float _x_offset, float _y_offset, int _MapRadius, Vector3 _MapPivotPos)
     {
@@ -45,7 +46,7 @@ public class GameMapManager : MonoGlobalManager
         MapRow = MapRadius * 2 + 1;
         maxCol = MapRow; // 最大列数=总行数
         MapPivotPos = _MapPivotPos;
-        mapSaveData = ResourcesLoader.FindMapSaveData();
+        mapSaveData = ResourcesLoader.FindMapSaveData(mapdataBack);
         mapSaveData.mapRadius = MapRadius;
         mapSaveData.InitializeIfEmpty();
         Debug.Log(mapSaveData + " --" + mapSaveData.cellData+ "??");
@@ -70,15 +71,12 @@ public class GameMapManager : MonoGlobalManager
         coroutineManager = GameRoot.GetManager<CoroutineManager>();
         hexGridClickManager = GameRoot.GetManager<HexMapInteractManager>();
 
-        // 优先读取存档数据生成地图（新增）
+        // 优先读取存档数据生成地图
         if (mapSaveData != null && mapSaveData.cellData != null)
         {
             LoadMapFromSaveData();
         }
-        //else
-        //{
-        //    StartCoroutine(MapCreateCoro());
-        //}
+
     }
 
     #region 正六边形地图生成（你原有逻辑，无修改）
