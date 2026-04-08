@@ -51,7 +51,9 @@ public class HexPathFindingManager : MonoGlobalManager
     public bool enableDebugLog = false;
 
     
-    private HexMapInteractManager _gridManager;
+    //private HexMapInteractManager _gridManager;
+
+    private GameMapManager  _mapManager;
     private Dictionary<Vector2Int, bool> _walkableDic;
 
     // 材质对象
@@ -86,16 +88,17 @@ public class HexPathFindingManager : MonoGlobalManager
 
     void InitDependencies()
     {
-        _gridManager = GameRoot.GetManager<HexMapInteractManager>();
-        if (_gridManager == null)
+        _mapManager ??= GameRoot.GetManager<GameMapManager>();
+        //_gridManager = GameRoot.GetManager<HexMapInteractManager>();
+        if (_mapManager == null)
         {
-            Debug.LogError("[HexPathDrawMgr] 未找到HexGridInteractManager，功能禁用！");
+            Debug.LogError("[GameMapManager] GameMapManager，功能禁用！");
             enabled = false;
             return;
         }
 
         // 获取障碍字典
-        _walkableDic = _gridManager.WalkableDic;
+        _walkableDic = _mapManager.WalkableDic;
 
         // 加载所有材质
         _walkablePathMat = Resources.Load<Material>(walkableMatPath);
@@ -394,7 +397,7 @@ public class HexPathFindingManager : MonoGlobalManager
     public List<HexRoomData> GetAllHexNeighbors(HexRoomData room)
     {
         List<HexRoomData> neighbors = new List<HexRoomData>();
-        if (room == null || _gridManager == null) return neighbors;
+        if (room == null || _mapManager == null) return neighbors;
 
         int row = room.row;
         int col = room.col;
@@ -424,7 +427,7 @@ public class HexPathFindingManager : MonoGlobalManager
 
         foreach (var offset in neighborOffsets)
         {
-            if (_gridManager.GetHexRoomMap().TryGetValue(offset, out HexRoomData neighbor))
+            if (_mapManager.HexRoomMap.TryGetValue(offset, out HexRoomData neighbor))
                 neighbors.Add(neighbor);
         }
 

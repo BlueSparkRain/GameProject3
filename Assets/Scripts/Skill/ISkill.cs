@@ -1,12 +1,12 @@
 public interface ISkill
 {
-    public void SkillExcute(IBattleUnit caster);
+    public void SkillExcute(IBattlable caster);
 
     /// <summary>
     /// 技能增强
     /// </summary>
     /// <param name="targets"></param>
-    public void SkillEnhance(IBattleUnit caster);
+    public void SkillEnhance(IBattlable caster);
 
     public E_SkillTargetType skillTargetType { get; set; }
 

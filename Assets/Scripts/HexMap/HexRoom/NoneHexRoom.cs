@@ -5,9 +5,12 @@ using UnityEngine.Events;
 
 public class NoneHexRoom :IHexRoom
 {
-    public void DoRoomLogic(UnityAction roomJob = null)
+    public void DoHexRoomLogic(UnityAction roomJob = null)
     {
         Debug.Log("这是个空白房间");
     }
 
+    public void DoHexRoomModel()
+    {
+    }
 }

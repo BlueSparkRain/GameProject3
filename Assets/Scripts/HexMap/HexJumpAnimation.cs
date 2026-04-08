@@ -1,3 +1,4 @@
+using Core;
 using DG.Tweening;
 using UnityEngine;
 
@@ -31,7 +32,6 @@ public class HexJumpAnimation : MonoBehaviour
         _originalPos = _selfTrans.localPosition;
     }
 
-
     /// <summary>
     /// 触发跳动动画（外部调用）
     /// </summary>
@@ -46,7 +46,7 @@ public class HexJumpAnimation : MonoBehaviour
         float actualHeight = baseJumpHeight * (1 - distanceRatio);
         if (actualHeight < 0.01f) actualHeight = 0.01f; // 避免高度为0
 
-        float rand_Height = Random.Range(0.7f, 1.3f);
+        float rand_Height = Random.Range(1f, 2f);
         float rand_Duration = Random.Range(0.5f, 1f);
 
         // 执行跳动动画
@@ -67,26 +67,28 @@ public class HexJumpAnimation : MonoBehaviour
         float rand_Duration = Random.Range(0.5f, 0.8f);
         _selfTrans.DOLocalMoveY(_originalPos.y + heightDistance * rand_Height,
             baseHeightDuration * rand_Duration).SetEase(jumpEase);
-
         _originalPos.y = _originalPos.y + heightDistance * rand_Height;
     }
 
     public void CloudeAppear(Transform _cloudeTrans) {
         cloudeTrans= _cloudeTrans;
         Vector3 cloudeStartPos = cloudeTrans.position;
-        cloudeTrans.DOLocalMoveY(-8f, baseHeightDuration * 2)
+        cloudeTrans.DOLocalMoveY(-8f, baseHeightDuration * 4)
             .SetEase(jumpEase)
             .OnComplete(()=> cloudeTrans.GetComponent<CloudFloatOptimized>().DoCloudeAnim());
     }
     bool cloudeDisappear=false;
     public void CloudeDisAppear() {
+        if (cloudeTrans == null)
+            return;
         if (!cloudeDisappear)
         {
             cloudeDisappear = true;
             cloudeTrans.GetComponent<CloudFloatOptimized>().StopCloudAnim();
             Vector3 cloudeStartPos = cloudeTrans.position;
             cloudeTrans.DOScale(2, baseHeightDuration * 8);
-            cloudeTrans.DOLocalMoveY(80f, baseHeightDuration * 10).SetEase(jumpEase).OnComplete(()=>DestroyImmediate(cloudeTrans.gameObject));
+            cloudeTrans.DOLocalMoveY(80f, baseHeightDuration * 10).SetEase(jumpEase).OnComplete(
+                ()=> GameRoot.GetManager<ObjectPoolManager>().ReturnPool(EPoolType.RoomCloude_房间遮云,cloudeTrans.gameObject));
         }
     }
 }

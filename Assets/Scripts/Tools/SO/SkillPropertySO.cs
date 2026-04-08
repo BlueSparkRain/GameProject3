@@ -35,16 +35,16 @@ public enum E_SkillTargetType
     对全体,
 }
 
-// ====================== 新增：阵营枚举（自动区分敌我） ======================
+//阵营枚举（自动区分敌我）
 public enum E_Camp
 {
     玩家方,  // 玩家、友军
     敌方     // 敌人、怪物
 }
 
-// ====================== 新增：战斗单位接口（所有角色/敌人通用） ======================
+//战斗单位接口(所有角色/敌人通用)
 // 技能不依赖具体角色，只依赖这个接口 → 极致解耦
-public interface IBattleUnit
+public interface IBattlable
 {
     E_Camp Camp { get; }             // 阵营
     bool IsAlive { get; }            // 是否存活

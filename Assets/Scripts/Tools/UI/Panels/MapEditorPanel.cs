@@ -20,8 +20,12 @@ public class MapTerrainEditorPanel : UIPanelBase
     [Header("山脉标记按钮")]
     public Button MountainButton;
 
-    [Header("战斗标记按钮")]
-    public Button BattleButton;
+    [Header("小怪战斗标记按钮")]
+    public Button LowBattleButton;
+    [Header("精英战斗标记按钮")]
+    public Button MidBattleButton;
+    [Header("Boss战斗标记按钮")]
+    public Button HighBattleButton;
     [Header("事件标记按钮")]
     public Button EventButton;
     [Header("奖励标记按钮")]
@@ -37,18 +41,15 @@ public class MapTerrainEditorPanel : UIPanelBase
 
     void ExitEdit()
     {
-        arrowFree = true;
         if (Arrow != null)
             Arrow.transform.position = Vector3.zero;
     }
 
-    bool arrowFree = true;
     public void GetHexTag(HexRoomData roomData)
     {
         this.roomData = roomData;
         currentRoomPosText.text = $"({roomData.row},{roomData.col})";
         Arrow.transform.position = roomData.transform.position + Vector3.up * 2;
-        arrowFree = false;
         currentTag = roomData.GetComponent<HexTerrainTag>();
         currentRoomHasEditedText.text = currentTag.isEdited ? "本次编辑已配置:" + currentTag.hexTerrainType : "本次编辑尚未配置(默认Ocean):";
     }
@@ -77,14 +78,20 @@ public class MapTerrainEditorPanel : UIPanelBase
         MountainButton.onClick.AddListener(() =>
                    SetButtonTag(E_HexTerrainType.Obstacle_Mountain));
 
-        BattleButton.onClick.AddListener(() =>
-                   SetButtonTag(E_HexTerrainType.Walkable_BattleRoom));
+        LowBattleButton.onClick.AddListener(() =>
+                   SetButtonTag(E_HexTerrainType.Walkable_LowLevel_BattleRoom));
+        MidBattleButton.onClick.AddListener(() =>
+           SetButtonTag(E_HexTerrainType.Walkable_MidLevel_BattleRoom)); 
+        HighBattleButton.onClick.AddListener(() =>
+                   SetButtonTag(E_HexTerrainType.Walkable_HighLevel_BattleRoom));
+
+
         EventButton.onClick.AddListener(() =>
-                   SetButtonTag(E_HexTerrainType.Walkable_EventRoom));
+                   SetButtonTag(E_HexTerrainType.Walkable_UnknownEventRoom));
         RewardButton.onClick.AddListener(() =>
                    SetButtonTag(E_HexTerrainType.Walkable_RewardRoom));
         CityButton.onClick.AddListener(() =>
-                   SetButtonTag(E_HexTerrainType.Walkable_CityRoom));
+                   SetButtonTag(E_HexTerrainType.Walkable_CityShopRoom));
 
         hideButton.onClick.AddListener(() => Hide());
         EventCenter.AddEventListener(E_EventType.Editor_Terrain_ExitEdit, ExitEdit);

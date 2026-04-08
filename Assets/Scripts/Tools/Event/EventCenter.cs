@@ -437,10 +437,11 @@ public enum E_EventType
     LoadObjPool,
     E_DataSave,
     E_KillABoss,
-    Mover_StartMove,
+    Mover_PlayerStartMove,
     //进入特殊房间（玩家或AI）
     Mover_IntoSpecialRoom,
     Mover_OneTimeMove,
+    Mover_CheckCurrrentRoom,
     Mover_MoveStop,
     Player_RoundEnd,
     LoadMapStart,

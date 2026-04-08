@@ -17,47 +17,27 @@ public class HexMapInteractManager : MonoGlobalManager
     Material hoverMaterial;
 
     string  hoverMatPath= "Material/HexRoomData/NPC__HexRoom";
-
+    /// <summary>
+    /// 玩家视野
+    /// </summary>
     public int eyeRadius=6;
 
-    // 坐标到房间的映射表（高效查找）
-    Dictionary<Vector2Int, HexRoomData> _hexRoomMap = new Dictionary<Vector2Int, HexRoomData>();
-
-    Dictionary<Vector2Int, bool> _walkableDic=new Dictionary<Vector2Int, bool>();
-
-    public Dictionary<Vector2Int, bool> WalkableDic => _walkableDic;
-        
     // 悬浮材质缓存（性能核心：O(1)查找，仅缓存需要恢复的材质）
     Dictionary<HexRoomData, Material> _originMaterialMap = new Dictionary<HexRoomData, Material>();
     // 当前悬浮的房间（避免每帧重复检测/替换材质）
     HexRoomData _currentHoverRoom;
 
-
     WaitForSeconds cloudeDelay;
     CoroutineManager coroutineManager;
 
-    public HexRoomData GetRnadomRoom()
-    {
-        HexRoomData hexRoomData=null;
-        do
-            hexRoomData = _hexRoomMap.GetRandomElement().Value;
-        while (!hexRoomData.walkable);
-        return hexRoomData;
-    }
-
-    /// <summary>
-    /// 对外暴露房间字典（供寻路管理器访问，解耦核心）
-    /// </summary>
-    public Dictionary<Vector2Int, HexRoomData> GetHexRoomMap(){
-        return _hexRoomMap;
-    }
     protected override void MgrOnInit()
     {
         base.MgrOnInit();
-        EventCenter.AddEventListener(E_EventType.Mover_OneTimeMove, OnOneMoverEnd);
+        mapManager = GameRoot.GetManager<GameMapManager>();
+        coroutineManager = GameRoot.GetManager<CoroutineManager>();
+        EventCenter.AddEventListener(E_EventType.Mover_OneTimeMove, OneMoverCloudeCheck);
         EventCenter.AddEventListener(E_EventType.Editor_Terrain_OneTime, SwitchEditingState);
         cloudeDelay = new WaitForSeconds(0.01f);
-        coroutineManager = GameRoot.GetManager<CoroutineManager>();
     }
     public override void MgrUpdate(float deltaTime){
         // 检测鼠标左键点击（原有逻辑保留）
@@ -67,17 +47,17 @@ public class HexMapInteractManager : MonoGlobalManager
         CheckHoverHexRoom();
     }
 
-    /// <summary>
-    /// 注册一个六边形房间到映射表
-    /// </summary>
-    public void RegisterHexRoom(HexRoomData room,bool walkable){
-        Vector2Int key = new Vector2Int(room.row, room.col);
-        if (!_hexRoomMap.ContainsKey(key))
-        {
-            _hexRoomMap.Add(key, room);
-            _walkableDic.Add(key, walkable);
-        }
-    }
+    ///// <summary>
+    ///// 注册一个六边形房间到映射表
+    ///// </summary>
+    //public void RegisterHexRoom(HexRoomData room,bool walkable){
+    //    Vector2Int key = new Vector2Int(room.row, room.col);
+    //    if (!_hexRoomMap.ContainsKey(key))
+    //    {
+    //        _hexRoomMap.Add(key, room);
+    //        _walkableDic.Add(key, walkable);
+    //    }
+    //}
 
     /// <summary>
     /// 检测点击的六边形房间
@@ -110,17 +90,19 @@ public class HexMapInteractManager : MonoGlobalManager
             }
         }
     }
-
+    GameMapManager mapManager;
     /// <summary>
     /// 触发指定坐标半径内的所有房间跳动（原有逻辑保留）
     /// </summary>
     void TriggerRadiusJump(int centerRow, int centerCol){
+
         // 1. 生成正六边形范围的行+列坐标（无冗余、不遗漏）
         List<Vector2Int> radiusRowCols = HexCoordinateUtility.GetRowColsInRadius(centerRow, centerCol, jumpRadius);
 
         // 2. 遍历仅触发存在的房间
         foreach (Vector2Int rowCol in radiusRowCols){
-            if (_hexRoomMap.TryGetValue(rowCol, out HexRoomData room)){
+            if (mapManager.HexRoomMap.TryGetValue(rowCol, out HexRoomData room))
+            {
                 // 2.1 计算距离（直接用行+列，无需HexRoom提供轴向坐标）
                 int distance = HexCoordinateUtility.GetDistanceByRowCol(centerRow, centerCol, room.row, room.col);
 
@@ -138,8 +120,8 @@ public class HexMapInteractManager : MonoGlobalManager
 
     //每次角色移动后检测一次
 
-    void OnOneMoverEnd() {
-        HexRoomData characterRoom = GameRoot.GetManager<MapMoverChecker>().currentMover.CurrentRooom;
+    void OneMoverCloudeCheck() {
+        HexRoomData characterRoom = GameRoot.GetManager<MapMoverChecker>().currentIMovable.currentRoom;// currentMover.CurrentRooom;
         coroutineManager.StartCoroutine(TriggerCloudeDisappear(characterRoom.row, characterRoom.col));
     }
 
@@ -153,10 +135,10 @@ public class HexMapInteractManager : MonoGlobalManager
         List<Vector2Int> radiusRowCols = HexCoordinateUtility.GetRowColsInRadius(centerRow, centerCol, eyeRadius);
         foreach (Vector2Int rowCol in radiusRowCols)
         {
-            if (_hexRoomMap.TryGetValue(rowCol, out HexRoomData room))
+            if (mapManager.HexRoomMap.TryGetValue(rowCol, out HexRoomData room))
             { 
                 // 2.3 触发动画（动画组件无修改）
-                //room.GetComponent<HexJumpAnimation>()?.CloudeDisAppear();
+                room.GetComponent<HexJumpAnimation>()?.CloudeDisAppear();
                 yield return cloudeDelay;
             }
         }

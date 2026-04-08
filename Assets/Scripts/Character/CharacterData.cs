@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 /// <summary>
@@ -10,6 +12,7 @@ public class CharacterData : MonoBehaviour
     public E_CharacterType characterType;
 
     string characterSO_ParentPath = "SOData/CharacterSOData/";
+
     /// <summary>
     /// 角色初始数据
     /// </summary>
@@ -21,180 +24,363 @@ public class CharacterData : MonoBehaviour
     CharcterPropertyGrowthSO CharcterPropertyGrowthSO;
 
 
-    #region 角色基础属性声明——(游戏初始化读取SOData中的数据)
+    #region 角色基础属性声明——(游戏初始化读取SO数据/Jason文件中读取数据)
     /// <summary>
-    /// 物理固穿：固定减少对方物抗
+    /// 1.物理固穿：固定减少对方物抗
     /// </summary>
-    private float Phy_Flat_Penetration;
-
+    private float phy_Flat_Penetration;
     /// <summary>
-    /// 法术固穿：固定减少对方魔抗
+    /// 2.法术固穿：固定减少对方魔抗
     /// </summary>
-    private float Mag_Flat_Penetration;
-
+    private float mag_Flat_Penetration;
     /// <summary>
-    /// 物抗：减少受到的物理伤害
+    /// 3.物抗：减少受到的物理伤害
     /// </summary>
-    private float Phy_Resistance;
-
+    private float phy_Resistance;
     /// <summary>
-    /// 魔抗：减少受到的魔法伤害
+    /// 4.魔抗：减少受到的魔法伤害
     /// </summary>
-    private float Mag_Resistance;
-
+    private float mag_Resistance;
     /// <summary>
-    /// 物攻：影响物理伤害
+    /// 5.物攻：影响物理伤害
     /// </summary>
-    private float Phy_Attack;
-
+    private float phy_Attack;
     /// <summary>
-    /// 法强：影响魔法伤害
+    /// 6.法强：影响魔法伤害
     /// </summary>
-    private float Magic_Attack;
-
+    private float magic_Attack;
     /// <summary>
-    /// 最大法力值：决定法力值的上限
+    /// 7.最大法力值：决定法力值的上限
     /// </summary>
-    private float Maximum_Mana;
-
+    private float maximum_Mana;
     /// <summary>
-    /// 法力值回复：自动回复法力值的速度
+    /// 8.法力值回复：自动回复法力值的速度
     /// </summary>
-    private float Mana_Regeneration;
-
+    private float mana_Regeneration;
     /// <summary>
-    /// 最大生命值：决定生命值的上限
+    /// 9.最大生命值：决定生命值的上限
     /// </summary>
-    private float Maximum_Health;
-
+    private float maximum_Health;
     /// <summary>
-    /// 生命值回复：自动回复生命值的速度
+    /// 10.生命值回复：自动回复生命值的速度
     /// </summary>
-    private float Health_Regeneration;
-
+    private float health_Regeneration;
     /// <summary>
-    /// 生命偷取：攻击伤害转为治疗的百分比
+    /// 11.生命偷取：攻击伤害转为治疗的百分比
     /// </summary>
-    private float Life_Steal;
-
+    private float life_Steal;
     /// <summary>
-    /// 韧性：减免受到的负面效果的时长
+    /// 12.韧性：减免受到的负面效果的时长
     /// </summary>
-    private float Tenacity;
-
+    private float tenacity;
     /// <summary>
-    /// 耐力：被击破状态恢复的速度
+    /// 13.耐力：被击破状态恢复的速度
     /// </summary>
-    private float Endurance;
-
+    private float endurance;
     /// <summary>
-    /// 闪避率：闪避攻击伤害的概率
+    /// 14.闪避率：闪避攻击伤害的概率
     /// </summary>
-    private float Dodge_Rate;
-
+    private float dodge_Rate;
     /// <summary>
-    /// 治疗强化：获得治疗值的强化百分比
+    /// 15.治疗强化：获得治疗值的强化百分比
     /// </summary>
-    private float Heal_Amplification;
-
+    private float heal_Amplification;
     /// <summary>
-    /// 护盾强化：获得护盾值的强化百分比
+    /// 16.护盾强化：获得护盾值的强化百分比
     /// </summary>
-    private float Shield_Amplification;
+    private float shield_Amplification;
+    /// <summary>
+    /// 17.最大ATB点数
+    /// </summary>
+    private int maximum_ATB;
+    /// <summary>
+    /// 18.角色当前等级
+    /// </summary>
+    private int currentLevel;
 
-    private int Maximum_ATB;
-
+    public float Phy_Flat_Penetration=>phy_Flat_Penetration;
+    public float Mag_Flat_Penetration=>mag_Flat_Penetration;
+    public float Phy_Resistance=>phy_Resistance;
+    public float Mag_Resistance=>mag_Resistance;
+    public float Phy_Attack=>phy_Attack;
+    public float Magic_Attack=>magic_Attack;
+    public float Maximum_Mana=>maximum_Mana;
+    public float Mana_Regeneration=>mana_Regeneration;
+    public float Maximum_Health=>maximum_Health;
+    public float Health_Regeneration=>health_Regeneration;
+    public float Life_Steal=>life_Steal;
+    public float Tenacity=>tenacity;
+    public float Endurance=>endurance;
+    public float Dodge_Rate=>dodge_Rate;
+    public float Heal_Amplification=>heal_Amplification;
+    public float Shield_Amplification=>shield_Amplification;
+    public int Maximum_ATB=>maximum_ATB;
+    public int CurrentLevel=>currentLevel;
     #endregion
-    Dictionary<E_CharacterPropertyType, float> propertyDic = new Dictionary<E_CharacterPropertyType, float>();
+    IUpGradable upgradeHandle;
+    IBattlable ibattle;
 
-    IBattleUnit battleUnit;
-    public void InitCharacter() {
-        battleUnit = new Player(); 
-    
-    }
     CharacterDataSO LoadCharacterSOData()
     {
         return Resources.Load<CharacterDataSO>(characterSO_ParentPath + characterType);
     }
 
-    void Start()
+    public void InitCharacter(E_CharacterType _characterType, bool isPlayer, bool canLevelUp)
     {
-        InitCharacterData();
-        InitSkillDic();
+        characterType = _characterType;
+        currentLevel = 1;
+
+        if (isPlayer) ibattle = new Player();
+        else ibattle = new Enemy();
+
+        if (canLevelUp)
+        {
+            upgradeHandle = new LevelUpGradeHandle();
+            GetComponent<CharacterMapMoveHandle>().InitMover(isPlayer, characterType);
+        }
+        else upgradeHandle = new StageUpGradeHandle();
+
+        //如果有存档记录,就加载存档数据
+        //没有存档记录，就初始化角色
+        if (JsonSaver.HasValidData<Save_CharacterData>())
+        {
+            Debug.Log("加载了存档数据");
+            InitBySaveData();
+        }
+        else
+        {
+            Debug.Log("加载了初始数据");
+            InitCharacterData();
+        }
     }
+    void InitBySaveData()
+    {
+       var characterSaveData = JsonSaver.Load<Save_CharacterData>();
+        phy_Flat_Penetration = characterSaveData.Phy_Flat_Penetration;
+        mag_Flat_Penetration = characterSaveData.Mag_Flat_Penetration;
+        phy_Resistance = characterSaveData.Phy_Resistance;
+        mag_Resistance = characterSaveData.Mag_Resistance;
+        phy_Attack = characterSaveData.Phy_Attack;
+        magic_Attack = characterSaveData.Magic_Attack;
+        maximum_Mana = characterSaveData.Maximum_Mana;
+        mana_Regeneration = characterSaveData.Mana_Regeneration;
+        maximum_Health = characterSaveData.Maximum_Health;
+        health_Regeneration = characterSaveData.Health_Regeneration;
+        life_Steal = characterSaveData.Life_Steal;
+        tenacity = characterSaveData.Tenacity;
+        endurance = characterSaveData.Endurance;
+        dodge_Rate = characterSaveData.Dodge_Rate;
+        heal_Amplification = characterSaveData.Heal_Amplification;
+        shield_Amplification = characterSaveData.Shield_Amplification;
+        maximum_ATB = characterSaveData.Maximum_ATB;
+        currentLevel = characterSaveData.CurrentLevel;
+    }
+
     /// <summary>
-    /// 读取角色初始数据
+    /// 初始化：读取SO文件中角色初始数据
     /// </summary>
     void InitCharacterData()
     {
         characterData = LoadCharacterSOData();
-        Phy_Flat_Penetration = characterData.Phy_Flat_Penetration;
-        Mag_Flat_Penetration = characterData.Mag_Flat_Penetration;
-        Phy_Resistance = characterData.Phy_Resistance;
-        Mag_Resistance = characterData.Mag_Resistance;
-        Phy_Attack = characterData.Phy_Attack;
-        Magic_Attack = characterData.Magic_Attack;
-        Maximum_Mana = characterData.Maximum_Mana;
-        Mana_Regeneration = characterData.Mana_Regeneration;
-        Maximum_Health = characterData.Maximum_Health;
-        Health_Regeneration = characterData.Health_Regeneration;
-        Life_Steal = characterData.Life_Steal;
-        Tenacity = characterData.Tenacity;
-        Endurance = characterData.Endurance;
-        Dodge_Rate = characterData.Dodge_Rate;
-        Heal_Amplification = characterData.Heal_Amplification;
-        Shield_Amplification = characterData.Shield_Amplification;
-        Maximum_ATB= characterData.Maximum_ATB;
+        phy_Flat_Penetration = characterData.Phy_Flat_Penetration;
+        mag_Flat_Penetration = characterData.Mag_Flat_Penetration;
+        phy_Resistance = characterData.Phy_Resistance;
+        mag_Resistance = characterData.Mag_Resistance;
+        phy_Attack = characterData.Phy_Attack;
+        magic_Attack = characterData.Magic_Attack;
+        maximum_Mana = characterData.Maximum_Mana;
+        mana_Regeneration = characterData.Mana_Regeneration;
+        maximum_Health = characterData.Maximum_Health;
+        health_Regeneration = characterData.Health_Regeneration;
+        life_Steal = characterData.Life_Steal;
+        tenacity = characterData.Tenacity;
+        endurance = characterData.Endurance;
+        dodge_Rate = characterData.Dodge_Rate;
+        heal_Amplification = characterData.Heal_Amplification;
+        shield_Amplification = characterData.Shield_Amplification;
+        maximum_ATB= characterData.Maximum_ATB;
     }
 
-    /// <summary>
-    /// 注册属性字典
-    /// </summary>
-    void InitSkillDic()
+    public float GetProperty(E_CharacterPropertyType type)
     {
-        propertyDic.Add(E_CharacterPropertyType.Phy_Flat_Penetration, Phy_Flat_Penetration);
-        propertyDic.Add(E_CharacterPropertyType.Mag_Flat_Penetration, Mag_Flat_Penetration);
-        propertyDic.Add(E_CharacterPropertyType.Phy_Resistance, Phy_Resistance);
-        propertyDic.Add(E_CharacterPropertyType.Mag_Resistance, Mag_Resistance);
-        propertyDic.Add(E_CharacterPropertyType.Phy_Attack, Phy_Attack);
-        propertyDic.Add(E_CharacterPropertyType.Magic_Attack, Magic_Attack);
-        propertyDic.Add(E_CharacterPropertyType.Maximum_Mana, Maximum_Mana);
-        propertyDic.Add(E_CharacterPropertyType.Mana_Regeneration, Mana_Regeneration);
-        propertyDic.Add(E_CharacterPropertyType.Maximum_Health, Maximum_Health);
-        propertyDic.Add(E_CharacterPropertyType.Health_Regeneration, Health_Regeneration);
-        propertyDic.Add(E_CharacterPropertyType.Life_Steal, Life_Steal);
-        propertyDic.Add(E_CharacterPropertyType.Tenacity, Tenacity);
-        propertyDic.Add(E_CharacterPropertyType.Endurance, Endurance);
-        propertyDic.Add(E_CharacterPropertyType.Dodge_Rate, Dodge_Rate);
-        propertyDic.Add(E_CharacterPropertyType.Heal_Amplification, Heal_Amplification);
-        propertyDic.Add(E_CharacterPropertyType.Shield_Amplification, Shield_Amplification);
-        propertyDic.Add(E_CharacterPropertyType.Maximum_ATB, Maximum_ATB);
-    }
-
-    public float GetProperty(E_CharacterPropertyType propertyType)
-    {
-        if (propertyDic.ContainsKey(propertyType))
-            return propertyDic[propertyType];
-        else
+        switch (type)
         {
-            Debug.Log("未查找到目标属性");
-            return 0;
+            case E_CharacterPropertyType.Phy_Flat_Penetration: return phy_Flat_Penetration;
+            case E_CharacterPropertyType.Mag_Flat_Penetration: return mag_Flat_Penetration;
+            case E_CharacterPropertyType.Phy_Resistance: return phy_Resistance;
+            case E_CharacterPropertyType.Mag_Resistance: return mag_Resistance;
+            case E_CharacterPropertyType.Phy_Attack: return phy_Attack;
+            case E_CharacterPropertyType.Magic_Attack: return magic_Attack;
+            case E_CharacterPropertyType.Maximum_Mana: return maximum_Mana;
+            case E_CharacterPropertyType.Mana_Regeneration: return mana_Regeneration;
+            case E_CharacterPropertyType.Maximum_Health: return maximum_Health;
+            case E_CharacterPropertyType.Health_Regeneration: return health_Regeneration;
+            case E_CharacterPropertyType.Life_Steal: return life_Steal;
+            case E_CharacterPropertyType.Tenacity: return tenacity;
+            case E_CharacterPropertyType.Endurance: return endurance;
+            case E_CharacterPropertyType.Dodge_Rate: return dodge_Rate;
+            case E_CharacterPropertyType.Heal_Amplification: return heal_Amplification;
+            case E_CharacterPropertyType.Shield_Amplification: return shield_Amplification;
+            case E_CharacterPropertyType.Maximum_ATB: return maximum_ATB;
+            default: Debug.LogError("属性不存在"); return 0;
         }
     }
 
-    /// <summary>
-    /// 对目标属性应用一次变化
-    /// </summary>
-    /// <param name="targetPropertyType"></param>
-    /// <param name="expression"></param>
-    public void AdjustProperty(E_CharacterPropertyType targetPropertyType, float expression)
+    // 修改属性（直接改私有字段，改完直接存档，100%同步）
+    public void AdjustProperty(E_CharacterPropertyType type, float value)
     {
-        if (propertyDic.ContainsKey(targetPropertyType))
-            propertyDic[targetPropertyType] += expression;
-        else
+        switch (type)
         {
-            Debug.Log("未查找到目标属性");
-            return;
+            case E_CharacterPropertyType.Phy_Flat_Penetration: phy_Flat_Penetration += value; break;
+            case E_CharacterPropertyType.Mag_Flat_Penetration: mag_Flat_Penetration += value; break;
+            case E_CharacterPropertyType.Phy_Resistance: phy_Resistance += value; break;
+            case E_CharacterPropertyType.Mag_Resistance: mag_Resistance += value; break;
+            case E_CharacterPropertyType.Phy_Attack: phy_Attack += value; break;
+            case E_CharacterPropertyType.Magic_Attack: magic_Attack += value; break;
+            case E_CharacterPropertyType.Maximum_Mana: maximum_Mana += value; break;
+            case E_CharacterPropertyType.Mana_Regeneration: mana_Regeneration += value; break;
+            case E_CharacterPropertyType.Maximum_Health: maximum_Health += value; break;
+            case E_CharacterPropertyType.Health_Regeneration: health_Regeneration += value; break;
+            case E_CharacterPropertyType.Life_Steal: life_Steal += value; break;
+            case E_CharacterPropertyType.Tenacity: tenacity += value; break;
+            case E_CharacterPropertyType.Endurance: endurance += value; break;
+            case E_CharacterPropertyType.Dodge_Rate: dodge_Rate += value; break;
+            case E_CharacterPropertyType.Heal_Amplification: heal_Amplification += value; break;
+            case E_CharacterPropertyType.Shield_Amplification: shield_Amplification += value; break;
+            case E_CharacterPropertyType.Maximum_ATB: maximum_ATB += (int)value; break;
+            default: Debug.LogError("属性不存在"); return;
         }
+        Debug.Log("保存Save_CharacterData文件:" + JsonSaver.GetSaveFilePath<Save_CharacterData>());
+        // 修改完直接保存，永久生效
+        JsonSaver.Save(new Save_CharacterData(this));
+        Debug.Log($"属性修改成功: {type} = {GetProperty(type)}");
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            AdjustProperty(E_CharacterPropertyType.Phy_Attack, 5);
+            
+        }
+    }
+}
+
+[Serializable]
+public class Save_CharacterData:IValidatable {
+    public Save_CharacterData() { }
+    public Save_CharacterData(CharacterData characterSaveData) {
+        Phy_Flat_Penetration = characterSaveData.Phy_Flat_Penetration;
+        Mag_Flat_Penetration = characterSaveData.Mag_Flat_Penetration;
+        Phy_Resistance = characterSaveData.Phy_Resistance;
+        Mag_Resistance = characterSaveData.Mag_Resistance;
+        Phy_Attack = characterSaveData.Phy_Attack;
+        Magic_Attack = characterSaveData.Magic_Attack;
+        Maximum_Mana = characterSaveData.Maximum_Mana;
+        Mana_Regeneration = characterSaveData.Mana_Regeneration;
+        Maximum_Health = characterSaveData.Maximum_Health;
+        Health_Regeneration = characterSaveData.Health_Regeneration;
+        Life_Steal = characterSaveData.Life_Steal;
+        Tenacity = characterSaveData.Tenacity;
+        Endurance = characterSaveData.Endurance;
+        Dodge_Rate = characterSaveData.Dodge_Rate;
+        Heal_Amplification = characterSaveData.Heal_Amplification;
+        Shield_Amplification = characterSaveData.Shield_Amplification;
+        Maximum_ATB = characterSaveData.Maximum_ATB;
+        CurrentLevel = characterSaveData.CurrentLevel;
+
+    }
+    /// <summary>
+    /// [Save]物理固穿
+    /// </summary>
+    public float Phy_Flat_Penetration;
+
+    /// <summary>
+    /// [Save]法术固穿
+    /// </summary>
+    public float Mag_Flat_Penetration;
+
+    /// <summary>
+    /// [Save]物抗
+    /// </summary>
+    public float Phy_Resistance;
+
+    /// <summary>
+    /// [Save]魔抗
+    /// </summary>
+    public float Mag_Resistance;
+
+    /// <summary>
+    /// [Save]物攻
+    /// </summary>
+    public float Phy_Attack;
+
+    /// <summary>
+    /// [Save]法强
+    /// </summary>
+    public float Magic_Attack;
+
+    /// <summary>
+    /// [Save]最大法力值
+    /// </summary>
+    public float Maximum_Mana;
+
+    /// <summary>
+    /// [Save]法力值回复
+    /// </summary>
+    public float Mana_Regeneration;
+
+    /// <summary>
+    /// [Save]最大生命值
+    /// </summary>
+    public float Maximum_Health;
+
+    /// <summary>
+    /// [Save]生命值回复
+    /// </summary>
+    public float Health_Regeneration;
+
+    /// <summary>
+    /// [Save]生命偷取
+    /// </summary>
+    public float Life_Steal;
+
+    /// <summary>
+    /// [Save]韧性
+    /// </summary>
+    public float Tenacity;
+
+    /// <summary>
+    /// [Save]耐力
+    /// </summary>
+    public float Endurance;
+
+    /// <summary>
+    /// [Save]闪避率
+    /// </summary>
+    public float Dodge_Rate;
+
+    /// <summary>
+    /// [Save]治疗强化
+    /// </summary>
+    public float Heal_Amplification;
+
+    /// <summary>
+    /// [Save]护盾强化
+    /// </summary>
+    public float Shield_Amplification;
+
+    /// <summary>
+    /// 当前最大ATB值
+    /// </summary>
+    public int Maximum_ATB;
+
+    /// <summary>
+    /// [Save]角色当前等级
+    /// </summary>
+    public int CurrentLevel;
+
+    public bool IsValid()
+    {
+        return CurrentLevel > 0;
     }
 }

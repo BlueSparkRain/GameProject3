@@ -86,7 +86,6 @@ public class MapSaveSOData : ScriptableObject
     [System.Serializable]
     private class SerializedHexCell
     {
-        // 改名！明确区分 行和列，彻底避免写反
         public int row;
         public int col;
         public E_HexTerrainType type;

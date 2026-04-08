@@ -10,6 +10,8 @@ public enum E_CharacterType{
     Boss_1,
 }
 
+
+
 [CreateAssetMenu(menuName = "SOData/CharacterData", fileName = "CharacterData")]
 public class CharacterDataSO : ScriptableObject
 {

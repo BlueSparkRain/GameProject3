@@ -10,14 +10,14 @@ using UnityEngine;
 public static class BattleTargetSelector 
 {
     // 全局战斗单位池（战斗管理器注册所有存活单位，O(1)获取）
-    public static List<IBattleUnit> AllBattleUnits { get; set; } = new();
+    public static List<IBattlable> AllBattleUnits { get; set; } = new();
 
     /// <summary>
     /// 核心：根据施法者+技能类型，获取合法目标（自动处理死亡+阵营）
     /// </summary>
-    public static List<IBattleUnit> GetValidTargets(IBattleUnit caster, E_SkillTargetType type)
+    public static List<IBattlable> GetValidTargets(IBattlable caster, E_SkillTargetType type)
     {
-        var targets = new List<IBattleUnit>();
+        var targets = new List<IBattlable>();
         bool isPlayerCaster = caster.Camp == E_Camp.玩家方;
 
         switch (type)
@@ -49,15 +49,15 @@ public static class BattleTargetSelector
     }
 
     // 工具：获取第一个存活目标
-    private static IBattleUnit GetFirstAliveTarget(E_Camp camp) =>
+    private static IBattlable GetFirstAliveTarget(E_Camp camp) =>
         AllBattleUnits.First(u => u.Camp == camp && u.IsAlive);
 
     // 工具：获取所有存活目标
-    private static List<IBattleUnit> GetAllAliveTargets(E_Camp camp) =>
+    private static List<IBattlable> GetAllAliveTargets(E_Camp camp) =>
         AllBattleUnits.Where(u => u.Camp == camp && u.IsAlive).ToList();
 
     // 工具：获取N个存活目标
-    private static List<IBattleUnit> GetNAliveTargets(E_Camp camp, int count) =>
+    private static List<IBattlable> GetNAliveTargets(E_Camp camp, int count) =>
         AllBattleUnits.Where(u => u.Camp == camp && u.IsAlive).Take(count).ToList();
 }
 

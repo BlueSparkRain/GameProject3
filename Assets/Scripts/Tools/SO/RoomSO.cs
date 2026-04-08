@@ -20,15 +20,18 @@ public class RoomSO :ScriptableObject
 
 public enum E_HexRoomType {
     None_无,
-    Battle_战斗,
+    Battle_LowLevel_战斗_杂鱼,
+    Battle_MidLevel_战斗_精英,
+    Battle_HighLevel_战斗_首领,
+    CityShop_城商镇,
     NPC_特定交互,
-    Unknown_随机事件,
-    //NewArea_锚点,
+    UnknownEvent_随机事件,
+    Reward_神像奖励,
 }
 
 
 public enum E_BattleType { 
-    普通敌人,
+    杂鱼敌人,
     精英敌人,
     首领敌人,
 }
