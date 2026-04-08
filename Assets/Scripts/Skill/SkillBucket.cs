@@ -27,12 +27,12 @@ public class Skill_BaseAttack : ISkill
 
     public E_SkillTargetType skillTargetType { get; set; }
 
-    public void SkillEnhance(IBattleUnit caster)
+    public void SkillEnhance(IBattlable caster)
     {
 
     }
 
-    public void SkillExcute(IBattleUnit caster)
+    public void SkillExcute(IBattlable caster)
     {
 
     }

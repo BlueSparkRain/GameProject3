@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Base_HexRoom_Battle
+  m_Name: Base_HexRoom_BattleLow
   m_Shader: {fileID: 4800000, guid: 7ba4ce75b9c596f4ebd9f2240fb7cb80, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -38,6 +38,6 @@ Material:
     - _BaseColor: {r: 0.90132046, g: 1, b: 0, a: 1}
     - _GradientCenter: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _GradientColor: {r: 0, g: 0.9213741, b: 1, a: 1}
-    - _MainColor: {r: 1, g: 0.27226716, b: 0, a: 1}
-    - _ShadowColor: {r: 0.44705883, g: 0.054827176, b: 0, a: 1}
+    - _MainColor: {r: 1, g: 0.18267244, b: 0, a: 1}
+    - _ShadowColor: {r: 0, g: 0.08748331, b: 0.6117647, a: 1}
   m_BuildTextureStacks: []

@@ -129,7 +129,6 @@ namespace Core
         {
             OnDisable(); // 移除事件监听
             base.MgrDispose();
-            Debug.Log("[SceneSwitchManager]---场景切换管理器已回收！");
         }
 
         public override void MgrUpdate(float deltaTime) { }

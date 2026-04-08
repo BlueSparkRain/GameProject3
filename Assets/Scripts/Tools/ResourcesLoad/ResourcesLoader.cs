@@ -19,6 +19,7 @@ public static class ResourcesLoader
     static string roomCloudePath = "Prefab/HexRoom/RoomCloude";
     static string skillIconPath = "Prefab/Skill/SkillIcon";
 
+    static string characterPath = "Prefab/Character/Character_";
 
     static string mapSaveDataPath = "SOData/HexMapSOData/HexMapSOData";
 
@@ -31,6 +32,11 @@ public static class ResourcesLoader
      public static GameObject FindSkillIconObj() {
         return Resources.Load<GameObject>(skillIconPath);
     }
+
+    public static GameObject FindCharacterObj(string backStr) {
+        return Resources.Load<GameObject>(characterPath+backStr);
+    }
+
     /// <summary>
     /// 根据技能ID返回对应的SkillSOData
     /// </summary>

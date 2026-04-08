@@ -23,25 +23,32 @@ public class CharacterMapIcon : MonoBehaviour
 
     string characterSO_ParentPath = "SOData/CharacterSOData/";
 
+    [Header("经验条")]
+    public Image levelFillbar;
 
+    Transform charcaterTrans;
+
+    /// <summary>
+    /// 基础经验 + (当前等级 - 1) × 每级增量（基础：200；增量：100）
+    /// </summary>
     private void Awake()
     {
-        EventCenter.AddEventListener(E_EventType.Mover_StartMove, MoverStartMove);
+        EventCenter.AddEventListener(E_EventType.Mover_PlayerStartMove, MoverStartMove);
     }
-
     private void OnDestroy()
     {
-        EventCenter.RemoveEventListener(E_EventType.Mover_StartMove, MoverStartMove);
-        
+        EventCenter.RemoveEventListener(E_EventType.Mover_PlayerStartMove, MoverStartMove);
     }
 
-    public void InitIcon(E_CharacterType _characterType)
+    public void InitIcon(E_CharacterType _characterType, Transform _charcaterTrans)
     {
         characterSelectButton.onClick.AddListener(OnClickIconButton);
         characterType = _characterType;
+        charcaterTrans = _charcaterTrans;
         characterSOData = LoadCharacterSOData();
         characterImage.sprite = characterSOData.characterSprite;
         characterName = characterSOData.characterName;
+        levelFillbar.fillAmount = 0;
     }
     CharacterDataSO LoadCharacterSOData()
     {
@@ -83,10 +90,14 @@ public class CharacterMapIcon : MonoBehaviour
     void OnClickIconButton()
     {
         HexPathFindingManager hexPathFindingManager = GameRoot.GetManager<HexPathFindingManager>();
-        if (!GameRoot.GetManager<MapMoverChecker>().GetTargetMover(this))
-            return;
-        var mover = GameRoot.GetManager<MapMoverChecker>().GetTargetMover(this);
-        GameRoot.GetManager<OrthoCameraNavigator>().FocusOnTarget(mover.gameObject);
+        //if (!GameRoot.GetManager<MapMoverChecker>().GetTargetMover(this))
+
+        if (GameRoot.GetManager<MapMoverChecker>().GetTargetPlayerMover(this)==null)
+        return;
+
+        var mover = GameRoot.GetManager<MapMoverChecker>().GetTargetPlayerMover(this);
+        //GameRoot.GetManager<OrthoCameraNavigator>().FocusOnTarget(mover.gameObject);
+        GameRoot.GetManager<OrthoCameraNavigator>().FocusOnTarget(charcaterTrans.gameObject);
 
         if (canMove)
             isActive = !isActive;
@@ -97,7 +108,7 @@ public class CharacterMapIcon : MonoBehaviour
 
         if (isActive){
             hexPathFindingManager.SetPlayerStartRoom(
-             mover.CurrentRooom);
+             mover.currentRoom);
 
             //如果该角色本回合有行动点尚未用尽，可以进行移动
             SetCameraToCharacter();

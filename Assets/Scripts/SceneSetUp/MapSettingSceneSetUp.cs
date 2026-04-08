@@ -20,6 +20,8 @@ public class MapSettingSceneSetUp : MonoBehaviour
     [Header("地图地形数据")]
     public MapSaveSOData MapSOData;
 
+    public bool needDelay = false;
+
     private void Awake()
     {
         ObjectPoolManager obj = GameRoot.GetManager<ObjectPoolManager>();
@@ -31,7 +33,6 @@ public class MapSettingSceneSetUp : MonoBehaviour
         gameMapManager.GameMapManagerInit(y_Offset, x_Offset, MapRadius, MapPivot.position);
         EventCenter.AddEventListener<Vector2Int, E_HexTerrainType>(E_EventType.Editor_Terrain, EditorOneRoomTexrrainTag);
         GameRoot.GetManager<HexMapInteractManager>().USEEditMode();
-
     }
     void EditorOneRoomTexrrainTag(Vector2Int pos,E_HexTerrainType terrainType) {
         MapSOData.cellData[pos.x, pos.y] = terrainType;
@@ -42,14 +43,16 @@ public class MapSettingSceneSetUp : MonoBehaviour
     private void Start()
     {
         EventCenter.EventTrigger(E_EventType.LoadObjPool, EPoolType.MapRoom_地图房间);
-        gameMapManager.CreateWholeMap();
-    }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space)) { 
-            
-        
-        }
+        if (needDelay) 
+            StartCoroutine(WaitMapCreate());
+        else
+            gameMapManager.CreateWholeMap();
     }
+    IEnumerator WaitMapCreate() {
+        yield return new WaitForSeconds(4);
+        gameMapManager.CreateWholeMap();
+        
+    }
+   
 }

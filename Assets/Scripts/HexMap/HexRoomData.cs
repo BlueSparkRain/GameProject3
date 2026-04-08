@@ -1,4 +1,5 @@
 using Core;
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -20,63 +21,60 @@ public class HexRoomData : MonoBehaviour
     HexJumpAnimation hexJumpAnimation;
     CoroutineManager coroutineManager;
 
-    string roomModelPath = "Prefab/Model/";
 
-    GameObject roomModel;
     public IHexRoom IHexRoom=>iHexRoom;
     IHexRoom iHexRoom;
-    public void InitRoomID(int _row, int _col, E_HexRoomType _roomType)
-    {
-        roomType = _roomType;
-       
-        InitRoomStyle();
 
-        row = _row; col = _col;
+    bool hasCloude;
+    public void InitRoomID(int _row, int _col)
+    {
         hexJumpAnimation = GetComponent<HexJumpAnimation>();
+        //只有海洋不会产生云朵
+        if (GetComponent<HexTerrainTag>().hexTerrainType != E_HexTerrainType.Obstacle__Ocean)
+        {
+            LoadRoomCloude();
+        }
+
         coroutineManager = GameRoot.GetManager<CoroutineManager>();
+        row = _row; col = _col;
         hexJumpAnimation.TriggerJump(0.4f);
-        //LoadRoomModel();
-
     }
 
-    void LoadRoomModel()
-    {
-        if (roomType != E_HexRoomType.None_无)
-            roomModel = Resources.Load<GameObject>(roomModelPath + roomType);
-        if (roomModel)
-            Instantiate(roomModel, transform.position + Vector3.up * 0.5f, Quaternion.identity, transform);
-        
-        LoadRoomCloude();
+    public void UpdateRoomType(E_HexRoomType _roomType) {
+        InitRoomStyle(_roomType);
     }
+
+    //void LoadRoomModel()
+    //{
+    //    if (roomType != E_HexRoomType.None_无)
+    //        roomModel = Resources.Load<GameObject>(roomModelPath + roomType);
+    //    if (roomModel)
+    //        Instantiate(roomModel, transform.position + Vector3.up * 0.5f, Quaternion.identity, transform);
+    //}
 
     void LoadRoomCloude() {
         var cloude = GameRoot.GetManager<ObjectPoolManager>().GetInstance(EPoolType.RoomCloude_房间遮云);
         cloude.transform.position = transform.position + Vector3.up * 20f;
-        //var cloude= Instantiate(roomCloude, transform.position + Vector3.up * 20f, Quaternion.Euler(-90, 0, 0));
         hexJumpAnimation.CloudeAppear(cloude.transform);
     }
 
-    
-
-    void InitRoomStyle()
+    void InitRoomStyle(E_HexRoomType _roomType)
     {
+        roomType = _roomType;
         switch (roomType)
         {
-            case E_HexRoomType.None_无:
-                iHexRoom = new NoneHexRoom();
-                break;
-            case E_HexRoomType.Battle_战斗:
-                iHexRoom = new BattleHexRoom(E_CharacterType.LE_1);
-                break;
-            case E_HexRoomType.NPC_特定交互:
-                iHexRoom = new NPCHexRoom();
-                break;
-            case E_HexRoomType.Unknown_随机事件:
-                iHexRoom = new UnknownHexRoom();
-                break;
-            default:
-                break;
+            case E_HexRoomType.None_无:iHexRoom = new NoneHexRoom();break;
+            case E_HexRoomType.Battle_LowLevel_战斗_杂鱼: iHexRoom = new BattleHexRoom(E_BattleType.杂鱼敌人); break;
+            case E_HexRoomType.Battle_MidLevel_战斗_精英: iHexRoom = new BattleHexRoom(E_BattleType.精英敌人); break;
+            case E_HexRoomType.Battle_HighLevel_战斗_首领: iHexRoom = new BattleHexRoom(E_BattleType.首领敌人); break;
+            case E_HexRoomType.NPC_特定交互: iHexRoom = new NPCHexRoom(); break;
+            case E_HexRoomType.UnknownEvent_随机事件:iHexRoom = new UnknownEventHexRoom();break;
+            case E_HexRoomType.Reward_神像奖励: iHexRoom=new RewardHexRoom();break;
+            case E_HexRoomType.CityShop_城商镇:iHexRoom=new CityShopHexRoom();break;
+            default: break;
         }
+        //得到新的类型，加载对应的模型
+        iHexRoom.DoHexRoomModel();// LoadRoomModel();
     }
     public virtual void ResetSelf()
     {
@@ -97,22 +95,19 @@ public class HexRoomData : MonoBehaviour
         GameRoot.GetManager<UIManager>().OpenPanel<BattlePanel>(E_UIPanelType.BattlePanel);
     }
 }
+[Serializable]
+public class MapRoomData {
+
+    /// <summary>
+    /// 保存时是否有云朵
+    /// </summary>
+    public bool hasCloude;
+}
 
 public interface IHexRoom
 {
-    public void DoRoomLogic(UnityAction roomJob=null);
+    public void DoHexRoomLogic(UnityAction roomJob=null);
+
+    public void DoHexRoomModel();
 }
 
-/// <summary>
-/// 各种模型的类型
-/// </summary>
-
-public enum E_ModelType
-{
-    None,
-    NPC1, NPC2,
-    Enemy_1, Enemy_2, Enemy_3,
-    Unknown,
-    NewArea,
-    Rewards,
-}

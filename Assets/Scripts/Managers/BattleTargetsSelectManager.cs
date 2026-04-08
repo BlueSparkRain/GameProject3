@@ -84,7 +84,7 @@ public class BattleTargetsSelectManager : MonoSceneManager
             //case E_SkillTargetType.对敌方全体:
             //    for (int i = 0; i < enemyControllers.Count; i++)
             //        targets.Add(enemyControllers[i]);
-                break;
+                //break;
             case E_SkillTargetType.对N目标:
 
                 break;

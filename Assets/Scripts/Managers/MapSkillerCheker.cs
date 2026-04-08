@@ -46,7 +46,7 @@ public class MapSkillerCheker : MonoSceneManager
                 case E_HexRoomType.None_无:
 
                     break;
-                case E_HexRoomType.Battle_战斗:
+                case E_HexRoomType.Battle_LowLevel_战斗_杂鱼:
                     //随机的技能或道具奖励+经验奖励
                     skiller.GetNewSkill(0);
                     break;
@@ -54,7 +54,7 @@ public class MapSkillerCheker : MonoSceneManager
                     //随机的技能或道具奖励+经验奖励
                     skiller.GetNewSkill(0);
                     break;
-                case E_HexRoomType.Unknown_随机事件:
+                case E_HexRoomType.UnknownEvent_随机事件:
 
                     break;
                 default:

@@ -85,7 +85,7 @@ public class CoroutineManager : MonoGlobalManager
         StopAllGlobalCoroutines();
         _activeCoroutines.Clear();
         _coroutinePool.Clear();
-        Debug.Log("【协程管理器】数据清理完成，对象永久保留");
+
     }
     #endregion
 

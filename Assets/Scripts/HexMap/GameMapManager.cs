@@ -1,90 +1,150 @@
 using Core;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 管理初始地图的加载+历史状态存档读取
+/// 随机地块获取
+/// 游戏内地块状态更新+存档保存
+/// </summary>
 public class GameMapManager : MonoGlobalManager
 {
+
+
+    [Header("正六边形地图设置")]
+    public int MapRadius = 20;
+
     float x_Offset;//每行内的偏移
     float y_Offset;//相邻行的偏移
 
-    [Header("=== 正六边形地图设置 ===")]
-    public int MapRadius = 20;
-    private int MapRow;
-    private int maxCol; // 正六边形最大列数
+    private int mapRow;
+    private int mapCol; 
 
-    [Header("=== 地块材质配置（新增） ===")]
-    public Material oceanMat;        // 海洋材质
-    public Material landMat;         // 陆地材质
-    public Material obstacle_TreeMat;   
-    public Material obstacle_StoneMat;    
-    public Material obstacle_MountainMat;    
+    #region 地块材质配置
+    private Material obstacle_oceanMat;       
+    private Material walkable_landMat;         
+    private Material obstacle_TreeMat;
+    private Material obstacle_StoneMat;
+    private Material obstacle_MountainMat;
 
-    public Material walkable_BattleRoomMat;  
-    public Material walkable_EventRoomMat;  
-    public Material walkable_RewardRoomMat;  
-    public Material walkable_CityRoomMat;
+    private Material walkable_BattleLow_RoomMat;
+    private Material walkable_BattleMid_RoomMat;
+    private Material walkable_BattleHigh_RoomMat;
+    private Material walkable_EventRoomMat;
+    private Material walkable_RewardRoomMat;
+    private Material walkable_CityRoomMat;
+    #endregion
 
-
+    #region 地图生成
+    //初始化地图数据
     MapSaveSOData mapSaveData;
+    //地图数据后缀-动态资源加载
+    public string mapdataBack;
+    //行批次延迟
     float rowBatchInterval = 0.05f;
+    //相邻房间延迟
     float bornRoomInterval = 0.03f;
+    //地图锚点
     Vector3 MapPivotPos;
-
-    // 缓存所有生成的地块（新增）
+    // 缓存所有生成的地块
     private HexRoomData[,] allCells;
+    #endregion
 
-    HexMapInteractManager hexGridClickManager;
     CoroutineManager coroutineManager;
 
-    public string mapdataBack;
+    #region 运行时地块管理
+    // 坐标到房间的映射表（高效查找）
+    Dictionary<Vector2Int, HexRoomData> _hexRoomMap = new Dictionary<Vector2Int, HexRoomData>();
+    Dictionary<Vector2Int, bool> _walkableDic = new Dictionary<Vector2Int, bool>();
+    public Dictionary<Vector2Int, bool> WalkableDic => _walkableDic;
+    public Dictionary<Vector2Int, HexRoomData> HexRoomMap => _hexRoomMap;
+
+    //寻找一个完全随机的地块
+    public HexRoomData GetRnadomRoom()
+    {
+        HexRoomData hexRoomData = null;
+        do hexRoomData = _hexRoomMap.GetRandomElement().Value;
+        while (!hexRoomData.walkable);
+
+        Debug.Log(hexRoomData.roomType+":"+hexRoomData.walkable);
+        return hexRoomData;
+    }
+    #endregion
+
+
+    /// <summary>
+    /// 注册一个六边形房间到映射表，登记数据+可通行性
+    /// </summary>
+    public void RegisterHexRoom(HexRoomData room, bool walkable)
+    {
+
+        Vector2Int key = new Vector2Int(room.row, room.col);
+        if (!_hexRoomMap.ContainsKey(key))
+        {
+            _hexRoomMap.Add(key, room);
+            _walkableDic.Add(key, walkable);
+        }
+    }
+
     public override void MgrUpdate(float deltaTime) { }
+
+    /// <summary>
+    /// 地图初始化:
+    /// (1)读取SO数据加载自定义的初始地图
+    /// (2)依据存档信息来替换某些发生变化的地块的信息
+    /// </summary>
+    /// <param name="_x_offset"></param>
+    /// <param name="_y_offset"></param>
+    /// <param name="_MapRadius"></param>
+    /// <param name="_MapPivotPos"></param>
     public void GameMapManagerInit(float _x_offset, float _y_offset, int _MapRadius, Vector3 _MapPivotPos)
     {
         x_Offset = _x_offset;
         y_Offset = _y_offset;
         MapRadius = _MapRadius;
-        MapRow = MapRadius * 2 + 1;
-        maxCol = MapRow; // 最大列数=总行数
+        mapRow = MapRadius * 2 + 1;
+        mapCol = mapRow; // 最大列数=总行数
         MapPivotPos = _MapPivotPos;
         mapSaveData = ResourcesLoader.FindMapSaveData(mapdataBack);
         mapSaveData.mapRadius = MapRadius;
         mapSaveData.InitializeIfEmpty();
-        Debug.Log(mapSaveData + " --" + mapSaveData.cellData+ "??");
         // 初始化地块缓存数组（新增）
-        allCells = new HexRoomData[MapRow, maxCol];
+        allCells = new HexRoomData[mapRow, mapCol];
         EventCenter.AddEventListener<Vector2Int, E_HexTerrainType>(E_EventType.Editor_Terrain, UpdateHexTag);
     }
 
     public void CreateWholeMap()
     {
         // 加载材质
-        oceanMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_Ocean");
-        landMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_Land");
+        obstacle_oceanMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_Ocean");
+        walkable_landMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_Land");
         obstacle_TreeMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_Tree");
         obstacle_StoneMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_Stone");
         obstacle_MountainMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_Mountain");
         
-        walkable_BattleRoomMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_Battle");
+        walkable_BattleLow_RoomMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_BattleLow");
+        walkable_BattleMid_RoomMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_BattleMid");
+        walkable_BattleHigh_RoomMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_BattleHigh");
+
         walkable_EventRoomMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_Event");
         walkable_RewardRoomMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_Reward");
         walkable_CityRoomMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_City");
         coroutineManager = GameRoot.GetManager<CoroutineManager>();
-        hexGridClickManager = GameRoot.GetManager<HexMapInteractManager>();
-
-        // 优先读取存档数据生成地图
+      
+        // 优先读取SO数据生成地图
         if (mapSaveData != null && mapSaveData.cellData != null)
         {
             LoadMapFromSaveData();
         }
-
     }
 
-    #region 正六边形地图生成（你原有逻辑，无修改）
+    #region 正六边形地图生成
     IEnumerator MapCreateCoro()
     {
         WaitForSeconds rowBatchDealy = new WaitForSeconds(rowBatchInterval);
         bool fromleft = true;
-        for (int row = 0; row < MapRow; row++)
+        for (int row = 0; row < mapRow; row++)
         {
             coroutineManager.StartCoroutine(CreatRowRooms(row, fromleft));
             fromleft = !fromleft;
@@ -125,7 +185,19 @@ public class GameMapManager : MonoGlobalManager
     }
     #endregion
 
-    #region 核心功能：地块创建+类型控制+存档（新增+修改）
+
+    bool IsTerrainWalkabke(E_HexTerrainType cellType) {
+
+        return cellType == E_HexTerrainType.Walkable_EmptyLand ||
+               cellType == E_HexTerrainType.Walkable_CityShopRoom ||
+               cellType == E_HexTerrainType.Walkable_RewardRoom ||
+               cellType == E_HexTerrainType.Walkable_UnknownEventRoom ||
+               cellType == E_HexTerrainType.Walkable_LowLevel_BattleRoom ||
+               cellType == E_HexTerrainType.Walkable_MidLevel_BattleRoom ||
+               cellType == E_HexTerrainType.Walkable_HighLevel_BattleRoom;
+    }
+
+    #region 地块创建+类型控制+存档
     void CreateOneRoom(int _row, int _col)
     {
         E_HexTerrainType cellType = E_HexTerrainType.Obstacle__Ocean;
@@ -135,10 +207,9 @@ public class GameMapManager : MonoGlobalManager
             cellType = mapSaveData.cellData[_row, _col];
         }
 
-        // 判断是否可行走（新增）
-        bool isWalkable = cellType == E_HexTerrainType.Walkable_EmptyLand;
-
-        var newHexRoom = CreateHexRoom(_row, _col, isWalkable);
+        // 更新行走状态
+        bool isWalkable = IsTerrainWalkabke(cellType);
+        var newHexRoom = CreateHexRoom(_row, _col, isWalkable,cellType);
         allCells[_row, _col] = newHexRoom; // 缓存地块（新增）
 
         newHexRoom.SetCellState(isWalkable);
@@ -158,20 +229,23 @@ public class GameMapManager : MonoGlobalManager
 
         switch (type)
         {
-            case E_HexTerrainType.Obstacle__Ocean : renderer.material = oceanMat; break;
-            case E_HexTerrainType.Walkable_EmptyLand: renderer.material = landMat; break;
+            case E_HexTerrainType.Obstacle__Ocean : renderer.material = obstacle_oceanMat; break;
+            case E_HexTerrainType.Walkable_EmptyLand: renderer.material = walkable_landMat; break;
             case E_HexTerrainType.Obstacle_Tree: renderer.material = obstacle_TreeMat; break;
             case E_HexTerrainType.Obstacle_Stone: renderer.material = obstacle_StoneMat; break;
             case E_HexTerrainType.Obstacle_Mountain: renderer.material = obstacle_MountainMat; break;
             
-            case E_HexTerrainType.Walkable_BattleRoom: renderer.material = walkable_BattleRoomMat; break;
-            case E_HexTerrainType.Walkable_EventRoom: renderer.material = walkable_EventRoomMat; break;
+            case E_HexTerrainType.Walkable_LowLevel_BattleRoom: renderer.material = walkable_BattleLow_RoomMat; break;
+            case E_HexTerrainType.Walkable_MidLevel_BattleRoom: renderer.material = walkable_BattleMid_RoomMat; break;
+            case E_HexTerrainType.Walkable_HighLevel_BattleRoom: renderer.material = walkable_BattleHigh_RoomMat; break;
+
+            case E_HexTerrainType.Walkable_UnknownEventRoom: renderer.material = walkable_EventRoomMat; break;
             case E_HexTerrainType.Walkable_RewardRoom: renderer.material = walkable_RewardRoomMat; break;
-            case E_HexTerrainType.Walkable_CityRoom: renderer.material = walkable_CityRoomMat; break;
+            case E_HexTerrainType.Walkable_CityShopRoom: renderer.material = walkable_CityRoomMat; break;
         }
     }
 
-    HexRoomData CreateHexRoom(int row, int col, bool walkable, E_HexRoomType e_HexRoomType = E_HexRoomType.None_无)
+    HexRoomData CreateHexRoom(int row, int col, bool walkable, E_HexTerrainType cellType)
     {
         HexRoomData newHexRoom = GameRoot.GetManager<ObjectPoolManager>()
             .GetInstance(EPoolType.MapRoom_地图房间).GetComponent<HexRoomData>();
@@ -180,34 +254,33 @@ public class GameMapManager : MonoGlobalManager
             newHexRoom.GetComponent<HexJumpAnimation>().InitPos(MapPivotPos + new Vector3(y_Offset * col, 0, x_Offset * row));
         else
             newHexRoom.GetComponent<HexJumpAnimation>().InitPos(MapPivotPos + new Vector3(y_Offset * (col + 0.5f), 0, x_Offset * row));
-        
-        if (newHexRoom){
-            newHexRoom.InitRoomID(row, col, e_HexRoomType);
-            hexGridClickManager.RegisterHexRoom(newHexRoom, walkable);
+
+        if (newHexRoom)
+        {
+            newHexRoom.GetComponent<HexTerrainTag>().SetTag(cellType);
+            newHexRoom.InitRoomID(row, col);
+            RegisterHexRoom(newHexRoom, walkable);
         }
+
         return newHexRoom;
     }
     #endregion
 
-    #region 编辑功能：点击切换地块类型+保存数据（新增）
-
-
+    #region 地图编辑功能：点击切换地块类型+保存数据
     /// <summary>
     /// 设置地块类型（新增）
     /// </summary>
     public void UpdateHexTag(Vector2Int pos, E_HexTerrainType type)
     {
         if (allCells[pos.x, pos.y] == null) return;
-
         // 更新行走状态
-        bool isWalkable = type == E_HexTerrainType.Walkable_EmptyLand;
+        bool isWalkable = IsTerrainWalkabke(type);
         allCells[pos.x, pos.y].SetCellState(isWalkable);
-        hexGridClickManager.RegisterHexRoom(allCells[pos.x, pos.y], isWalkable);
-        Debug.Log("更新材质！");
+        //更新地块类型后需要重新注册
+        RegisterHexRoom(allCells[pos.x, pos.y], isWalkable);
         // 更新材质
         SetCellMaterial(allCells[pos.x, pos.y], type);
     }
-
 
     /// <summary>
     /// 从存档加载地图（新增）
@@ -227,7 +300,7 @@ public class GameMapManager : MonoGlobalManager
         {
             Destroy(transform.GetChild(i).gameObject);
         }
-        allCells = new HexRoomData[MapRow, maxCol];
+        allCells = new HexRoomData[mapRow, mapCol];
 
         // 按存档生成
         StartCoroutine(MapCreateCoro());
@@ -238,7 +311,7 @@ public class GameMapManager : MonoGlobalManager
     void ReplaceOuterMat(HexRoomData room)
     {
         MeshRenderer renderer = room.GetComponent<MeshRenderer>();
-        renderer.material = landMat;
+        renderer.material = walkable_landMat;
         renderer.enabled = true;
     }
 }

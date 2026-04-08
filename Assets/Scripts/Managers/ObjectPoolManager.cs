@@ -57,18 +57,10 @@ public class ObjectPoolManager : MonoGlobalManager
     public override void MgrDispose()
     {
         base.MgrDispose();
-        // 注销事件（杜绝僵尸委托！）
-            EventCenter.RemoveEventListener<EPoolType>(E_EventType.LoadObjPool, LoadOnePool);
-            Debug.Log("【对象池】已注销事件监听，无僵尸引用！");
+        EventCenter.RemoveEventListener<EPoolType>(E_EventType.LoadObjPool, LoadOnePool);
     }
-    //// 【关键修复】管理器销毁时，自动从静态事件中心移除自己的监听！
-    //protected override void MgrDispose()
-    //{
-    //    base.MgrDispose();
-    //    // 注销事件（杜绝僵尸委托！）
-    //    EventCenterManager.RemoveEventListener<EPoolType>(E_EventType.LoadObjPool, LoadOnePool);
-    //    Debug.Log("【对象池】已注销事件监听，无僵尸引用！");
-    //}
+
+
 
     void LoadOnePool(EPoolType poolType)
     {

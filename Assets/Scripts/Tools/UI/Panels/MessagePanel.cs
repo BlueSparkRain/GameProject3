@@ -14,7 +14,6 @@ public class MessagePanel : UIPanelBase
     [Header("确认按钮")]
     public Button confrimButton;
 
-    int a = 0;
     public override void Hide()
     {
         base.Hide();
