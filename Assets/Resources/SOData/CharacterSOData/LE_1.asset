@@ -13,17 +13,17 @@ MonoBehaviour:
   m_Name: LE_1
   m_EditorClassIdentifier: 
   characterType: 4
-  characterSprite: {fileID: 0}
+  characterSprite: {fileID: 21300000, guid: ec25ca2d0ab90fd4e89d15368f8a0915, type: 3}
   characterName: "\u5C0F\u5C0F\u602A"
   Phy_Flat_Penetration: 0.3
   Mag_Flat_Penetration: 0.2
   Phy_Resistance: 0
   Mag_Resistance: 0
-  Phy_Attack: 0.5
-  Magic_Attack: 0
-  Maximum_Mana: 150
+  Phy_Attack: 1
+  Magic_Attack: 1
+  Maximum_Mana: 100
   Mana_Regeneration: 0
-  Maximum_Health: 80
+  Maximum_Health: 100
   Health_Regeneration: 0
   Life_Steal: 0
   Tenacity: 0

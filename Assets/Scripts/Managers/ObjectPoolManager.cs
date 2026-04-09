@@ -23,6 +23,12 @@ public class ObjectPoolManager : MonoGlobalManager
 
     void CreatePoolParent()
     {
+        // 重复运行时，先销毁旧的父物体，避免残留
+        if (HexRoomsTrans != null) Destroy(HexRoomsTrans.gameObject);
+        if (RoomCloudesTrans != null) Destroy(RoomCloudesTrans.gameObject);
+        if (SkillIconsTrans != null) Destroy(SkillIconsTrans.gameObject);
+        if (SkillSlotsTrans != null) Destroy(SkillSlotsTrans.gameObject);
+
         HexRoomsTrans = new GameObject("HexRooms").transform;
         HexRoomsTrans.SetParent(transform);
 
@@ -41,10 +47,13 @@ public class ObjectPoolManager : MonoGlobalManager
         base.MgrOnInit();
         CreatePoolParent();
 
-        poolDataDic.Add(EPoolType.MapRoom_地图房间, new PoolData(HexRoomsTrans, ResourcesLoader.FindHexRoomObj(), 400));
-        poolDataDic.Add(EPoolType.RoomCloude_房间遮云, new PoolData(RoomCloudesTrans, ResourcesLoader.FindRoomCloudeObj(), 400));
-        poolDataDic.Add(EPoolType.SkillIcon_技能图标, new PoolData(SkillIconsTrans, ResourcesLoader.FindSkillIconObj(), 20));
-        poolDataDic.Add(EPoolType.SkillSlot_技能槽位, new PoolData(SkillSlotsTrans, ResourcesLoader.FindSkillSlotObj(), 20));
+        // 初始化前清空字典，防止重复添加
+        poolDataDic.Clear();
+
+        poolDataDic.Add(EPoolType.MapRoom_地图房间, new PoolData(HexRoomsTrans, ResourcesLoader.FindHexRoomObj(), 2700));
+        poolDataDic.Add(EPoolType.RoomCloude_房间遮云, new PoolData(RoomCloudesTrans, ResourcesLoader.FindRoomCloudeObj(), 2700));
+        poolDataDic.Add(EPoolType.SkillIcon_技能图标, new PoolData(SkillIconsTrans, ResourcesLoader.FindSkillIconObj(), 30));
+        poolDataDic.Add(EPoolType.SkillSlot_技能槽位, new PoolData(SkillSlotsTrans, ResourcesLoader.FindSkillSlotObj(), 30));
 
         // 注册事件
         EventCenter.AddEventListener<EPoolType>(E_EventType.LoadObjPool, LoadOnePool);
@@ -54,17 +63,39 @@ public class ObjectPoolManager : MonoGlobalManager
     {
         base.Awake();
     }
+
+    /// <summary>
+    /// 【核心修复】重写销毁方法，彻底清空对象池
+    /// </summary>
     public override void MgrDispose()
     {
         base.MgrDispose();
         EventCenter.RemoveEventListener<EPoolType>(E_EventType.LoadObjPool, LoadOnePool);
+
+        // 遍历所有对象池，销毁物体 + 清空列表
+        foreach (var data in poolDataDic.Values)
+        {
+            if (data.pool != null)
+            {
+                foreach (var obj in data.pool)
+                {
+                    if (obj != null) Destroy(obj);
+                }
+                data.pool.Clear();
+            }
+        }
+        // 清空字典
+        poolDataDic.Clear();
+
+        // 销毁父物体
+        if (HexRoomsTrans != null) Destroy(HexRoomsTrans.gameObject);
+        if (RoomCloudesTrans != null) Destroy(RoomCloudesTrans.gameObject);
+        if (SkillIconsTrans != null) Destroy(SkillIconsTrans.gameObject);
+        if (SkillSlotsTrans != null) Destroy(SkillSlotsTrans.gameObject);
     }
-
-
 
     void LoadOnePool(EPoolType poolType)
     {
-        // 安全获取协程管理器
         var coroutineMgr = GameRoot.GetManager<CoroutineManager>();
         if (coroutineMgr != null)
         {
@@ -74,6 +105,9 @@ public class ObjectPoolManager : MonoGlobalManager
 
     public IEnumerator StartFillPool(EPoolType poolType)
     {
+        // 空值防护
+        if (!poolDataDic.ContainsKey(poolType)) yield break;
+
         int createdCount = 0;
         int poolSize = poolDataDic[poolType].poolSize;
 
@@ -94,6 +128,9 @@ public class ObjectPoolManager : MonoGlobalManager
         if (!poolDataDic.ContainsKey(poolType)) return null;
 
         PoolData poolData = poolDataDic[poolType];
+        // 预制体空值校验
+        if (poolData.prefab == null) return null;
+
         GameObject instance;
 
         if (poolType == EPoolType.MapRoom_地图房间 || poolType == EPoolType.RoomCloude_房间遮云)
@@ -106,25 +143,42 @@ public class ObjectPoolManager : MonoGlobalManager
         return instance;
     }
 
+    /// <summary>
+    /// 【修复】获取物体时，过滤已销毁的空对象
+    /// </summary>
     public GameObject GetInstance(EPoolType poolType)
     {
+        if (!poolDataDic.ContainsKey(poolType)) return null;
+
         var pool = poolDataDic[poolType].pool;
-        foreach (var obj in pool)
+        // 遍历池，先判断物体是否为空，再判断是否未激活
+        for (int i = 0; i < pool.Count; i++)
         {
+            var obj = pool[i];
+            if (obj == null)
+            {
+                // 清理已销毁的空引用
+                pool.RemoveAt(i);
+                i--;
+                continue;
+            }
             if (!obj.activeInHierarchy)
             {
                 obj.SetActive(true);
                 return obj;
             }
         }
+        // 池内无可用物体，创建新的
         var instance = CreateNewInstance(poolType);
-        instance.SetActive(true);
+        if (instance != null) instance.SetActive(true);
         return instance;
     }
 
     public void ReturnPool(EPoolType poolType, GameObject obj)
     {
-        Debug.Log("得吃了！"+poolType);
+        if (obj == null || !poolDataDic.ContainsKey(poolType)) return;
+
+        Debug.Log("回收物体：" + poolType);
         obj.transform.SetParent(poolDataDic[poolType].parent);
         obj.SetActive(false);
     }

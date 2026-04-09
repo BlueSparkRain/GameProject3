@@ -1,4 +1,5 @@
 using Core;
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +9,7 @@ using UnityEngine;
 /// 随机地块获取
 /// 游戏内地块状态更新+存档保存
 /// </summary>
-public class GameMapManager : MonoGlobalManager
+public class GameMapManager : MonoSceneManager
 {
 
 
@@ -42,7 +43,7 @@ public class GameMapManager : MonoGlobalManager
     //地图数据后缀-动态资源加载
     public string mapdataBack;
     //行批次延迟
-    float rowBatchInterval = 0.05f;
+    float rowBatchInterval = 0.04f;
     //相邻房间延迟
     float bornRoomInterval = 0.03f;
     //地图锚点
@@ -213,7 +214,9 @@ public class GameMapManager : MonoGlobalManager
         allCells[_row, _col] = newHexRoom; // 缓存地块（新增）
 
         newHexRoom.SetCellState(isWalkable);
-        newHexRoom.GetComponent<HexJumpAnimation>().TriggerJump(0.4f);
+
+        newHexRoom.transform.DOScale(new Vector3(100,100,50), 0.5f).From(0);
+        newHexRoom.GetComponent<HexJumpAnimation>().TriggerJump(0.3f);
 
         // 设置对应材质（新增）
         SetCellMaterial(newHexRoom, cellType);

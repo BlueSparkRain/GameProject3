@@ -47,18 +47,6 @@ public class HexMapInteractManager : MonoGlobalManager
         CheckHoverHexRoom();
     }
 
-    ///// <summary>
-    ///// 注册一个六边形房间到映射表
-    ///// </summary>
-    //public void RegisterHexRoom(HexRoomData room,bool walkable){
-    //    Vector2Int key = new Vector2Int(room.row, room.col);
-    //    if (!_hexRoomMap.ContainsKey(key))
-    //    {
-    //        _hexRoomMap.Add(key, room);
-    //        _walkableDic.Add(key, walkable);
-    //    }
-    //}
-
     /// <summary>
     /// 检测点击的六边形房间
     /// </summary>
@@ -85,6 +73,7 @@ public class HexMapInteractManager : MonoGlobalManager
 
                 GameRoot.GetManager<AudioManager>().PlaySFX("Music/SFX/mambo");
                 hexPathFindingManager.SetPathFindState(false);
+
                 mapCharacterMoveChecker.MoverGo(hexPathFindingManager.TargetMoverPath);
                 hexPathFindingManager.EndOneTimeMove();
             }
@@ -118,10 +107,9 @@ public class HexMapInteractManager : MonoGlobalManager
         }
     }
 
-    //每次角色移动后检测一次
-
     void OneMoverCloudeCheck() {
         HexRoomData characterRoom = GameRoot.GetManager<MapMoverChecker>().currentIMovable.currentRoom;// currentMover.CurrentRooom;
+        Debug.Log(characterRoom+"??????");
         coroutineManager.StartCoroutine(TriggerCloudeDisappear(characterRoom.row, characterRoom.col));
     }
 
@@ -148,7 +136,7 @@ public class HexMapInteractManager : MonoGlobalManager
     /// <summary>
     /// 检测鼠标悬浮的六边形房间（性能优化：仅房间变化时处理）
     /// </summary>
-    private void CheckHoverHexRoom(){
+    void CheckHoverHexRoom(){
         //射线检测获取当前悬浮房间
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         HexRoomData newHoverRoom = null;
@@ -252,21 +240,21 @@ public class HexMapInteractManager : MonoGlobalManager
     #endregion
 }
 
-public static class DictionaryExtensions
-{
-    /// <summary>
-    /// 从字典中随机取一个元素
-    /// </summary>
-    public static KeyValuePair<TKey, TValue> GetRandomElement<TKey, TValue>(this Dictionary<TKey, TValue> dict)
-    {
-        if (dict == null || dict.Count == 0)
-            return default;
+//public static class DictionaryExtensions
+//{
+//    /// <summary>
+//    /// 从字典中随机取一个元素
+//    /// </summary>
+//    public static KeyValuePair<TKey, TValue> GetRandomElement<TKey, TValue>(this Dictionary<TKey, TValue> dict)
+//    {
+//        if (dict == null || dict.Count == 0)
+//            return default;
 
-        // 随机索引
-        int randomIndex = UnityEngine.Random.Range(0, dict.Count);
-        // 直接按顺序取第 N 个元素（最省性能）
-        using var enumerator = dict.GetEnumerator();
-        for (int i = 0; enumerator.MoveNext() && i < randomIndex; i++) { }
-        return enumerator.Current;
-    }
-}
+//        // 随机索引
+//        int randomIndex = UnityEngine.Random.Range(0, dict.Count);
+//        // 直接按顺序取第 N 个元素（最省性能）
+//        using var enumerator = dict.GetEnumerator();
+//        for (int i = 0; enumerator.MoveNext() && i < randomIndex; i++) { }
+//        return enumerator.Current;
+//    }
+//}

@@ -6,6 +6,10 @@ public class Robot_CharacterMapMover : IMapMoveable
 {
     public HexRoomData currentRoom { get ; set ; }
 
+    public void DoEndSelfRound()
+    {
+    }
+
     public void DoMoveFunc(List<HexRoomData> path)
     {
 

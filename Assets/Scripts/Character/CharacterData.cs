@@ -1,8 +1,8 @@
 using System;
-using System.Collections.Generic;
-using UnityEditor.Rendering;
 using UnityEngine;
 
+
+[RequireComponent(typeof(CharacterCampTag))]
 /// <summary>
 /// 记录一名角色当前的属性数据（战斗中读取的是当前的属性数据（而非SOData））
 /// </summary>
@@ -98,27 +98,25 @@ public class CharacterData : MonoBehaviour
     /// </summary>
     private int currentLevel;
 
-    public float Phy_Flat_Penetration=>phy_Flat_Penetration;
-    public float Mag_Flat_Penetration=>mag_Flat_Penetration;
-    public float Phy_Resistance=>phy_Resistance;
-    public float Mag_Resistance=>mag_Resistance;
-    public float Phy_Attack=>phy_Attack;
-    public float Magic_Attack=>magic_Attack;
-    public float Maximum_Mana=>maximum_Mana;
-    public float Mana_Regeneration=>mana_Regeneration;
-    public float Maximum_Health=>maximum_Health;
-    public float Health_Regeneration=>health_Regeneration;
-    public float Life_Steal=>life_Steal;
-    public float Tenacity=>tenacity;
-    public float Endurance=>endurance;
-    public float Dodge_Rate=>dodge_Rate;
-    public float Heal_Amplification=>heal_Amplification;
-    public float Shield_Amplification=>shield_Amplification;
-    public int Maximum_ATB=>maximum_ATB;
-    public int CurrentLevel=>currentLevel;
+    public float Phy_Flat_Penetration => phy_Flat_Penetration;
+    public float Mag_Flat_Penetration => mag_Flat_Penetration;
+    public float Phy_Resistance => phy_Resistance;
+    public float Mag_Resistance => mag_Resistance;
+    public float Phy_Attack => phy_Attack;
+    public float Magic_Attack => magic_Attack;
+    public float Maximum_Mana => maximum_Mana;
+    public float Mana_Regeneration => mana_Regeneration;
+    public float Maximum_Health => maximum_Health;
+    public float Health_Regeneration => health_Regeneration;
+    public float Life_Steal => life_Steal;
+    public float Tenacity => tenacity;
+    public float Endurance => endurance;
+    public float Dodge_Rate => dodge_Rate;
+    public float Heal_Amplification => heal_Amplification;
+    public float Shield_Amplification => shield_Amplification;
+    public int Maximum_ATB => maximum_ATB;
+    public int CurrentLevel => currentLevel;
     #endregion
-    IUpGradable upgradeHandle;
-    IBattlable ibattle;
 
     CharacterDataSO LoadCharacterSOData()
     {
@@ -130,16 +128,7 @@ public class CharacterData : MonoBehaviour
         characterType = _characterType;
         currentLevel = 1;
 
-        if (isPlayer) ibattle = new Player();
-        else ibattle = new Enemy();
-
-        if (canLevelUp)
-        {
-            upgradeHandle = new LevelUpGradeHandle();
-            GetComponent<CharacterMapMoveHandle>().InitMover(isPlayer, characterType);
-        }
-        else upgradeHandle = new StageUpGradeHandle();
-
+        GetComponent<CharacterCampTag>().InitCharacterTag(_characterType,isPlayer, canLevelUp);
         //如果有存档记录,就加载存档数据
         //没有存档记录，就初始化角色
         if (JsonSaver.HasValidData<Save_CharacterData>())
@@ -155,7 +144,7 @@ public class CharacterData : MonoBehaviour
     }
     void InitBySaveData()
     {
-       var characterSaveData = JsonSaver.Load<Save_CharacterData>();
+        var characterSaveData = JsonSaver.Load<Save_CharacterData>();
         phy_Flat_Penetration = characterSaveData.Phy_Flat_Penetration;
         mag_Flat_Penetration = characterSaveData.Mag_Flat_Penetration;
         phy_Resistance = characterSaveData.Phy_Resistance;
@@ -198,7 +187,7 @@ public class CharacterData : MonoBehaviour
         dodge_Rate = characterData.Dodge_Rate;
         heal_Amplification = characterData.Heal_Amplification;
         shield_Amplification = characterData.Shield_Amplification;
-        maximum_ATB= characterData.Maximum_ATB;
+        maximum_ATB = characterData.Maximum_ATB;
     }
 
     public float GetProperty(E_CharacterPropertyType type)
@@ -258,17 +247,20 @@ public class CharacterData : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
             AdjustProperty(E_CharacterPropertyType.Phy_Attack, 5);
-            
+
         }
     }
 }
 
 [Serializable]
-public class Save_CharacterData:IValidatable {
+public class Save_CharacterData : IValidatable
+{
     public Save_CharacterData() { }
-    public Save_CharacterData(CharacterData characterSaveData) {
+    public Save_CharacterData(CharacterData characterSaveData)
+    {
         Phy_Flat_Penetration = characterSaveData.Phy_Flat_Penetration;
         Mag_Flat_Penetration = characterSaveData.Mag_Flat_Penetration;
         Phy_Resistance = characterSaveData.Phy_Resistance;

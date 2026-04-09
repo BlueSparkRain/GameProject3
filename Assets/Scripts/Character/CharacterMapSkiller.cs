@@ -23,10 +23,9 @@ public class CharacterMapSkiller : MonoBehaviour
     public int atbSkillSlotNum=5;
     private List<SkillData> atbSkillDatas = new List<SkillData>();
 
-
-    public int current_restSkillNum=0;
-    public int current_normalSkillNum=0;
-    public int current_atbSkillNum=0;
+    int current_restSkillNum=0;
+    int current_normalSkillNum=0;
+    int current_atbSkillNum=0;
 
     public List<SkillData> RestWholeSkillDatas=>restWholeSkillDatas;//属性，不产生内存
     public List<SkillData> NormalSkillDatas => normalSkillDatas;
@@ -36,10 +35,9 @@ public class CharacterMapSkiller : MonoBehaviour
     [Header("是否可以调整技能分配")]
     public bool canActSettle=false;
 
-    public bool isPlayer = false;
     private void Start()
     {
-        EventCenter.EventTrigger(E_EventType.Character_Born,this,isPlayer);
+        EventCenter.EventTrigger(E_EventType.Character_Born,this,GetComponent<CharacterCampTag>().isPlayer);
     }
 
     /// <summary>
@@ -49,9 +47,9 @@ public class CharacterMapSkiller : MonoBehaviour
     public void GetNewSkill(int skillID)
     {
         var newSkillData = new SkillData(ResourcesLoader.FindSkillSOByID(skillID));
-        Debug.Log("获取到新技能——" + newSkillData.skill_Name);
         restWholeSkillDatas.Add(newSkillData);
-        current_restSkillNum++;
+        Debug.Log("获取到新技能——" + newSkillData.skill_Name + restWholeSkillDatas.Count);
+        current_restSkillNum = restWholeSkillDatas.Count;
     }
 
     /// <summary>

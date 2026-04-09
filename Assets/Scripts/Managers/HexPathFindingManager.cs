@@ -180,8 +180,12 @@ public class HexPathFindingManager : MonoGlobalManager
             Debug.LogWarning("[HexPathDrawMgr]---玩家起始地块不可行走！");
             return;
         }
-
         _playerStartRoom = room;
+        Debug.Log(_playerStartRoom.GetComponent<Renderer>().material+"达娃微微的");
+
+        MeshRenderer renderer = _playerStartRoom.GetComponent<MeshRenderer>();
+        _playerRoom_OriginMat = renderer.material;
+
         _walkablePath.Clear();
         _diswalkablePath.Clear();
         _autoFullPath.Clear();
@@ -383,14 +387,12 @@ public class HexPathFindingManager : MonoGlobalManager
         int dCol = colB - colA;
         bool isNeighbor = false;
 
-        if (dRow is 1 or -1)
-        {
+        if (dRow is 1 or -1){
             bool isOddRow = (rowA % 2 == 1) == isOddRowStaggered;
             isNeighbor = isOddRow ? (dCol is 0 or 1) : (dCol is 0 or -1);
         }
         else if (dRow == 0)
             isNeighbor = dCol is 1 or -1;
-
         return isNeighbor;
     }
 
@@ -403,21 +405,17 @@ public class HexPathFindingManager : MonoGlobalManager
         int col = room.col;
         bool isOddRow = (row % 2 == 1) == isOddRowStaggered;
 
-        List<Vector2Int> neighborOffsets = new List<Vector2Int>
-        {
-            new(row, col + 1), new(row, col - 1)
-        };
+        List<Vector2Int> neighborOffsets = new List<Vector2Int>{
+            new(row, col + 1), new(row, col - 1)};
 
-        if (isOddRow)
-        {
+        if (isOddRow){
             neighborOffsets.AddRange(new List<Vector2Int>
             {
                 new(row + 1, col), new(row + 1, col + 1),
                 new(row - 1, col), new(row - 1, col + 1)
             });
         }
-        else
-        {
+        else{
             neighborOffsets.AddRange(new List<Vector2Int>
             {
                 new(row + 1, col), new(row + 1, col - 1),
@@ -425,8 +423,7 @@ public class HexPathFindingManager : MonoGlobalManager
             });
         }
 
-        foreach (var offset in neighborOffsets)
-        {
+        foreach (var offset in neighborOffsets){
             if (_mapManager.HexRoomMap.TryGetValue(offset, out HexRoomData neighbor))
                 neighbors.Add(neighbor);
         }
@@ -442,10 +439,8 @@ public class HexPathFindingManager : MonoGlobalManager
         if (_walkablePathMat == null) return;
 
         // 渲染玩家起点
-        if (_playerStartRoom)
-        {
+        if (_playerStartRoom){
             MeshRenderer renderer = _playerStartRoom.GetComponent<MeshRenderer>();
-            _playerRoom_OriginMat = renderer.material;
             renderer.material = _playerRoomMat;
         }
 

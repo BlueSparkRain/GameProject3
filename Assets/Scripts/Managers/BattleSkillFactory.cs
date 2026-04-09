@@ -10,12 +10,14 @@ public static class BattleSkillFactory
 {
         // 核心缓存：技能ID → 技能创建委托（最高效方式，无反射）
         private static readonly Dictionary<int, Func<ISkill>> _skillMap = new();
-        private static int skillNum=3;
+        private static int skillNum=5;
         public static void RegisterAllSkills()
         {
             for (int i = 0; i < skillNum; i++){
                 var skillSo = ResourcesLoader.FindSkillSOByID(i);
                 _skillMap[i] = () => new Skill_BaseAttack(skillSo.skill_targetType);
+
+            UnityEngine.Debug.Log(i + ":" + skillSo.skill_Name);
             }
             // 注册格式：ID => new 技能()
         //_skillMap[102] = () => new IceSkill();
@@ -23,14 +25,35 @@ public static class BattleSkillFactory
         // 新增技能只加这一行，完全解耦
     }
 
-        /// <summary>
-        /// 根据单个ID创建技能（供任意角色使用）
-        /// </summary>
-        public static ISkill Create(int skillId)
+
+    public static ISkill CreateBattleSkill(int skillId, IBattlable caster) {
+        var skill=Create(skillId);
+        skill.GetCaster(caster);
+        return skill;
+    }
+
+    public static List<ISkill> CreateBattleSkillsBatch(List<int> skillidlist,IBattlable caster) {
+        var skills = CreateBatch(skillidlist);
+        foreach (var skill in skills){
+            skill.GetCaster(caster);
+        }
+        return skills;
+    }
+
+    /// <summary>
+    /// 根据单个ID创建技能（供任意角色使用） 
+    /// </summary>
+    /// <param name="skillId">技能ID</param>
+    /// <param name="caster">技能发动方</param>
+    /// <returns></returns>
+    /// <exception cref="KeyNotFoundException"></exception>
+        static ISkill Create(int skillId)
         {
-            if (_skillMap.TryGetValue(skillId, out var creator))
-                return creator();
-            UnityEngine.Debug.Log(skillId+ ": "+ creator()); ;
+        if (_skillMap.TryGetValue(skillId, out var creator))
+        {
+            return creator();
+        }
+            UnityEngine.Debug.Log(skillId+ ": "+ creator()); 
             throw new KeyNotFoundException($"技能ID {skillId} 未注册");
         }
 
@@ -38,7 +61,7 @@ public static class BattleSkillFactory
         /// 【核心方法】根据ID列表批量创建技能（对局前直接调用）
         /// 玩家/敌人/任何单位都能用
         /// </summary>
-        public static List<ISkill> CreateBatch(List<int> skillIdList)
+        static List<ISkill> CreateBatch(List<int> skillIdList)
         {
             List<ISkill> skills = new List<ISkill>(skillIdList.Count); // 预分配内存，无GC
             foreach (int id in skillIdList) skills.Add(Create(id));

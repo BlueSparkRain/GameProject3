@@ -27,7 +27,8 @@ Material:
     m_Floats:
     - _ColorLerp: 0.659
     - _EdgePower: 0.075
-    - _Lerp: 0.252
+    - _Lerp: 0
+    - _LerpIntensity: -0.82
     - _Offset: 0.1
     - _OutlineWidth: 0.0385
     - _Transition: 0.399
@@ -35,8 +36,8 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 0.81446534, b: 0.81446534, a: 1}
     - _Color: {r: 1, g: 0, b: 0, a: 1}
-    - _Color1: {r: 0.097892284, g: 0, b: 1, a: 1}
-    - _Color2: {r: 1, g: 1, b: 0, a: 1}
+    - _Color1: {r: 0, g: 2.3889792, b: 4.287094, a: 1}
+    - _Color2: {r: 6.964404, g: 2.5736482, b: 0, a: 1}
     - _OutlineColor: {r: 1, g: 0, b: 0, a: 1}
     - _OutlineColor1: {r: 1, g: 0, b: 0, a: 1}
     - _OutlineColor2: {r: 1, g: 1, b: 0, a: 1}

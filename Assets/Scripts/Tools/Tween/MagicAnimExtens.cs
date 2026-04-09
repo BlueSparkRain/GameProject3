@@ -90,7 +90,53 @@ public static class MagicAnimExtens
         }
     }
 
+    public static void PerfectJump_WorldAnim(Transform charcaterTrans, Vector3 targetPos)
+    {
+        // 清空旧动画，防止卡顿重叠
+        charcaterTrans.DOKill();
+        float totalDuration = 0.2f;   // 总时长（0.4~0.6最丝滑）
+        float jumpPower = 0.8f;      // 弹跳高度
+                                     // 挤压/拉伸幅度（数值越小越柔和，越大越Q弹）
+        float squeezeXZ = 1.15f;     // 起跳/落地 XZ挤压
+        float squeezeY = 0.8f;      // 起跳/落地 Y压缩
+        float stretchXZ = 0.9f;      // 空中 XZ拉伸
+        float stretchY = 1.2f;      // 空中 Y拉长
 
+        // 创建序列动画
+        Sequence seq = DOTween.Sequence();
+
+        // 1. 抛物线跳跃（基础位移，丝滑曲线）
+        seq.Join(charcaterTrans.DOJump(targetPos, jumpPower, 1, totalDuration)
+            .SetEase(Ease.InOutSine)); // 【关键】最丝滑的正弦曲线，抛弃Flash
+
+        // ====================== 无缝缩放动画（完美同步跳跃）======================
+        // 阶段1：起跳快速挤压 (0 ~ 20% 总时长)
+        seq.Insert(0, charcaterTrans.DOScale(
+            new Vector3(squeezeXZ, squeezeY, squeezeXZ),
+            totalDuration * 0.3f
+        ).SetEase(Ease.OutSine));
+
+        // 阶段2：腾空缓慢拉伸 (20% ~ 50% 总时长)
+        seq.Insert(totalDuration * 0.2f, charcaterTrans.DOScale(
+            new Vector3(stretchXZ, stretchY, stretchXZ),
+            totalDuration * 0.3f
+        ).SetEase(Ease.InOutSine));
+
+        // 阶段3：落地前挤压 (50% ~ 85% 总时长)
+        seq.Insert(totalDuration * 0.5f, charcaterTrans.DOScale(
+            new Vector3(squeezeXZ, squeezeY, squeezeXZ),
+            totalDuration * 0.4f
+        ).SetEase(Ease.InOutSine));
+
+        // 阶段4：落地回弹复原 (85% ~ 100% 总时长)
+        seq.Insert(totalDuration * 0.85f, charcaterTrans.DOScale(
+            Vector3.one,
+            totalDuration * 0.3f
+        ).SetEase(Ease.OutSine));
+
+        // 播放
+        seq.Play();
+    }
 
 
 

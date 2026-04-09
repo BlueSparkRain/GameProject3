@@ -1,3 +1,4 @@
+using UnityEngine;
 using UnityEngine.Events;
 
 public class CityShopHexRoom : IHexRoom
@@ -7,12 +8,18 @@ public class CityShopHexRoom : IHexRoom
 
 
     }
+
+    public void DoHexRoomInit()
+    {
+
+    }
+
     public void DoHexRoomLogic(UnityAction roomJob = null)
     {
 
     }
 
-    public void DoHexRoomModel()
+    public void DoHexRoomModel(Vector3 pos)
     {
 
     }

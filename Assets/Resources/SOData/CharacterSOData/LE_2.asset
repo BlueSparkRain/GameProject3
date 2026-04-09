@@ -13,19 +13,19 @@ MonoBehaviour:
   m_Name: LE_2
   m_EditorClassIdentifier: 
   characterType: 5
-  characterSprite: {fileID: 21300000, guid: 8e8f12b5b6054f14b80551ac65631236, type: 3}
+  characterSprite: {fileID: 21300000, guid: ec25ca2d0ab90fd4e89d15368f8a0915, type: 3}
   characterName: "\u5C0F\u5C0F\u602A"
   Phy_Flat_Penetration: 0.5
   Mag_Flat_Penetration: 0.5
   Phy_Resistance: 1
   Mag_Resistance: 1
   Phy_Attack: 1
-  Magic_Attack: 2
-  Maximum_Mana: 200
+  Magic_Attack: 1
+  Maximum_Mana: 100
   Mana_Regeneration: 1
   Maximum_Health: 100
-  Health_Regeneration: 0.8
-  Life_Steal: 0.2
+  Health_Regeneration: 0
+  Life_Steal: 0
   Tenacity: 0.8
   Endurance: 1
   Dodge_Rate: 0.1

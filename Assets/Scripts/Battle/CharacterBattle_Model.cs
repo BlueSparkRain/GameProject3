@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// 战斗角色数据模型（纯数据，无Unity脚本）
+/// 战斗角色数据模型
 /// </summary>
 public class CharacterBattle_Model
 {

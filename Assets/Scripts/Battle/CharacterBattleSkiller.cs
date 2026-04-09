@@ -1,98 +1,157 @@
-using Core;
-using System.Collections;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
 using UnityEngine;
 
 /// <summary>
-/// 战斗技能管理器，专门管理局内的技能循环
+/// 战斗技能管理器，专门管理局内的技能Icon的技能循环
 /// 进入战场前，上个场景中的CharacterSkiller会将目前玩家的技能数据传递过来（*-*）(或一个管理器)，
 /// 生成对应的技能图标，并注册到skiller中
 /// </summary>
 public class CharacterBattleSkiller : MonoBehaviour
 {
-    private List<SkillIcon> normalSkillIcons = new List<SkillIcon>();
-    private List<SkillIcon> atbSkillIcons = new List<SkillIcon>();
+    List<SkillIcon> normalSkillIcons = new List<SkillIcon>();
+    List<SkillIcon> atbSkillIcons = new List<SkillIcon>();
 
-    private List<SkillData> skillDatas = new List<SkillData>();
-    private List<int> skillIDs = new List<int>() { 0, 0, };
+    List<int> normalSkillIDs = new List<int>();
+    List<int> atbSkillIDs = new List<int>();
 
-    SkillIconSpawner normalSkillIconSpawner;
-    SkillIconSpawner atbSkillIconSpawner;
-
+    public SkillIconSpawner normalSkillIconSpawner;
+    public SkillIconSpawner atbSkillIconSpawner;
 
     CharacterBattle_Controller battleController;
-    List<ISkill> skills=new List<ISkill>();
-    //Dictionary<SkillIcon, ISkill> skillIconDic = new Dictionary<SkillIcon, ISkill>();
+
+    List<ISkill> normalSkills = new List<ISkill>();
+    List<ISkill> atbSkills = new List<ISkill>();
+    Dictionary<SkillIcon, ISkill> skillIconDic = new Dictionary<SkillIcon, ISkill>();
+
+
+    IBattlable self;//由上个场景中的战斗双方角色传输
+    public bool IsPlayer;
 
     private void Start()
     {
+        self = IsPlayer ? new Player(GetComponent<CharacterBattle_Controller>()) : new Enemy(GetComponent<CharacterBattle_Controller>());
+        BattleTargetSelector.RegisteABattler(self);
+        InitSkiller(self);
+    }
+
+    private void Update()
+    {
+        if (go)
+            DoSkillsUpdate();
+    }
+
+    bool go;
+    public void InitSkiller(IBattlable battler)
+    {
+        this.self = battler;
         normalSkillIconSpawner = GetComponentInChildren<SkillIconSpawner>();
         battleController = GetComponent<CharacterBattle_Controller>();
-        EventCenter.AddEventListener<int>(E_EventType.Battle_LoadASkill,RegisterSkill);
-        BattleSkillFactory.CreateBatch(skillIDs);
-        normalSkillIcons = normalSkillIconSpawner.LoadSlotsAndSkills(5,skillDatas,false);
-       
-        //battleTargetsManager = GameRoot.GetManager<BattleTargetsSelectManager>();
-        //GameRoot.GetManager<BattleTargetsSelectManager>().RegisterSkiller(isPlayer, GetComponent<CharacterBattle_Controller>());
-        //StartCoroutine(LoadSkills());
-        //GameRoot.GetManager<EventCenterManager>().AddEventListener(E_EventType.BattleEnd, BattleEnd);
+
+        EventCenter.AddEventListener<CharacterBattle_Controller,float>(E_EventType.SkillExcute, SkillCost);
+
+        List<SkillData> normalSkillDatas = new List<SkillData>();
+        //List<SkillData> atbSkillDatas = new List<SkillData>();
+
+        //测试！随机添加
+        for (int i = 0; i < 5; i++)
+            normalSkillIDs.Add(Random.Range(0, 5));
+
+        for (int i = 0; i < normalSkillIDs.Count; i++)
+        {
+            var newSkillData = new SkillData(ResourcesLoader.FindSkillSOByID(normalSkillIDs[i]));
+            normalSkillDatas.Add(newSkillData);
+        }
+
+        #region 创建SkillIcon
+
+        //5个背包槽
+        normalSkillIcons = normalSkillIconSpawner.LoadSlotsAndSkills(5, normalSkillDatas, false, true);
+
+        //5个ATB槽
+        //atbSkillIcons=atbSkillIconSpawner.LoadSlotsAndSkills(5,)
+        #endregion
+
+
+        #region 创建BattleSkill
+        InitSkillsBatch(normalSkillIDs);
+        #endregion
+
+        //注册按钮-Skill字典 + 关联Icon&Skill
+        for (int i = 0; i < normalSkillIcons.Count; i++)
+        {
+
+            Debug.Log(i + "()Icon:" + normalSkillIcons[i] + " Skill:" + normalSkills[i]);
+            normalSkillIcons[i].InitBattleSkill(normalSkills[i]);
+            skillIconDic.Add(normalSkillIcons[i], normalSkills[i]);
+        }
+        //for (int i = 0; i < atbSkillIcons.Count; i++){
+        //    atbSkillIcons[i].InitBattleSkill(atbSkills[i]);
+        //    skillIconDic.Add(atbSkillIcons[i], atbSkills[i]);
+        //}
+        go = true;
     }
 
-   
 
-    public void RegisterSkill(int skillID)
+
+    void InitSkillsBatch(List<int> skillIDList)
     {
-        skills.Add(BattleSkillFactory.Create(skillID)); 
+        var _normalSkills = BattleSkillFactory.CreateBattleSkillsBatch(skillIDList, self);
+        foreach (var skill in _normalSkills)
+        {
+            normalSkills.Add(skill);
+        }
+
+
     }
-    //IEnumerator LoadSkills()
-    //{
-    //    yield return new WaitForSeconds(1);
-    //    skillIcons = skillIconSpawner.LoadSkillIcons(isPlayer, skillIDs, GetComponent<CharacterBattle_Controller>());
-    //}
+
+
+
+    void FreezeSkill(int ID, bool freeze)
+    {
+        foreach (var icon in normalSkillIcons)
+            if (icon.SkillData.skill_ID == ID)
+                icon.FreezeIcon(freeze);
+
+        foreach (var icon in atbSkillIcons)
+            if (icon.SkillData.skill_ID == ID)
+                icon.FreezeIcon(freeze);
+    }
+
+    /// <summary>
+    /// 次级技能效果
+    /// </summary>
+    /// <param name="skillID"></param>
+    void AppendBattleSkillEffect(int skillID)
+    {
+        normalSkills.Add(BattleSkillFactory.CreateBattleSkill(skillID, self));
+    }
 
     void BattleEnd()
     {
         battleEnd = true;
     }
+
     bool battleEnd;
-    private void Update()
+
+    public void DoSkillsUpdate()
     {
         if (battleEnd)
             return;
+
+        //只有背包技能才会自动循环释放
         if (!battleController.charcaterDead)
         {
-            foreach (var skill in normalSkillIcons)
+            foreach (var SkillIcon in normalSkillIcons)
             {
-                skill.IconCycleUpdate();
-                skill.CheckSkillCanExcute(battleController.GetCharacterModelValue(EModelType.SP));
+                SkillIcon.IconCycleUpdate();
+                SkillIcon.CheckSkillCanExcute(battleController.GetCharacterModelValue(E_BattleModelType.SP));
             }
         }
     }
 
 
-    void UpdateBattleModel()
+    void SkillCost(CharacterBattle_Controller battleController, float sp_cost)
     {
-
-
-    }
-
-    /// <summary>
-    /// 根据请求的技能ID来产生对应的skillIcon
-    /// </summary>
-    /// <param name="skillID"></param>
-    void LoadASkill(int skillID)
-    {
-
-        var newSkillIcon = GameRoot.GetManager<ObjectPoolManager>().
-        GetInstance(EPoolType.SkillIcon_技能图标).GetComponent<SkillIcon>();
-    }
-    void FreezeASkill()
-    {
-
-    }
-    void DelASkill()
-    {
-
+        battleController.AdjustCharacterModelValue(E_BattleModelType.SP, sp_cost);
     }
 }

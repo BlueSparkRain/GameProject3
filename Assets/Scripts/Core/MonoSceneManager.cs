@@ -26,6 +26,7 @@ using Core;
             if (GameRoot.Instance == null) return;
 
             var existing = GameRoot.Instance.GetSceneManager(GetType());
+    
             if (existing != null && (object)existing != this){
                 Destroy(gameObject);
                 Debug.LogWarning($"Duplicate scene mono manager: {GetType().Name}, destroying this instance.");

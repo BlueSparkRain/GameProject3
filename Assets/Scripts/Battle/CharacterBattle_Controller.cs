@@ -1,36 +1,42 @@
 using Core;
 using System;
 using System.Collections.Generic;
+using UnityEditor.U2D.Animation;
 using UnityEngine;
 
 public class CharacterBattle_Controller : MonoBehaviour
 {
     public CharacterBattle_Viewer viewer;
     CharacterBattle_Model  model;
-    Dictionary<EModelType, Action<float>> modelDic=new Dictionary<EModelType, Action<float>>();
-    //对局中的角色属性数据
-    //public CharacterData characterData;
-    public CharacterDataSO CharacterDataSO;
+    Dictionary<E_BattleModelType, Action<float>> modelDic=new Dictionary<E_BattleModelType, Action<float>>();
+    //上个场景中传递而来的对局角色属性数据
+    CharacterData CharacterData;
+
+    [Header("测试用，将来通过上个场景传输而来的CharacterData")]
+    public E_CharacterType characterType;
+
+    private CharacterDataSO sodata;
 
     private void Start()
     {
         viewer = GetComponent<CharacterBattle_Viewer>();
-        //model = new CharacterBattle_Model(characterData.GetProperty(E_CharacterPropertyType.Maximum_Health),
-        //   characterData.GetProperty(E_CharacterPropertyType.Maximum_Mana),
-        //   (int)characterData.GetProperty(E_CharacterPropertyType.Maximum_ATB));
-        model=new CharacterBattle_Model(CharacterDataSO.Maximum_Health, CharacterDataSO.Maximum_Mana,(int)CharacterDataSO.Maximum_ATB);
+        //model=new CharacterBattle_Model(CharacterData.Maximum_Health, CharacterData.Maximum_Mana,(int)CharacterData.Maximum_ATB);
+        sodata = ResourcesLoader.FindCharaterSO(characterType);
+        model = new CharacterBattle_Model(sodata.Maximum_Health, sodata.Maximum_Mana,(int)sodata.Maximum_ATB);
+        
+        
         viewer.UpdataUI(model);
-        modelDic.Add(EModelType.HP,val=> model.HP+=val);
-        modelDic.Add(EModelType.MAX_HP,val=>model.MaxHP+=val);
-        modelDic.Add(EModelType.SP, val => model.SP += val);
-        modelDic.Add(EModelType.MAX_SP, val => model.MaxSP += val);
-        modelDic.Add(EModelType.AG, val => model.AG += val);
-        modelDic.Add(EModelType.MAX_AG, val => model.MaxAG += val);
-        modelDic.Add(EModelType.ATBPoints,val=> model.ATBPoints+=(int)val);
-        modelDic.Add(EModelType.MAX_ATBPoints,val=> model.MaxATBPoints+=(int)val);
+        modelDic.Add(E_BattleModelType.HP,val=> model.HP+=val);
+        modelDic.Add(E_BattleModelType.MAX_HP,val=>model.MaxHP+=val);
+        modelDic.Add(E_BattleModelType.SP, val => model.SP += val);
+        modelDic.Add(E_BattleModelType.MAX_SP, val => model.MaxSP += val);
+        modelDic.Add(E_BattleModelType.AG, val => model.AG += val);
+        modelDic.Add(E_BattleModelType.MAX_AG, val => model.MaxAG += val);
+        modelDic.Add(E_BattleModelType.ATBPoints,val=> model.ATBPoints+=(int)val);
+        modelDic.Add(E_BattleModelType.MAX_ATBPoints,val=> model.MaxATBPoints+=(int)val);
 
         model.OnDataChanged +=()=> viewer.UpdataUI(model);
-        model.OnHPZero += CharacterDead;
+        //model.OnHPZero += CharacterDead;
     }
 
     //角色死亡
@@ -40,42 +46,47 @@ public class CharacterBattle_Controller : MonoBehaviour
         charcaterDead = true;
         EventCenter.EventTrigger<CharacterBattle_Controller>
             (E_EventType.CharacterDead, this);
-
-
     }
-    ///// <summary>
-    ///// 修改角色的属性
-    ///// </summary>
-    //public void AdjustCharacterData(E_CharacterPropertyType propertyType,float targetValue) { 
-    //    characterData.AdjustProperty(propertyType, targetValue);
-    //}
+
+    public float GetCharacterData(E_CharacterPropertyType propertyType)
+    {
+        //return CharacterData.GetProperty(propertyType);
+        return sodata.GetProperty(propertyType);
+    }
+
+    /// <summary>
+    /// 修改角色的属性
+    /// </summary>
+    public void AdjustCharacterData(E_CharacterPropertyType propertyType, float targetValue)
+    {
+        CharacterData.AdjustProperty(propertyType, targetValue);
+    }
 
     /// <summary>
     /// 修改角色模型
     /// </summary>
-    public void AdjustCharacterModel(EModelType modelType, float targetValue) {
+    public void AdjustCharacterModelValue(E_BattleModelType modelType, float targetValue) {
         modelDic[modelType].Invoke(targetValue);
         //Debug.Log(name +"——"+ modelType+"调整:" +targetValue+" 改变后的值：" +GetCharacterModelValue(modelType));
     }
 
-    public float GetCharacterModelValue(EModelType modelType) {
+    public float GetCharacterModelValue(E_BattleModelType modelType) {
         return modelType switch
         {
-            EModelType.HP => model.HP,
-            EModelType.MAX_HP => model.MaxHP,
-            EModelType.SP => model.SP,
-            EModelType.MAX_SP => model.MaxSP,
-            EModelType.AG => model.AG,
-            EModelType.MAX_AG => model.MaxAG,
-            EModelType.ATBPoints => model.ATBPoints,
-            EModelType.MAX_ATBPoints => model.MaxATBPoints,
+            E_BattleModelType.HP => model.HP,
+            E_BattleModelType.MAX_HP => model.MaxHP,
+            E_BattleModelType.SP => model.SP,
+            E_BattleModelType.MAX_SP => model.MaxSP,
+            E_BattleModelType.AG => model.AG,
+            E_BattleModelType.MAX_AG => model.MaxAG,
+            E_BattleModelType.ATBPoints => model.ATBPoints,
+            E_BattleModelType.MAX_ATBPoints => model.MaxATBPoints,
             _ => throw new ArgumentOutOfRangeException(nameof(modelType), modelType, null)
         };
     }
 
 }
-
-public enum EModelType
+public enum E_BattleModelType
 {
     HP,
     MAX_HP,

@@ -5,9 +5,18 @@ public enum E_CharacterType{
     P_2,
     P_3,
     P_4,
+
     LE_1,
     LE_2,
+    LE_3,
+
+    ME_1,
+    ME_2,
+    ME_3,
+
     Boss_1,
+    Boss_2,
+    Boss_3,
 }
 
 
@@ -94,4 +103,28 @@ public class CharacterDataSO : ScriptableObject
     public int Maximum_ATB;
     #endregion
 
+    public float GetProperty(E_CharacterPropertyType type)
+    {
+        switch (type)
+        {
+            case E_CharacterPropertyType.Phy_Flat_Penetration: return Phy_Flat_Penetration;
+            case E_CharacterPropertyType.Mag_Flat_Penetration: return Mag_Flat_Penetration;
+            case E_CharacterPropertyType.Phy_Resistance: return Phy_Resistance;
+            case E_CharacterPropertyType.Mag_Resistance: return Mag_Resistance;
+            case E_CharacterPropertyType.Phy_Attack: return Phy_Attack;
+            case E_CharacterPropertyType.Magic_Attack: return Magic_Attack;
+            case E_CharacterPropertyType.Maximum_Mana: return Maximum_Mana;
+            case E_CharacterPropertyType.Mana_Regeneration: return Mana_Regeneration;
+            case E_CharacterPropertyType.Maximum_Health: return Maximum_Health;
+            case E_CharacterPropertyType.Health_Regeneration: return Health_Regeneration;
+            case E_CharacterPropertyType.Life_Steal: return Life_Steal;
+            case E_CharacterPropertyType.Tenacity: return Tenacity;
+            case E_CharacterPropertyType.Endurance: return Endurance;
+            case E_CharacterPropertyType.Dodge_Rate: return Dodge_Rate;
+            case E_CharacterPropertyType.Heal_Amplification: return Heal_Amplification;
+            case E_CharacterPropertyType.Shield_Amplification: return Shield_Amplification;
+            case E_CharacterPropertyType.Maximum_ATB: return Maximum_ATB;
+            default: Debug.LogError("属性不存在"); return 0;
+        }
+    }
 }

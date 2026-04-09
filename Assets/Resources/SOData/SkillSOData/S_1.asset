@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c17864d2e66c324dbfeff8567400938, type: 3}
   m_Name: S_1
   m_EditorClassIdentifier: 
-  skill_ID: 2
-  skil_Sprite: {fileID: 21300000, guid: c67fbf9375ad5c34399c2849430ca7f7, type: 3}
-  skill_Name: 
+  skill_ID: 1
+  skill_Sprite: {fileID: 21300000, guid: c67fbf9375ad5c34399c2849430ca7f7, type: 3}
+  skill_Name: "\u5168\u8EAB\u649E\u51FB"
   skill_Description: 
   skill_CoolDown_origin: 4
-  skill_CoolDown: 4
-  sp_cost: 10
-  ang_grow: 10
+  skill_sp_cost: 10
+  skill_ang_grow: 10
+  skill_targetType: 0

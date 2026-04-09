@@ -3,9 +3,11 @@ Shader "Unlit/TwoColorOutline"
  Properties
     {
         _OutlineWidth ("描边宽度", Range(0.002, 0.08)) = 0.03
-        _Color1 ("描边颜色A", Color) = (1,0,0,1)
-        _Color2 ("描边颜色B", Color) = (1,1,0,1)
+        [HDR]_Color1 ("描边颜色A", Color) = (1,0,0,1)
+        [HDR]_Color2 ("描边颜色B", Color) = (1,1,0,1)
         _Lerp ("颜色混合", Range(0,1)) = 0.5
+
+        _LerpIntensity("水平插值强度",Range(-5,5))=1
     }
 
     SubShader
@@ -31,38 +33,40 @@ Shader "Unlit/TwoColorOutline"
                 float4 _Color1;
                 float4 _Color2;
                 float _Lerp;
+
+                float _LerpIntensity;
             CBUFFER_END
 
             struct Attributes
             {
                 float4 positionOS : POSITION;
                 float3 normalOS : NORMAL;
+                float2 uv:TEXCOORD0;
             };
 
             struct Varyings
             {
                 float4 positionHCS : SV_POSITION;
+                float3 normalWS : NORMAL;
+                float2 uv:TEXCOORD0;
             };
 
             Varyings vert (Attributes input)
             {
                 Varyings output;
-
-                // ====================== 【唯一修改：仅平滑法线，不改动任何坐标】 ======================
-                // 1. 完全保留你原版的 模型空间外扩
-                // 2. 仅强制法线平滑插值（修复分裂，无任何副作用）
+                output.uv=input.uv;
                 float3 smoothNormal = normalize(input.normalOS); // 平滑法线，唯一改动
                 float3 pos = input.positionOS.xyz + smoothNormal * _OutlineWidth;
-                // ==================================================================================
-
+                output.normalWS=TransformObjectToWorldNormal(input.normalOS);
                 output.positionHCS = TransformObjectToHClip(pos);
                 return output;
             }
 
-            // 你的片段着色器 一字不改
+
             half4 frag (Varyings i) : SV_Target
             {
-                return lerp(_Color1, _Color2, _Lerp);
+      
+                return lerp(_Color1, _Color2,  TransformObjectToWorld( i.normalWS).y *_LerpIntensity );
             }
             ENDHLSL
         }

@@ -20,12 +20,9 @@ public class CharacterMapMoveHandle : MonoBehaviour
         iMapMover.currentRoom = hexRoomData;
     }
 
-
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;
         Gizmos.DrawLine(transform.position, transform.position + Vector3.down * 4);
     }
-
-
 }

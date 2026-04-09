@@ -48,6 +48,10 @@ public static class BattleTargetSelector
         return targets;
     }
 
+    public static void RegisteABattler(IBattlable battler) {
+        AllBattleUnits.Add(battler);
+    }
+
     // 工具：获取第一个存活目标
     private static IBattlable GetFirstAliveTarget(E_Camp camp) =>
         AllBattleUnits.First(u => u.Camp == camp && u.IsAlive);

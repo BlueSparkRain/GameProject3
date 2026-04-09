@@ -16,57 +16,30 @@ public class SkillBucket { }
 /// </summary>
 public class Skill_BaseAttack : ISkill
 {
-    public Skill_BaseAttack(E_SkillTargetType skillTargetType) { 
-    this.skillTargetType= skillTargetType;
+    public Skill_BaseAttack(E_SkillTargetType _skillTargetType) {
+        skillTargetType = _skillTargetType;
     }
-
     //决定伤害类型
-
-    float baseAttackValue = -5;
+    float baseAttackValue = -2;
     float baseAttackRate;
 
+    public IBattlable self { get; set; }
+    public List<IBattlable> targets { get; set; }
     public E_SkillTargetType skillTargetType { get; set; }
 
-    public void SkillEnhance(IBattlable caster)
+    public void SkillExcuteSingle(IBattlable target)
+    {
+        target.BattleController.AdjustCharacterModelValue(E_BattleModelType.HP,
+            target.BattleController.GetCharacterData(E_CharacterPropertyType.Phy_Attack)*baseAttackValue);
+        Debug.Log(self.Camp + "对" + target.BattleController.name+"发动攻击！造成伤害"+
+            target.BattleController.GetCharacterData(E_CharacterPropertyType.Phy_Attack) * baseAttackValue);
+    
+    }
+
+    public void SkillEnhanceSingle(IBattlable target)
     {
 
     }
-
-    public void SkillExcute(IBattlable caster)
-    {
-
-    }
-
-
-    //void UpdateTargets(CharacterBattle_Controller battler)
-    //{
-    //    Debug.Log(battler.gameObject.name + "已死亡!!");
-    //    if (targets.Contains(battler)){
-    //        targets.Remove(battler);
-    //        Debug.Log("从目标中删除" + battler + targets.Count);}
-    //    else
-    //        Debug.Log("当前目标中无死亡者，雨我无瓜");
-    //    if (targets.Count <= 0)
-    //        GetSkillTraget();
-    //}
-
-
-
-
-    //public override void SkillExcute(){
-    //    //if (targets.Count <= 0)
-    //    //    return;
-    //    //foreach (var target in targets){
-    //    //    Debug.Log("我是" + self_controller.gameObject.name + ",我的攻击对象" + target + "  " + targets.Count);
-    //    //    //Debug.Log(target.name + "收到伤害" + baseAttackValue * baseAttackRate);
-    //    //    target.AdjustCharacterModel(EModelType.HP, baseAttackValue * baseAttackRate);
-    //    //}
-
-    //    //施法耗蓝 //增加怒气
-    //    base.SkillExcute();
-    //}
-
-
 }
 
 ///// <summary>

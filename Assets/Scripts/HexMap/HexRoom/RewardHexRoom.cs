@@ -1,3 +1,4 @@
+using UnityEngine;
 using UnityEngine.Events;
 
 public class RewardHexRoom : IHexRoom
@@ -6,11 +7,16 @@ public class RewardHexRoom : IHexRoom
     {
 
     }
+
+    public void DoHexRoomInit()
+    {
+    }
+
     public void DoHexRoomLogic(UnityAction roomJob = null)
     {
     }
 
-    public void DoHexRoomModel()
+    public void DoHexRoomModel(Vector3 pos)
     {
     }
 }

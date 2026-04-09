@@ -36,7 +36,6 @@ public class MapSkillerCheker : MonoSceneManager
     //角色（移动中断）进入特殊房间后获得的技能奖励
     void DoSkillReward(CharacterMapSkiller skiller, E_HexRoomType roomType)
     {
-
         if (skillersRoomDic.ContainsKey(skiller))
         {
             skillersRoomDic[skiller] = roomType;
@@ -80,7 +79,6 @@ public class MapSkillerCheker : MonoSceneManager
     }
 
     void CallSkillPanel() {
-        Debug.Log("Mann");
         uiManager.OpenPanel<SkillPanel>(E_UIPanelType.SkillPanel,
                      (p) => p.LoadSkillIconBySettle(
                          currentSkiller.canActSettle,
@@ -96,6 +94,8 @@ public class MapSkillerCheker : MonoSceneManager
     {
         if (!skillersRoomDic.ContainsKey(mapSkiller)) 
             skillersRoomDic.Add(mapSkiller, E_HexRoomType.None_无);
+        //if(mapSkiller.GetComponent<>)
+        
         if (isPlayer)
         {
             Debug.Log("玩家！");
@@ -105,7 +105,10 @@ public class MapSkillerCheker : MonoSceneManager
 
     public void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            playerSkiller.GetNewSkill(Random.Range(0,5));
+        }
     }
 
 

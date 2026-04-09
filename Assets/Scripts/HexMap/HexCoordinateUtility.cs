@@ -37,7 +37,6 @@ public static class HexCoordinateUtility
         return result;
     }
 
-    // ========== 新增快捷方法（适配无修改的HexRoom） ==========
     /// <summary>
     /// 直接基于行+列生成半径内的所有行+列坐标（无需HexRoom参与转换）
     /// </summary>
@@ -51,7 +50,7 @@ public static class HexCoordinateUtility
     }
 
     /// <summary>
-    /// 计算两个行+列坐标的距离（直接调用，无需HexRoom处理）
+    /// 计算两个行+列坐标的距离
     /// </summary>
     public static int GetDistanceByRowCol(int row1, int col1, int row2, int col2){
         Vector2Int axial1 = RowColToAxial(row1, col1);

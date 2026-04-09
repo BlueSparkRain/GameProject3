@@ -12,14 +12,18 @@ public static class ResourcesLoader
     static string skillDataPath = "SOData/SkillSOData/";
 
 
-    static string skillSlotPath = "Prefab/BattleArea/CharacterBattle/SkillSlots/SkillSlot";
 
 
     static string hexRoomPath = "Prefab/HexRoom/MapRoom";
     static string roomCloudePath = "Prefab/HexRoom/RoomCloude";
-    static string skillIconPath = "Prefab/Skill/SkillIcon";
+
+    static string skillSlotPath = "Prefab/SkillUI/SkillSlot";
+    static string skillIconPath = "Prefab/SkillUI/SkillIcon";
 
     static string characterPath = "Prefab/Character/Character_";
+
+
+    static string characterSOPath = "SOData/CharacterSOData/";
 
     static string mapSaveDataPath = "SOData/HexMapSOData/HexMapSOData";
 
@@ -37,6 +41,10 @@ public static class ResourcesLoader
         return Resources.Load<GameObject>(characterPath+backStr);
     }
 
+
+    public static CharacterDataSO FindCharaterSO(E_CharacterType characterType) {
+        return Resources.Load<CharacterDataSO>(characterSOPath + characterType);
+    }
     /// <summary>
     /// 根据技能ID返回对应的SkillSOData
     /// </summary>

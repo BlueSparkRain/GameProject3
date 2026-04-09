@@ -445,5 +445,6 @@ public enum E_EventType
     Mover_MoveStop,
     Player_RoundEnd,
     LoadMapStart,
-    LoadMapEnd
+    LoadMapEnd,
+    SkillExcute,
 }

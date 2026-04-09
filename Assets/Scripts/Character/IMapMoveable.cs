@@ -10,4 +10,9 @@ public interface IMapMoveable
     /// 执行回合移动方法
     /// </summary>
     public void DoMoveFunc(List<HexRoomData> path);
+
+    /// <summary>
+    /// Mover宣布结束自身回合
+    /// </summary>
+    public void DoEndSelfRound();
 }

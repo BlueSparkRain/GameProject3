@@ -23,7 +23,7 @@ MonoBehaviour:
   Magic_Attack: 2
   Maximum_Mana: 200
   Mana_Regeneration: 1
-  Maximum_Health: 100
+  Maximum_Health: 300
   Health_Regeneration: 0.8
   Life_Steal: 0.2
   Tenacity: 0.8

@@ -19,7 +19,20 @@ public class MenuSceneSetUp : MonoBehaviour
         settingButton.onClick.AddListener(OnClickNoButton);
         creditsButton.onClick.AddListener(OnClickNoButton);
         ObjectPoolManager obj = GameRoot.GetManager<ObjectPoolManager>();
+
+        StartCoroutine(LoadAllPool());
     }
+
+    IEnumerator LoadAllPool() {
+        WaitForSeconds delay = new WaitForSeconds(0.5f);
+        EventCenter.EventTrigger(E_EventType.LoadObjPool, EPoolType.MapRoom_地图房间);
+        yield return delay;
+        EventCenter.EventTrigger(E_EventType.LoadObjPool, EPoolType.RoomCloude_房间遮云);
+        yield return delay;
+        EventCenter.EventTrigger(E_EventType.LoadObjPool, EPoolType.SkillSlot_技能槽位);
+        EventCenter.EventTrigger(E_EventType.LoadObjPool, EPoolType.SkillIcon_技能图标);
+    }
+
     void OnClickGameButton() {
         GameRoot.GetManager<SceneSwitchManager>().SwitchSceneAsync("MapScene");
     

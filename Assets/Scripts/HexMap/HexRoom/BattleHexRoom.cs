@@ -1,4 +1,5 @@
 using Core;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -11,6 +12,8 @@ public class BattleHexRoom : IHexRoom
     //需存档：记录战斗房间历史的具体怪物类型
     CharacterDataSO enemyCharacterDataSO;
 
+
+    float scaleRate=1;
     /// <summary>
     /// 随机产生低等级怪物
     /// </summary>
@@ -18,19 +21,40 @@ public class BattleHexRoom : IHexRoom
     public BattleHexRoom(E_BattleType _battleType)
     {
         battleType= _battleType;
-        enemyCharacterDataSO = Resources.Load<CharacterDataSO>(enemyCharacterSoDataPath + enemyCharacterType);
     }
 
-    public void LoadCharacterType() {
+    public void DoHexRoomInit()
+    {
         //如果存档中有记录，加载对应的类型
         //如果没有，表示第一次获取，
         //对应等级的怪物池子中抽取一种随机的怪物
-        E_CharacterType _characterType = E_CharacterType.LE_1;
-        enemyCharacterType= _characterType;
+
+        E_CharacterType _characterType=E_CharacterType.LE_1;
+        switch (battleType)
+        {
+            case E_BattleType.杂鱼敌人:
+                scaleRate = 0.8f;
+                _characterType = E_CharacterType.LE_1;
+                break;
+            case E_BattleType.精英敌人:
+                scaleRate = 1f;
+                _characterType = E_CharacterType.ME_1;
+                break;
+            case E_BattleType.首领敌人:
+                scaleRate = 1.5f;
+                _characterType = E_CharacterType.Boss_1;
+                break;
+            default:
+                break;
+        }
+
+        enemyCharacterType = _characterType;
+        enemyCharacterDataSO = Resources.Load<CharacterDataSO>(enemyCharacterSoDataPath + enemyCharacterType);
 
         //之后根据具体的类型加载对应的模型
         //和
         //存档/初始化的怪物数据
+      
     }
 
     public void DoHexRoomLogic(UnityAction roomJob)
@@ -38,17 +62,19 @@ public class BattleHexRoom : IHexRoom
         EventCenter.EventTrigger(E_EventType.Mover_MoveStop);
         //读取敌人信息，并进入战斗场景
         Debug.Log("玩家进入战斗房间");
-        GameRoot.GetManager<UIManager>().OpenPanel<BattlePanel>(E_UIPanelType.BattlePanel);
-        //GameRoot.GetManager<SceneSwitchManager>().SwitchSceneAsync("BattleScene", SceneSwitchManager.LoadMode.Single);
-        
+        GameRoot.GetManager<UIManager>().OpenPanel<BattlePanel>(E_UIPanelType.BattlePanel);  
     }
 
-    public void DoHexRoomModel()
+    public void DoHexRoomModel(Vector3 modelPos)
     {
         //根据战斗类型，从对应的池子里取出随机的怪物数据
         //根据具体怪物数据产生对应的模型
+        var charac=MapCharacterCaller.CallNewCharacter("DisMoveable");
+        charac.InitCharacter(enemyCharacterType, false, false);
+        charac.transform.localScale = Vector3.zero;
+        charac.transform.localPosition= modelPos;
 
-
-
+        charac.transform.DOScale(scaleRate, 0.5f);
+        //charac.transform.localScale*=scaleRate;
     }
 }

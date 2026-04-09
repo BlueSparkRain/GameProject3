@@ -1,5 +1,7 @@
 using Core;
+using DG.Tweening;
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -29,6 +31,7 @@ public class HexRoomData : MonoBehaviour
     public void InitRoomID(int _row, int _col)
     {
         hexJumpAnimation = GetComponent<HexJumpAnimation>();
+
         //只有海洋不会产生云朵
         if (GetComponent<HexTerrainTag>().hexTerrainType != E_HexTerrainType.Obstacle__Ocean)
         {
@@ -44,17 +47,9 @@ public class HexRoomData : MonoBehaviour
         InitRoomStyle(_roomType);
     }
 
-    //void LoadRoomModel()
-    //{
-    //    if (roomType != E_HexRoomType.None_无)
-    //        roomModel = Resources.Load<GameObject>(roomModelPath + roomType);
-    //    if (roomModel)
-    //        Instantiate(roomModel, transform.position + Vector3.up * 0.5f, Quaternion.identity, transform);
-    //}
-
     void LoadRoomCloude() {
         var cloude = GameRoot.GetManager<ObjectPoolManager>().GetInstance(EPoolType.RoomCloude_房间遮云);
-        cloude.transform.position = transform.position + Vector3.up * 20f;
+        cloude.transform.position = transform.position + Vector3.up * 23f;
         hexJumpAnimation.CloudeAppear(cloude.transform);
     }
 
@@ -73,8 +68,10 @@ public class HexRoomData : MonoBehaviour
             case E_HexRoomType.CityShop_城商镇:iHexRoom=new CityShopHexRoom();break;
             default: break;
         }
+        //初始化房间类型
+        IHexRoom.DoHexRoomInit();
         //得到新的类型，加载对应的模型
-        iHexRoom.DoHexRoomModel();// LoadRoomModel();
+        iHexRoom.DoHexRoomModel(transform.position+Vector3.up);
     }
     public virtual void ResetSelf()
     {
@@ -95,6 +92,8 @@ public class HexRoomData : MonoBehaviour
         GameRoot.GetManager<UIManager>().OpenPanel<BattlePanel>(E_UIPanelType.BattlePanel);
     }
 }
+
+
 [Serializable]
 public class MapRoomData {
 
@@ -106,8 +105,9 @@ public class MapRoomData {
 
 public interface IHexRoom
 {
+    public void DoHexRoomInit();
     public void DoHexRoomLogic(UnityAction roomJob=null);
 
-    public void DoHexRoomModel();
+    public void DoHexRoomModel(Vector3 pos);
 }
 
