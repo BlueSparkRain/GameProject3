@@ -1,6 +1,7 @@
 using Core;
 using DG.Tweening;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class MapMoverChecker : MonoSceneManager
@@ -9,25 +10,36 @@ public class MapMoverChecker : MonoSceneManager
 
     public IMapMoveable currentIMovable;
 
-    string mapIconPrefabPath = "Prefab/MapUI/CharacterMapIcon";
+    string mapIconPrefabPath = "Prefab/MapUI/PlayerMapIcon";
     HexPathFindingManager hexPathFindingManager;
 
     public override void MgrUpdate(float deltaTime) { }
 
-    private Dictionary<CharacterMapIcon, IMapMoveable> imapMovableDic = new Dictionary<CharacterMapIcon, IMapMoveable>();
+    //玩家角色的映射
+    private Dictionary<PlayerMapIcon, IMapMoveable> playerIconMoverDic = new Dictionary<PlayerMapIcon, IMapMoveable>();
 
     int iconNUm = 0;
+
+    //所有的移动对象每回合的行动情况
+    //只有所有都是ready，才能进入下个回合
+    public Dictionary<IMapMoveable, bool> roundMoveDic=new Dictionary<IMapMoveable, bool>();
 
     protected override void MgrOnInit()
     {
         base.MgrOnInit();
         EventCenter.AddEventListener<IMapMoveable, Vector3>(E_EventType.Mover_CheckCurrrentRoom, CheckCurrentRoom);
         hexPathFindingManager = GameRoot.GetManager<HexPathFindingManager>();
+
+        EventCenter.AddEventListener<IMapMoveable>(E_EventType.Character_Mover_Regist,RegisterBornMover);
+        EventCenter.AddEventListener<IMapMoveable>(E_EventType.OneMoverEndRound,OneMoverEndRound);
     }
 
     //每回合，所有可以移动的角色会依次行动（先按照固定顺序）
     //玩家回合，无限/有限时间，可以根据玩家鼠标来寻路
     //敌人回合，时间，根据策略来自动调用寻路。
+
+
+
 
     #region 玩家Mover相关逻辑：（1）MapIcon创建注册（2）获取MapIcon关联Mover
 
@@ -37,29 +49,31 @@ public class MapMoverChecker : MonoSceneManager
     /// <param name="characterRoomMover"></param>
     /// <param name="charcaterTrans"></param>
     /// <returns></returns>
-    public CharacterMapIcon CreateNewMapIcon(Player_CharacterMapMover characterRoomMover, Transform charcaterTrans)
+    public PlayerMapIcon CreateNewMapIcon(Player_CharacterMapMover characterRoomMover, Transform charcaterTrans)
     {
-        var newIcon = GameObject.Instantiate(Resources.Load<GameObject>(mapIconPrefabPath), mapIconParent).GetComponent<CharacterMapIcon>();
+        var newIcon = GameObject.Instantiate(Resources.Load<GameObject>(mapIconPrefabPath), mapIconParent).GetComponent<PlayerMapIcon>();
         newIcon.transform.localScale = Vector3.zero;
-        newIcon.transform.DOScale(1, 0.4f).SetEase(Ease.OutQuad).From(0);
-        newIcon.transform.DORotate(new Vector3(0, 0, 360), 0.5f, RotateMode.FastBeyond360).SetEase(Ease.OutQuad);
-        imapMovableDic.Add(newIcon, characterRoomMover);
+        newIcon.GetComponent<RectTransform>().localPosition += new Vector3(200, 0 , 0) * iconNUm;
+        newIcon.transform.DOLocalMoveY(120,0.3f).From(-400);
+        newIcon.transform.DOScale(new Vector3(1,1,0), 0.5f).SetEase(Ease.OutQuad).From(new Vector3(1,0,0));
+        //newIcon.transform.DORotate(new Vector3(0, 0, 360), 0.5f, RotateMode.FastBeyond360).SetEase(Ease.OutQuad);
+        playerIconMoverDic.Add(newIcon, characterRoomMover);
         newIcon.InitIcon(characterRoomMover.CharacterType, charcaterTrans);
-        newIcon.GetComponent<RectTransform>().localPosition += new Vector3(200, 0, 0) * iconNUm;
         iconNUm++;
         return newIcon;
     }
 
+   
     /// <summary>
     /// 只有玩家自身是通过MapIcon来交互移动的
     /// </summary>
     /// <param name="mapIcon"></param>
     /// <returns></returns>
-    public IMapMoveable GetTargetPlayerMover(CharacterMapIcon mapIcon)
+    public IMapMoveable GetTargetPlayerMover(PlayerMapIcon mapIcon)
     {
-        if (imapMovableDic.ContainsKey(mapIcon))
+        if (playerIconMoverDic.ContainsKey(mapIcon))
         {
-            currentIMovable = imapMovableDic[mapIcon];
+            currentIMovable = playerIconMoverDic[mapIcon];
             if ((currentIMovable as Player_CharacterMapMover).IsMoving)
             {
                 Debug.Log("[MapMoverChecker]---请求失败！目标玩家Mover正在移动中");
@@ -109,4 +123,50 @@ public class MapMoverChecker : MonoSceneManager
             }
         }
     }
+
+
+    #region 回合检测
+    /// <summary>
+    /// 一个Mover宣布结束自身回合
+    /// </summary>
+    /// <param name="mover"></param>
+    void OneMoverEndRound(IMapMoveable mover)
+    {
+        if (roundMoveDic.ContainsKey(mover))
+        {
+            roundMoveDic[mover] = true;
+        }
+        CheckNewRound();
+    }
+
+    /// <summary>
+    /// 登记场上新的Mover
+    /// </summary>
+    /// <param name="mover"></param>
+    void RegisterBornMover(IMapMoveable mover)
+    {
+        if (!roundMoveDic.ContainsKey(mover))
+        {
+            roundMoveDic.Add(mover, false);
+            Debug.Log("新添加一个Mover");
+        }
+    }
+
+    /// <summary>
+    /// 每当一个Mover宣布结束回合，就检测一下
+    /// </summary>
+    void CheckNewRound()
+    {
+        foreach (var item in roundMoveDic)
+        {
+            if (!item.Value)
+            {
+                Debug.Log("[MapMoverChecker]---存在Mover未行动，本回合尚未结束");
+                return;
+            }
+        }
+        Debug.Log("[MapMoverChecker]---本回合结束!");
+        EventCenter.EventTrigger(E_EventType.NewRound);
+    }
+    #endregion
 }

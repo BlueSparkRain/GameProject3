@@ -115,10 +115,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7627043575187611446}
-  - component: {fileID: 7791924893523751560}
   - component: {fileID: 8027820419803196631}
   - component: {fileID: 392350666827927310}
   - component: {fileID: 6955840191279012510}
+  - component: {fileID: 4785981754647884235}
   m_Layer: 3
   m_Name: Character_DisMoveable
   m_TagString: Untagged
@@ -144,19 +144,6 @@ Transform:
   - {fileID: 3822646037406768773}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -89.98, y: 0, z: 0}
---- !u!114 &7791924893523751560
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6467037609410535853}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1130606238a42740a253af990ec7065, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  characterType: 6
 --- !u!114 &8027820419803196631
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,11 +159,7 @@ MonoBehaviour:
   restSkillSlotNum: 20
   normalSkillSlotNum: 5
   atbSkillSlotNum: 5
-  current_restSkillNum: 0
-  current_normalSkillNum: 0
-  current_atbSkillNum: 0
   canActSettle: 0
-  isPlayer: 1
 --- !u!114 &392350666827927310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -212,6 +195,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.5291157, y: 0.522278, z: 0.6631635}
   m_Center: {x: 0, y: -0.0000019073489, z: 0.6486597}
+--- !u!114 &4785981754647884235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6467037609410535853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 732c96c71d89917408912b960223eec6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7579286655616559578
 GameObject:
   m_ObjectHideFlags: 0

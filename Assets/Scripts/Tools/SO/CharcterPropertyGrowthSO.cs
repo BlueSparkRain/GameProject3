@@ -55,6 +55,4 @@ public class CharcterPropertyGrowthSO : ScriptableObject
     [Header("初始ATB点数")]
     public int Maximum_ATB_grow = 1;
 
-    [Header("成长间隔（默认每级成长）")]
-    public int growthInterval = 1;
 }

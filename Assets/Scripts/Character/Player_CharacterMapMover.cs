@@ -18,9 +18,10 @@ public class Player_CharacterMapMover : IMapMoveable
     public int remain_Acionpoints;
 
     CoroutineManager coroutineManager;
+    //MapMoverChecker  moverChecker;
 
     //玩家操控角色-需要与Icon交互
-    CharacterMapIcon mapIcon;
+    PlayerMapIcon mapIcon;
     //记录角色的位置
     Transform charcaterTrans;
 
@@ -53,6 +54,7 @@ public class Player_CharacterMapMover : IMapMoveable
     void PlayerGetMovePoints()
     {
         remain_Acionpoints = max_Actionpoints;
+        //EventCenter.EventTrigger(E_EventType.OneMoverEndRound,this);
         moveStop = remain_Acionpoints <= 0;
         mapIcon.SetMoveDot(remain_Acionpoints);
     }
@@ -103,10 +105,6 @@ public class Player_CharacterMapMover : IMapMoveable
 
     }
 
-    public void DoEndSelfRound()
-    {
-     
-    }
 
     IEnumerator MoveAnim(List<HexRoomData> roomPath)
     {

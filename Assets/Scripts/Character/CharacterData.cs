@@ -2,11 +2,10 @@ using System;
 using UnityEngine;
 
 
-[RequireComponent(typeof(CharacterCampTag))]
 /// <summary>
 /// 记录一名角色当前的属性数据（战斗中读取的是当前的属性数据（而非SOData））
 /// </summary>
-public class CharacterData : MonoBehaviour
+public class CharacterData : ISaveable
 {
     [Header("角色")]
     public E_CharacterType characterType;
@@ -22,7 +21,6 @@ public class CharacterData : MonoBehaviour
     /// 角色属性成长数据
     /// </summary>
     CharcterPropertyGrowthSO CharcterPropertyGrowthSO;
-
 
     #region 角色基础属性声明——(游戏初始化读取SO数据/Jason文件中读取数据)
     /// <summary>
@@ -118,31 +116,13 @@ public class CharacterData : MonoBehaviour
     public int CurrentLevel => currentLevel;
     #endregion
 
-    CharacterDataSO LoadCharacterSOData()
-    {
-        return Resources.Load<CharacterDataSO>(characterSO_ParentPath + characterType);
-    }
-
-    public void InitCharacter(E_CharacterType _characterType, bool isPlayer, bool canLevelUp)
-    {
+    public CharacterData(E_CharacterType _characterType) {
         characterType = _characterType;
         currentLevel = 1;
-
-        GetComponent<CharacterCampTag>().InitCharacterTag(_characterType,isPlayer, canLevelUp);
-        //如果有存档记录,就加载存档数据
-        //没有存档记录，就初始化角色
-        if (JsonSaver.HasValidData<Save_CharacterData>())
-        {
-            Debug.Log("加载了存档数据");
-            InitBySaveData();
-        }
-        else
-        {
-            Debug.Log("加载了初始数据");
-            InitCharacterData();
-        }
+        JsonSaver.InitData<Save_CharacterData>(this);
     }
-    void InitBySaveData()
+
+    public void InitBySaveData()
     {
         var characterSaveData = JsonSaver.Load<Save_CharacterData>();
         phy_Flat_Penetration = characterSaveData.Phy_Flat_Penetration;
@@ -165,12 +145,9 @@ public class CharacterData : MonoBehaviour
         currentLevel = characterSaveData.CurrentLevel;
     }
 
-    /// <summary>
-    /// 初始化：读取SO文件中角色初始数据
-    /// </summary>
-    void InitCharacterData()
+    public void InitBySelf()
     {
-        characterData = LoadCharacterSOData();
+        characterData = Resources.Load<CharacterDataSO>(characterSO_ParentPath + characterType);
         phy_Flat_Penetration = characterData.Phy_Flat_Penetration;
         mag_Flat_Penetration = characterData.Mag_Flat_Penetration;
         phy_Resistance = characterData.Phy_Resistance;
@@ -189,7 +166,7 @@ public class CharacterData : MonoBehaviour
         shield_Amplification = characterData.Shield_Amplification;
         maximum_ATB = characterData.Maximum_ATB;
     }
-
+  
     public float GetProperty(E_CharacterPropertyType type)
     {
         switch (type)
@@ -244,16 +221,8 @@ public class CharacterData : MonoBehaviour
         JsonSaver.Save(new Save_CharacterData(this));
         Debug.Log($"属性修改成功: {type} = {GetProperty(type)}");
     }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            AdjustProperty(E_CharacterPropertyType.Phy_Attack, 5);
-
-        }
-    }
 }
+
 
 [Serializable]
 public class Save_CharacterData : IValidatable
@@ -279,7 +248,6 @@ public class Save_CharacterData : IValidatable
         Shield_Amplification = characterSaveData.Shield_Amplification;
         Maximum_ATB = characterSaveData.Maximum_ATB;
         CurrentLevel = characterSaveData.CurrentLevel;
-
     }
     /// <summary>
     /// [Save]物理固穿

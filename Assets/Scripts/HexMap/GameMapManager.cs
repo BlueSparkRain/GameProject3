@@ -215,7 +215,7 @@ public class GameMapManager : MonoSceneManager
 
         newHexRoom.SetCellState(isWalkable);
 
-        newHexRoom.transform.DOScale(new Vector3(100,100,50), 0.5f).From(0);
+        newHexRoom.transform.DOScale(new Vector3(100,100,50), 0.5f).From(new Vector3(80,80,0));
         newHexRoom.GetComponent<HexJumpAnimation>().TriggerJump(0.3f);
 
         // 设置对应材质（新增）

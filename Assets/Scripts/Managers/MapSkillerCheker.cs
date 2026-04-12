@@ -28,7 +28,7 @@ public class MapSkillerCheker : MonoSceneManager
         //在Raycaster中进行操作对象的选择，如果为空，默认打开玩家自身的
         EventCenter.AddEventListener<CharacterMapSkiller>(E_EventType.Select_Characer, SelectCharacter_UpdateCurrentSkiller);
 
-        EventCenter.AddEventListener<CharacterMapSkiller,bool>(E_EventType.Character_Born, RegisterSkiller);
+        EventCenter.AddEventListener<CharacterMapSkiller,bool>(E_EventType.Character_Skiller_Regist, RegisterSkiller);
         EventCenter.AddEventListener<CharacterMapSkiller, E_HexRoomType>(E_EventType.Mover_IntoSpecialRoom, DoSkillReward);
 
         uiManager = GameRoot.GetManager<UIManager>();

@@ -29,7 +29,7 @@ public class MapSettingSceneSetUp : MonoBehaviour
         gameRoot.RegisterScene_MonoManager<OrthoCameraNavigator>();
         gameMapManager = GameRoot.GetManager<GameMapManager>();
         //角色射线检测管理器
-        gameRoot.RegisterScene_MonoManager<CharacterRayCaster>();
+        gameRoot.RegisterScene_MonoManager<CharacterRayCasterManager>();
         gameMapManager.GameMapManagerInit(y_Offset, x_Offset, MapRadius, MapPivot.position);
         EventCenter.AddEventListener<Vector2Int, E_HexTerrainType>(E_EventType.Editor_Terrain, EditorOneRoomTexrrainTag);
         GameRoot.GetManager<HexMapInteractManager>().USEEditMode();

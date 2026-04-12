@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 /// <summary>
@@ -13,6 +14,13 @@ public interface IValidatable
     bool IsValid();
 }
 
+public interface ISaveable {
+
+ 
+
+    public void InitBySaveData();
+    public void InitBySelf();
+}
 
 /// <summary>
 /// JSON 存档管理器
@@ -61,6 +69,24 @@ public static class JsonSaver
         }
     }
     #endregion
+
+    /// <summary>
+    /// 依据存档数据来初始化
+    /// </summary>
+    public static void InitData<T>(ISaveable file) where T : class, IValidatable, new()
+    {
+
+        if (JsonSaver.HasValidData<T>())
+        {
+            Debug.Log("加载了存档数据");
+            file.InitBySaveData();
+        }
+        else
+        {
+            Debug.Log("加载了初始数据");
+            file.InitBySelf();
+        }
+    }
 
     #region 加载数据（自动验证，无效则返回默认）
     public static T Load<T>() where T : class, IValidatable, new()

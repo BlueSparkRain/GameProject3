@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 613d31c2430a18944a5a67fcee6e60d7, type: 3}
+  m_Name: LE_3
+  m_EditorClassIdentifier: 
+  Phy_Flat_Penetration_grow: 0.02
+  Mag_Flat_Penetration_grow: 0.02
+  Phy_Resistance_grow: 10
+  Mag_Resistance_grow: 10
+  Phy_Attack_grow: 5
+  Magic_Attack_grow: 5
+  Maximum_Mana_grow: 80
+  Mana_Regeneration_grow: 0.02
+  Maximum_Health_grow: 100
+  Health_Regeneration_grow: 0.02
+  Life_Steal_grow: 0.02
+  Tenacity_grow: 0.02
+  Endurance_grow: 0.02
+  Dodge_Rate_grow: 0.02
+  Heal_Amplification_grow: 0.02
+  Shield_Amplification_grow: 0.02
+  Maximum_ATB_grow: 3

@@ -15,7 +15,7 @@ public class MenuSceneSetUp : MonoBehaviour
     private void Start()
     {
         gameButton.onClick.AddListener(OnClickGameButton);
-        continueButton.onClick.AddListener(OnClickNoButton);
+        continueButton.onClick.AddListener(OnClickContinueButton);
         settingButton.onClick.AddListener(OnClickNoButton);
         creditsButton.onClick.AddListener(OnClickNoButton);
         ObjectPoolManager obj = GameRoot.GetManager<ObjectPoolManager>();
@@ -34,6 +34,14 @@ public class MenuSceneSetUp : MonoBehaviour
     }
 
     void OnClickGameButton() {
+        //清空历史存档
+        
+        GameRoot.GetManager<SceneSwitchManager>().SwitchSceneAsync("MapScene");
+        JsonSaver.StartNewGame();
+    }
+
+    void OnClickContinueButton() { 
+        //读取历史存档数据加载游戏
         GameRoot.GetManager<SceneSwitchManager>().SwitchSceneAsync("MapScene");
     
     }

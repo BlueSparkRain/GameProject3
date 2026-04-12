@@ -24,6 +24,7 @@ public static class ResourcesLoader
 
 
     static string characterSOPath = "SOData/CharacterSOData/";
+    static string characterGrowthSOPath = "SOData/CharacterGrowthSOData/";
 
     static string mapSaveDataPath = "SOData/HexMapSOData/HexMapSOData";
 
@@ -44,6 +45,11 @@ public static class ResourcesLoader
 
     public static CharacterDataSO FindCharaterSO(E_CharacterType characterType) {
         return Resources.Load<CharacterDataSO>(characterSOPath + characterType);
+    }
+
+    public static CharcterPropertyGrowthSO FindCharaterGrowthSO(E_CharacterType characterType)
+    {
+        return Resources.Load<CharcterPropertyGrowthSO>(characterGrowthSOPath + characterType);
     }
     /// <summary>
     /// 根据技能ID返回对应的SkillSOData

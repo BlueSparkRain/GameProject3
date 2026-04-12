@@ -1,8 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine.Events;
-using Core.Interfaces;
-using Core;
-using System.Diagnostics;
 
 /// <summary>
 /// 静态事件中心（改造完成）
@@ -420,9 +417,14 @@ public enum E_EventType
     Editor_Terrain_ExitEdit,
 
     /// <summary>
-    /// 一个角色产生再地图上
+    ///登记MapSkiller
     /// </summary>
-    Character_Born,
+    Character_Skiller_Regist,
+
+    /// <summary>
+    /// 登记MapMover
+    /// </summary>
+    Character_Mover_Regist,
 
     /// <summary>
     /// 选中一个角色对象,更新全局checker的操作对象
@@ -447,4 +449,19 @@ public enum E_EventType
     LoadMapStart,
     LoadMapEnd,
     SkillExcute,
+
+    /// <summary>
+    /// 调整玩家活力点数
+    /// </summary>
+    AdjustVitalityPoints,
+
+    /// <summary>
+    /// 新的行动回合
+    /// </summary>
+    NewRound,
+
+    /// <summary>
+    /// 一个Mover结束了自身的行动回合
+    /// </summary>
+    OneMoverEndRound,
 }

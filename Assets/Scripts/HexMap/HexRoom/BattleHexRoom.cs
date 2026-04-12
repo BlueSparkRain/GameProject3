@@ -70,7 +70,7 @@ public class BattleHexRoom : IHexRoom
         //根据战斗类型，从对应的池子里取出随机的怪物数据
         //根据具体怪物数据产生对应的模型
         var charac=MapCharacterCaller.CallNewCharacter("DisMoveable");
-        charac.InitCharacter(enemyCharacterType, false, false);
+        charac.InitCharacterDataTag(enemyCharacterType, false, false);
         charac.transform.localScale = Vector3.zero;
         charac.transform.localPosition= modelPos;
 

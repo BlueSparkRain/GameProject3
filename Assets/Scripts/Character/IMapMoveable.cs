@@ -14,5 +14,8 @@ public interface IMapMoveable
     /// <summary>
     /// Mover宣布结束自身回合
     /// </summary>
-    public void DoEndSelfRound();
+    public void DoEndSelfRound()
+    {
+        EventCenter.EventTrigger(E_EventType.OneMoverEndRound,this);
+    }
 }

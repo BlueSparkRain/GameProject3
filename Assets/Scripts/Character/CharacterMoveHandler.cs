@@ -9,10 +9,14 @@ public class CharacterMapMoveHandle : MonoBehaviour
     /// <param name="isPlayer"></param>
     public void InitMover(bool isPlayer, E_CharacterType characterType) {
 
-        characterType = GetComponent<CharacterData>().characterType;
+        //characterType = GetComponent<CharacterData>().characterType;
         iMapMover = isPlayer? 
             new Player_CharacterMapMover(characterType, transform):
             new Robot_CharacterMapMover();
+
+
+        //注册Mover
+        EventCenter.EventTrigger(E_EventType.Character_Mover_Regist, iMapMover);
     }
 
     void UpdateCurrentRoom(HexRoomData hexRoomData)

@@ -1,27 +1,47 @@
 using Core;
 using DG.Tweening;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 public class MapSceneSetUp : MonoBehaviour
 {
     GameRoot gameRoot;
 
-    public float x_Offset = 0.88f;//每行内的偏移
-    public float y_Offset = 0.75f;//相邻行的偏移
+    float x_Offset = 0.88f;//每行内的偏移
+    float y_Offset = 0.75f;//相邻行的偏移
 
-    public int MapRadius = 20;
+    int MapRadius = 30;
     public Transform MapPivot;
     GameMapManager gameMapManager;
     public Button EndRoundButton;
 
+    [Header("Test-游戏回合文本")]
+    public TMP_Text roundUIText;
+    [Header("Test-活力点数文本")]
+    public TMP_Text vitalityPointsUIText;
+
     public bool needDelay = false;
 
     public float characterHeight = 1;
+
+
+    private void UpdateRoundText()
+    {
+       roundUIText.text=GameRoot.GetManager<GameRoundManager>().RoundNum.ToString();
+    }
+    private void UpdateValityText()
+    {
+        Debug.Log("更新！！！！！！！！！");
+        vitalityPointsUIText.text = GameRoot.GetManager<VitalityPointsManager>().valityPoint.ToString();
+    }
+
+
     private void Awake()
     {
         gameRoot = GameRoot.Instance;
         BattleSkillFactory.RegisterAllSkills();
+
 
 
         //地图生成管理器
@@ -37,18 +57,29 @@ public class MapSceneSetUp : MonoBehaviour
         //技能管理器
         gameRoot.RegisterScene_MonoManager<MapSkillerCheker>();
         //角色射线检测管理器
-        gameRoot.RegisterScene_MonoManager<CharacterRayCaster>();
+        gameRoot.RegisterScene_MonoManager<CharacterRayCasterManager>();
 
+        //回合记录管理器
+        gameRoot.RegisterScene_MonoManager<GameRoundManager>();
+        //活力点数管理器
+        gameRoot.RegisterScene_MonoManager<VitalityPointsManager>();
 
         gameMapManager = GameRoot.GetManager<GameMapManager>();
         gameMapManager.GameMapManagerInit(y_Offset, x_Offset, MapRadius, MapPivot.position);
+
+        //测试代码
+        EventCenter.AddEventListener(E_EventType.NewRound, UpdateRoundText);
+        EventCenter.AddEventListener(E_EventType.AdjustVitalityPoints, UpdateValityText);
+
+        EventCenter.EventTrigger(E_EventType.NewRound);
+        EventCenter.EventTrigger(E_EventType.AdjustVitalityPoints);
+
         if (EndRoundButton)
             EndRoundButton.onClick.AddListener(() => EventCenter.EventTrigger(E_EventType.Player_RoundEnd));
+        //EndRoundButton.onClick.AddListener(() => EventCenter.EventTrigger(E_EventType.OneMoverEndRound));
 
-        //EventCenter.EventTrigger(E_EventType.LoadObjPool, EPoolType.MapRoom_地图房间);
-        //EventCenter.EventTrigger(E_EventType.LoadObjPool, EPoolType.RoomCloude_房间遮云);
-        //EventCenter.EventTrigger(E_EventType.LoadObjPool, EPoolType.SkillSlot_技能槽位);
-        //EventCenter.EventTrigger(E_EventType.LoadObjPool, EPoolType.SkillIcon_技能图标);
+
+        //EventCenter.EventTrigger(E_EventType.AdjustVitalityPoints);
     }
 
     IEnumerator LoadAllPool()
@@ -73,8 +104,9 @@ public class MapSceneSetUp : MonoBehaviour
 
         //产生角色
         var player1 = MapCharacterCaller.CallNewCharacter("Moveable");
-        //支持外部角色调整
-        player1.InitCharacter(E_CharacterType.P_1, true, true);
+
+          //支持外部角色调整
+            player1.InitCharacterDataTag(E_CharacterType.P_1, true, true);
 
         yield return new WaitForSeconds(4f);
         //地图还没有加载，还没来得及注册

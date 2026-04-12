@@ -35,7 +35,7 @@ public class SkillIcon : MonoBehaviour
     /// <summary>
     /// 关联的BattleSkill
     /// </summary>
-    ISkill currentSkill;
+    SkillBase currentSkill;
 
     /// <summary>
     /// 战斗中无法拖拽，但是可以在地图界面中拖拽换槽位
@@ -60,7 +60,7 @@ public class SkillIcon : MonoBehaviour
     /// 将一个具体的BattleSkill关联给此Icon
     /// </summary>
     /// <param name="skill"></param>
-    public void InitBattleSkill(ISkill skill)
+    public void InitBattleSkill(SkillBase skill)
     {
         currentSkill = skill;
         Debug.Log("十大"+skill);

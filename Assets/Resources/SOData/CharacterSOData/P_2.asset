@@ -17,13 +17,13 @@ MonoBehaviour:
   characterName: "\u55B52"
   Phy_Flat_Penetration: 0.5
   Mag_Flat_Penetration: 0.5
-  Phy_Resistance: 1
-  Mag_Resistance: 1
-  Phy_Attack: 2
-  Magic_Attack: 2
-  Maximum_Mana: 200
+  Phy_Resistance: 100
+  Mag_Resistance: 100
+  Phy_Attack: 50
+  Magic_Attack: 50
+  Maximum_Mana: 1000
   Mana_Regeneration: 1
-  Maximum_Health: 100
+  Maximum_Health: 1200
   Health_Regeneration: 0.8
   Life_Steal: 0.2
   Tenacity: 0.8
@@ -31,3 +31,4 @@ MonoBehaviour:
   Dodge_Rate: 0.1
   Heal_Amplification: 0
   Shield_Amplification: 0
+  Maximum_ATB: 0

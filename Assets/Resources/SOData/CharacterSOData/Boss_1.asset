@@ -17,13 +17,13 @@ MonoBehaviour:
   characterName: "\u5927\u5927\u602A"
   Phy_Flat_Penetration: 1
   Mag_Flat_Penetration: 1
-  Phy_Resistance: 5
-  Mag_Resistance: 5
-  Phy_Attack: 5
-  Magic_Attack: 5
-  Maximum_Mana: 200
+  Phy_Resistance: 100
+  Mag_Resistance: 100
+  Phy_Attack: 50
+  Magic_Attack: 50
+  Maximum_Mana: 1000
   Mana_Regeneration: 1
-  Maximum_Health: 100
+  Maximum_Health: 1200
   Health_Regeneration: 0.5
   Life_Steal: 0.3
   Tenacity: 0.8

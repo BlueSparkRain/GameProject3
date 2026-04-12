@@ -41,10 +41,10 @@ public class OrthoCameraNavigator : MonoSceneManager
     public float scaleSmoothTime = 0.4f;
 
     [Header("地图边界（XZ平面）")]
-    public bool enableMapBounds = false;
+    public bool enableMapBounds = true;
     public float mapLeftBound = -5f;    // X最小
-    public float mapRightBound = 50f;   // X最大
-    public float mapBackBound = -5f;    // Z最小
+    public float mapRightBound = 60f;   // X最大
+    public float mapBackBound = -15f;    // Z最小
     public float mapFrontBound = 50f;   // Z最大
 
     [Header("聚焦配置")]

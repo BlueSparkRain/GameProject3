@@ -19,9 +19,9 @@ public class CharacterBattleSkiller : MonoBehaviour
 
     CharacterBattle_Controller battleController;
 
-    List<ISkill> normalSkills = new List<ISkill>();
-    List<ISkill> atbSkills = new List<ISkill>();
-    Dictionary<SkillIcon, ISkill> skillIconDic = new Dictionary<SkillIcon, ISkill>();
+    List<SkillBase> normalSkills = new List<SkillBase>();
+    List<SkillBase> atbSkills = new List<SkillBase>();
+    Dictionary<SkillIcon, SkillBase> skillIconDic = new Dictionary<SkillIcon, SkillBase>();
 
 
     IBattlable self;//由上个场景中的战斗双方角色传输
@@ -47,7 +47,7 @@ public class CharacterBattleSkiller : MonoBehaviour
         normalSkillIconSpawner = GetComponentInChildren<SkillIconSpawner>();
         battleController = GetComponent<CharacterBattle_Controller>();
 
-        EventCenter.AddEventListener<CharacterBattle_Controller,float>(E_EventType.SkillExcute, SkillCost);
+        EventCenter.AddEventListener<CharacterBattle_Controller, float>(E_EventType.SkillExcute, SkillCost);
 
         List<SkillData> normalSkillDatas = new List<SkillData>();
         //List<SkillData> atbSkillDatas = new List<SkillData>();
@@ -91,8 +91,6 @@ public class CharacterBattleSkiller : MonoBehaviour
         go = true;
     }
 
-
-
     void InitSkillsBatch(List<int> skillIDList)
     {
         var _normalSkills = BattleSkillFactory.CreateBattleSkillsBatch(skillIDList, self);
@@ -103,8 +101,6 @@ public class CharacterBattleSkiller : MonoBehaviour
 
 
     }
-
-
 
     void FreezeSkill(int ID, bool freeze)
     {

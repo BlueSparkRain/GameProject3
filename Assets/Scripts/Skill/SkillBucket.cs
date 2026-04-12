@@ -14,7 +14,7 @@ public class SkillBucket { }
 /// <summary>
 /// 对一名敌人角色造成伤害的技能
 /// </summary>
-public class Skill_BaseAttack : ISkill
+public class Skill_BaseAttack : SkillBase
 {
     public Skill_BaseAttack(E_SkillTargetType _skillTargetType) {
         skillTargetType = _skillTargetType;
@@ -23,20 +23,20 @@ public class Skill_BaseAttack : ISkill
     float baseAttackValue = -2;
     float baseAttackRate;
 
-    public IBattlable self { get; set; }
-    public List<IBattlable> targets { get; set; }
-    public E_SkillTargetType skillTargetType { get; set; }
+    //public IBattlable self { get; set; }
+    //public List<IBattlable> targets { get; set; }
+    //public E_SkillTargetType skillTargetType { get; set; }
 
-    public void SkillExcuteSingle(IBattlable target)
+
+    public override void SkillExcuteSingle(IBattlable target)
     {
         target.BattleController.AdjustCharacterModelValue(E_BattleModelType.HP,
-            target.BattleController.GetCharacterData(E_CharacterPropertyType.Phy_Attack)*baseAttackValue);
-        Debug.Log(self.Camp + "对" + target.BattleController.name+"发动攻击！造成伤害"+
             target.BattleController.GetCharacterData(E_CharacterPropertyType.Phy_Attack) * baseAttackValue);
-    
+        Debug.Log(self.Camp + "对" + target.BattleController.name + "发动攻击！造成伤害" +
+            target.BattleController.GetCharacterData(E_CharacterPropertyType.Phy_Attack) * baseAttackValue);
     }
 
-    public void SkillEnhanceSingle(IBattlable target)
+    public override void SkillEnhanceSingle(IBattlable target)
     {
 
     }
