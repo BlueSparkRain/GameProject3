@@ -18,7 +18,7 @@ public static class SkillIconCaller
         ObjectPoolManager = GameRoot.GetManager<ObjectPoolManager>();
         //产生对应的skillIcon
         var newSkillIcon = ObjectPoolManager.
-        GetInstance(EPoolType.SkillIcon_技能图标);
+        GetInstance(E_PoolType.SkillIcon_技能图标);
 
         newSkillIcon.transform.SetParent(skillSlot);
         var rect = newSkillIcon.GetComponent<RectTransform>();
@@ -40,7 +40,7 @@ public static class SkillIconCaller
     public static SkillSlot LoadSkillSlot(Transform slotsParent)
     {
         ObjectPoolManager = GameRoot.GetManager<ObjectPoolManager>();
-        var slot = ObjectPoolManager.GetInstance(EPoolType.SkillSlot_技能槽位);
+        var slot = ObjectPoolManager.GetInstance(E_PoolType.SkillSlot_技能槽位);
         slot.transform.SetParent(slotsParent);
         slot.transform.localPosition = Vector3.zero;
         slot.transform.localScale = Vector3.zero;
@@ -50,13 +50,11 @@ public static class SkillIconCaller
     }
 
 
-    public static void UnLoadSkillIcon(EPoolType ePoolType, GameObject obj, float animScale = 0.5f)
+    public static void UnLoadSkillIcon(E_PoolType ePoolType, GameObject obj, float animScale = 0.5f)
     {
         //ObjectPoolManager ??= GameRoot.GetManager<ObjectPoolManager>();
         obj.transform.DOScale(0, 0.2f * animScale).From(1).SetEase(Ease.OutQuad);
         obj.transform.DORotate(new Vector3(0, 0, 360), 0.3f * animScale, RotateMode.FastBeyond360).SetEase(Ease.OutQuad)
             .OnComplete(() => ObjectPoolManager.ReturnPool(ePoolType, obj));
     }
-
-
 }

@@ -9,10 +9,8 @@ using UnityEngine;
 /// 随机地块获取
 /// 游戏内地块状态更新+存档保存
 /// </summary>
-public class GameMapManager : MonoSceneManager
+public class GameMapManager : MonoGlobalManager
 {
-
-
     [Header("正六边形地图设置")]
     public int MapRadius = 20;
 
@@ -43,9 +41,9 @@ public class GameMapManager : MonoSceneManager
     //地图数据后缀-动态资源加载
     public string mapdataBack;
     //行批次延迟
-    float rowBatchInterval = 0.04f;
+    float rowBatchInterval = 0.01f;
     //相邻房间延迟
-    float bornRoomInterval = 0.03f;
+    float bornRoomInterval = 0.002f;
     //地图锚点
     Vector3 MapPivotPos;
     // 缓存所有生成的地块
@@ -61,15 +59,71 @@ public class GameMapManager : MonoSceneManager
     public Dictionary<Vector2Int, bool> WalkableDic => _walkableDic;
     public Dictionary<Vector2Int, HexRoomData> HexRoomMap => _hexRoomMap;
 
+    public HexRoomData GetRandomRoomInBounds(int minCol, int maxCol, int minRow, int maxRow)
+    {
+        List<HexRoomData> validRooms = new List<HexRoomData>();
+
+        foreach (var kvp in _hexRoomMap)
+        {
+            Vector2Int pos = kvp.Key;
+            HexRoomData room = kvp.Value;
+
+            // 判断是否在范围内 + 是否可走
+            if (pos.x >= minCol && pos.x <= maxCol &&
+                pos.y >= minRow && pos.y <= maxRow &&
+                room.walkable)
+            {
+                validRooms.Add(room);
+            }
+        }
+
+        if (validRooms.Count == 0)
+        {
+            Debug.LogWarning("区域内无可用房间");
+            return null;
+        }
+
+        return validRooms[UnityEngine.Random.Range(0, validRooms.Count)];
+    }
+
     //寻找一个完全随机的地块
     public HexRoomData GetRnadomRoom()
     {
-        HexRoomData hexRoomData = null;
-        do hexRoomData = _hexRoomMap.GetRandomElement().Value;
-        while (!hexRoomData.walkable);
+        if (_hexRoomMap.Count == 0)
+        {
+            Debug.LogError("地图尚未生成，无法获取随机房间");
+            return null;
+        }
 
-        Debug.Log(hexRoomData.roomType+":"+hexRoomData.walkable);
+        Debug.Log(_hexRoomMap.Count+"dasdhkd");
+        int maxAttempts = _hexRoomMap.Count * 10;
+        HexRoomData hexRoomData = null;
+        do
+        {
+            hexRoomData = _hexRoomMap.GetRandomElement().Value;
+        }
+        while (!hexRoomData.walkable && --maxAttempts > 0);
+        //while (!hexRoomData.walkable) ;
+
+        if (!hexRoomData.walkable)
+        {
+            Debug.LogError("未找到可行走房间，请检查地图配置");
+            return null;
+        }
+
+        //Debug.Log(hexRoomData.roomType+":"+hexRoomData.walkable);
         return hexRoomData;
+    }
+
+    /// <summary>
+    /// 寻找一个确定的房间
+    /// </summary>
+    /// <param name="pos"></param>
+    /// <returns></returns>
+    public HexRoomData GetTargetRoom(Vector2Int pos) {
+        Debug.Log(_hexRoomMap.Count + "小小");
+        Debug.Log(_hexRoomMap[pos]+"大大");
+        return  _hexRoomMap[pos];
     }
     #endregion
 
@@ -114,7 +168,6 @@ public class GameMapManager : MonoSceneManager
         allCells = new HexRoomData[mapRow, mapCol];
         EventCenter.AddEventListener<Vector2Int, E_HexTerrainType>(E_EventType.Editor_Terrain, UpdateHexTag);
     }
-
     public void CreateWholeMap()
     {
         // 加载材质
@@ -143,8 +196,12 @@ public class GameMapManager : MonoSceneManager
     #region 正六边形地图生成
     IEnumerator MapCreateCoro()
     {
-        WaitForSeconds rowBatchDealy = new WaitForSeconds(rowBatchInterval);
-        bool fromleft = true;
+        WaitForSeconds rowBatchDealy;
+     
+        rowBatchDealy = new WaitForSeconds(rowBatchInterval);
+      
+        
+            bool fromleft = true;
         for (int row = 0; row < mapRow; row++)
         {
             coroutineManager.StartCoroutine(CreatRowRooms(row, fromleft));
@@ -155,7 +212,10 @@ public class GameMapManager : MonoSceneManager
     }
     IEnumerator CreatRowRooms(int row, bool fromleft)
     {
-        WaitForSeconds roomDealy = new WaitForSeconds(bornRoomInterval);
+        WaitForSeconds roomDealy;
+      
+        roomDealy = new WaitForSeconds(bornRoomInterval);
+
         GetHexRowColRange(row, out int startCol, out int endCol);
 
         if (fromleft)
@@ -201,7 +261,7 @@ public class GameMapManager : MonoSceneManager
     #region 地块创建+类型控制+存档
     void CreateOneRoom(int _row, int _col)
     {
-        E_HexTerrainType cellType = E_HexTerrainType.Obstacle__Ocean;
+        E_HexTerrainType cellType = E_HexTerrainType.Obstacle_Ocean;
         // 如果有存档，读取存档类型（新增）
         if (mapSaveData != null && mapSaveData.cellData != null)
         {
@@ -215,7 +275,7 @@ public class GameMapManager : MonoSceneManager
 
         newHexRoom.SetCellState(isWalkable);
 
-        newHexRoom.transform.DOScale(new Vector3(100,100,50), 0.5f).From(new Vector3(80,80,0));
+        newHexRoom.transform.DOScale(new Vector3(1,1,0.5f), 0.4f).From(new Vector3(0.7f,0.7f,0));
         newHexRoom.GetComponent<HexJumpAnimation>().TriggerJump(0.3f);
 
         // 设置对应材质（新增）
@@ -232,7 +292,7 @@ public class GameMapManager : MonoSceneManager
 
         switch (type)
         {
-            case E_HexTerrainType.Obstacle__Ocean : renderer.material = obstacle_oceanMat; break;
+            case E_HexTerrainType.Obstacle_Ocean : renderer.material = obstacle_oceanMat; break;
             case E_HexTerrainType.Walkable_EmptyLand: renderer.material = walkable_landMat; break;
             case E_HexTerrainType.Obstacle_Tree: renderer.material = obstacle_TreeMat; break;
             case E_HexTerrainType.Obstacle_Stone: renderer.material = obstacle_StoneMat; break;
@@ -248,10 +308,12 @@ public class GameMapManager : MonoSceneManager
         }
     }
 
+
+
     HexRoomData CreateHexRoom(int row, int col, bool walkable, E_HexTerrainType cellType)
     {
         HexRoomData newHexRoom = GameRoot.GetManager<ObjectPoolManager>()
-            .GetInstance(EPoolType.MapRoom_地图房间).GetComponent<HexRoomData>();
+            .GetInstance(E_PoolType.MapRoom_地图房间).GetComponent<HexRoomData>();
 
         if (row % 2 == 0)
             newHexRoom.GetComponent<HexJumpAnimation>().InitPos(MapPivotPos + new Vector3(y_Offset * col, 0, x_Offset * row));
@@ -260,7 +322,7 @@ public class GameMapManager : MonoSceneManager
 
         if (newHexRoom)
         {
-            newHexRoom.GetComponent<HexTerrainTag>().SetTag(cellType);
+            newHexRoom.GetComponent<HexTerrainStyleHandler>().SetTag(cellType);
             newHexRoom.InitRoomID(row, col);
             RegisterHexRoom(newHexRoom, walkable);
         }

@@ -523,9 +523,9 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2742601590208273279}
-  - {fileID: 6219627941802304423}
   - {fileID: 1067234493587754164}
+  - {fileID: 6219627941802304423}
+  - {fileID: 2742601590208273279}
   m_Father: {fileID: 8038701896064798738}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -807,6 +807,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6091986182051449561}
     m_Modifications:
+    - target: {fileID: 205775153820164136, guid: 95495f4e0d6ba45408fc1a253888a508,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1392705647992916021, guid: 95495f4e0d6ba45408fc1a253888a508,
         type: 3}
       propertyPath: m_AnchorMax.x

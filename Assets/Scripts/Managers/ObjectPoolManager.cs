@@ -3,23 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum EPoolType
+public enum E_PoolType
 {
     MapRoom_地图房间,
     RoomCloude_房间遮云,
     SkillIcon_技能图标,
     SkillSlot_技能槽位,
+    RoomModel_房间纸片,
 }
 
 public class ObjectPoolManager : MonoGlobalManager
 {
     public int batchSize = 5;
-    private Dictionary<EPoolType, PoolData> poolDataDic = new Dictionary<EPoolType, PoolData>();
+    private Dictionary<E_PoolType, PoolData> poolDataDic = new Dictionary<E_PoolType, PoolData>();
 
     Transform HexRoomsTrans;
     Transform RoomCloudesTrans;
     Transform SkillIconsTrans;
     Transform SkillSlotsTrans;
+    //Transform SkillSlotsTrans;
 
     void CreatePoolParent()
     {
@@ -50,13 +52,14 @@ public class ObjectPoolManager : MonoGlobalManager
         // 初始化前清空字典，防止重复添加
         poolDataDic.Clear();
 
-        poolDataDic.Add(EPoolType.MapRoom_地图房间, new PoolData(HexRoomsTrans, ResourcesLoader.FindHexRoomObj(), 2700));
-        poolDataDic.Add(EPoolType.RoomCloude_房间遮云, new PoolData(RoomCloudesTrans, ResourcesLoader.FindRoomCloudeObj(), 2700));
-        poolDataDic.Add(EPoolType.SkillIcon_技能图标, new PoolData(SkillIconsTrans, ResourcesLoader.FindSkillIconObj(), 30));
-        poolDataDic.Add(EPoolType.SkillSlot_技能槽位, new PoolData(SkillSlotsTrans, ResourcesLoader.FindSkillSlotObj(), 30));
+        poolDataDic.Add(E_PoolType.MapRoom_地图房间, new PoolData(HexRoomsTrans, ResourcesLoader.FindHexRoomObj(), 2700));
+        poolDataDic.Add(E_PoolType.RoomCloude_房间遮云, new PoolData(RoomCloudesTrans, ResourcesLoader.FindRoomCloudeObj(), 2700));
+        poolDataDic.Add(E_PoolType.SkillIcon_技能图标, new PoolData(SkillIconsTrans, ResourcesLoader.FindSkillIconObj(), 30));
+        poolDataDic.Add(E_PoolType.SkillSlot_技能槽位, new PoolData(SkillSlotsTrans, ResourcesLoader.FindSkillSlotObj(), 30));
+        poolDataDic.Add(E_PoolType.RoomModel_房间纸片, new PoolData(SkillSlotsTrans, ResourcesLoader.FindSkillSlotObj(), 30));
 
         // 注册事件
-        EventCenter.AddEventListener<EPoolType>(E_EventType.LoadObjPool, LoadOnePool);
+        EventCenter.AddEventListener<E_PoolType>(E_EventType.LoadObjPool, LoadOnePool);
     }
 
     protected override void Awake()
@@ -70,7 +73,7 @@ public class ObjectPoolManager : MonoGlobalManager
     public override void MgrDispose()
     {
         base.MgrDispose();
-        EventCenter.RemoveEventListener<EPoolType>(E_EventType.LoadObjPool, LoadOnePool);
+        EventCenter.RemoveEventListener<E_PoolType>(E_EventType.LoadObjPool, LoadOnePool);
 
         // 遍历所有对象池，销毁物体 + 清空列表
         foreach (var data in poolDataDic.Values)
@@ -94,7 +97,7 @@ public class ObjectPoolManager : MonoGlobalManager
         if (SkillSlotsTrans != null) Destroy(SkillSlotsTrans.gameObject);
     }
 
-    void LoadOnePool(EPoolType poolType)
+    void LoadOnePool(E_PoolType poolType)
     {
         var coroutineMgr = GameRoot.GetManager<CoroutineManager>();
         if (coroutineMgr != null)
@@ -103,7 +106,7 @@ public class ObjectPoolManager : MonoGlobalManager
         }
     }
 
-    public IEnumerator StartFillPool(EPoolType poolType)
+    public IEnumerator StartFillPool(E_PoolType poolType)
     {
         // 空值防护
         if (!poolDataDic.ContainsKey(poolType)) yield break;
@@ -123,7 +126,7 @@ public class ObjectPoolManager : MonoGlobalManager
         }
     }
 
-    GameObject CreateNewInstance(EPoolType poolType)
+    GameObject CreateNewInstance(E_PoolType poolType)
     {
         if (!poolDataDic.ContainsKey(poolType)) return null;
 
@@ -133,7 +136,7 @@ public class ObjectPoolManager : MonoGlobalManager
 
         GameObject instance;
 
-        if (poolType == EPoolType.MapRoom_地图房间 || poolType == EPoolType.RoomCloude_房间遮云)
+        if (poolType == E_PoolType.MapRoom_地图房间 || poolType == E_PoolType.RoomCloude_房间遮云)
             instance = Instantiate(poolData.prefab, transform.position + new Vector3(-10, 0, 0), Quaternion.Euler(-90, 0, 0), poolData.parent);
         else
             instance = Instantiate(poolData.prefab, transform.position + new Vector3(-10, 0, 0), Quaternion.identity, poolData.parent);
@@ -146,7 +149,7 @@ public class ObjectPoolManager : MonoGlobalManager
     /// <summary>
     /// 【修复】获取物体时，过滤已销毁的空对象
     /// </summary>
-    public GameObject GetInstance(EPoolType poolType)
+    public GameObject GetInstance(E_PoolType poolType)
     {
         if (!poolDataDic.ContainsKey(poolType)) return null;
 
@@ -174,7 +177,7 @@ public class ObjectPoolManager : MonoGlobalManager
         return instance;
     }
 
-    public void ReturnPool(EPoolType poolType, GameObject obj)
+    public void ReturnPool(E_PoolType poolType, GameObject obj)
     {
         if (obj == null || !poolDataDic.ContainsKey(poolType)) return;
 

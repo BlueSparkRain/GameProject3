@@ -169,7 +169,7 @@ GameObject:
   - component: {fileID: 6074156628283847649}
   - component: {fileID: 2663682674329803068}
   - component: {fileID: 5969579073982123099}
-  - component: {fileID: 8790794201349078844}
+  - component: {fileID: 7924504396908485912}
   m_Layer: 5
   m_Name: CharacterBattleArea
   m_TagString: Untagged
@@ -279,9 +279,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewer: {fileID: 0}
-  CharacterDataSO: {fileID: 0}
+  characterType: 0
   charcaterDead: 0
---- !u!114 &8790794201349078844
+--- !u!114 &7924504396908485912
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -290,12 +290,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6703023380856288044}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d6a5b6223473d3439fd5bb4b5323984, type: 3}
+  m_Script: {fileID: 11500000, guid: 752d4b9ef4de4eb4d8e014df9cbc1758, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   normalSkillIconSpawner: {fileID: 858398844789769879}
   atbSkillIconSpawner: {fileID: 0}
-  IsPlayer: 0
 --- !u!1001 &339850631278315789
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -20,6 +20,9 @@ public class PlayerMapIcon : MonoBehaviour
     bool canMove;
     Transform charcaterTrans;
 
+    //private CharacterLevelUpHandler levelUpHandler;
+    [Header("经验Box")]
+    public PlayerLevelBox  levelBox;   
     private void Awake()
     {
         EventCenter.AddEventListener(E_EventType.Mover_PlayerStartMove, MoverStartMove);
@@ -29,18 +32,17 @@ public class PlayerMapIcon : MonoBehaviour
         EventCenter.RemoveEventListener(E_EventType.Mover_PlayerStartMove, MoverStartMove);
     }
 
-
-    void UpdateLevelView()
-    {
-
-
-    }
-
     public void InitIcon(E_CharacterType _characterType, Transform _charcaterTrans)
     {
         characterSelectButton.onClick.AddListener(OnClickIconButton);
         characterType = _characterType;
         charcaterTrans = _charcaterTrans;
+
+        //玩家操控角色需要更新UI数据
+        var levelUpHandler=charcaterTrans.GetComponent<CharacterLevelUpHandler>();
+        levelUpHandler.EXPUIUpdateEvent += levelBox.UpdateMapPlayerIconUI;
+        levelUpHandler.InitLevelHandler();
+
         characterSOData = ResourcesLoader.FindCharaterSO(_characterType); 
         characterImage.sprite = characterSOData.characterSprite;
         characterNameText.text = characterSOData.characterName;

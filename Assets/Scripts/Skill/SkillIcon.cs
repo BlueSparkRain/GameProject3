@@ -1,6 +1,3 @@
-using AmplifyShaderEditor;
-using Core;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,11 +16,11 @@ public class SkillIcon : MonoBehaviour
     #region 技能状态字段
     [Header("技能计时器")]
     public float skillTimer = 0;
-    public bool hasNoSP;    
+    public bool hasNoSP;
     #endregion
     //当前的技能数据
     private SkillData skillData;
-    public SkillData SkillData=>skillData;
+    public SkillData SkillData => skillData;
 
     //管理技能释放后的模型的变化，如果没蓝图标变蓝，无法释放技能
 
@@ -46,14 +43,15 @@ public class SkillIcon : MonoBehaviour
     /// 现在根据SkillData（可能是保存的数据）中来读取并加载一个Icon
     /// </summary>
     /// <param name="_skilldata"></param>
-    public void InitSkillIcon(SkillData _skilldata,bool _canDrag)
+    public void InitSkillIcon(SkillData _skilldata,SkillSlot slot, bool _canDrag)
     {
         skillData = _skilldata;
         canDrag = _canDrag;
-
         //EventCenter.EventTrigger(E_EventType.Battle_LoadASkill,skillData.skill_ID);
         //替换图标
         skillImage.sprite = SkillData.skill_Sprite;
+        skillTimer = skillData.skill_CoolDown;
+        GetComponent<SlotSwaperHandler>().InitSlot(slot);
     }
 
     /// <summary>
@@ -63,13 +61,13 @@ public class SkillIcon : MonoBehaviour
     public void InitBattleSkill(SkillBase skill)
     {
         currentSkill = skill;
-        Debug.Log("十大"+skill);
     }
 
     /// <summary>
     /// 技能被禁用
     /// </summary>
-    public void FreezeIcon(bool freeze) {
+    public void FreezeIcon(bool freeze)
+    {
         isFreezzing = freeze;
         //可能出现一个锁链的UI_Image
     }
@@ -94,21 +92,24 @@ public class SkillIcon : MonoBehaviour
             return;
         }
 
-        if (skillTimer > -0.01){
-            skillCoolDownImage.fillAmount = skillTimer/skillData.skill_CoolDown;
+        if (skillTimer > -0.01)
+        {
+            skillCoolDownImage.fillAmount = skillTimer / skillData.skill_CoolDown;
             skillTimer -= Time.deltaTime;
         }
-        else{
+        else
+        {
             //根据是否有蓝来通知Skiller释放对应的技能
-            if (hasNoSP){
+            if (hasNoSP)
+            {
                 return;
             }
 
             //冷却好且具备蓝量
             //如果使用加强版技能
             currentSkill.SkillExcute(E_SkillLevel.基础版本);
-            skillTimer =skillData.skill_CoolDown;
-            EventCenter.EventTrigger(E_EventType.SkillExcute,currentSkill.self.BattleController,skillData.skill_sp_cost);
+            skillTimer = skillData.skill_CoolDown;
+            EventCenter.EventTrigger(E_EventType.SkillExcute, currentSkill.self.BattleController, skillData.skill_sp_cost);
         }
     }
 

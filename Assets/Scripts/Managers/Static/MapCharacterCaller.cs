@@ -1,7 +1,9 @@
+using Core;
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Core;
+using static UnityEditor.Experimental.GraphView.GraphView;
 public static class MapCharacterCaller 
 {
 
@@ -14,6 +16,18 @@ public static class MapCharacterCaller
     public static CharacterDataTag CallNewCharacter(string backStr) {
         var target = GameObject.Instantiate(ResourcesLoader.FindCharacterObj(backStr));
         return target.GetComponent<CharacterDataTag>();
+    }
+
+    public static void SetMapPos(Transform characterTrans) {
+        mapManager = GameRoot.GetManager<GameMapManager>();
+        //地图还没有加载，还没来得及注册
+        HexRoomData randonoom = mapManager.GetRnadomRoom();
+
+        characterTrans.position = randonoom.transform.position + Vector3.up * 1.2f;
+        characterTrans.localScale = Vector3.zero;
+
+        characterTrans.DOScale(1.5f, 0.3f).SetEase(Ease.InQuart).From(0);
+        characterTrans.DOScale(1, 0.2f).SetEase(Ease.OutQuart);
     }
 
     public static  void GetRandomPos() {

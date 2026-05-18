@@ -6,7 +6,7 @@ using UnityEngine;
 /// 进入战场前，上个场景中的CharacterSkiller会将目前玩家的技能数据传递过来（*-*）(或一个管理器)，
 /// 生成对应的技能图标，并注册到skiller中
 /// </summary>
-public class CharacterBattleSkiller : MonoBehaviour
+public class CharacterBattleSkiller 
 {
     List<SkillIcon> normalSkillIcons = new List<SkillIcon>();
     List<SkillIcon> atbSkillIcons = new List<SkillIcon>();
@@ -14,40 +14,42 @@ public class CharacterBattleSkiller : MonoBehaviour
     List<int> normalSkillIDs = new List<int>();
     List<int> atbSkillIDs = new List<int>();
 
-    public SkillIconSpawner normalSkillIconSpawner;
-    public SkillIconSpawner atbSkillIconSpawner;
-
+    SkillIconSpawner normalSkillIconSpawner;
+    SkillIconSpawner atbSkillIconSpawner;
     CharacterBattle_Controller battleController;
 
     List<SkillBase> normalSkills = new List<SkillBase>();
     List<SkillBase> atbSkills = new List<SkillBase>();
     Dictionary<SkillIcon, SkillBase> skillIconDic = new Dictionary<SkillIcon, SkillBase>();
 
+    public CharacterBattleSkiller(SkillIconSpawner _normalSkillIconSpawner,SkillIconSpawner _atbSkillIconSpawner){
+        normalSkillIconSpawner=_normalSkillIconSpawner;
+        atbSkillIconSpawner=_atbSkillIconSpawner;}
 
     IBattlable self;//由上个场景中的战斗双方角色传输
     public bool IsPlayer;
 
-    private void Start()
+    bool DoCycle;
+    bool battleEnd;
+
+    void InitSkillsBatch(List<int> skillIDList)
     {
-        self = IsPlayer ? new Player(GetComponent<CharacterBattle_Controller>()) : new Enemy(GetComponent<CharacterBattle_Controller>());
+        var _normalSkills = BattleSkillFactory.CreateBattleSkillsBatch(skillIDList, self);
+        foreach (var skill in _normalSkills)
+        {
+            normalSkills.Add(skill);
+        }
+    }
+    public void InitSkiller(bool isplayer, CharacterBattle_Controller battler_controller)
+    {
+        self = isplayer ? new Player(battler_controller) : new Enemy(battler_controller);
         BattleTargetSelector.RegisteABattler(self);
-        InitSkiller(self);
-    }
-
-    private void Update()
-    {
-        if (go)
-            DoSkillsUpdate();
-    }
-
-    bool go;
-    public void InitSkiller(IBattlable battler)
-    {
-        this.self = battler;
-        normalSkillIconSpawner = GetComponentInChildren<SkillIconSpawner>();
-        battleController = GetComponent<CharacterBattle_Controller>();
+        battleController = battler_controller;
+        //normalSkillIconSpawner = GetComponentInChildren<SkillIconSpawner>();
+        //battleController = GetComponent<CharacterBattle_Controller>();
 
         EventCenter.AddEventListener<CharacterBattle_Controller, float>(E_EventType.SkillExcute, SkillCost);
+        EventCenter.AddEventListener<CharacterBattle_Controller>(E_EventType.CharacterDead, StopCylcle);
 
         List<SkillData> normalSkillDatas = new List<SkillData>();
         //List<SkillData> atbSkillDatas = new List<SkillData>();
@@ -79,7 +81,6 @@ public class CharacterBattleSkiller : MonoBehaviour
         //注册按钮-Skill字典 + 关联Icon&Skill
         for (int i = 0; i < normalSkillIcons.Count; i++)
         {
-
             Debug.Log(i + "()Icon:" + normalSkillIcons[i] + " Skill:" + normalSkills[i]);
             normalSkillIcons[i].InitBattleSkill(normalSkills[i]);
             skillIconDic.Add(normalSkillIcons[i], normalSkills[i]);
@@ -88,20 +89,20 @@ public class CharacterBattleSkiller : MonoBehaviour
         //    atbSkillIcons[i].InitBattleSkill(atbSkills[i]);
         //    skillIconDic.Add(atbSkillIcons[i], atbSkills[i]);
         //}
-        go = true;
+        DoCycle = true;
     }
 
-    void InitSkillsBatch(List<int> skillIDList)
+    void StopCylcle(CharacterBattle_Controller battler) {
+        if (battler != battleController) return;
+        SelfEnd();
+    }
+
+
+    public void OnSkillUpdate()
     {
-        var _normalSkills = BattleSkillFactory.CreateBattleSkillsBatch(skillIDList, self);
-        foreach (var skill in _normalSkills)
-        {
-            normalSkills.Add(skill);
-        }
-
-
-    }
-
+        if (DoCycle)
+            DoSkillsUpdate();
+    }    
     void FreezeSkill(int ID, bool freeze)
     {
         foreach (var icon in normalSkillIcons)
@@ -122,14 +123,11 @@ public class CharacterBattleSkiller : MonoBehaviour
         normalSkills.Add(BattleSkillFactory.CreateBattleSkill(skillID, self));
     }
 
-    void BattleEnd()
-    {
-        battleEnd = true;
-    }
+    void SelfEnd()=> battleEnd = true;
+  
 
-    bool battleEnd;
 
-    public void DoSkillsUpdate()
+    void DoSkillsUpdate()
     {
         if (battleEnd)
             return;

@@ -46,7 +46,6 @@ public class Player_CharacterMapMover : IMapMoveable
         this.charcaterTrans = charcaterTrans;
         coroutineManager = GameRoot.GetManager<CoroutineManager>();
 
-
         coroutineManager.StartCoroutine(WaitMapIcon());
     }
 
@@ -64,6 +63,8 @@ public class Player_CharacterMapMover : IMapMoveable
         yield return new WaitForSeconds(1f);
         mapIcon = GameRoot.GetManager<MapMoverChecker>().CreateNewMapIcon(this, charcaterTrans);
         mapIcon.SetMoveDot(remain_Acionpoints);
+
+        
         PlayerGetMovePoints();
     }
 
@@ -73,7 +74,7 @@ public class Player_CharacterMapMover : IMapMoveable
     {
         moveStop = true;
         //将剩余行动点传递给寻路管理器
-        mapIcon.SetMoveDot(remain_Acionpoints);
+        mapIcon?.SetMoveDot(remain_Acionpoints);
     }
 
     /// <summary>
@@ -88,7 +89,7 @@ public class Player_CharacterMapMover : IMapMoveable
 
         //玩家角色登场先走0步
         //设置当前Mover
-        GameRoot.GetManager<MapMoverChecker>().SetCurrentMover(this);
+        GameRoot.GetManager<MapMoverChecker>().SetCurrentMover(this, charcaterTrans.position);
 
         //只有玩家会相机聚焦
         GameRoot.GetManager<OrthoCameraNavigator>().FocusOnTarget(charcaterTrans.gameObject);

@@ -4,7 +4,7 @@
 public enum E_HexTerrainType
 {
     //None,
-    Obstacle__Ocean,     //海洋（不可行走）
+    Obstacle_Ocean,     //海洋（不可行走）
     Walkable_EmptyLand,  //空白陆地（可行走）
     Obstacle_Tree,       //障碍-树（不可行走）
     Obstacle_Stone,      //障碍-石头（不可行走）

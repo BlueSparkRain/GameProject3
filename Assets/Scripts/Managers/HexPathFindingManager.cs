@@ -181,8 +181,7 @@ public class HexPathFindingManager : MonoGlobalManager
             return;
         }
         _playerStartRoom = room;
-        Debug.Log(_playerStartRoom.GetComponent<Renderer>().material+"达娃微微的");
-
+      
         MeshRenderer renderer = _playerStartRoom.GetComponent<MeshRenderer>();
         _playerRoom_OriginMat = renderer.material;
 

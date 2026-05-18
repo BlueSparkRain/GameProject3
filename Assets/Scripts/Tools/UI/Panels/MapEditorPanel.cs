@@ -33,7 +33,7 @@ public class MapTerrainEditorPanel : UIPanelBase
     [Header("城镇标记按钮")]
     public Button CityButton;
 
-    private HexTerrainTag currentTag;
+    private HexTerrainStyleHandler currentTag;
     private HexRoomData roomData;
     public GameObject ArrowPrefab;
     GameObject Arrow;
@@ -50,7 +50,7 @@ public class MapTerrainEditorPanel : UIPanelBase
         this.roomData = roomData;
         currentRoomPosText.text = $"({roomData.row},{roomData.col})";
         Arrow.transform.position = roomData.transform.position + Vector3.up * 2;
-        currentTag = roomData.GetComponent<HexTerrainTag>();
+        currentTag = roomData.GetComponent<HexTerrainStyleHandler>();
         currentRoomHasEditedText.text = currentTag.isEdited ? "本次编辑已配置:" + currentTag.hexTerrainType : "本次编辑尚未配置(默认Ocean):";
     }
 
@@ -68,7 +68,7 @@ public class MapTerrainEditorPanel : UIPanelBase
         base.OnInit();
         Arrow = GameObject.Instantiate(ArrowPrefab);
         OceanButton.onClick.AddListener(() =>
-            SetButtonTag(E_HexTerrainType.Obstacle__Ocean));
+            SetButtonTag(E_HexTerrainType.Obstacle_Ocean));
         LandButton.onClick.AddListener(() =>
                    SetButtonTag(E_HexTerrainType.Walkable_EmptyLand));
         TreeButton.onClick.AddListener(() =>

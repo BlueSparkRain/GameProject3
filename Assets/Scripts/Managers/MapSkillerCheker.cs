@@ -14,6 +14,14 @@ public class MapSkillerCheker : MonoSceneManager
 
     public CharacterMapSkiller PlayerSkiller=>playerSkiller;
 
+
+    public void UpdateSkillSettle(List<SkillData> restWholeDatas,
+                                     List<SkillData> normalDatas,
+                                     List<SkillData> atbDatas){
+        currentSkiller.UpdateSkilerSettle(restWholeDatas,normalDatas,atbDatas);
+        Debug.Log(currentSkiller.gameObject.name+"已更新技能配置");
+    }
+
     /// <summary>
     /// 更新当前操作的角色对象
     /// </summary>
@@ -27,10 +35,8 @@ public class MapSkillerCheker : MonoSceneManager
         base.MgrOnInit();
         //在Raycaster中进行操作对象的选择，如果为空，默认打开玩家自身的
         EventCenter.AddEventListener<CharacterMapSkiller>(E_EventType.Select_Characer, SelectCharacter_UpdateCurrentSkiller);
-
         EventCenter.AddEventListener<CharacterMapSkiller,bool>(E_EventType.Character_Skiller_Regist, RegisterSkiller);
         EventCenter.AddEventListener<CharacterMapSkiller, E_HexRoomType>(E_EventType.Mover_IntoSpecialRoom, DoSkillReward);
-
         uiManager = GameRoot.GetManager<UIManager>();
     }
     //角色（移动中断）进入特殊房间后获得的技能奖励
@@ -43,7 +49,6 @@ public class MapSkillerCheker : MonoSceneManager
             switch (roomType)
             {
                 case E_HexRoomType.None_无:
-
                     break;
                 case E_HexRoomType.Battle_LowLevel_战斗_杂鱼:
                     //随机的技能或道具奖励+经验奖励
@@ -54,7 +59,6 @@ public class MapSkillerCheker : MonoSceneManager
                     skiller.GetNewSkill(0);
                     break;
                 case E_HexRoomType.UnknownEvent_随机事件:
-
                     break;
                 default:
                     break;
@@ -94,10 +98,8 @@ public class MapSkillerCheker : MonoSceneManager
     {
         if (!skillersRoomDic.ContainsKey(mapSkiller)) 
             skillersRoomDic.Add(mapSkiller, E_HexRoomType.None_无);
-        //if(mapSkiller.GetComponent<>)
         
-        if (isPlayer)
-        {
+        if (isPlayer){
             Debug.Log("玩家！");
             playerSkiller = mapSkiller;
         }

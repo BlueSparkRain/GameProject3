@@ -1,3 +1,4 @@
+using Core;
 using System;
 using TMPro;
 using UnityEngine;
@@ -35,6 +36,7 @@ public class MessagePanel : UIPanelBase
     void SetConfrimButtonAction(UnityAction action) {
         confrimButton.onClick.RemoveAllListeners();
         confrimButton.onClick.AddListener(action);
+        confrimButton.onClick.AddListener(Close);
     }
 
 

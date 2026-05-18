@@ -14,7 +14,6 @@ public class LevelUpGradeMode : IUpGradable
         UnityEngine.Debug.Log("我是每级升级型角色");
         growthData = ResourcesLoader.FindCharaterGrowthSO(characterType);
         characterData = data;
-        UnityEngine.Debug.Log(growthData+" "+characterData+"大家奥地利");
     }
     
 }

@@ -1,4 +1,3 @@
-using Core;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,33 +10,50 @@ public class CharacterMapSkiller : MonoBehaviour
 {
     //当打开技能配置面板的时候，读取的就是这里的配置
 
+    //槽位数
+    public int restSkillSlotNum = 20;
+    public int normalSkillSlotNum = 5;
+    public int atbSkillSlotNum = 5;
     //角色尚未分配的所有技能数据
-    public int restSkillSlotNum=20;
     private List<SkillData> restWholeSkillDatas = new List<SkillData>();
-    
+
     //底部基础技能数据
-    public int normalSkillSlotNum=5;
     private List<SkillData> normalSkillDatas = new List<SkillData>();
 
     //右侧ATB技能数据
-    public int atbSkillSlotNum=5;
     private List<SkillData> atbSkillDatas = new List<SkillData>();
 
-    int current_restSkillNum=0;
-    int current_normalSkillNum=0;
-    int current_atbSkillNum=0;
+    int current_restSkillNum = 0;
+    int current_normalSkillNum = 0;
+    int current_atbSkillNum = 0;
 
-    public List<SkillData> RestWholeSkillDatas=>restWholeSkillDatas;//属性，不产生内存
+    public List<SkillData> RestWholeSkillDatas => restWholeSkillDatas;//属性，不产生内存
     public List<SkillData> NormalSkillDatas => normalSkillDatas;
     public List<SkillData> ATBSkillDatas => atbSkillDatas;
 
     [Header("是否可以调整技能分配")]
-    public bool canActSettle=false;
+    public bool canActSettle = false;
 
     private void Start()
     {
-        EventCenter.EventTrigger(E_EventType.Character_Skiller_Regist,this,GetComponent<CharacterDataTag>().isPlayer);
+        EventCenter.EventTrigger(E_EventType.Character_Skiller_Regist, this, GetComponent<CharacterDataTag>().isPlayer);
     }
+
+    /// <summary>
+    /// 应用配置过后的技能列表
+    /// </summary>
+    public void UpdateSkilerSettle(List<SkillData> restWholeDatas,
+                                     List<SkillData> normalDatas,
+                                     List<SkillData> atbDatas)
+    {
+        restWholeSkillDatas = restWholeDatas;
+        normalSkillDatas = normalDatas;
+        atbSkillDatas = atbDatas;
+        current_restSkillNum = RestWholeSkillDatas.Count;
+        current_normalSkillNum = normalSkillDatas.Count;
+        current_atbSkillNum = atbSkillDatas.Count;
+    }
+
 
     /// <summary>
     /// 通过技能ID获得一个新的技能，并对应的技能数据添加到技能列表中
@@ -58,7 +74,7 @@ public class CharacterMapSkiller : MonoBehaviour
     /// <param name="_ATBSkillDatas"></param>
     public void UpdateActableDataList(
         List<SkillData> _RestWholeSkillDatas,
-        List<SkillData> _NormalSkillDatas, 
+        List<SkillData> _NormalSkillDatas,
         List<SkillData> _ATBSkillDatas)
     {
         restWholeSkillDatas = _RestWholeSkillDatas;

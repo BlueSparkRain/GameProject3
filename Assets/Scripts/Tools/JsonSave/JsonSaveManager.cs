@@ -1,41 +1,28 @@
 using System;
 using System.IO;
-using System.Runtime.CompilerServices;
 using UnityEngine;
-
 /// <summary>
 /// 数据验证接口（所有存档类必须实现，自定义合法规则）
 /// </summary>
 public interface IValidatable
 {
-    /// <summary>
-    /// 自定义：数据是否合法有效
-    /// </summary>
     bool IsValid();
 }
 
-public interface ISaveable {
-
- 
-
-    public void InitBySaveData();
-    public void InitBySelf();
+public interface ISaveable
+{
+    void InitBySaveData();
+    void InitBySelf();
 }
 
 /// <summary>
 /// JSON 存档管理器
-/// 1. 正常启动 = 加载本地已有存档（续玩）
-/// 2. 手动点击【开始新游戏】= 清空并重置存档
-/// 3. 文件仅创建一次，不存在时才自动生成
-/// 
-/// 判断存档 = 验证数据是否有效，而非仅判断文件
+/// 扩展：支持【单个角色+唯一ID】独立存档
 /// </summary>
 public static class JsonSaver
 {
-
     private static readonly string SaveRoot = Application.persistentDataPath + "/GameSaves/";
     private const string FileExtension = ".xjson";
-
     static JsonSaver()
     {
         if (!Directory.Exists(SaveRoot))
@@ -43,52 +30,56 @@ public static class JsonSaver
     }
 
     #region 核心：判断【数据是否有效】
-    /// <summary>
-    /// 检测：本地是否存在【有效、可正常使用】的存档数据
-    /// 满足：文件存在 + 解析成功 + 数据合法
-    /// </summary>
     public static bool HasValidData<T>() where T : class, IValidatable, new()
     {
         try
         {
             string path = GetSavePath<T>();
-            // 1. 无文件 → 无效
             if (!File.Exists(path)) return false;
-
-            // 2. 读取并反序列化
             string json = File.ReadAllText(path);
             T data = JsonUtility.FromJson<T>(json);
-
-            // 3. 验证数据是否合法（自定义规则）
             return data != null && data.IsValid();
         }
-        catch
+        catch { return false; }
+    }
+
+    // ✅ 新增：按ID判断是否有有效存档
+    public static bool HasValidData<T>(string uniqueId) where T : class, IValidatable, new()
+    {
+        try
         {
-            // 解析失败/异常 → 数据无效
-            return false;
+            string path = GetSavePath<T>(uniqueId);
+            if (!File.Exists(path)) {
+                return false; }
+            string json = File.ReadAllText(path);
+            T data = JsonUtility.FromJson<T>(json);
+            return data != null && data.IsValid();
         }
+        catch { return false; }
     }
     #endregion
 
-    /// <summary>
-    /// 依据存档数据来初始化
-    /// </summary>
-    public static void InitData<T>(ISaveable file) where T : class, IValidatable, new()
+    #region 初始化数据
+    public static void InitData<T>(ISaveable file,Func<bool> additive=null) where T : class, IValidatable, new()
     {
-
-        if (JsonSaver.HasValidData<T>())
-        {
-            Debug.Log("加载了存档数据");
-            file.InitBySaveData();
+        if (additive != null) {
+            if (HasValidData<T>() && additive()) { file.InitBySaveData();return;}
+            else { file.InitBySelf(); return; }
         }
-        else
-        {
-            Debug.Log("加载了初始数据");
-            file.InitBySelf();
-        }
+        if (HasValidData<T>()) { file.InitBySaveData(); }
+        else { file.InitBySelf(); }
     }
 
-    #region 加载数据（自动验证，无效则返回默认）
+    // ✅ 新增：按ID初始化角色数据
+    public static void InitData<T>(ISaveable file, string uniqueId) where T : class, IValidatable, new()
+    {
+        Debug.Log(uniqueId+"大为降低航空物流活动"+ HasValidData<T>(uniqueId));
+        if (HasValidData<T>(uniqueId)) { file.InitBySaveData(); }
+        else { file.InitBySelf(); }
+    }
+    #endregion
+
+    #region 加载数据
     public static T Load<T>() where T : class, IValidatable, new()
     {
         try
@@ -98,22 +89,11 @@ public static class JsonSaver
             {
                 string json = File.ReadAllText(path);
                 T data = JsonUtility.FromJson<T>(json);
-
-                // 数据有效 → 返回
-                if (data != null && data.IsValid())
-                {
-                    Debug.Log($"加载【有效存档】: {typeof(T).Name}");
-                    return data;
-                }
-
-                // 数据损坏/无效 → 重置
+                if (data != null && data.IsValid()) return data;
                 Debug.LogWarning($"存档损坏，自动重置: {typeof(T).Name}");
             }
-
-            // 无文件 / 数据无效 → 创建默认有效数据
             T defaultData = new T();
             Save(defaultData);
-            Debug.Log($"创建【有效默认数据】: {typeof(T).Name}");
             return defaultData;
         }
         catch (Exception e)
@@ -124,9 +104,39 @@ public static class JsonSaver
             return fallback;
         }
     }
+
+    // ✅ 核心新增：按【唯一ID】加载单个角色的数据
+    public static T Load<T>(string uniqueId) where T : class, IValidatable, new()
+    {
+        try
+        {
+            string path = GetSavePath<T>(uniqueId);
+            if (File.Exists(path))
+            {
+                string json = File.ReadAllText(path);
+                T data = JsonUtility.FromJson<T>(json);
+                if (data != null && data.IsValid())
+                {
+                    Debug.Log($"加载【角色存档】ID:{uniqueId}");
+                    return data;
+                }
+                Debug.LogWarning($"角色存档损坏 ID:{uniqueId}，自动重置");
+            }
+            T defaultData = new T();
+            Save(defaultData, uniqueId);
+            return defaultData;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"读取角色失败 ID:{uniqueId}: {e.Message}");
+            T fallback = new T();
+            Save(fallback, uniqueId);
+            return fallback;
+        }
+    }
     #endregion
 
-    #region 保存（自动保证数据有效）
+    #region 保存数据
     public static void Save<T>(T data) where T : class, IValidatable
     {
         try
@@ -136,8 +146,7 @@ public static class JsonSaver
                 Debug.LogError($"拒绝保存无效数据: {typeof(T).Name}");
                 return;
             }
-
-            string json = JsonUtility.ToJson(data, true);//true:完美排布，便于人类阅读
+            string json = JsonUtility.ToJson(data, true);
             File.WriteAllText(GetSavePath<T>(), json);
         }
         catch (Exception e)
@@ -145,9 +154,31 @@ public static class JsonSaver
             Debug.LogError($"保存失败 {typeof(T).Name}: {e.Message}");
         }
     }
+
+    // ✅ 核心新增：按【唯一ID】保存单个角色的数据
+    public static void Save<T>(T data, string uniqueId) where T : class, IValidatable
+    {
+        try
+        {
+
+            Debug.Log(data+" "+ !data.IsValid()+"啊时代大王i的");
+            if (data == null || !data.IsValid())
+            {
+                Debug.LogError($"拒绝保存无效角色数据 ID:{uniqueId}");
+                return;
+            }
+            string json = JsonUtility.ToJson(data, true);
+
+            File.WriteAllText(GetSavePath<T>(uniqueId), json);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"保存角色失败 ID:{uniqueId}: {e.Message}");
+        }
+    }
     #endregion
 
-    #region 开始新游戏（清空重置）
+    #region 新游戏（清空所有存档）
     public static void StartNewGame()
     {
         try
@@ -158,9 +189,6 @@ public static class JsonSaver
                 foreach (var file in Directory.GetFiles(SaveRoot))
                     File.Delete(file);
             }
-
-            //Load<Save_CharacterData>();
-            //Load<MapSaveData>();
             Debug.Log("新游戏数据初始化完成");
         }
         catch (Exception e)
@@ -170,26 +198,17 @@ public static class JsonSaver
     }
     #endregion
 
-    #region 工具
-    private static string GetSavePath<T>()
-    {
-        return Path.Combine(SaveRoot, typeof(T).Name + FileExtension);
-    }
+    #region 工具方法
+    // 原有：按类型存档
+    private static string GetSavePath<T>() => Path.Combine(SaveRoot, typeof(T).Name + FileExtension);
 
-    /// <summary>
-    /// 获取目标数据类型的存档文件完整路径
-    /// 无存档文件时自动打印提示
-    /// </summary>
+    // ✅ 新增：按【类型+唯一ID】生成独立存档路径（多角色不覆盖）
+    private static string GetSavePath<T>(string uniqueId) => Path.Combine(SaveRoot, $"{typeof(T).Name}_{uniqueId}{FileExtension}");
+
     public static string GetSaveFilePath<T>() where T : class
     {
         string fullPath = GetSavePath<T>();
-
-        // 无文件 → 打印警告
-        if (!File.Exists(fullPath))
-        {
-            Debug.LogWarning($"【存档查询】未找到 {typeof(T).Name} 的存档文件\n路径：{fullPath}");
-        }
-
+        if (!File.Exists(fullPath)) Debug.LogWarning($"未找到存档：{fullPath}");
         return fullPath;
     }
     #endregion

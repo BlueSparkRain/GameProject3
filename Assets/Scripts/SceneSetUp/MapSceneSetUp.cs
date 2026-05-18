@@ -1,10 +1,10 @@
 using Core;
-using DG.Tweening;
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-public class MapSceneSetUp : MonoBehaviour
+public class MapSceneSetUp : MonoBehaviour, ISaveable
 {
     GameRoot gameRoot;
 
@@ -20,107 +20,161 @@ public class MapSceneSetUp : MonoBehaviour
     public TMP_Text roundUIText;
     [Header("Test-活力点数文本")]
     public TMP_Text vitalityPointsUIText;
-
     public bool needDelay = false;
-
     public float characterHeight = 1;
-
-
     private void UpdateRoundText()
     {
-       roundUIText.text=GameRoot.GetManager<GameRoundManager>().RoundNum.ToString();
+        roundUIText.text = GameRoot.GetManager<GameRoundManager>().RoundNum.ToString();
     }
-    private void UpdateValityText()
-    {
+    private void UpdateValityText(){
         Debug.Log("更新！！！！！！！！！");
         vitalityPointsUIText.text = GameRoot.GetManager<VitalityPointsManager>().valityPoint.ToString();
     }
 
+    public void InitBySaveData(){
+        Debug.Log("222222-------------------------");
+        Debug.Log("没有重新加载哦");
+        gameMapManager = GameRoot.GetManager<GameMapManager>();
+        gameMapManager.GameMapManagerInit(y_Offset, x_Offset, MapRadius, MapPivot.position);
 
-    private void Awake()
-    {
+        StartCoroutine(LoadCharacter(1));
+    }
+
+    private void OnApplicationQuit(){
+        JsonSaver.Save(new FirstLoadMap(false));
+    }
+
+    public void InitBySelf(){
+        Debug.Log("111111-------------------------");
+        //读取是否加载过地图,如果加载过，忽略
         gameRoot = GameRoot.Instance;
         BattleSkillFactory.RegisterAllSkills();
-
-
-
         //地图生成管理器
-        gameRoot.RegisterScene_MonoManager<GameMapManager>();
+        gameRoot.RegisterGlobal_MonoManager<GameMapManager>();
         //地图寻路管理器
         gameRoot.RegisterGlobal_MonoManager<HexPathFindingManager>();
         //地图房间交互管理器
         gameRoot.RegisterGlobal_MonoManager<HexMapInteractManager>();
+        //移动管理器
+        gameRoot.RegisterGlobal_MonoManager<MapMoverChecker>();
+
+        gameMapManager = GameRoot.GetManager<GameMapManager>();
+        gameMapManager.GameMapManagerInit(y_Offset, x_Offset, MapRadius, MapPivot.position);
+
+        if (EndRoundButton)
+        {
+            EndRoundButton.onClick.AddListener(() => EventCenter.EventTrigger(E_EventType.Player_RoundEnd));
+            EndRoundButton.onClick.AddListener(() => EventCenter.EventTrigger(E_EventType.OneMoverEndRound));
+        }
+        //测试代码
+        EventCenter.AddEventListener(E_EventType.NewRound, UpdateRoundText);
+        EventCenter.AddEventListener(E_EventType.AdjustVitalityPoints, UpdateValityText);
+
+
+        //地图加载
+        StartCoroutine(LoadAllPool());
+        StartCoroutine(LoadMap());
+        StartCoroutine(LoadCharacter(2));
+        JsonSaver.Save(new FirstLoadMap(true));
+    }
+    void Awake()
+    {
+       
+
+        //读取是否加载过地图,如果加载过，忽略
+        gameRoot = GameRoot.Instance;
+        BattleSkillFactory.RegisterAllSkills();
+        //地图生成管理器
+        //gameRoot.RegisterScene_MonoManager<GameMapManager>();
+
         //正交相机漫游管理器
         gameRoot.RegisterScene_MonoManager<OrthoCameraNavigator>();
-        //移动管理器
-        gameRoot.RegisterScene_MonoManager<MapMoverChecker>();
         //技能管理器
         gameRoot.RegisterScene_MonoManager<MapSkillerCheker>();
         //角色射线检测管理器
         gameRoot.RegisterScene_MonoManager<CharacterRayCasterManager>();
-
+        //混沌等级管理器
+        gameRoot.RegisterScene_MonoManager<ChaosLevelManager>();
         //回合记录管理器
         gameRoot.RegisterScene_MonoManager<GameRoundManager>();
         //活力点数管理器
         gameRoot.RegisterScene_MonoManager<VitalityPointsManager>();
 
-        gameMapManager = GameRoot.GetManager<GameMapManager>();
-        gameMapManager.GameMapManagerInit(y_Offset, x_Offset, MapRadius, MapPivot.position);
+        JsonSaver.InitData<FirstLoadMap>(this, JsonSaver.Load<FirstLoadMap>().GetState);
+        ////测试代码
+        //EventCenter.AddEventListener(E_EventType.NewRound, UpdateRoundText);
+        //EventCenter.AddEventListener(E_EventType.AdjustVitalityPoints, UpdateValityText);
 
-        //测试代码
-        EventCenter.AddEventListener(E_EventType.NewRound, UpdateRoundText);
-        EventCenter.AddEventListener(E_EventType.AdjustVitalityPoints, UpdateValityText);
+        //EventCenter.EventTrigger(E_EventType.NewRound);
+        //EventCenter.EventTrigger(E_EventType.AdjustVitalityPoints);
+    }
+    private void Start()
+    {
+        ////地图加载
+        //StartCoroutine(LoadAllPool());
+        //StartCoroutine(LoadCharacter());
 
         EventCenter.EventTrigger(E_EventType.NewRound);
         EventCenter.EventTrigger(E_EventType.AdjustVitalityPoints);
-
-        if (EndRoundButton)
-            EndRoundButton.onClick.AddListener(() => EventCenter.EventTrigger(E_EventType.Player_RoundEnd));
-        //EndRoundButton.onClick.AddListener(() => EventCenter.EventTrigger(E_EventType.OneMoverEndRound));
-
-
-        //EventCenter.EventTrigger(E_EventType.AdjustVitalityPoints);
     }
+
+
 
     IEnumerator LoadAllPool()
     {
         WaitForSeconds delay = new WaitForSeconds(0.5f);
-        EventCenter.EventTrigger(E_EventType.LoadObjPool, EPoolType.SkillSlot_技能槽位);
+        EventCenter.EventTrigger(E_EventType.LoadObjPool, E_PoolType.SkillSlot_技能槽位);
         yield return delay;
-        EventCenter.EventTrigger(E_EventType.LoadObjPool, EPoolType.SkillIcon_技能图标);
+        EventCenter.EventTrigger(E_EventType.LoadObjPool, E_PoolType.SkillIcon_技能图标);
     }
-    private void Start()
-    {
-        StartCoroutine(LoadAllPool());
-        if (needDelay)
-            StartCoroutine(WaitMapCreate());
-        else
-            gameMapManager.CreateWholeMap();
-    }
-    IEnumerator WaitMapCreate()
-    {
-        yield return new WaitForSeconds(2);
-        gameMapManager.CreateWholeMap();
 
+    IEnumerator LoadCharacter(float delay)
+    {
+        yield return new WaitForSeconds(delay);
         //产生角色
         var player1 = MapCharacterCaller.CallNewCharacter("Moveable");
+        //支持外部角色调整
+        player1.InitCharacterDataTag(E_CharacterType.P_1, true, true);
 
-          //支持外部角色调整
-            player1.InitCharacterDataTag(E_CharacterType.P_1, true, true);
-
-        yield return new WaitForSeconds(4f);
-        //地图还没有加载，还没来得及注册
-        HexRoomData randonoom = gameMapManager.GetRnadomRoom();
-
-        player1.transform.position = randonoom.transform.position + Vector3.up * characterHeight;
-        player1.transform.localScale = Vector3.zero;
-        //把玩家放到一个特殊的位置,然后原地走一格
         GameRoot.GetManager<OrthoCameraNavigator>().FocusOnTarget(player1.gameObject);
-
         (player1.GetComponent<CharacterMapMoveHandle>().iMapMover as Player_CharacterMapMover).CharacterZeroMove();
-        yield return new WaitForSeconds(1.2f);
-        player1.transform.DOScale(1.5f, 0.3f).SetEase(Ease.InQuart).From(0);
-        yield return new WaitForSeconds(0.3f);
-        player1.transform.DOScale(1, 0.2f).SetEase(Ease.OutQuart);
+        
+        ////地图还没有加载，还没来得及注册
+        //HexRoomData randonoom = gameMapManager.GetRnadomRoom();
+
+        //player1.transform.position = randonoom.transform.position + Vector3.up * characterHeight;
+        //player1.transform.localScale = Vector3.zero;
+        ////把玩家放到一个特殊的位置,然后原地走一格
+
+        //yield return new WaitForSeconds(1.2f);
+        //player1.transform.DOScale(1.5f, 0.3f).SetEase(Ease.InQuart).From(0);
+        //yield return new WaitForSeconds(0.3f);
+        //player1.transform.DOScale(1, 0.2f).SetEase(Ease.OutQuart);
+    }
+
+    IEnumerator LoadMap(){
+        yield return new WaitForSeconds(0.5f);
+        gameMapManager.CreateWholeMap();
+    }
+}
+
+[Serializable]
+public class FirstLoadMap : IValidatable
+{
+    public bool hasLoadMap = false;
+
+    public bool GetState()
+    {
+        return hasLoadMap;
+    }
+    public FirstLoadMap() { }
+    public FirstLoadMap(bool _load = true)
+    {
+        hasLoadMap = _load;
+
+    }
+    public bool IsValid()
+    {
+        return true;
     }
 }

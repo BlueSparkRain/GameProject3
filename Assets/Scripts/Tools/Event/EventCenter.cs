@@ -451,6 +451,11 @@ public enum E_EventType
     SkillExcute,
 
     /// <summary>
+    /// 完成了技能配置,更新对应角色的skiller
+    /// </summary>
+    SkillSettle,
+
+    /// <summary>
     /// 调整玩家活力点数
     /// </summary>
     AdjustVitalityPoints,
@@ -464,4 +469,14 @@ public enum E_EventType
     /// 一个Mover结束了自身的行动回合
     /// </summary>
     OneMoverEndRound,
+
+    /// <summary>
+    /// 混沌等级提升
+    /// </summary>
+    ChaosLevelUP,
+
+    /// <summary>
+    /// 调整经验值
+    /// </summary>
+    AdjustEXP,
 }

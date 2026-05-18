@@ -31,7 +31,7 @@ public enum AnimationTargetType
 {
     Auto,       // 自动识别（默认）
     UI,         // UI元素（RectTransform）
-    Sprite2D,   // 2D精灵（SpriteRenderer）
+    Sprite2D,   // 2D精灵（spriteRenderer）
     Object3D    // 3D物体（Transform）
 }
 

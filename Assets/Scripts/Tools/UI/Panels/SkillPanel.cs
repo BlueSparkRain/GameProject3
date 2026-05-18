@@ -1,6 +1,6 @@
+using Core;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -43,19 +43,27 @@ public class SkillPanel : UIPanelBase
             return;
 
         //先立即卸载所有按钮
-        Debug.Log(_RestWholeSkillDatas.Count+ "???_RestWholeSkillDatas");
-        Debug.Log(_NormalSkillDatas.Count+ "???_NormalSkillDatas");
-        Debug.Log(_ATBSkillDatas.Count+ "???_ATBSkillDatas");
-        restWholeSkillsSpawner.LoadSlotsAndSkills(restSkillSlotNum,_RestWholeSkillDatas,canPlayerDrag);
-        normalSkillsSpawner.LoadSlotsAndSkills(normalSkillSlotNum, _NormalSkillDatas,canPlayerDrag);
-        ATBSkillsSpawner.LoadSlotsAndSkills(atbSkillSlotNum,_ATBSkillDatas,canPlayerDrag);
+        Debug.Log(_RestWholeSkillDatas.Count + "???_RestWholeSkillDatas");
+        Debug.Log(_NormalSkillDatas.Count + "???_NormalSkillDatas");
+        Debug.Log(_ATBSkillDatas.Count + "???_ATBSkillDatas");
+        restWholeSkillsSpawner.LoadSlotsAndSkills(restSkillSlotNum, _RestWholeSkillDatas, canPlayerDrag);
+        normalSkillsSpawner.LoadSlotsAndSkills(normalSkillSlotNum, _NormalSkillDatas, canPlayerDrag);
+        ATBSkillsSpawner.LoadSlotsAndSkills(atbSkillSlotNum, _ATBSkillDatas, canPlayerDrag);
     }
 
     /// <summary>
     /// 将面板此时的配置写回操作的玩家数据
     /// </summary>
-    void UpdateSettleBackSkiller() { 
-    
+    void UpdateSettleBackSkiller()
+    {
+
+        var restskills = restWholeSkillsSpawner.GetSettledSkilldatas();
+        var backetskills = normalSkillsSpawner.GetSettledSkilldatas();
+        var atbskills = ATBSkillsSpawner.GetSettledSkilldatas();
+        var skillchecker = GameRoot.GetManager<MapSkillerCheker>();
+        if (skillchecker != null)
+            skillchecker.UpdateSkillSettle(restskills, backetskills, atbskills);
+        EventCenter.EventTrigger(E_EventType.SkillSettle);
     }
     protected override void BeforeFadeInAnimCallBack()
     {
@@ -66,12 +74,13 @@ public class SkillPanel : UIPanelBase
     protected override void EnterAnimCallBack()
     {
         base.EnterAnimCallBack();
-        canOpen =!canOpen;
+        canOpen = !canOpen;
     }
 
     protected override void BeforeFadeOutAnimCallBack()
     {
         canOpen = !canOpen;
+        UpdateSettleBackSkiller();
         Debug.Log("离场前卸载Icons");
         base.BeforeFadeOutAnimCallBack();
         restWholeSkillsSpawner.UnloadSkills();
@@ -90,10 +99,11 @@ public class SkillPanel : UIPanelBase
         base.UnitBeforeAnimCallBack();
     }
 
-    void ReturnAllSkill() { 
-        
+    void ReturnAllSkill()
+    {
 
-    
+
+
     }
 
     protected override void OnInit()

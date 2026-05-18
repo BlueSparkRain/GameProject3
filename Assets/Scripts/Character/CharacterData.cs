@@ -91,10 +91,7 @@ public class CharacterData : ISaveable
     /// 17.最大ATB点数
     /// </summary>
     private int maximum_ATB;
-    /// <summary>
-    /// 18.角色当前等级
-    /// </summary>
-    private int currentLevel;
+
 
     public float Phy_Flat_Penetration => phy_Flat_Penetration;
     public float Mag_Flat_Penetration => mag_Flat_Penetration;
@@ -113,8 +110,14 @@ public class CharacterData : ISaveable
     public float Heal_Amplification => heal_Amplification;
     public float Shield_Amplification => shield_Amplification;
     public int Maximum_ATB => maximum_ATB;
-    public int CurrentLevel => currentLevel;
     #endregion
+
+    public int CurrentLevel => currentLevel;
+
+    /// <summary>
+    /// 18.角色当前等级
+    /// </summary>
+    private int currentLevel;
 
     public CharacterData(E_CharacterType _characterType) {
         characterType = _characterType;

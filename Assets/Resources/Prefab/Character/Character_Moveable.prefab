@@ -200,9 +200,10 @@ GameObject:
   m_Component:
   - component: {fileID: 8795855537690547855}
   - component: {fileID: 4835979473886454039}
-  - component: {fileID: 3866674452186410950}
   - component: {fileID: 5164975717304628194}
+  - component: {fileID: 772017514261026540}
   - component: {fileID: 6863777581835650210}
+  - component: {fileID: 3866674452186410950}
   - component: {fileID: 5681279175203068222}
   m_Layer: 3
   m_Name: Character_Moveable
@@ -241,20 +242,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 732c96c71d89917408912b960223eec6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3866674452186410950
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1296723962664213854}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec24ac7bafa138b47b7687455643fc27, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  is3DCharacter: 1
-  ModelLayer: {fileID: 187177125907699451}
 --- !u!114 &5164975717304628194
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -267,6 +254,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a11042ab40042f4b82875ef5f39f865, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &772017514261026540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296723962664213854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52d0d4fd4ac7ec64ea9ac9010106ba03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelGoalEXP: 0
+  currentEXP: 0
 --- !u!114 &6863777581835650210
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -283,6 +284,20 @@ MonoBehaviour:
   normalSkillSlotNum: 5
   atbSkillSlotNum: 5
   canActSettle: 0
+--- !u!114 &3866674452186410950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296723962664213854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec24ac7bafa138b47b7687455643fc27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  is3DCharacter: 1
+  ModelLayer: {fileID: 187177125907699451}
 --- !u!65 &5681279175203068222
 BoxCollider:
   m_ObjectHideFlags: 0

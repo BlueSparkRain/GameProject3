@@ -28,6 +28,10 @@ public static class ResourcesLoader
 
     static string mapSaveDataPath = "SOData/HexMapSOData/HexMapSOData";
 
+    static string terrainSODataPath = "SOData/TerrainSOData/";
+
+    static string roomModelSOPath = "SOData/RoomModelSOData/";
+
     public static GameObject FindHexRoomObj() {
         return Resources.Load<GameObject>(hexRoomPath);
     }
@@ -42,6 +46,13 @@ public static class ResourcesLoader
         return Resources.Load<GameObject>(characterPath+backStr);
     }
 
+    public static RoomModelSOData FindRoomModelSO(E_RoomModelType  roomModelType) {
+        return Resources.Load<RoomModelSOData>(roomModelSOPath+roomModelType);
+    }
+
+    public static TerrainSOData FindTerrainData(E_HexTerrainType terrainType) {
+        return Resources.Load<TerrainSOData>(terrainSODataPath+terrainType);
+    }
 
     public static CharacterDataSO FindCharaterSO(E_CharacterType characterType) {
         return Resources.Load<CharacterDataSO>(characterSOPath + characterType);

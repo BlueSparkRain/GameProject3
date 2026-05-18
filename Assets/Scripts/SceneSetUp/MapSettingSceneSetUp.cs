@@ -26,13 +26,20 @@ public class MapSettingSceneSetUp : MonoBehaviour
     {
         ObjectPoolManager obj = GameRoot.GetManager<ObjectPoolManager>();
         gameRoot = GameRoot.Instance;
+        BattleSkillFactory.RegisterAllSkills();
+        gameRoot.RegisterGlobal_MonoManager<GameMapManager>();
+        gameRoot.RegisterGlobal_MonoManager<HexPathFindingManager>();
+        gameRoot.RegisterGlobal_MonoManager<HexMapInteractManager>();
         gameRoot.RegisterScene_MonoManager<OrthoCameraNavigator>();
-        gameMapManager = GameRoot.GetManager<GameMapManager>();
         //角色射线检测管理器
         gameRoot.RegisterScene_MonoManager<CharacterRayCasterManager>();
+        Debug.Log(gameMapManager+"dd");
+        
+        gameMapManager = GameRoot.GetManager<GameMapManager>();
         gameMapManager.GameMapManagerInit(y_Offset, x_Offset, MapRadius, MapPivot.position);
         EventCenter.AddEventListener<Vector2Int, E_HexTerrainType>(E_EventType.Editor_Terrain, EditorOneRoomTexrrainTag);
         GameRoot.GetManager<HexMapInteractManager>().USEEditMode();
+
     }
     void EditorOneRoomTexrrainTag(Vector2Int pos,E_HexTerrainType terrainType) {
         MapSOData.cellData[pos.x, pos.y] = terrainType;
@@ -42,7 +49,7 @@ public class MapSettingSceneSetUp : MonoBehaviour
 
     private void Start()
     {
-        EventCenter.EventTrigger(E_EventType.LoadObjPool, EPoolType.MapRoom_地图房间);
+        EventCenter.EventTrigger(E_EventType.LoadObjPool, E_PoolType.MapRoom_地图房间);
 
         if (needDelay) 
             StartCoroutine(WaitMapCreate());

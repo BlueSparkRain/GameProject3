@@ -34,7 +34,7 @@ public class MapSaveSOData : ScriptableObject
         Debug.Log("初始化地图：海洋");
         for (int x = 0; x < mapSize; x++)
             for (int y = 0; y < mapSize; y++)
-                cellData[x, y] = E_HexTerrainType.Obstacle__Ocean;
+                cellData[x, y] = E_HexTerrainType.Obstacle_Ocean;
     }
 
     // ====================== 【完全还原你原生正确公式】 ======================

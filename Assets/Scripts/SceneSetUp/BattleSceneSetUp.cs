@@ -6,11 +6,12 @@ public class BattleSceneSetUp : MonoBehaviour
     private void Awake()
     {
         BattleSkillFactory.RegisterAllSkills();
-
         gameRoot = GameRoot.Instance;
+        gameRoot.RegisterScene_MonoManager<BattleTargetsSelectManager>();
+
         //gameRoot.RegisterScene_MonoManager<BattleTargetsSelectManager>();
-        //EventCenter.EventTrigger(E_EventType.LoadObjPool, EPoolType.SkillIcon_技能图标);
-        //StartCoroutine(  GameRoot.GetManager<ObjectPoolManager>().StartFillPool(EPoolType.SkillIcon));
+        //EventCenter.EventTrigger(E_EventType.LoadObjPool, E_PoolType.SkillIcon_技能图标);
+        //StartCoroutine(  GameRoot.GetManager<ObjectPoolManager>().StartFillPool(E_PoolType.SkillIcon));
     }
 
 }

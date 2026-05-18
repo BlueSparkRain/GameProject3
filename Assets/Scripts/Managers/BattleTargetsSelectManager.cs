@@ -32,18 +32,23 @@ public class BattleTargetsSelectManager : MonoSceneManager
         if (PlayerWinBattle()){
             EventCenter.EventTrigger(E_EventType.BattleEnd);
             GameRoot.GetManager<UIManager>().OpenPanel<MessagePanel>(E_UIPanelType.MessagePanel,
-                p => p.SetMessage("你获胜了", () => GameRoot.GetManager<SceneSwitchManager>().SwitchSceneAsync("MapScene")));
+                p => p.SetMessage("你获胜了", ()=> { GameRoot.GetManager<SceneSwitchManager>().SwitchSceneAsync("MapScene");
+                }));
             return;
         }
         if (EnemyWinBattle()) { 
             EventCenter.EventTrigger(E_EventType.BattleEnd);
             GameRoot.GetManager<UIManager>().OpenPanel<MessagePanel>(E_UIPanelType.MessagePanel, 
-                p => p.SetMessage("你失败了", () => GameRoot.GetManager<SceneSwitchManager>().SwitchSceneAsync("MapScene")));
+                p => p.SetMessage("你失败了", () => { GameRoot.GetManager<SceneSwitchManager>().SwitchSceneAsync("MapScene");
+                    //GameRoot.GetManager<UIManager>().HidePanel(E_UIPanelType.MessagePanel);
+                }));
             return;
         }
     }
 
     bool EnemyWinBattle() {
+
+        Debug.Log(playerControllers.Count+"??玩家人数");
         foreach (var battler in playerControllers){
             if (!battler.charcaterDead)
                 return false;
@@ -51,6 +56,7 @@ public class BattleTargetsSelectManager : MonoSceneManager
         return true;
     }
     bool PlayerWinBattle() {
+        Debug.Log(enemyControllers.Count + "??敌人人数");
         foreach (var battler in enemyControllers){
             if(!battler.charcaterDead)
             return false;

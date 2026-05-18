@@ -2,6 +2,7 @@ using UnityEngine;
 
 /// <summary>
 /// 管理角色数据的读取和更新(升级)和阵营
+/// 管理角色升级时的属性数值调整
 /// </summary>
 public class CharacterDataTag : MonoBehaviour
 {
@@ -28,14 +29,15 @@ public class CharacterDataTag : MonoBehaviour
         this.isPlayer = isPlayer;
         if (isPlayer) ibattle = new Player();
         else ibattle = new Enemy();
-            
-        if (canLevelUP){
-            upgradeHandle = new LevelUpGradeMode(characterType,characterData);
+
+        if (canLevelUP)
+        {
+            upgradeHandle = new LevelUpGradeMode(characterType, characterData);
             GetComponent<CharacterMapMoveHandle>().InitMover(isPlayer, characterType);
         }
-        else upgradeHandle = new StageUpGradeMode(characterType,characterData);
-
+        else upgradeHandle = new StageUpGradeMode(characterType, characterData);
     }
+
 
     private void Update()
     {
@@ -45,4 +47,5 @@ public class CharacterDataTag : MonoBehaviour
             upgradeHandle.UpGrade();
         }
     }
+
 }

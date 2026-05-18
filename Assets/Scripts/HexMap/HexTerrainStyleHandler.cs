@@ -1,0 +1,94 @@
+using System;
+using UnityEngine;
+
+public class HexTerrainStyleHandler : MonoBehaviour
+{
+    [Header("是否已经被配置过")]
+    public bool isEdited = false;
+    public E_HexTerrainType hexTerrainType = E_HexTerrainType.Obstacle_Ocean;
+
+    [Header("地形精灵组件")]
+    public SpriteRenderer  terrainSpriteRenderer;
+
+    public bool useTerrainSprite=false;
+
+    [Header("房间纸牌精灵")]
+    public SpriteRenderer modelSpriteRenderer;
+
+    //地形Data
+    TerrainSOData terrainSOData;
+    //模型Data
+    RoomModelSOData modelSOData;
+    public void SetTag(E_HexTerrainType _hexTerrainType)
+    {
+        hexTerrainType = _hexTerrainType;
+        isEdited = true;
+
+        GetComponent<HexRoomStyleHandler>().SetRoomType(GetRoomType());
+
+        SetRoomModel();
+        SetTerrainStyle();
+    }
+    void SetTerrainStyle() {
+        if (!useTerrainSprite){ 
+            terrainSpriteRenderer.enabled = false; return; }
+
+        terrainSOData = ResourcesLoader.FindTerrainData(hexTerrainType);
+        Debug.Log(hexTerrainType + " "+terrainSOData);
+        Sprite sprite = terrainSOData.sprites.GetRandomElement();
+        terrainSpriteRenderer.sprite =sprite;
+    }
+
+    void SetRoomModel()
+    {
+        if (modelSOData != null) {
+            modelSpriteRenderer.sprite=modelSOData.roomSprites.GetRandomElement();
+        }
+
+    }
+    E_HexRoomType GetRoomType()
+    {
+        switch (hexTerrainType)
+        {
+            case E_HexTerrainType.Obstacle_Ocean: {
+            return E_HexRoomType.None_无; }
+            case E_HexTerrainType.Walkable_EmptyLand:{
+                    //加载模型数据
+                    return E_HexRoomType.None_无; }
+            case E_HexTerrainType.Obstacle_Tree:{
+                    modelSOData = ResourcesLoader.FindRoomModelSO(E_RoomModelType.树木);
+                    return E_HexRoomType.None_无; }
+            case E_HexTerrainType.Obstacle_Stone:{ 
+                    modelSOData = ResourcesLoader.FindRoomModelSO(E_RoomModelType.石头);
+                    return E_HexRoomType.None_无; }
+            case E_HexTerrainType.Obstacle_Mountain: {
+                    modelSOData = ResourcesLoader.FindRoomModelSO(E_RoomModelType.石头);
+                    return E_HexRoomType.None_无; }
+            case E_HexTerrainType.Walkable_LowLevel_BattleRoom:{
+                    
+                    return E_HexRoomType.Battle_LowLevel_战斗_杂鱼; }
+            case E_HexTerrainType.Walkable_MidLevel_BattleRoom: {
+                    
+                    return E_HexRoomType.Battle_MidLevel_战斗_精英; }
+            case E_HexTerrainType.Walkable_HighLevel_BattleRoom: {
+                    
+                    return E_HexRoomType.Battle_HighLevel_战斗_首领; }
+            case E_HexTerrainType.Walkable_UnknownEventRoom: {
+                    
+                    return E_HexRoomType.UnknownEvent_随机事件; }
+            case E_HexTerrainType.Walkable_RewardRoom: {
+                    
+                    return E_HexRoomType.Reward_神像奖励; }
+            case E_HexTerrainType.Walkable_CityShopRoom:{ 
+                    modelSOData = ResourcesLoader.FindRoomModelSO(E_RoomModelType.城镇);
+                    return E_HexRoomType.CityShop_城商镇; }
+            default: return E_HexRoomType.None_无;
+        }
+    }
+}
+
+
+
+public enum E_RoomModelType { 
+    城镇,石头,树木,
+}

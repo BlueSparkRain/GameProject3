@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-
+using Core;
 public class GameRoundManager : MonoSceneManager, ISaveable
 {
     /// <summary>
@@ -32,13 +32,16 @@ public class GameRoundManager : MonoSceneManager, ISaveable
         EventCenter.AddEventListener(E_EventType.NewRound, PlusRoundNum);
         JsonSaver.InitData<Save_GameRoundState>(this);
     }
+    void CheckChaosLevel() {
+        GameRoot.GetManager<ChaosLevelManager>().AdjustChaosLevelByRound(roundNum);
+    }
 
     void PlusRoundNum()
     {
         UnityEngine.Debug.Log("»ØºÏÊý+1");
         roundNum++;
         JsonSaver.Save(new Save_GameRoundState(roundNum));
-        //EventCenter.EventTrigger(E_EventType.NewRound);
+        CheckChaosLevel();
     }
 }
 

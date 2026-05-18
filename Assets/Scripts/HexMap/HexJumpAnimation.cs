@@ -88,7 +88,7 @@ public class HexJumpAnimation : MonoBehaviour
             Vector3 cloudeStartPos = cloudeTrans.position;
             cloudeTrans.DOScale(2, baseHeightDuration * 8);
             cloudeTrans.DOLocalMoveY(90f, baseHeightDuration * 10).SetEase(jumpEase).OnComplete(
-                ()=> GameRoot.GetManager<ObjectPoolManager>().ReturnPool(EPoolType.RoomCloude_房间遮云,cloudeTrans.gameObject));
+                ()=> GameRoot.GetManager<ObjectPoolManager>().ReturnPool(E_PoolType.RoomCloude_房间遮云,cloudeTrans.gameObject));
         }
     }
 }

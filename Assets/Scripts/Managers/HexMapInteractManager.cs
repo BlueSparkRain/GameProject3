@@ -1,8 +1,7 @@
-using System.Collections.Generic;
-using UnityEngine;
 using Core;
 using System.Collections;
-using UnityEditor.Experimental.GraphView;
+using System.Collections.Generic;
+using UnityEngine;
 /// <summary>
 /// 六边形网格交互管理器（单例，统一处理点击、区域计算、动画触发 + （不同条件）悬浮材质替换）
 /// </summary>
@@ -16,11 +15,11 @@ public class HexMapInteractManager : MonoGlobalManager
 
     Material hoverMaterial;
 
-    string  hoverMatPath= "Material/HexRoomData/NPC__HexRoom";
+    string hoverMatPath = "Material/HexRoomData/NPC__HexRoom";
     /// <summary>
     /// 玩家视野
     /// </summary>
-    public int eyeRadius=6;
+    public int eyeRadius = 6;
 
     // 悬浮材质缓存（性能核心：O(1)查找，仅缓存需要恢复的材质）
     Dictionary<HexRoomData, Material> _originMaterialMap = new Dictionary<HexRoomData, Material>();
@@ -39,7 +38,8 @@ public class HexMapInteractManager : MonoGlobalManager
         EventCenter.AddEventListener(E_EventType.Editor_Terrain_OneTime, SwitchEditingState);
         cloudeDelay = new WaitForSeconds(0.01f);
     }
-    public override void MgrUpdate(float deltaTime){
+    public override void MgrUpdate(float deltaTime)
+    {
         // 检测鼠标左键点击（原有逻辑保留）
         if (Input.GetMouseButtonDown(0))
             CheckClickHexRoom();
@@ -50,26 +50,26 @@ public class HexMapInteractManager : MonoGlobalManager
     /// <summary>
     /// 检测点击的六边形房间
     /// </summary>
-    void CheckClickHexRoom(){
+    void CheckClickHexRoom()
+    {
         // 射线检测（正交相机适配）
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit)){
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
             HexRoomData clickedRoomData = hit.collider.GetComponent<HexRoomData>();
-            //HexJumpAnimation clickedRoomJumper = clickedRoomData.GetComponent<HexJumpAnimation>();
-            
-            if (clickedRoomData != null){
+            if (clickedRoomData != null)
+            {
                 //触发半径内的所有房间跳动
                 TriggerRadiusJump(clickedRoomData.row, clickedRoomData.col);
-
                 EditTerrainLogic(clickedRoomData);
-
             }
 
             //如果是在寻路状态下被点击到的房间，将触发RoomMover的移动
-            HexPathFindingManager hexPathFindingManager=GameRoot.GetManager<HexPathFindingManager>();
+            HexPathFindingManager hexPathFindingManager = GameRoot.GetManager<HexPathFindingManager>();
             MapMoverChecker mapCharacterMoveChecker = GameRoot.GetManager<MapMoverChecker>();
-            
-            if (hexPathFindingManager.canTriggerMover) {
+
+            if (hexPathFindingManager.canTriggerMover)
+            {
 
                 GameRoot.GetManager<AudioManager>().PlaySFX("Music/SFX/mambo");
                 hexPathFindingManager.SetPathFindState(false);
@@ -83,13 +83,14 @@ public class HexMapInteractManager : MonoGlobalManager
     /// <summary>
     /// 触发指定坐标半径内的所有房间跳动（原有逻辑保留）
     /// </summary>
-    void TriggerRadiusJump(int centerRow, int centerCol){
-
+    void TriggerRadiusJump(int centerRow, int centerCol)
+    {
         // 1. 生成正六边形范围的行+列坐标（无冗余、不遗漏）
         List<Vector2Int> radiusRowCols = HexCoordinateUtility.GetRowColsInRadius(centerRow, centerCol, jumpRadius);
 
         // 2. 遍历仅触发存在的房间
-        foreach (Vector2Int rowCol in radiusRowCols){
+        foreach (Vector2Int rowCol in radiusRowCols)
+        {
             if (mapManager.HexRoomMap.TryGetValue(rowCol, out HexRoomData room))
             {
                 // 2.1 计算距离（直接用行+列，无需HexRoom提供轴向坐标）
@@ -107,8 +108,10 @@ public class HexMapInteractManager : MonoGlobalManager
         }
     }
 
-    void OneMoverCloudeCheck() {
+    void OneMoverCloudeCheck()
+    {
         HexRoomData characterRoom = GameRoot.GetManager<MapMoverChecker>().currentIMovable.currentRoom;
+        Debug.Log(coroutineManager+"??//"+ characterRoom);
         coroutineManager.StartCoroutine(TriggerCloudeDisappear(characterRoom.row, characterRoom.col));
     }
 
@@ -117,25 +120,27 @@ public class HexMapInteractManager : MonoGlobalManager
     /// </summary>
     /// <param name="centerRow"></param>
     /// <param name="centerCol"></param>
-    IEnumerator TriggerCloudeDisappear(int centerRow, int centerCol) {
+    IEnumerator TriggerCloudeDisappear(int centerRow, int centerCol)
+    {
         // 1. 生成正六边形范围的行+列坐标（无冗余、不遗漏）
         List<Vector2Int> radiusRowCols = HexCoordinateUtility.GetRowColsInRadius(centerRow, centerCol, eyeRadius);
         foreach (Vector2Int rowCol in radiusRowCols)
         {
             if (mapManager.HexRoomMap.TryGetValue(rowCol, out HexRoomData room))
-            { 
+            {
                 // 2.3 触发动画（动画组件无修改）
                 room.GetComponent<HexJumpAnimation>()?.CloudeDisAppear();
                 yield return cloudeDelay;
             }
         }
-     }
+    }
 
     #region 鼠标悬浮材质替换核心逻辑
     /// <summary>
     /// 检测鼠标悬浮的六边形房间（性能优化：仅房间变化时处理）
     /// </summary>
-    void CheckHoverHexRoom(){
+    void CheckHoverHexRoom()
+    {
         //射线检测获取当前悬浮房间
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         HexRoomData newHoverRoom = null;
@@ -152,7 +157,7 @@ public class HexMapInteractManager : MonoGlobalManager
         //新悬浮房间设置hover材质
         if (newHoverRoom != null)
             SetHoverMaterial(newHoverRoom);
-        
+
         //更新当前悬浮房间缓存
         _currentHoverRoom = newHoverRoom;
     }
@@ -160,7 +165,8 @@ public class HexMapInteractManager : MonoGlobalManager
     /// <summary>
     /// 给房间设置(判断路径是否可行)悬浮材质（创建实例，不影响原材质和其他房间）
     /// </summary>
-    void SetHoverMaterial(HexRoomData room){
+    void SetHoverMaterial(HexRoomData room)
+    {
         hoverMaterial = Resources.Load<Material>(hoverMatPath);
         if (hoverMaterial == null) return;
 
@@ -170,7 +176,7 @@ public class HexMapInteractManager : MonoGlobalManager
         // 缓存原始材质（仅第一次悬浮时缓存，避免重复赋值）
         if (!_originMaterialMap.ContainsKey(room))
             _originMaterialMap.Add(room, roomRenderer.material); // 注意用material（实例）而非sharedMaterial
-        
+
         // 创建hover材质的实例 → 多个房间悬浮时互不影响
         roomRenderer.material = Instantiate(hoverMaterial);
     }
@@ -178,7 +184,8 @@ public class HexMapInteractManager : MonoGlobalManager
     /// <summary>
     /// 恢复房间的原始材质
     /// </summary>
-    void RestoreOriginMaterial(HexRoomData room){
+    void RestoreOriginMaterial(HexRoomData room)
+    {
         Renderer roomRenderer = room.GetComponent<Renderer>();
         if (roomRenderer == null) return;
 
@@ -200,7 +207,7 @@ public class HexMapInteractManager : MonoGlobalManager
 
     #region 编辑器模式——地形编辑区域
     HexRoomData editingRoom;
-    bool UseEditMode=false;
+    bool UseEditMode = false;
     bool EditingTerrain;
     public void USEEditMode()
     {
@@ -239,21 +246,3 @@ public class HexMapInteractManager : MonoGlobalManager
     #endregion
 }
 
-//public static class DictionaryExtensions
-//{
-//    /// <summary>
-//    /// 从字典中随机取一个元素
-//    /// </summary>
-//    public static KeyValuePair<TKey, TValue> GetRandomElement<TKey, TValue>(this Dictionary<TKey, TValue> dict)
-//    {
-//        if (dict == null || dict.Count == 0)
-//            return default;
-
-//        // 随机索引
-//        int randomIndex = UnityEngine.Random.Range(0, dict.Count);
-//        // 直接按顺序取第 N 个元素（最省性能）
-//        using var enumerator = dict.GetEnumerator();
-//        for (int i = 0; enumerator.MoveNext() && i < randomIndex; i++) { }
-//        return enumerator.Current;
-//    }
-//}

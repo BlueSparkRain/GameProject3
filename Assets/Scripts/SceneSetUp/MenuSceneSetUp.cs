@@ -25,12 +25,12 @@ public class MenuSceneSetUp : MonoBehaviour
 
     IEnumerator LoadAllPool() {
         WaitForSeconds delay = new WaitForSeconds(0.5f);
-        EventCenter.EventTrigger(E_EventType.LoadObjPool, EPoolType.MapRoom_地图房间);
+        EventCenter.EventTrigger(E_EventType.LoadObjPool, E_PoolType.MapRoom_地图房间);
         yield return delay;
-        EventCenter.EventTrigger(E_EventType.LoadObjPool, EPoolType.RoomCloude_房间遮云);
+        EventCenter.EventTrigger(E_EventType.LoadObjPool, E_PoolType.RoomCloude_房间遮云);
         yield return delay;
-        EventCenter.EventTrigger(E_EventType.LoadObjPool, EPoolType.SkillSlot_技能槽位);
-        EventCenter.EventTrigger(E_EventType.LoadObjPool, EPoolType.SkillIcon_技能图标);
+        EventCenter.EventTrigger(E_EventType.LoadObjPool, E_PoolType.SkillSlot_技能槽位);
+        EventCenter.EventTrigger(E_EventType.LoadObjPool, E_PoolType.SkillIcon_技能图标);
     }
 
     void OnClickGameButton() {
