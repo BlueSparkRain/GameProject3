@@ -48,5 +48,6 @@ public interface IBattlable
 {
     E_Camp Camp { get; }             // 阵营
     bool IsAlive { get; }            // 是否存活
-    public CharacterBattle_Controller BattleController { get; set; }
+    public BattleDamageHandler battlerDataHandler { get; set; }
+    //
 }

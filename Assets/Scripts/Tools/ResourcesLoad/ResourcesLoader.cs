@@ -20,7 +20,8 @@ public static class ResourcesLoader
     static string skillSlotPath = "Prefab/SkillUI/SkillSlot";
     static string skillIconPath = "Prefab/SkillUI/SkillIcon";
 
-    static string characterPath = "Prefab/Character/Character_";
+    static string mapCharacterPath = "Prefab/Character/Character_";
+    static string battlerCharacterPath = "Prefab/BattleArea/CharacterBattleArea";
 
 
     static string characterSOPath = "SOData/CharacterSOData/";
@@ -43,7 +44,7 @@ public static class ResourcesLoader
     }
 
     public static GameObject FindCharacterObj(string backStr) {
-        return Resources.Load<GameObject>(characterPath+backStr);
+        return Resources.Load<GameObject>(mapCharacterPath+backStr);
     }
 
     public static RoomModelSOData FindRoomModelSO(E_RoomModelType  roomModelType) {
@@ -81,6 +82,11 @@ public static class ResourcesLoader
     {
         return Resources.Load<MapSaveSOData>(mapSaveDataPath+mapdataBack);
 
+    }
+
+
+    public static GameObject FindBattleCharacterObj() {
+        return Resources.Load<GameObject>(battlerCharacterPath);
     }
 }     
 

@@ -15,8 +15,8 @@ MonoBehaviour:
   characterType: 4
   characterSprite: {fileID: 21300000, guid: ec25ca2d0ab90fd4e89d15368f8a0915, type: 3}
   characterName: "\u5C0F\u5C0F\u602A"
-  Phy_Flat_Penetration: 0.3
-  Mag_Flat_Penetration: 0.2
+  Phy_Flat_Penetration: 0
+  Mag_Flat_Penetration: 0
   Phy_Resistance: 100
   Mag_Resistance: 100
   Phy_Attack: 50

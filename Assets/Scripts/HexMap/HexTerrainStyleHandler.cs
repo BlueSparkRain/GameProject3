@@ -14,22 +14,22 @@ public class HexTerrainStyleHandler : MonoBehaviour
 
     [Header("房间纸牌精灵")]
     public SpriteRenderer modelSpriteRenderer;
-
     //地形Data
     TerrainSOData terrainSOData;
     //模型Data
     RoomModelSOData modelSOData;
-    public void SetTag(E_HexTerrainType _hexTerrainType)
-    {
+    public void InitTerrainStyle(E_HexTerrainType _hexTerrainType){
         hexTerrainType = _hexTerrainType;
         isEdited = true;
-
         GetComponent<HexRoomStyleHandler>().SetRoomType(GetRoomType());
-
-        SetRoomModel();
-        SetTerrainStyle();
+        SetRoomSprite();
+        SetTerrainSprite();
     }
-    void SetTerrainStyle() {
+
+    /// <summary>
+    /// 设置标识地块类型的精灵
+    /// </summary>
+    void SetTerrainSprite() {
         if (!useTerrainSprite){ 
             terrainSpriteRenderer.enabled = false; return; }
 
@@ -39,33 +39,32 @@ public class HexTerrainStyleHandler : MonoBehaviour
         terrainSpriteRenderer.sprite =sprite;
     }
 
-    void SetRoomModel()
-    {
+    /// <summary>
+    /// 设置标识房间类型的精灵
+    /// </summary>
+    void SetRoomSprite(){
         if (modelSOData != null) {
             modelSpriteRenderer.sprite=modelSOData.roomSprites.GetRandomElement();
         }
-
     }
-    E_HexRoomType GetRoomType()
-    {
+    E_HexRoomType GetRoomType(){
         switch (hexTerrainType)
         {
             case E_HexTerrainType.Obstacle_Ocean: {
-            return E_HexRoomType.None_无; }
+            return E_HexRoomType.None_无交互地形; }
             case E_HexTerrainType.Walkable_EmptyLand:{
                     //加载模型数据
-                    return E_HexRoomType.None_无; }
+                    return E_HexRoomType.None_无交互地形; }
             case E_HexTerrainType.Obstacle_Tree:{
                     modelSOData = ResourcesLoader.FindRoomModelSO(E_RoomModelType.树木);
-                    return E_HexRoomType.None_无; }
+                    return E_HexRoomType.None_无交互地形; }
             case E_HexTerrainType.Obstacle_Stone:{ 
                     modelSOData = ResourcesLoader.FindRoomModelSO(E_RoomModelType.石头);
-                    return E_HexRoomType.None_无; }
+                    return E_HexRoomType.None_无交互地形; }
             case E_HexTerrainType.Obstacle_Mountain: {
                     modelSOData = ResourcesLoader.FindRoomModelSO(E_RoomModelType.石头);
-                    return E_HexRoomType.None_无; }
+                    return E_HexRoomType.None_无交互地形; }
             case E_HexTerrainType.Walkable_LowLevel_BattleRoom:{
-                    
                     return E_HexRoomType.Battle_LowLevel_战斗_杂鱼; }
             case E_HexTerrainType.Walkable_MidLevel_BattleRoom: {
                     
@@ -82,7 +81,7 @@ public class HexTerrainStyleHandler : MonoBehaviour
             case E_HexTerrainType.Walkable_CityShopRoom:{ 
                     modelSOData = ResourcesLoader.FindRoomModelSO(E_RoomModelType.城镇);
                     return E_HexRoomType.CityShop_城商镇; }
-            default: return E_HexRoomType.None_无;
+            default: return E_HexRoomType.None_无交互地形;
         }
     }
 }

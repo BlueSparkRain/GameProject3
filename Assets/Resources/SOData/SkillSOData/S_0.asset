@@ -17,6 +17,6 @@ MonoBehaviour:
   skill_Name: "\u81F4\u547D\u8282\u594F"
   skill_Description: "\u4E0D\u77E5\u9053"
   skill_CoolDown_origin: 2
-  skill_sp_cost: 5
+  skill_sp_cost: 20
   skill_ang_grow: 5
   skill_targetType: 0

@@ -48,7 +48,7 @@ public class MapSkillerCheker : MonoSceneManager
 
             switch (roomType)
             {
-                case E_HexRoomType.None_无:
+                case E_HexRoomType.None_无交互地形:
                     break;
                 case E_HexRoomType.Battle_LowLevel_战斗_杂鱼:
                     //随机的技能或道具奖励+经验奖励
@@ -97,7 +97,7 @@ public class MapSkillerCheker : MonoSceneManager
     public void RegisterSkiller(CharacterMapSkiller mapSkiller,bool isPlayer=false)
     {
         if (!skillersRoomDic.ContainsKey(mapSkiller)) 
-            skillersRoomDic.Add(mapSkiller, E_HexRoomType.None_无);
+            skillersRoomDic.Add(mapSkiller, E_HexRoomType.None_无交互地形);
         
         if (isPlayer){
             Debug.Log("玩家！");

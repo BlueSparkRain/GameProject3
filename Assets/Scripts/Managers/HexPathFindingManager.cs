@@ -65,15 +65,15 @@ public class HexPathFindingManager : MonoGlobalManager
     private Material _playerRoom_OriginMat;
 
     // 核心绘制数据
-    private HexRoomData _playerStartRoom;
-    private HexRoomData _currentDrawRoom;
-    private List<HexRoomData> _walkablePath;
-    private List<HexRoomData> _diswalkablePath;
-    private Dictionary<HexRoomData, Material> _originMatCache;
+    private HexRoomTag _playerStartRoom;
+    private HexRoomTag _currentDrawRoom;
+    private List<HexRoomTag> _walkablePath;
+    private List<HexRoomTag> _diswalkablePath;
+    private Dictionary<HexRoomTag, Material> _originMatCache;
 
     // 自动路径模式数据
     private bool _isManualDrawing;
-    private List<HexRoomData> _autoFullPath;
+    private List<HexRoomTag> _autoFullPath;
 
     #region 管理器生命周期
     public override void MgrInit(GameRoot gameRoot)
@@ -118,10 +118,10 @@ public class HexPathFindingManager : MonoGlobalManager
 
     void InitDrawData()
     {
-        _walkablePath = new List<HexRoomData>();
-        _originMatCache = new Dictionary<HexRoomData, Material>();
-        _diswalkablePath = new List<HexRoomData>();
-        _autoFullPath = new List<HexRoomData>();
+        _walkablePath = new List<HexRoomTag>();
+        _originMatCache = new Dictionary<HexRoomTag, Material>();
+        _diswalkablePath = new List<HexRoomTag>();
+        _autoFullPath = new List<HexRoomTag>();
         _isManualDrawing = false;
         _playerStartRoom = null;
         _currentDrawRoom = null;
@@ -167,7 +167,7 @@ public class HexPathFindingManager : MonoGlobalManager
     #endregion
 
     #region 外部接口
-    public void SetPlayerStartRoom(HexRoomData room)
+    public void SetPlayerStartRoom(HexRoomTag room)
     {
         if (room == null)
         {
@@ -194,7 +194,7 @@ public class HexPathFindingManager : MonoGlobalManager
 
         if (debugNeighborCheck)
         {
-            List<HexRoomData> startNeighbors = GetAllHexNeighbors(room);
+            List<HexRoomTag> startNeighbors = GetAllHexNeighbors(room);
         }
 
         if (enableDebugLog)
@@ -210,14 +210,14 @@ public class HexPathFindingManager : MonoGlobalManager
             Debug.Log($"[HexPathDrawMgr] 最大行动点数更新为：{currentActionPoints}");
     }
 
-    public List<HexRoomData> GetDrawnPath()
+    public List<HexRoomTag> GetDrawnPath()
     {
-        return new List<HexRoomData>(_walkablePath);
+        return new List<HexRoomTag>(_walkablePath);
     }
 
-    public List<HexRoomData> GetUnreachablePath()
+    public List<HexRoomTag> GetUnreachablePath()
     {
-        return new List<HexRoomData>(_diswalkablePath);
+        return new List<HexRoomTag>(_diswalkablePath);
     }
     #endregion
 
@@ -231,7 +231,7 @@ public class HexPathFindingManager : MonoGlobalManager
             return;
         }
 
-        HexRoomData newMouseRoom = hit.collider.GetComponent<HexRoomData>();
+        HexRoomTag newMouseRoom = hit.collider.GetComponent<HexRoomTag>();
         if (newMouseRoom != null && newMouseRoom != _currentDrawRoom)
         {
             _currentDrawRoom = newMouseRoom;
@@ -245,31 +245,31 @@ public class HexPathFindingManager : MonoGlobalManager
     /// <summary>
     /// 检测地块是否允许行走
     /// </summary>
-    private bool IsRoomWalkable(HexRoomData room)
+    private bool IsRoomWalkable(HexRoomTag room)
     {
         if (room == null || _walkableDic == null) return false;
         return _walkableDic.TryGetValue(new Vector2Int(room.row, room.col), out bool isWalkable) && isWalkable;
     }
 
     #region 高性能BFS最短路径算法
-    private List<HexRoomData> BFSFindShortestPath(HexRoomData start, HexRoomData target)
+    private List<HexRoomTag> BFSFindShortestPath(HexRoomTag start, HexRoomTag target)
     {
-        List<HexRoomData> path = new List<HexRoomData>();
+        List<HexRoomTag> path = new List<HexRoomTag>();
         if (start == null || target == null || start == target) return path;
 
-        Queue<HexRoomData> queue = new Queue<HexRoomData>();
-        Dictionary<HexRoomData, HexRoomData> pathMap = new Dictionary<HexRoomData, HexRoomData>();
-        HashSet<HexRoomData> visited = new HashSet<HexRoomData>();
+        Queue<HexRoomTag> queue = new Queue<HexRoomTag>();
+        Dictionary<HexRoomTag, HexRoomTag> pathMap = new Dictionary<HexRoomTag, HexRoomTag>();
+        HashSet<HexRoomTag> visited = new HashSet<HexRoomTag>();
 
         queue.Enqueue(start);
         visited.Add(start);
 
         while (queue.Count > 0)
         {
-            HexRoomData current = queue.Dequeue();
+            HexRoomTag current = queue.Dequeue();
             if (current == target) break;
 
-            foreach (HexRoomData neighbor in GetAllHexNeighbors(current))
+            foreach (HexRoomTag neighbor in GetAllHexNeighbors(current))
             {
                 if (!IsRoomWalkable(neighbor)) continue;
 
@@ -282,7 +282,7 @@ public class HexPathFindingManager : MonoGlobalManager
             }
         }
 
-        HexRoomData temp = target;
+        HexRoomTag temp = target;
         while (pathMap.ContainsKey(temp))
         {
             path.Add(temp);
@@ -295,7 +295,7 @@ public class HexPathFindingManager : MonoGlobalManager
     /// <summary>
     /// 拆分路径（受开关控制）
     /// </summary>
-    private void SplitPath(List<HexRoomData> fullPath)
+    private void SplitPath(List<HexRoomTag> fullPath)
     {
         _walkablePath.Clear();
         _diswalkablePath.Clear();
@@ -353,7 +353,7 @@ public class HexPathFindingManager : MonoGlobalManager
         //_isManualDrawing = true;
         //_autoFullPath.Clear();
 
-        //HexRoomData lastRoom = _walkablePath.Count > 0 ? _walkablePath[^1] : _playerStartRoom;
+        //HexRoomTag lastRoom = _walkablePath.Count > 0 ? _walkablePath[^1] : _playerStartRoom;
 
         //if (IsHexNeighbor(lastRoom, _currentDrawRoom) && IsRoomWalkable(_currentDrawRoom))
         //{
@@ -373,7 +373,7 @@ public class HexPathFindingManager : MonoGlobalManager
     #endregion
 
     #region 六边形邻居判断
-    bool IsHexNeighbor(HexRoomData a, HexRoomData b)
+    bool IsHexNeighbor(HexRoomTag a, HexRoomTag b)
     {
         if (a == null || b == null) return false;
 
@@ -395,9 +395,9 @@ public class HexPathFindingManager : MonoGlobalManager
         return isNeighbor;
     }
 
-    public List<HexRoomData> GetAllHexNeighbors(HexRoomData room)
+    public List<HexRoomTag> GetAllHexNeighbors(HexRoomTag room)
     {
-        List<HexRoomData> neighbors = new List<HexRoomData>();
+        List<HexRoomTag> neighbors = new List<HexRoomTag>();
         if (room == null || _mapManager == null) return neighbors;
 
         int row = room.row;
@@ -423,7 +423,7 @@ public class HexPathFindingManager : MonoGlobalManager
         }
 
         foreach (var offset in neighborOffsets){
-            if (_mapManager.HexRoomMap.TryGetValue(offset, out HexRoomData neighbor))
+            if (_mapManager.HexRoomMap.TryGetValue(offset, out HexRoomTag neighbor))
                 neighbors.Add(neighbor);
         }
 
@@ -459,7 +459,7 @@ public class HexPathFindingManager : MonoGlobalManager
     /// <summary>
     /// 应用材质（缓存原始材质）
     /// </summary>
-    private void ApplyMaterial(HexRoomData room, Material mat)
+    private void ApplyMaterial(HexRoomTag room, Material mat)
     {
         MeshRenderer renderer = room.GetComponent<MeshRenderer>();
         if (renderer == null) return;
@@ -491,12 +491,12 @@ public class HexPathFindingManager : MonoGlobalManager
 
         canTriggerMover = isInValidPath ? true : false;
         if (canTriggerMover)
-            TargetMoverPath = new List<HexRoomData>(_walkablePath);
+            TargetMoverPath = new List<HexRoomTag>(_walkablePath);
     }
 
     //可以通过点击触发移动
     public bool canTriggerMover;
-    public List<HexRoomData> TargetMoverPath;
+    public List<HexRoomTag> TargetMoverPath;
 
     public void EndOneTimeMove() {
         canTriggerMover = false;

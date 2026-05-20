@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-
+#pragma warning disable CS0618
 [System.Serializable]
 public class CRTPostEffectSettings
 {

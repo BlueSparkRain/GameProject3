@@ -15,20 +15,20 @@ MonoBehaviour:
   characterType: 11
   characterSprite: {fileID: 21300000, guid: f8eaa16c550cfec418afb744d4e8ef53, type: 3}
   characterName: "\u5927\u5927\u602A"
-  Phy_Flat_Penetration: 1
-  Mag_Flat_Penetration: 1
+  Phy_Flat_Penetration: 0
+  Mag_Flat_Penetration: 0
   Phy_Resistance: 100
   Mag_Resistance: 100
   Phy_Attack: 50
   Magic_Attack: 50
   Maximum_Mana: 1000
-  Mana_Regeneration: 1
+  Mana_Regeneration: 0
   Maximum_Health: 1200
-  Health_Regeneration: 0.5
-  Life_Steal: 0.3
-  Tenacity: 0.8
-  Endurance: 1
-  Dodge_Rate: 0.1
+  Health_Regeneration: 0
+  Life_Steal: 0
+  Tenacity: 0
+  Endurance: 0
+  Dodge_Rate: 0
   Heal_Amplification: 0
   Shield_Amplification: 0
   Maximum_ATB: 3

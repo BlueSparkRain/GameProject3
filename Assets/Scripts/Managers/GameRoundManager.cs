@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 using Core;
-public class GameRoundManager : MonoSceneManager, ISaveable
+public class GameRoundManager : MonoSceneManager, ICanSave_And_Load
 {
     /// <summary>
     /// 当前游戏进行的回合数

@@ -34,7 +34,7 @@ public class MapTerrainEditorPanel : UIPanelBase
     public Button CityButton;
 
     private HexTerrainStyleHandler currentTag;
-    private HexRoomData roomData;
+    private HexRoomTag roomData;
     public GameObject ArrowPrefab;
     GameObject Arrow;
     public Button hideButton;
@@ -45,7 +45,7 @@ public class MapTerrainEditorPanel : UIPanelBase
             Arrow.transform.position = Vector3.zero;
     }
 
-    public void GetHexTag(HexRoomData roomData)
+    public void GetHexTag(HexRoomTag roomData)
     {
         this.roomData = roomData;
         currentRoomPosText.text = $"({roomData.row},{roomData.col})";
@@ -58,7 +58,7 @@ public class MapTerrainEditorPanel : UIPanelBase
     void SetButtonTag(E_HexTerrainType hexTerrainType)
     {
         EventCenter.EventTrigger(E_EventType.Editor_Terrain, new Vector2Int(roomData.row, roomData.col), hexTerrainType);
-        currentTag.SetTag(hexTerrainType);
+        currentTag.InitTerrainStyle(hexTerrainType);
         EventCenter.EventTrigger(E_EventType.Editor_Terrain_OneTime);
         ExitEdit();
     }

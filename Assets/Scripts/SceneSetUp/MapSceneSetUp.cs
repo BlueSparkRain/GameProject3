@@ -4,12 +4,12 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-public class MapSceneSetUp : MonoBehaviour, ISaveable
+public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load
 {
     GameRoot gameRoot;
 
     float x_Offset = 0.88f;//每行内的偏移
-    float y_Offset = 0.75f;//相邻行的偏移
+    float y_Offset = 0.8f;//相邻行的偏移
 
     int MapRadius = 30;
     public Transform MapPivot;
@@ -48,15 +48,16 @@ public class MapSceneSetUp : MonoBehaviour, ISaveable
         Debug.Log("111111-------------------------");
         //读取是否加载过地图,如果加载过，忽略
         gameRoot = GameRoot.Instance;
-        BattleSkillFactory.RegisterAllSkills();
         //地图生成管理器
         gameRoot.RegisterGlobal_MonoManager<GameMapManager>();
+        gameRoot.RegisterGlobal_CSManager(new GameBattleManager());
+
         //地图寻路管理器
         gameRoot.RegisterGlobal_MonoManager<HexPathFindingManager>();
         //地图房间交互管理器
         gameRoot.RegisterGlobal_MonoManager<HexMapInteractManager>();
         //移动管理器
-        gameRoot.RegisterGlobal_MonoManager<MapMoverChecker>();
+        gameRoot.RegisterGlobal_MonoManager<MapMoverManager>();
 
         gameMapManager = GameRoot.GetManager<GameMapManager>();
         gameMapManager.GameMapManagerInit(y_Offset, x_Offset, MapRadius, MapPivot.position);
@@ -70,22 +71,17 @@ public class MapSceneSetUp : MonoBehaviour, ISaveable
         EventCenter.AddEventListener(E_EventType.NewRound, UpdateRoundText);
         EventCenter.AddEventListener(E_EventType.AdjustVitalityPoints, UpdateValityText);
 
-
         //地图加载
-        StartCoroutine(LoadAllPool());
+        StartCoroutine(LoadSkillInfoPool());
         StartCoroutine(LoadMap());
         StartCoroutine(LoadCharacter(2));
         JsonSaver.Save(new FirstLoadMap(true));
     }
     void Awake()
     {
-       
-
         //读取是否加载过地图,如果加载过，忽略
         gameRoot = GameRoot.Instance;
         BattleSkillFactory.RegisterAllSkills();
-        //地图生成管理器
-        //gameRoot.RegisterScene_MonoManager<GameMapManager>();
 
         //正交相机漫游管理器
         gameRoot.RegisterScene_MonoManager<OrthoCameraNavigator>();
@@ -101,26 +97,16 @@ public class MapSceneSetUp : MonoBehaviour, ISaveable
         gameRoot.RegisterScene_MonoManager<VitalityPointsManager>();
 
         JsonSaver.InitData<FirstLoadMap>(this, JsonSaver.Load<FirstLoadMap>().GetState);
-        ////测试代码
-        //EventCenter.AddEventListener(E_EventType.NewRound, UpdateRoundText);
-        //EventCenter.AddEventListener(E_EventType.AdjustVitalityPoints, UpdateValityText);
-
-        //EventCenter.EventTrigger(E_EventType.NewRound);
-        //EventCenter.EventTrigger(E_EventType.AdjustVitalityPoints);
     }
     private void Start()
     {
-        ////地图加载
-        //StartCoroutine(LoadAllPool());
-        //StartCoroutine(LoadCharacter());
-
         EventCenter.EventTrigger(E_EventType.NewRound);
         EventCenter.EventTrigger(E_EventType.AdjustVitalityPoints);
     }
 
 
 
-    IEnumerator LoadAllPool()
+    IEnumerator LoadSkillInfoPool()
     {
         WaitForSeconds delay = new WaitForSeconds(0.5f);
         EventCenter.EventTrigger(E_EventType.LoadObjPool, E_PoolType.SkillSlot_技能槽位);
@@ -137,10 +123,11 @@ public class MapSceneSetUp : MonoBehaviour, ISaveable
         player1.InitCharacterDataTag(E_CharacterType.P_1, true, true);
 
         GameRoot.GetManager<OrthoCameraNavigator>().FocusOnTarget(player1.gameObject);
+        yield return new WaitForSeconds(delay/2);
         (player1.GetComponent<CharacterMapMoveHandle>().iMapMover as Player_CharacterMapMover).CharacterZeroMove();
         
         ////地图还没有加载，还没来得及注册
-        //HexRoomData randonoom = gameMapManager.GetRnadomRoom();
+        //HexRoomTag randonoom = gameMapManager.GetRnadomRoom();
 
         //player1.transform.position = randonoom.transform.position + Vector3.up * characterHeight;
         //player1.transform.localScale = Vector3.zero;

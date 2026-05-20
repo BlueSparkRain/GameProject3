@@ -30,7 +30,7 @@ public static class EventCenter
     public static void EventTrigger(E_EventType name)
     {
         if (eventDic.ContainsKey(name))
-            (eventDic[name] as EventInfo).actions?.Invoke();
+            (eventDic[name] as EventInfo)?.actions?.Invoke();
     }
 
     /// <summary>
@@ -449,6 +449,16 @@ public enum E_EventType
     LoadMapStart,
     LoadMapEnd,
     SkillExcute,
+
+    /// <summary>
+    /// 玩家将进入战斗，注册角色数据信息
+    /// </summary>
+    PlayerBeforeIntoBattle,
+
+    /// <summary>
+    /// 玩家脱战/完成战斗，清空BattleManager中的数据
+    /// </summary>
+    PlayerOutBattle,
 
     /// <summary>
     /// 完成了技能配置,更新对应角色的skiller

@@ -5,11 +5,11 @@ using UnityEngine;
 public interface IMapMoveable 
 {
 
-    public HexRoomData currentRoom { get; set; }
+    public HexRoomTag currentRoom { get; set; }
     /// <summary>
     /// 执行回合移动方法
     /// </summary>
-    public void DoMoveFunc(List<HexRoomData> path);
+    public void DoMoveFunc(List<HexRoomTag> path);
 
     /// <summary>
     /// Mover宣布结束自身回合

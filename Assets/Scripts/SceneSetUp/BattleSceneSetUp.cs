@@ -1,17 +1,21 @@
 using UnityEngine;
 using Core;
+using System.Collections;
 public class BattleSceneSetUp : MonoBehaviour
 {
     GameRoot gameRoot;
-    private void Awake()
-    {
-        BattleSkillFactory.RegisterAllSkills();
-        gameRoot = GameRoot.Instance;
+    private void Awake(){
+        gameRoot=GameRoot.Instance;
         gameRoot.RegisterScene_MonoManager<BattleTargetsSelectManager>();
-
-        //gameRoot.RegisterScene_MonoManager<BattleTargetsSelectManager>();
-        //EventCenter.EventTrigger(E_EventType.LoadObjPool, E_PoolType.SkillIcon_æŠ€èƒ½å›¾æ ‡);
-        //StartCoroutine(  GameRoot.GetManager<ObjectPoolManager>().StartFillPool(E_PoolType.SkillIcon));
+        gameRoot.RegisterScene_MonoManager<BattleLoadManager>();
     }
-
+    private void Start(){
+        StartCoroutine(LoadGame());
+    }
+    
+    IEnumerator LoadGame() { 
+        //Ê¹ÓÃBattlemanager½øÐÐÕ½¶·³¡¾°µÄ¼ÓÔØ
+        yield return  new WaitForSeconds(2);
+        GameRoot.GetManager<GameBattleManager>().SpawnBattleCharacter();
+    }
 }

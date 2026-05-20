@@ -5,7 +5,7 @@ using System.Collections;
 using UnityEngine;
 
 
-public class CharacterMapMoveHandle : MonoBehaviour, ISaveable
+public class CharacterMapMoveHandle : MonoBehaviour, ICanSave_And_Load
 {
     [Header("唯一ID（自动生成，请勿手动修改）")]
     string uniqueId = "player";
@@ -23,7 +23,6 @@ public class CharacterMapMoveHandle : MonoBehaviour, ISaveable
     /// <param name="isPlayer"></param>
     public void InitMover(bool isPlayer, E_CharacterType characterType)
     {
-
         //characterType = GetComponent<CharacterData>().characterType;
         iMapMover = isPlayer ?
             new Player_CharacterMapMover(characterType, transform) :
@@ -34,7 +33,7 @@ public class CharacterMapMoveHandle : MonoBehaviour, ISaveable
         if (moverPosData == null)
             moverPosData = new MapMoverPosition(uniqueId);
         EventCenter.EventTrigger(E_EventType.Character_Mover_Regist, iMapMover);
-        GameRoot.GetManager<MapMoverChecker>().RegisterMoverPostion(this.iMapMover, moverPosData);
+        GameRoot.GetManager<MapMoverManager>().RegisterMoverPostion(this.iMapMover, moverPosData);
 
     }
 
@@ -45,7 +44,7 @@ public class CharacterMapMoveHandle : MonoBehaviour, ISaveable
         JsonSaver.InitData<MapMoverPosition>(this, uniqueId);
     }
 
-    void UpdateCurrentRoom(HexRoomData hexRoomData)
+    void UpdateCurrentRoom(HexRoomTag hexRoomData)
     {
         iMapMover.currentRoom = hexRoomData;
     }
@@ -65,11 +64,9 @@ public class CharacterMapMoveHandle : MonoBehaviour, ISaveable
 
     IEnumerator SetCharacterPos(Vector3 pos)
     {
-        //HexRoomData randonoom = GameRoot.GetManager<GameMapManager>().GetTargetRoom(pos);
+        //HexRoomTag randonoom = GameRoot.GetManager<GameMapManager>().GetTargetRoom(pos);
 
         //yield return new WaitForSeconds(1f);
-
-        Debug.Log("吊带袜也大大哇i带丢掉---------设置了位置！！！！！！");
         transform.position = pos + Vector3.up * 1.2f;
         transform.localScale = Vector3.zero;
 
@@ -83,8 +80,6 @@ public class CharacterMapMoveHandle : MonoBehaviour, ISaveable
     /// </summary>
     public void InitBySaveData()
     {
-
-
         MapMoverPosition data = JsonSaver.Load<MapMoverPosition>(uniqueId);
         Debug.Log($"读取到位置记录：{data.pos.x},{data.pos.y}");
         // 把存档数据赋值给角色实例
@@ -111,7 +106,7 @@ public class CharacterMapMoveHandle : MonoBehaviour, ISaveable
         if (!JsonSaver.HasValidData<MapMoverPosition>(uniqueId))
         {
 
-            HexRoomData room = GameRoot.GetManager<GameMapManager>().GetRnadomRoom();
+            HexRoomTag room = GameRoot.GetManager<GameMapManager>().GetRnadomRoom();
             if (room == null)
             {
                 Debug.LogError("无法获取随机房间，地图可能未初始化");
@@ -139,7 +134,7 @@ public class MapMoverPosition : IValidatable
     public Vector2Int pos;
     public void SetPos(int row, int col)
     {
-        Debug.Log($"{uniqueId}+号Mover已更新位置:row:{row},col:{col}");
+        //Debug.Log($"{uniqueId}+号Mover已更新位置:row:{row},col:{col}");
         pos.Set(row, col);
     }
     public MapMoverPosition() { }

@@ -9,7 +9,7 @@ public interface IValidatable
     bool IsValid();
 }
 
-public interface ISaveable
+public interface ICanSave_And_Load
 {
     void InitBySaveData();
     void InitBySelf();
@@ -60,7 +60,7 @@ public static class JsonSaver
     #endregion
 
     #region 初始化数据
-    public static void InitData<T>(ISaveable file,Func<bool> additive=null) where T : class, IValidatable, new()
+    public static void InitData<T>(ICanSave_And_Load file,Func<bool> additive=null) where T : class, IValidatable, new()
     {
         if (additive != null) {
             if (HasValidData<T>() && additive()) { file.InitBySaveData();return;}
@@ -71,9 +71,8 @@ public static class JsonSaver
     }
 
     // ✅ 新增：按ID初始化角色数据
-    public static void InitData<T>(ISaveable file, string uniqueId) where T : class, IValidatable, new()
+    public static void InitData<T>(ICanSave_And_Load file, string uniqueId) where T : class, IValidatable, new()
     {
-        Debug.Log(uniqueId+"大为降低航空物流活动"+ HasValidData<T>(uniqueId));
         if (HasValidData<T>(uniqueId)) { file.InitBySaveData(); }
         else { file.InitBySelf(); }
     }
@@ -93,14 +92,14 @@ public static class JsonSaver
                 Debug.LogWarning($"存档损坏，自动重置: {typeof(T).Name}");
             }
             T defaultData = new T();
-            Save(defaultData);
+            //Save(defaultData);
             return defaultData;
         }
         catch (Exception e)
         {
             Debug.LogError($"读取失败 {typeof(T).Name}: {e.Message}");
             T fallback = new T();
-            Save(fallback);
+            //Save(fallback);
             return fallback;
         }
     }
@@ -141,8 +140,10 @@ public static class JsonSaver
     {
         try
         {
+            Debug.Log(data+">>>>>>>>>>>>>>"+ data.IsValid());
             if (data == null || !data.IsValid())
             {
+
                 Debug.LogError($"拒绝保存无效数据: {typeof(T).Name}");
                 return;
             }
@@ -160,8 +161,7 @@ public static class JsonSaver
     {
         try
         {
-
-            Debug.Log(data+" "+ !data.IsValid()+"啊时代大王i的");
+            Debug.Log(data.IsValid()+"?????00000000000000000000000000000");
             if (data == null || !data.IsValid())
             {
                 Debug.LogError($"拒绝保存无效角色数据 ID:{uniqueId}");
@@ -200,17 +200,17 @@ public static class JsonSaver
 
     #region 工具方法
     // 原有：按类型存档
-    private static string GetSavePath<T>() => Path.Combine(SaveRoot, typeof(T).Name + FileExtension);
+    public static string GetSavePath<T>() => Path.Combine(SaveRoot, typeof(T).Name + FileExtension);
 
     // ✅ 新增：按【类型+唯一ID】生成独立存档路径（多角色不覆盖）
-    private static string GetSavePath<T>(string uniqueId) => Path.Combine(SaveRoot, $"{typeof(T).Name}_{uniqueId}{FileExtension}");
+    public static string GetSavePath<T>(string uniqueId) => Path.Combine(SaveRoot, $"{typeof(T).Name}_{uniqueId}{FileExtension}");
 
-    public static string GetSaveFilePath<T>() where T : class
-    {
-        string fullPath = GetSavePath<T>();
-        if (!File.Exists(fullPath)) Debug.LogWarning($"未找到存档：{fullPath}");
-        return fullPath;
-    }
+    //public static string GetSaveFilePath<T>() where T : class
+    //{
+    //    string fullPath = GetSavePath<T>();
+    //    if (!File.Exists(fullPath)) Debug.LogWarning($"未找到存档：{fullPath}");
+    //    return fullPath;
+    //}
     #endregion
 }
 

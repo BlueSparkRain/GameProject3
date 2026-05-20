@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 1106994480732596697}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.056, y: -0.054, z: 1.04}
+  m_LocalPosition: {x: 0.056, y: -0.054, z: 0.66}
   m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 3912208504342783024}
   - component: {fileID: 4675135034000106259}
   - component: {fileID: 6834806676169834372}
+  - component: {fileID: 4278323965082844207}
   - component: {fileID: 5333147321464232690}
   - component: {fileID: 1645381435691459781}
   m_Layer: 6
@@ -131,7 +132,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3702633034361400875}
-  m_Mesh: {fileID: 760207555604313364, guid: 840da63f50a3b4d43b8ee7294d6f2dbe, type: 3}
+  m_Mesh: {fileID: -4684058438356655415, guid: 46742f5a8f37e6942abf62439a450c05, type: 3}
 --- !u!23 &4810967923550718542
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -209,7 +210,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 0.9195403, y: 0.9263176, z: 0.2037309}
-  m_Center: {x: 0, y: -3.9675447e-16, z: 0.84}
+  m_Center: {x: 0, y: -3.9675447e-16, z: 0.4}
 --- !u!114 &6834806676169834372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -225,6 +226,18 @@ MonoBehaviour:
   row: 0
   col: 0
   walkable: 0
+--- !u!114 &4278323965082844207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3702633034361400875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f124988b348e8d45a7194de54f5d343, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5333147321464232690
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -254,7 +267,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c4f80c9f96139448b7c163216d2954, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomType: 0
 --- !u!1001 &2545642153418120369
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -342,6 +354,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3387770044690922247, guid: 436dd0bee9435474bbed149f95e79996,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8059447805130534188, guid: 436dd0bee9435474bbed149f95e79996,
         type: 3}

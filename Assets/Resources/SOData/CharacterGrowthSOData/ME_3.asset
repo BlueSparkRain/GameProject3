@@ -12,20 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 613d31c2430a18944a5a67fcee6e60d7, type: 3}
   m_Name: ME_3
   m_EditorClassIdentifier: 
-  Phy_Flat_Penetration_grow: 0.02
-  Mag_Flat_Penetration_grow: 0.02
+  Phy_Flat_Penetration_grow: 0
+  Mag_Flat_Penetration_grow: 0
   Phy_Resistance_grow: 10
   Mag_Resistance_grow: 10
   Phy_Attack_grow: 5
   Magic_Attack_grow: 5
   Maximum_Mana_grow: 80
-  Mana_Regeneration_grow: 0.02
+  Mana_Regeneration_grow: 0
   Maximum_Health_grow: 100
-  Health_Regeneration_grow: 0.02
-  Life_Steal_grow: 0.02
-  Tenacity_grow: 0.02
-  Endurance_grow: 0.02
-  Dodge_Rate_grow: 0.02
-  Heal_Amplification_grow: 0.02
-  Shield_Amplification_grow: 0.02
-  Maximum_ATB_grow: 3
+  Health_Regeneration_grow: 0
+  Life_Steal_grow: 0
+  Tenacity_grow: 0
+  Endurance_grow: 0
+  Dodge_Rate_grow: 0
+  Heal_Amplification_grow: 0
+  Shield_Amplification_grow: 0
+  Maximum_ATB_grow: 0

@@ -5,12 +5,14 @@ using UnityEngine;
 /// <summary>
 /// 记录一名角色当前的属性数据（战斗中读取的是当前的属性数据（而非SOData））
 /// </summary>
-public class CharacterData : ISaveable
+public class CharacterData : ICanSave_And_Load
 {
     [Header("角色")]
     public E_CharacterType characterType;
 
     string characterSO_ParentPath = "SOData/CharacterSOData/";
+
+
 
     /// <summary>
     /// 角色初始数据
@@ -92,7 +94,7 @@ public class CharacterData : ISaveable
     /// </summary>
     private int maximum_ATB;
 
-
+    public string Character_Name => Resources.Load<CharacterDataSO>(characterSO_ParentPath + characterType).characterName;
     public float Phy_Flat_Penetration => phy_Flat_Penetration;
     public float Mag_Flat_Penetration => mag_Flat_Penetration;
     public float Phy_Resistance => phy_Resistance;
@@ -122,12 +124,13 @@ public class CharacterData : ISaveable
     public CharacterData(E_CharacterType _characterType) {
         characterType = _characterType;
         currentLevel = 1;
-        JsonSaver.InitData<Save_CharacterData>(this);
+        JsonSaver.InitData<Save_CharacterData>(this,_characterType.ToString());
     }
 
     public void InitBySaveData()
     {
-        var characterSaveData = JsonSaver.Load<Save_CharacterData>();
+        Debug.Log("这份角色数据此前记录过，直接加载存档数据"+characterType);
+        var characterSaveData = JsonSaver.Load<Save_CharacterData>(characterType.ToString());
         phy_Flat_Penetration = characterSaveData.Phy_Flat_Penetration;
         mag_Flat_Penetration = characterSaveData.Mag_Flat_Penetration;
         phy_Resistance = characterSaveData.Phy_Resistance;
@@ -150,6 +153,7 @@ public class CharacterData : ISaveable
 
     public void InitBySelf()
     {
+        Debug.Log("新的角色数据，进行首次存档数据");
         characterData = Resources.Load<CharacterDataSO>(characterSO_ParentPath + characterType);
         phy_Flat_Penetration = characterData.Phy_Flat_Penetration;
         mag_Flat_Penetration = characterData.Mag_Flat_Penetration;
@@ -168,6 +172,8 @@ public class CharacterData : ISaveable
         heal_Amplification = characterData.Heal_Amplification;
         shield_Amplification = characterData.Shield_Amplification;
         maximum_ATB = characterData.Maximum_ATB;
+        currentLevel = 1;
+        JsonSaver.Save(new Save_CharacterData(this), characterType.ToString());
     }
   
     public float GetProperty(E_CharacterPropertyType type)
@@ -179,7 +185,7 @@ public class CharacterData : ISaveable
             case E_CharacterPropertyType.Phy_Resistance: return phy_Resistance;
             case E_CharacterPropertyType.Mag_Resistance: return mag_Resistance;
             case E_CharacterPropertyType.Phy_Attack: return phy_Attack;
-            case E_CharacterPropertyType.Magic_Attack: return magic_Attack;
+            case E_CharacterPropertyType.Mag_Attack: return magic_Attack;
             case E_CharacterPropertyType.Maximum_Mana: return maximum_Mana;
             case E_CharacterPropertyType.Mana_Regeneration: return mana_Regeneration;
             case E_CharacterPropertyType.Maximum_Health: return maximum_Health;
@@ -196,33 +202,35 @@ public class CharacterData : ISaveable
     }
 
     // 修改属性（直接改私有字段，改完直接存档，100%同步）
-    public void AdjustProperty(E_CharacterPropertyType type, float value)
+    public void AdjustProperty(E_CharacterPropertyType type, float value,bool use_multi=false)
     {
         switch (type)
         {
-            case E_CharacterPropertyType.Phy_Flat_Penetration: phy_Flat_Penetration += value; break;
-            case E_CharacterPropertyType.Mag_Flat_Penetration: mag_Flat_Penetration += value; break;
-            case E_CharacterPropertyType.Phy_Resistance: phy_Resistance += value; break;
-            case E_CharacterPropertyType.Mag_Resistance: mag_Resistance += value; break;
-            case E_CharacterPropertyType.Phy_Attack: phy_Attack += value; break;
-            case E_CharacterPropertyType.Magic_Attack: magic_Attack += value; break;
-            case E_CharacterPropertyType.Maximum_Mana: maximum_Mana += value; break;
-            case E_CharacterPropertyType.Mana_Regeneration: mana_Regeneration += value; break;
-            case E_CharacterPropertyType.Maximum_Health: maximum_Health += value; break;
-            case E_CharacterPropertyType.Health_Regeneration: health_Regeneration += value; break;
-            case E_CharacterPropertyType.Life_Steal: life_Steal += value; break;
-            case E_CharacterPropertyType.Tenacity: tenacity += value; break;
-            case E_CharacterPropertyType.Endurance: endurance += value; break;
-            case E_CharacterPropertyType.Dodge_Rate: dodge_Rate += value; break;
-            case E_CharacterPropertyType.Heal_Amplification: heal_Amplification += value; break;
-            case E_CharacterPropertyType.Shield_Amplification: shield_Amplification += value; break;
-            case E_CharacterPropertyType.Maximum_ATB: maximum_ATB += (int)value; break;
+            case E_CharacterPropertyType.Phy_Flat_Penetration: if (!use_multi) phy_Flat_Penetration += value; else phy_Flat_Penetration *= value; break;
+            case E_CharacterPropertyType.Mag_Flat_Penetration: if (!use_multi) mag_Flat_Penetration += value; break;
+            case E_CharacterPropertyType.Phy_Resistance: if (!use_multi) phy_Resistance += value; else phy_Resistance *= value; break;
+            case E_CharacterPropertyType.Mag_Resistance: if (!use_multi) mag_Resistance += value; else mag_Resistance *= value; break;
+            case E_CharacterPropertyType.Phy_Attack: if (!use_multi) phy_Attack += value; else phy_Attack *= value; break;
+            case E_CharacterPropertyType.Mag_Attack: if (!use_multi) magic_Attack += value; else magic_Attack *= value; break;
+            case E_CharacterPropertyType.Maximum_Mana: if (!use_multi) maximum_Mana += value; else maximum_Mana *= value; break;
+            case E_CharacterPropertyType.Mana_Regeneration: if (!use_multi) mana_Regeneration += value; else mana_Regeneration *= value; break;
+            case E_CharacterPropertyType.Maximum_Health: if (!use_multi) maximum_Health += value; else maximum_Health *= value; break;
+            case E_CharacterPropertyType.Health_Regeneration: if (!use_multi) health_Regeneration += value; else phy_Resistance *= value; break;
+            case E_CharacterPropertyType.Life_Steal: if (!use_multi) life_Steal += value; else life_Steal *= value; break;
+            case E_CharacterPropertyType.Tenacity: if (!use_multi) tenacity += value; else tenacity *= value; break;
+            case E_CharacterPropertyType.Endurance: if (!use_multi) endurance += value; else endurance *= value; break;
+            case E_CharacterPropertyType.Dodge_Rate: if (!use_multi) dodge_Rate += value; else dodge_Rate *= value; break;
+            case E_CharacterPropertyType.Heal_Amplification: if (!use_multi) heal_Amplification += value; else heal_Amplification *= value; break;
+            case E_CharacterPropertyType.Shield_Amplification: if (!use_multi) shield_Amplification += value; else shield_Amplification *= value; break;
+            case E_CharacterPropertyType.Maximum_ATB: if (!use_multi) maximum_ATB += (int)value;break;
             default: Debug.LogError("属性不存在"); return;
         }
-        Debug.Log("保存Save_CharacterData文件:" + JsonSaver.GetSaveFilePath<Save_CharacterData>());
-        // 修改完直接保存，永久生效
-        JsonSaver.Save(new Save_CharacterData(this));
         Debug.Log($"属性修改成功: {type} = {GetProperty(type)}");
+    }
+
+    public bool IsValid()
+    {
+        throw new NotImplementedException();
     }
 }
 
@@ -344,6 +352,7 @@ public class Save_CharacterData : IValidatable
 
     public bool IsValid()
     {
+        Debug.Log(CurrentLevel+"撒旦会丢啊我都-----------------------------");
         return CurrentLevel > 0;
     }
 }

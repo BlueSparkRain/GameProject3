@@ -21,8 +21,6 @@ public class CharacterLevelUpHandler : MonoBehaviour
 
     public event Action<int, float, float,bool> EXPUIUpdateEvent;
 
-
-
     public void InitLevelHandler()
     {
         //ÖØÖÃUIÊı¾İ

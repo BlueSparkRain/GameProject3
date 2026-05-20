@@ -1,4 +1,4 @@
-public class ChaosLevelManager : MonoSceneManager, ISaveable
+public class ChaosLevelManager : MonoSceneManager, ICanSave_And_Load
 {
 
     public int currentLevel;

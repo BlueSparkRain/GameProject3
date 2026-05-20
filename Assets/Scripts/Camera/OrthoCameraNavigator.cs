@@ -48,7 +48,7 @@ public class OrthoCameraNavigator : MonoSceneManager
     public float mapFrontBound = 50f;   // Z最大
 
     [Header("聚焦配置")]
-    public float focusSmoothTime = 1f;
+    public float focusSmoothTime = 1.5f;
     #endregion
 
     #region 私有变量
@@ -268,9 +268,9 @@ public class OrthoCameraNavigator : MonoSceneManager
         // 🔥 终极正确：相机 Y 固定，只移动 XZ 对齐目标
         Vector3 targetPos = target.transform.position;
         Vector3 finalPos = new Vector3(
-            targetPos.x,
+            targetPos.x+1,
             _cachedCamTransform.position.y, // 永久固定高空Y，绝不改变！
-            targetPos.z-5
+            targetPos.z-3
         );
 
         _targetCamPos = finalPos;

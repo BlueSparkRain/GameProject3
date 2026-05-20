@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class VitalityPointsManager : MonoSceneManager, ISaveable
+public class VitalityPointsManager : MonoSceneManager, ICanSave_And_Load
 {
     //记录本局游戏玩家的活力点数
     public int valityPoint = 0;

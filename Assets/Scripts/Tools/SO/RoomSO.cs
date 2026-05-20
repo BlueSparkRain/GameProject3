@@ -9,7 +9,7 @@ public class RoomSO :ScriptableObject
     /// <summary>
     /// 房间类型
     /// </summary>
-    public E_HexRoomType roomType=E_HexRoomType.None_无;
+    public E_HexRoomType roomType=E_HexRoomType.None_无交互地形;
 
     /// <summary>
     /// 房间图标
@@ -19,7 +19,7 @@ public class RoomSO :ScriptableObject
 }
 
 public enum E_HexRoomType {
-    None_无,
+    None_无交互地形,
     Battle_LowLevel_战斗_杂鱼,
     Battle_MidLevel_战斗_精英,
     Battle_HighLevel_战斗_首领,

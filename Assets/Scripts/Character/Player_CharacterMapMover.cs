@@ -9,7 +9,7 @@ using UnityEngine;
 /// </summary>
 public class Player_CharacterMapMover : IMapMoveable
 {
-    HexRoomData IMapMoveable.currentRoom { get; set; }
+    HexRoomTag IMapMoveable.currentRoom { get; set; }
     public E_CharacterType CharacterType => characterType;
     E_CharacterType characterType;
 
@@ -18,7 +18,7 @@ public class Player_CharacterMapMover : IMapMoveable
     public int remain_Acionpoints;
 
     CoroutineManager coroutineManager;
-    //MapMoverChecker  moverChecker;
+    //MapMoverManager  moverChecker;
 
     //玩家操控角色-需要与Icon交互
     PlayerMapIcon mapIcon;
@@ -61,7 +61,7 @@ public class Player_CharacterMapMover : IMapMoveable
     IEnumerator WaitMapIcon()
     {
         yield return new WaitForSeconds(1f);
-        mapIcon = GameRoot.GetManager<MapMoverChecker>().CreateNewMapIcon(this, charcaterTrans);
+        mapIcon = GameRoot.GetManager<MapMoverManager>().CreateNewMapIcon(this, charcaterTrans);
         mapIcon.SetMoveDot(remain_Acionpoints);
 
         
@@ -85,11 +85,11 @@ public class Player_CharacterMapMover : IMapMoveable
         //更新当前房间
         EventCenter.EventTrigger(E_EventType.Mover_CheckCurrrentRoom, this as IMapMoveable, charcaterTrans.position);
         //根据MoverChecker顺序来决定当前的Mover
-        //GameRoot.GetManager<MapMoverChecker>().SetCurrentMover(this);
+        //GameRoot.GetManager<MapMoverManager>().SetCurrentMover(this);
 
         //玩家角色登场先走0步
         //设置当前Mover
-        GameRoot.GetManager<MapMoverChecker>().SetCurrentMover(this, charcaterTrans.position);
+        GameRoot.GetManager<MapMoverManager>().SetCurrentMover(this, charcaterTrans.position);
 
         //只有玩家会相机聚焦
         GameRoot.GetManager<OrthoCameraNavigator>().FocusOnTarget(charcaterTrans.gameObject);
@@ -98,7 +98,7 @@ public class Player_CharacterMapMover : IMapMoveable
     }
 
 
-    public void DoMoveFunc(List<HexRoomData> path)
+    public void DoMoveFunc(List<HexRoomTag> path)
     {
         //仅仅包含对于MapIcon的禁用操作
         EventCenter.EventTrigger(E_EventType.Mover_PlayerStartMove);
@@ -107,10 +107,10 @@ public class Player_CharacterMapMover : IMapMoveable
     }
 
 
-    IEnumerator MoveAnim(List<HexRoomData> roomPath)
+    IEnumerator MoveAnim(List<HexRoomTag> roomPath)
     {
         moveStop = remain_Acionpoints <= 0;
-        Debug.Log("Mover开始移动：路径长度" + roomPath.Count);
+        //Debug.Log("Mover开始移动：路径长度" + roomPath.Count);
         isMoving = true;
 
         for (int i = 0; i < roomPath.Count; i++)

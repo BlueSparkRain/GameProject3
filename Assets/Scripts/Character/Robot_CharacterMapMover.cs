@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Robot_CharacterMapMover : IMapMoveable
 {
-    public HexRoomData currentRoom { get ; set ; }
+    public HexRoomTag currentRoom { get ; set ; }
 
-    public void DoMoveFunc(List<HexRoomData> path)
+    public void DoMoveFunc(List<HexRoomTag> path)
     {
 
     }

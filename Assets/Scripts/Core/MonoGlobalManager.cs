@@ -27,7 +27,7 @@ public abstract class MonoGlobalManager : MonoBehaviour, IGlobalManager
         DontDestroyOnLoad(gameObject);
 
         if (GameRoot.Instance == null) return;
-
+        
         var existing = GameRoot.Instance.GetGlobalManager(GetType());
         if (existing != null && existing != this)
         {

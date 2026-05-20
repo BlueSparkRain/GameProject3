@@ -112,7 +112,7 @@ public class CharacterDataSO : ScriptableObject
             case E_CharacterPropertyType.Phy_Resistance: return Phy_Resistance;
             case E_CharacterPropertyType.Mag_Resistance: return Mag_Resistance;
             case E_CharacterPropertyType.Phy_Attack: return Phy_Attack;
-            case E_CharacterPropertyType.Magic_Attack: return Magic_Attack;
+            case E_CharacterPropertyType.Mag_Attack: return Magic_Attack;
             case E_CharacterPropertyType.Maximum_Mana: return Maximum_Mana;
             case E_CharacterPropertyType.Mana_Regeneration: return Mana_Regeneration;
             case E_CharacterPropertyType.Maximum_Health: return Maximum_Health;

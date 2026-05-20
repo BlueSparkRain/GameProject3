@@ -85,10 +85,10 @@ public class PlayerMapIcon : MonoBehaviour
     {
         HexPathFindingManager hexPathFindingManager = GameRoot.GetManager<HexPathFindingManager>();
 
-        if (GameRoot.GetManager<MapMoverChecker>().GetTargetPlayerMover(this)==null)
+        if (GameRoot.GetManager<MapMoverManager>().GetTargetPlayerMover(this)==null)
         return;
 
-        var mover = GameRoot.GetManager<MapMoverChecker>().GetTargetPlayerMover(this);
+        var mover = GameRoot.GetManager<MapMoverManager>().GetTargetPlayerMover(this);
         GameRoot.GetManager<OrthoCameraNavigator>().FocusOnTarget(charcaterTrans.gameObject);
 
         if (canMove)

@@ -31,5 +31,6 @@ using Core;
                 Destroy(gameObject);
                 Debug.LogWarning($"Duplicate scene mono manager: {GetType().Name}, destroying this instance.");
             }
+            MgrOnInit();
         }
     }

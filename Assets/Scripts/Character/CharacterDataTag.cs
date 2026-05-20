@@ -1,37 +1,44 @@
+using Core;
 using UnityEngine;
 
 /// <summary>
-/// ¹ÜÀí½ÇÉ«Êı¾İµÄ¶ÁÈ¡ºÍ¸üĞÂ(Éı¼¶)ºÍÕóÓª
-/// ¹ÜÀí½ÇÉ«Éı¼¶Ê±µÄÊôĞÔÊıÖµµ÷Õû
+/// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½İµÄ¶ï¿½È¡ï¿½Í¸ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½ï¿½ï¿½Óª
+/// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½
 /// </summary>
 public class CharacterDataTag : MonoBehaviour
 {
     public bool isPlayer { get; private set; }
     IUpGradable upgradeHandle;
     IBattlable ibattle;
+    //Save_CharacterData save_characterData;
+
     CharacterData characterData;
-
-    //¶ÁÈ¡´æµµÊı¾İ
     void TryGetSaveData() { 
-    
     }
-
+    void OnDisable(){
+        if (isPlayer)
+            EventCenter.RemoveEventListener(E_EventType.PlayerBeforeIntoBattle, OnPlayerBeforeIntoBattle);
+    }
+    void OnPlayerBeforeIntoBattle(){
+        GameRoot.GetManager<GameBattleManager>().RegisterPlayerToBattle(characterData);
+    }
     /// <summary>
     /// 
     /// </summary>
     /// <param name="characterType"></param>
     /// <param name="isPlayer"></param>
     /// <param name="canLevelUP"></param>
-    public void InitCharacterDataTag(E_CharacterType characterType, bool isPlayer, bool canLevelUP)
-    {
+    public void InitCharacterDataTag(E_CharacterType characterType, bool isPlayer, bool canLevelUP){
         characterData = new CharacterData(characterType);
 
         this.isPlayer = isPlayer;
-        if (isPlayer) ibattle = new Player();
+        if (isPlayer){
+            ibattle = new Player();
+            //åªæœ‰ç©å®¶è§’è‰²æ‰ä¼šæ³¨å†Œè‡ªèº«åˆ°ç©å®¶æ–¹
+            EventCenter.AddEventListener(E_EventType.PlayerBeforeIntoBattle, OnPlayerBeforeIntoBattle);
+        }
         else ibattle = new Enemy();
-
-        if (canLevelUP)
-        {
+        if (canLevelUP){
             upgradeHandle = new LevelUpGradeMode(characterType, characterData);
             GetComponent<CharacterMapMoveHandle>().InitMover(isPlayer, characterType);
         }
@@ -39,12 +46,10 @@ public class CharacterDataTag : MonoBehaviour
     }
 
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            //AdjustProperty(E_CharacterPropertyType.Phy_Attack, 5);
+    void Update(){
+        if (isPlayer && Input.GetKeyDown(KeyCode.B)){
             upgradeHandle.UpGrade();
+            //JsonSaver.Save(new Save_CharacterData(characterData),(characterData.characterType).ToString());
         }
     }
 

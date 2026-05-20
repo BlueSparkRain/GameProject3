@@ -4,11 +4,10 @@ public class Enemy : IBattlable
 {
     public E_Camp Camp => E_Camp.敌方;
     public bool IsAlive => true;
-
-    public CharacterBattle_Controller BattleController { get ; set; }
+    public BattleDamageHandler battlerDataHandler { get; set; }
 
     public Enemy() { }
-    public Enemy(CharacterBattle_Controller _BattleController) {
-        BattleController = _BattleController;
+    public Enemy(BattleDamageHandler _damageHandle) {
+        battlerDataHandler = _damageHandle;
     }
 }

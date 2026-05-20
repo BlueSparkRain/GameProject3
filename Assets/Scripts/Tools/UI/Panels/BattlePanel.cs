@@ -21,7 +21,9 @@ public class BattlePanel : UIPanelBase
     }
     void OnClickQuitButton() {
         Hide();
-        Debug.Log("撤退");
+        Debug.Log("逃跑");
+        //后期可以做成如果逃跑或者失败，玩家会被强制踢出战斗地块
+        EventCenter.EventTrigger(E_EventType.PlayerOutBattle);
     }
     public override void Hide()
     {

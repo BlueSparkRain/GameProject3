@@ -160,7 +160,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
-    pixelSize: 1
+    pixelSize: 2
     saturation: 0.8
     contrast: 1
     crtShader: {fileID: 4800000, guid: d1932b84349337446834e7abbd85aba5, type: 3}
@@ -171,6 +171,6 @@ MonoBehaviour:
     flickerPower: 0.2
     noiseDensity: 300
     noisePower: 0.25
-    edgeRange: 0.365
+    edgeRange: 0.376
     lineCurve: 5
     lineLength: 0.15

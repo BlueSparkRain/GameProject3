@@ -3,13 +3,13 @@ public class Player : IBattlable
     public E_Camp Camp => E_Camp.玩家方;
     public bool IsAlive => true;
 
-    public CharacterBattle_Controller BattleController { get; set; }
-
     public Player() { }
 
-    public Player(CharacterBattle_Controller characterData)
+    public BattleDamageHandler battlerDataHandler { get; set; }
+
+    public Player(BattleDamageHandler _damageHandle)
     {
-        BattleController = characterData;
+        battlerDataHandler = _damageHandle;
     }
 }
 

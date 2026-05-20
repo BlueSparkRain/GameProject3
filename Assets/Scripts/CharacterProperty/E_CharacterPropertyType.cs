@@ -27,7 +27,7 @@ public enum E_CharacterPropertyType{
     /// <summary>
     /// 法强：影响魔法伤害
     /// </summary>
-    Magic_Attack,
+    Mag_Attack,
 
     /// <summary>
     /// 最大法力值：决定法力值的上限
