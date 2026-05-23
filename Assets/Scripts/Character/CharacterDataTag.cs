@@ -8,10 +8,11 @@ using UnityEngine;
 public class CharacterDataTag : MonoBehaviour
 {
     public bool isPlayer { get; private set; }
-    IUpGradable upgradeHandle;
+    IUpGradable iUpgrade;
     IBattlable ibattle;
     //Save_CharacterData save_characterData;
 
+    CharacterLevelUpHandler levelUpHandler;
     CharacterData characterData;
     void TryGetSaveData() { 
     }
@@ -29,6 +30,7 @@ public class CharacterDataTag : MonoBehaviour
     /// <param name="isPlayer"></param>
     /// <param name="canLevelUP"></param>
     public void InitCharacterDataTag(E_CharacterType characterType, bool isPlayer, bool canLevelUP){
+
         characterData = new CharacterData(characterType);
 
         this.isPlayer = isPlayer;
@@ -38,17 +40,26 @@ public class CharacterDataTag : MonoBehaviour
             EventCenter.AddEventListener(E_EventType.PlayerBeforeIntoBattle, OnPlayerBeforeIntoBattle);
         }
         else ibattle = new Enemy();
-        if (canLevelUP){
-            upgradeHandle = new LevelUpGradeMode(characterType, characterData);
+        if (canLevelUP)
+            iUpgrade = new LevelUpGradeMode(characterType, characterData);
+        else iUpgrade = new StageUpGradeMode(characterType, characterData);
+
+
+        if (canLevelUP)
+        {
+            levelUpHandler = GetComponent<CharacterLevelUpHandler>();
+            levelUpHandler.InitLevelHandler(characterData, iUpgrade);
+
             GetComponent<CharacterMapMoveHandle>().InitMover(isPlayer, characterType);
         }
-        else upgradeHandle = new StageUpGradeMode(characterType, characterData);
+
     }
 
 
     void Update(){
+
         if (isPlayer && Input.GetKeyDown(KeyCode.B)){
-            upgradeHandle.UpGrade();
+            iUpgrade.UpGrade();
             //JsonSaver.Save(new Save_CharacterData(characterData),(characterData.characterType).ToString());
         }
     }

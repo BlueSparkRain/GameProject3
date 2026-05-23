@@ -83,5 +83,10 @@ public enum E_CharacterPropertyType{
     /// <summary>
     /// 初始最大ATB点数
     /// </summary>
-    Maximum_ATB
+    Maximum_ATB,
+
+    /// <summary>
+    /// 当前等级
+    /// </summary>
+    CurrentLevel
 }

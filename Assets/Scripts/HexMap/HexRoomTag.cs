@@ -35,8 +35,7 @@ public class HexRoomTag : MonoBehaviour
     public void SetCellState(bool _walkable){
         walkable = _walkable;
         //高低差动画
-        //if (walkable)
-            //coroutineManager.StartDelayedCoroutine(0.4f, () => hexJumpAnimation.WalkableUpAnim());
+    
     }
     public void CallBattle(){
         Debug.Log("Go");

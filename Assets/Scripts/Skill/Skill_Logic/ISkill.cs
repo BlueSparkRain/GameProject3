@@ -1,74 +1,137 @@
-using System.Collections.Generic;
+using UnityEngine;
 
-public enum E_SkillLevel
+public interface ISkill
 {
-    åŸºç¡€ç‰ˆæœ¬,
-    åŠ å¼ºç‰ˆæœ¬
+    /// <summary>
+    /// Ò»´Î¼¼ÄÜ»ù´¡Ğ§¹û
+    /// </summary>
+    /// <param name="self">ÊÍ·ÅÕß</param>
+    /// <param name="target">³ĞÊÜÕß</param>
+    public void Excute(IBattlable self, IBattlable target);
 }
 
-public interface IHaveWeakable
+/// <summary>
+/// Ò»´Î¹¥»÷Ğ§¹û×é¼ş£¨¶ÔtargetµÄModelÊôĞÔµ÷Õû£©
+/// </summary>
+public class Attack_Skill : ISkill
 {
-    public void GetWeakness();
+    /// <summary>
+    /// Ôì³ÉµÄÉËº¦ÊôĞÔÀàĞÍ
+    /// </summary>
+    E_WeaknessType weaknessType;
+    /// <summary>
+    /// ¼¼ÄÜµÄ»ù´¡ÉËº¦Öµ
+    /// </summary>
+    float baseAttackValue = 0;
+    /// <summary>
+    /// ¼¼ÄÜµÄ»ù´¡ÉËº¦±¶ÂÊ
+    /// </summary>
+    float baseAttackRate = 1f;
+
+    /// <summary>
+    /// Èõµã¹¥»÷µÄ¶îÍâ±¶ÂÊ
+    /// </summary>
+    float weakMulti = 2;
+    public Attack_Skill(){}
+
+    /// <summary>
+    /// ¹¥»÷Ö´ĞĞÇ°Ê¹ÓÃÀ´ÉèÖÃ±¾´Î¹¥»÷µÄ×´Ì¬
+    /// </summary>
+    /// <param name="_WeaknessType"></param>
+    /// <param name="_baseAttackValue"></param>
+    /// <param name="_baseAttackRate"></param>
+    public void SetAttackState(E_WeaknessType _WeaknessType,
+                        float _baseAttackValue,
+                        float _baseAttackRate)
+    {
+        weaknessType = _WeaknessType;
+        baseAttackValue = _baseAttackValue;
+        baseAttackRate = _baseAttackRate;
+    }
+    public void Excute(IBattlable self, IBattlable target)
+    {
+        E_Skill_DamageType damageType = DamageTypeChecker.GetDamageType(weaknessType);
+        
+        float value = self.battlerDataHandler.DoDamage(damageType, baseAttackRate * baseAttackValue);
+
+        //¼ì²é¹¥»÷Èõµã×´Ì¬£¨ÈçÊÇ->½áËãÉËº¦x2 + Ï÷¶Ü1µã£©
+        if (target.GetWeakAttack(weaknessType))
+        {
+            value *= weakMulti;
+            target.battlerDataHandler.DoModelValue(E_BattleModelType.ShieldPoints,-1);
+
+            Debug.Log($"{self.Camp}¶Ô{target.battlerDataHandler.name}·¢¶¯Ò»´Î[(Èõµã)]¹¥»÷:{baseAttackRate}*{baseAttackValue}*{weakMulti}*Íæ¼Ò¹¥»÷Á¦=[Ë°Ç°ÉËº¦]{value}");
+        }
+        else
+        {
+            Debug.Log($"{self.Camp}¶Ô{target.battlerDataHandler.name}·¢¶¯Ò»´Î¹¥»÷:{baseAttackRate}*{baseAttackValue}*Íæ¼Ò¹¥»÷Á¦=[Ë°Ç°ÉËº¦]{value}");
+        }
+        target.battlerDataHandler.GetDamage(damageType, value);
+    }
 }
 
-public abstract class SkillBase
+
+/// <summary>
+/// Ò»´ÎModelĞ§¹û×é¼ş£¨Ö±½Ó¶ÔtargetµÄModelÊôĞÔµ÷Õû£©
+/// </summary>
+public class ModelAdjust_Skill : ISkill
 {
-    public IBattlable self { get; set; }
-    public List<IBattlable> targets { get; set; }
-
-    public E_SkillTargetType skillTargetType { get; set; }
-
-    public SkillBase(E_SkillTargetType _skillTargetType)
-    {
-        skillTargetType = _skillTargetType;
-    }
-
-
-    void GetTargets()
-    {
-        targets = BattleTargetSelector.GetValidTargets(self, skillTargetType);
-    }
-
-    public void GetCaster(IBattlable _caster)
-    {
-        self = _caster;
-    }
+    /// <summary>
+    /// µ÷ÕûµÄ»ù´¡ÊıÖµ
+    /// </summary>
+    float baseAdjValue;
 
     /// <summary>
-    /// å¯¹æ‰€æœ‰ç›®æ ‡ä¸€æ¬¡é‡Šæ”¾å•ä½“æŠ€èƒ½
+    /// Òªµ÷ÕûµÄÄ£ĞÍÊı¾İÀàĞÍ
     /// </summary>
-    /// <param name="casters"></param>
-    public void SkillExcute(E_SkillLevel skillLevel)
-    {
-        GetTargets();
-        if (targets.Count <= 0)
-        {
-            UnityEngine.Debug.Log("ä½•æ„å‘³ï¼Œæ— ç›®æ ‡æŠ€èƒ½ï¼Ÿ");
-            return;
-        }
+    E_BattleModelType modelType;
 
-        for (int i = 0; i < targets.Count; i++)
-        {
-            switch (skillLevel)
-            {
-                case E_SkillLevel.åŸºç¡€ç‰ˆæœ¬: SkillExcuteSingle(targets[i]); break;
-                case E_SkillLevel.åŠ å¼ºç‰ˆæœ¬: SkillEnhanceSingle(targets[i]); break;
-            }
-        }
+    float skillRate;
+
+    public void SetModelState(E_BattleModelType _modelType, float baseValue, float _multi_value)
+    {
+        skillRate = _multi_value;
+        modelType = _modelType;
+        baseAdjValue = baseValue;
     }
 
+    public void Excute(IBattlable self, IBattlable target)
+    {
+        float value = baseAdjValue * skillRate;
+        self.battlerDataHandler.DoModelValue(modelType, value);
+        Debug.Log($"{self.Camp}¶Ô{target.battlerDataHandler.name}·¢¶¯Ò»´ÎModelµ÷Õû[{modelType}]£º{value}");
+    }
+}
+
+/// <summary>
+/// Ò»´ÎPropertyĞ§¹û×é¼ş£¨Ö±½Ó¶ÔtargetµÄPropertyÊôĞÔµ÷Õû£©
+/// </summary>
+public class PropertyAdjust_Skill : ISkill
+{
     /// <summary>
-    /// æŠ€èƒ½åŸºç¡€æ•ˆæœ
+    /// µ÷ÕûµÄ»ù´¡ÊıÖµ
     /// </summary>
-    /// <param name="target"></param>
-    public abstract void SkillExcuteSingle(IBattlable target);
+    float baseAdjValue;
 
     /// <summary>
-    /// æŠ€èƒ½å¢å¼º-å•ä½“
+    /// Òªµ÷ÕûµÄÄ£ĞÍÊı¾İÀàĞÍ
     /// </summary>
-    /// <param name="targets"></param>
-    public abstract void SkillEnhanceSingle(IBattlable target);
+    E_CharacterPropertyType propertyType;
 
+    float skillRate;
 
+    public void SetPropertyState(E_CharacterPropertyType _propertyType, float _baseValue, float _multi_value)
+    {
+        skillRate = _multi_value;
+        propertyType = _propertyType;
+        baseAdjValue = _baseValue;
+    }
+
+    public void Excute(IBattlable self, IBattlable target)
+    {
+        float value = baseAdjValue * skillRate;
+        self.battlerDataHandler.DoPropertyValue(propertyType, value);
+        Debug.Log($"{self.Camp}¶Ô{target.battlerDataHandler.name}·¢¶¯Ò»´ÎPropertyµ÷Õû[{propertyType}]£º{value}");
+    }
 }
 

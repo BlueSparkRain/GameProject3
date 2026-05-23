@@ -6,13 +6,16 @@ public class BattleSkillHandler : MonoBehaviour
     public SkillIconSpawner atbSkillIconSpawner;
     BattleSkiller battleSkiller;
     Battle_Controller battleController;
+    BattlerStateTag battlerStateTag;
     bool battleEnd=false;
 
-    public void InitBattleSkillHandler(IBattlable self, BattleMVCHandler battleMVCHandle){
-        battleSkiller = new BattleSkiller(normalSkillIconSpawner, atbSkillIconSpawner,self);
-        this.battleController = battleMVCHandle.BattleController;
+    public void InitBattleSkillHandler(IBattlable _self, BattleMVCHandler _battleMVCHandle, BattlerStateTag _battlerStateTag)
+    {
+        battlerStateTag = _battlerStateTag;
+        battleSkiller = new BattleSkiller(normalSkillIconSpawner, atbSkillIconSpawner,_self);
+        battleController = _battleMVCHandle.BattleController;
         EventCenter.AddEventListener<float>(E_EventType.SkillExcute, SkillCost);
-        EventCenter.AddEventListener<Battle_Controller>(E_EventType.CharacterDead, StopCylcle);
+        EventCenter.AddEventListener<BattlerStateTag>(E_EventType.Battle_CharacterDead, StopCylcle);
     }
 
     public void OnSkillerUpdate(){
@@ -20,7 +23,7 @@ public class BattleSkillHandler : MonoBehaviour
             return;
 
         //只有背包技能才会自动循环释放
-        if (!battleController.charcaterDead){
+        if (!battlerStateTag.State_Dead){
             battleSkiller.OnSkillUpdate(battleController.GetCharacterModelValue(E_BattleModelType.SP));
         }
     }
@@ -29,8 +32,8 @@ public class BattleSkillHandler : MonoBehaviour
     /// 本角色死亡，技能停止循环
     /// </summary>
     /// <param name="battler"></param>
-    void StopCylcle(Battle_Controller battler){
-        if (battler != battleController) return;
+    void StopCylcle(BattlerStateTag battler){
+        if (battler != battlerStateTag) return;
         SelfEnd();
     }
 

@@ -5,14 +5,15 @@ using UnityEngine;
 /// </summary>
 public class BattleDamageHandler : MonoBehaviour
 {
-    DamageChecker_Magic magic_damageChecker;
-    DamageChecker_Physic physic_damageChecker;
+    BattleDamager_Magic magic_damageChecker;
+    BattleDamager_Physic physic_damageChecker;
     Battle_Controller battleController;
+    public Battle_Controller BattleController=>battleController;
     public void InitDataHandler(BattleMVCHandler mvcHandler)
     {
         battleController = mvcHandler.BattleController;
-        magic_damageChecker = new DamageChecker_Magic(battleController);
-        physic_damageChecker = new DamageChecker_Physic(battleController);
+        magic_damageChecker = new BattleDamager_Magic(battleController);
+        physic_damageChecker = new BattleDamager_Physic(battleController);
     }
 
     /// <summary>
@@ -67,11 +68,17 @@ public class BattleDamageHandler : MonoBehaviour
     /// <param name="damageValue"></param>
     public void GetDamage(E_Skill_DamageType damageType, float damageValue)
     {
+        Debug.Log("擦撒德哈的是粉色粉色粉色"+damageValue);
         switch (damageType)
         {
             case E_Skill_DamageType.物理:
                 float da = physic_damageChecker.GetDamage(damageValue);
                 Debug.Log(name + "收到-----税后伤害:" + da);
+
+                //检查本角色力竭状态（如是->结算伤害x2）
+
+                //触发事件（结算物理伤害时，检测角色是否存在某些协同攻击BUFF）
+
                 battleController.AdjustCharacterModelValue(E_BattleModelType.HP, da);
                 break;
             case E_Skill_DamageType.魔法:

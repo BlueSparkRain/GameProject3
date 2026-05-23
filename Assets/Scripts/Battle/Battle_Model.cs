@@ -22,6 +22,7 @@ public class Battle_Model
 
     public event Action OnDataChanged;
     public event Action OnHPZero; 
+    public event Action OnShieldBreak;
     private float SafeValue(float value, float min, float max)
     {
         if (float.IsNaN(value) || float.IsInfinity(value))
@@ -100,10 +101,11 @@ public class Battle_Model
     public int ShieldPoints
     {
         get => _shieldPoints;
-        set
-        {
+        set{
             _shieldPoints = SafeValue(value, 0, _maxShieldPoints);
             OnDataChanged?.Invoke();
+            if (_shieldPoints <= 0)
+                OnShieldBreak?.Invoke();
         }
     }
     public int MaxShieldPoints

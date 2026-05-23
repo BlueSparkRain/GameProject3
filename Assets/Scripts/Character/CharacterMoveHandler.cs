@@ -90,8 +90,8 @@ public class CharacterMapMoveHandle : MonoBehaviour, ICanSave_And_Load
         else
             moverPosData.SetPos(data.pos.x, data.pos.y);
 
-
-        StartCoroutine(SetCharacterPos(GameRoot.GetManager<GameMapManager>().GetTargetRoom(data.pos).transform.position));
+        //var targetPos = roomPath[i].transform.position + Vector3.up * 0.6f;
+        StartCoroutine(SetCharacterPos(GameRoot.GetManager<GameMapManager>().GetTargetRoom(data.pos).transform.position ));
         Debug.Log($"角色 {uniqueId} 加载完成：坐标({currentRow},{currentCol})");
     }
 
@@ -112,7 +112,7 @@ public class CharacterMapMoveHandle : MonoBehaviour, ICanSave_And_Load
                 Debug.LogError("无法获取随机房间，地图可能未初始化");
                 return;
             }
-            StartCoroutine(SetCharacterPos(room.transform.position));
+            StartCoroutine(SetCharacterPos(room.transform.position ));
             currentRow = room.row;
             currentCol = room.col;
 

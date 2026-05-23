@@ -29,7 +29,6 @@ public class MapMoverManager : MonoGlobalManager
         EventCenter.AddEventListener<IMapMoveable>(E_EventType.OneMoverEndRound, OneMoverEndRound);
         //需要存储玩家对应Mover
     }
-
     //每回合，所有可以移动的角色会依次行动（先按照固定顺序）
     //玩家回合，无限/有限时间，可以根据玩家鼠标来寻路
     //敌人回合，时间，根据策略来自动调用寻路。
@@ -49,6 +48,7 @@ public class MapMoverManager : MonoGlobalManager
             mapIconParent = GameObject.FindWithTag("MapIconContent").transform;
         }
         var newIcon = GameObject.Instantiate(Resources.Load<GameObject>(mapIconPrefabPath), mapIconParent).GetComponent<PlayerMapIcon>();
+        Debug.Log("newIcon擦首都奥我电话");
         newIcon.transform.localScale = Vector3.zero;
         newIcon.GetComponent<RectTransform>().localPosition += new Vector3(200, 0, 0) * iconNum;
         newIcon.transform.DOLocalMoveY(120, 0.3f).From(-400);
@@ -124,9 +124,18 @@ public class MapMoverManager : MonoGlobalManager
             }
             if (downRoom != null)
             {
-                imover.currentRoom = downRoom;
+                //脱战检测
+                if (imover.currentRoom)
+                {
+                    E_HexRoomType roomType = imover.currentRoom.GetComponent<HexRoomStyleHandler>().RoomType;
+                    E_HexRoomType new_roomType = downRoom.GetComponent<HexRoomStyleHandler>().RoomType;
+                    if (roomType == E_HexRoomType.Battle_LowLevel_战斗_杂鱼 ||
+                        roomType == E_HexRoomType.Battle_LowLevel_战斗_杂鱼 ||
+                        roomType == E_HexRoomType.Battle_LowLevel_战斗_杂鱼)
+                        EventCenter.EventTrigger(E_EventType.PlayerOutBattle);
+                }
                 //触发对应的房间逻辑
-               
+                imover.currentRoom = downRoom;
                 imover.currentRoom.IHexRoom.DoHexRoomLogic();
             }
         }

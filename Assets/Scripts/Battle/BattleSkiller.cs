@@ -16,7 +16,9 @@ public class BattleSkiller
 
     SkillIconSpawner normalSkillIconSpawner;
     SkillIconSpawner atbSkillIconSpawner;
+
     Battle_Controller battleController;
+    BattlerStateTag batterStateTag;
 
     List<SkillBase> normalSkills = new List<SkillBase>();
     List<SkillBase> atbSkills = new List<SkillBase>();
@@ -28,7 +30,6 @@ public class BattleSkiller
         InitSkiller(self);
     }
 
-
     IBattlable self;//由上个场景中的战斗双方角色传输
     public bool IsPlayer;
 
@@ -39,18 +40,14 @@ public class BattleSkiller
     /// 注册每个实际技能效果逻辑
     /// </summary>
     /// <param name="skillIDList"></param>
-    void InitSkillsBatch(List<int> skillIDList)
-    {
+    void InitSkillsBatch(List<int> skillIDList){
         var _normalSkills = BattleSkillFactory.CreateBattleSkillsBatch(skillIDList, self);
-        foreach (var skill in _normalSkills)
-        {
+        foreach (var skill in _normalSkills){
             normalSkills.Add(skill);
         }
     }
-    void InitSkiller(IBattlable self)
-    {
+    void InitSkiller(IBattlable self){
         this.self = self;
-      
         List<SkillData> normalSkillDatas = new List<SkillData>();
         //List<SkillData> atbSkillDatas = new List<SkillData>();
 
@@ -80,8 +77,7 @@ public class BattleSkiller
         #endregion
 
         //注册按钮-Skill字典 + 关联Icon&Skill
-        for (int i = 0; i < normalSkillIcons.Count; i++)
-        {
+        for (int i = 0; i < normalSkillIcons.Count; i++){
             Debug.Log(i + "()Icon:" + normalSkillIcons[i] + " Skill:" + normalSkills[i]);
             normalSkillIcons[i].InitBattleSkill(normalSkills[i]);
             skillIconDic.Add(normalSkillIcons[i], normalSkills[i]);
@@ -91,20 +87,12 @@ public class BattleSkiller
         //    skillIconDic.Add(atbSkillIcons[i], atbSkills[i]);
         //}
         DoCycle = true;
+
+        EventCenter.AddEventListener<BattlerStateTag>(E_EventType.Battle_CharacterBreak,SkillsBreakCheck);
+
     }
 
-    ///// <summary>
-    ///// 本角色死亡，技能停止循环
-    ///// </summary>
-    ///// <param name="battler"></param>
-    //void StopCylcle(Battle_Controller battler) {
-    //    if (battler != battleController) return;
-    //    SelfEnd();
-    //}
-
-
-    public void OnSkillUpdate(float currentSP)
-    {
+    public void OnSkillUpdate(float currentSP){
         if (DoCycle)
             DoSkillsUpdate(currentSP);
     }    
@@ -120,6 +108,22 @@ public class BattleSkiller
     }
 
     /// <summary>
+    /// 当力竭时触发，所有icon被打断
+    /// </summary>
+    void SkillsBreakCheck(BattlerStateTag tag) {
+
+        if (batterStateTag == tag){
+            foreach (var icon in normalSkillIcons){
+                icon.SkillBreak();
+            }
+        }
+        else
+        Debug.Log("我没力竭");
+        
+    }
+
+
+    /// <summary>
     /// 追加次级技能效果
     /// </summary>
     /// <param name="skillID"></param>
@@ -128,29 +132,9 @@ public class BattleSkiller
         normalSkills.Add(BattleSkillFactory.CreateBattleSkill(skillID, self));
     }
 
-    //void SelfEnd()=> battleEnd = true;
-  
-
-
-    void DoSkillsUpdate(float currentSP)
-    {
-        //if (battleEnd)
-        //    return;
-
-        //只有背包技能才会自动循环释放
-        //if (!battleController.charcaterDead)
-        //{
-            foreach (var SkillIcon in normalSkillIcons)
-            {
-                SkillIcon.IconCycleUpdate(currentSP);
-                //SkillIcon.CheckSkillCanExcute(battleController.GetCharacterModelValue(E_BattleModelType.SP));
-            }
-        //}
+    void DoSkillsUpdate(float currentSP){
+      foreach (var SkillIcon in normalSkillIcons){
+          SkillIcon.IconCycleUpdate(currentSP);
+      }
     }
-
-
-    //void SkillCost(Battle_Controller battleController, float sp_cost)
-    //{
-    //    battleController.AdjustCharacterModelValue(E_BattleModelType.SP, sp_cost);
-    //}
 }

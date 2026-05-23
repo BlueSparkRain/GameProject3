@@ -16,31 +16,35 @@ public class HexRoomStyleHandler : MonoBehaviour
     {
         hexJumpAnimation = GetComponent<HexJumpAnimHandler>();
         roomTag = _roomTag;
+        Debug.Log("百迈纳多噶看到"+roomTag);
         //只有海洋不会产生云朵
 
-        if (GetComponent<HexTerrainStyleHandler>().hexTerrainType != E_HexTerrainType.Obstacle_Ocean)
+        if (GetComponent<HexTerrainStyleHandler>().HexTerrainType != E_HexTerrainType.Obstacle_Ocean)
         {
             LoadRoomCloude();
         }
+        
     }
 
     void LoadRoomCloude()
     {
+        Debug.Log("大会的五点hi混合双打");
         var cloude = GameRoot.GetManager<ObjectPoolManager>().GetInstance(E_PoolType.RoomCloude_房间遮云);
         cloude.transform.position = transform.position + Vector3.up * 23f;
         hexJumpAnimation.CloudeAppear(cloude.transform);
     }
 
-    public void SetRoomType(E_HexRoomType _roomType)
+    public void SetRoomType(E_HexRoomType _roomType,HexRoomTag _roomTag)
     {
         roomType = _roomType;
+        roomTag= _roomTag;
         IHexRoom iHexRoom = null;
         switch (roomType)
         {
             case E_HexRoomType.None_无交互地形: iHexRoom = new NoneHexRoom(); break;
-            case E_HexRoomType.Battle_LowLevel_战斗_杂鱼: iHexRoom = new BattleHexRoom(roomTag, E_BattleType.杂鱼敌人); break;
-            case E_HexRoomType.Battle_MidLevel_战斗_精英: iHexRoom = new BattleHexRoom(roomTag, E_BattleType.精英敌人); break;
-            case E_HexRoomType.Battle_HighLevel_战斗_首领: iHexRoom = new BattleHexRoom(roomTag, E_BattleType.首领敌人); break;
+            case E_HexRoomType.Battle_LowLevel_战斗_杂鱼: iHexRoom = new BattleHexRoom(_roomTag, E_BattleType.杂鱼敌人); break;
+            case E_HexRoomType.Battle_MidLevel_战斗_精英: iHexRoom = new BattleHexRoom(_roomTag, E_BattleType.精英敌人); break;
+            case E_HexRoomType.Battle_HighLevel_战斗_首领: iHexRoom = new BattleHexRoom(_roomTag, E_BattleType.首领敌人); break;
             case E_HexRoomType.NPC_特定交互: iHexRoom = new NPCHexRoom(); break;
             case E_HexRoomType.UnknownEvent_随机事件: iHexRoom = new UnknownEventHexRoom(); break;
             case E_HexRoomType.Reward_神像奖励: iHexRoom = new RewardHexRoom(); break;

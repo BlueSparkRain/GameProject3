@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class VitalityPointsManager : MonoSceneManager, ICanSave_And_Load
+public class VitalityPointsManager :MonoGlobalManager, ICanSave_And_Load
 {
     //记录本局游戏玩家的活力点数
     public int valityPoint = 0;
@@ -37,28 +37,24 @@ public class VitalityPointsManager : MonoSceneManager, ICanSave_And_Load
     /// 调整活力点数
     /// </summary>
     /// <param name="transValue">变化值</param>
-    public void AdjustVolityPoints(int transValue)
-    {
-
+    public void AdjustVolityPoints(int transValue){
         if (valityPoint + transValue > max_VitalityPoints)
             valityPoint = max_VitalityPoints;
         else if (valityPoint+transValue<=0)
             valityPoint = 0;
         else
             valityPoint += transValue;
-        //更新UI
-        EventCenter.EventTrigger(E_EventType.AdjustVitalityPoints);
-
         //调整后需要保存数据
+        Debug.Log($"[VitalityPointsManager]活力点数变化---{transValue}");
         JsonSaver.Save<Save_VitalityPoins>(new Save_VitalityPoins(valityPoint, max_VitalityPoints));
+        EventCenter.EventTrigger(E_EventType.UpdateUIVitalityPoints);
     }
 
-    public void InitBySaveData()
-    {
+    public void InitBySaveData(){
         var saveData = JsonSaver.Load<Save_VitalityPoins>();
         valityPoint = saveData.currentVitalityPoints;
         max_VitalityPoints = saveData.max_VitalityPoints;
-        EventCenter.EventTrigger(E_EventType.AdjustVitalityPoints);
+        EventCenter.EventTrigger(E_EventType.UpdateUIVitalityPoints);
     }
 
     public void InitBySelf()

@@ -197,6 +197,7 @@ public class CharacterData : ICanSave_And_Load
             case E_CharacterPropertyType.Heal_Amplification: return heal_Amplification;
             case E_CharacterPropertyType.Shield_Amplification: return shield_Amplification;
             case E_CharacterPropertyType.Maximum_ATB: return maximum_ATB;
+            case E_CharacterPropertyType.CurrentLevel: return currentLevel;
             default: Debug.LogError("属性不存在"); return 0;
         }
     }
@@ -223,6 +224,7 @@ public class CharacterData : ICanSave_And_Load
             case E_CharacterPropertyType.Heal_Amplification: if (!use_multi) heal_Amplification += value; else heal_Amplification *= value; break;
             case E_CharacterPropertyType.Shield_Amplification: if (!use_multi) shield_Amplification += value; else shield_Amplification *= value; break;
             case E_CharacterPropertyType.Maximum_ATB: if (!use_multi) maximum_ATB += (int)value;break;
+            case E_CharacterPropertyType.CurrentLevel: if (!use_multi) currentLevel += (int)value;break;
             default: Debug.LogError("属性不存在"); return;
         }
         Debug.Log($"属性修改成功: {type} = {GetProperty(type)}");
@@ -352,7 +354,6 @@ public class Save_CharacterData : IValidatable
 
     public bool IsValid()
     {
-        Debug.Log(CurrentLevel+"撒旦会丢啊我都-----------------------------");
         return CurrentLevel > 0;
     }
 }

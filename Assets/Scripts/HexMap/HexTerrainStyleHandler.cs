@@ -1,3 +1,4 @@
+using Core;
 using System;
 using UnityEngine;
 
@@ -5,7 +6,8 @@ public class HexTerrainStyleHandler : MonoBehaviour
 {
     [Header("是否已经被配置过")]
     public bool isEdited = false;
-    public E_HexTerrainType hexTerrainType = E_HexTerrainType.Obstacle_Ocean;
+    E_HexTerrainType hexTerrainType = E_HexTerrainType.Obstacle_Ocean;
+    public E_HexTerrainType HexTerrainType => hexTerrainType;
 
     [Header("地形精灵组件")]
     public SpriteRenderer  terrainSpriteRenderer;
@@ -18,10 +20,17 @@ public class HexTerrainStyleHandler : MonoBehaviour
     TerrainSOData terrainSOData;
     //模型Data
     RoomModelSOData modelSOData;
-    public void InitTerrainStyle(E_HexTerrainType _hexTerrainType){
+    public void InitTerrainStyle(E_HexTerrainType _hexTerrainType,HexRoomTag roomTag){
         hexTerrainType = _hexTerrainType;
         isEdited = true;
-        GetComponent<HexRoomStyleHandler>().SetRoomType(GetRoomType());
+        GetComponent<HexRoomStyleHandler>().SetRoomType(GetRoomType(),roomTag);
+        SetRoomSprite();
+        SetTerrainSprite();
+    }
+    public void InitTerrainStyle(E_HexTerrainType _hexTerrainType)
+    {
+        hexTerrainType = _hexTerrainType;
+        isEdited = true;
         SetRoomSprite();
         SetTerrainSprite();
     }

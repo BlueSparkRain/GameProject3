@@ -102,7 +102,7 @@ public class ObjectPoolManager : MonoGlobalManager
         var coroutineMgr = GameRoot.GetManager<CoroutineManager>();
         if (coroutineMgr != null)
         {
-            coroutineMgr.StartCoroutine(StartFillPool(poolType));
+            coroutineMgr.StartCoroutine(StartFillPool(poolType), this);
         }
     }
 

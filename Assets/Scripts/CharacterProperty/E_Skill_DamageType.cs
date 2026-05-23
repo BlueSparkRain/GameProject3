@@ -5,6 +5,7 @@ public enum E_Skill_DamageType{
 public enum E_WeaknessType{
     剑, 刀, 斧, 杖, 弓, 枪, 通解,
     风, 雷, 冰, 火, 光, 暗, 究极,
+    无,//单纯的伤害，不削盾
 }
 
 /// <summary>

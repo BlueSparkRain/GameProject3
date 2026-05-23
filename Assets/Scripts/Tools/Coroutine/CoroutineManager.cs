@@ -66,6 +66,7 @@ public class CoroutineManager : MonoGlobalManager
         base.Awake();
         // 基类已执行DontDestroyOnLoad，此处移除重复代码
         InitCoroutinePool(16);
+        SceneManager.sceneUnloaded += OnSceneUnloaded;
     }
 
     public override void MgrUpdate(float deltaTime)
@@ -82,10 +83,10 @@ public class CoroutineManager : MonoGlobalManager
     /// </summary>
     public override void MgrDispose()
     {
+        SceneManager.sceneUnloaded -= OnSceneUnloaded;
         StopAllGlobalCoroutines();
         _activeCoroutines.Clear();
         _coroutinePool.Clear();
-
     }
     #endregion
 
@@ -149,8 +150,8 @@ public class CoroutineManager : MonoGlobalManager
         handle.CoroutineEnumerator = WrapCoroutineWithState(enumerator, coroutineId);
         handle.State = CoroutineState.Running;
 
-        handle.Coroutine = base.StartCoroutine(handle.CoroutineEnumerator);
         _activeCoroutines[coroutineId] = handle;
+        handle.Coroutine = base.StartCoroutine(handle.CoroutineEnumerator);
 
         return coroutineId;
     }
@@ -184,8 +185,8 @@ public class CoroutineManager : MonoGlobalManager
         outerHandle.Target = target;
         outerHandle.CoroutineEnumerator = RepeatingCoroutineLogic(interval, repeatCount, enumeratorFunc, outerCorId, target);
         outerHandle.State = CoroutineState.Running;
-        outerHandle.Coroutine = base.StartCoroutine(outerHandle.CoroutineEnumerator);
         _activeCoroutines[outerCorId] = outerHandle;
+        outerHandle.Coroutine = base.StartCoroutine(outerHandle.CoroutineEnumerator);
 
         return outerCorId;
     }
@@ -271,6 +272,17 @@ public class CoroutineManager : MonoGlobalManager
     #endregion
 
     #region 内部辅助
+
+    /// <summary>
+    /// 检测Unity对象是否存活（未被销毁）
+    /// ReferenceEquals过滤"未设置目标"的情况，Unity重载的!=过滤"已销毁"的情况
+    /// </summary>
+    private static bool IsTargetAlive(UnityEngine.Object target)
+    {
+        if (ReferenceEquals(target, null)) return true;
+        return target != null;
+    }
+
     private string GenerateCoroutineId()
     {
         return $"{COROUTINE_ID_PREFIX}{++_coroutineIdCounter}";
@@ -280,26 +292,35 @@ public class CoroutineManager : MonoGlobalManager
     {
         while (true)
         {
-            if (_activeCoroutines.TryGetValue(coroutineId, out var handle))
+            if (!_activeCoroutines.TryGetValue(coroutineId, out var handle))
             {
-                if (handle.IsCancelled || handle.State == CoroutineState.Cancelled)
-                    yield break;
+                yield break;
+            }
 
-                if (handle.State == CoroutineState.Paused)
-                {
-                    yield return null;
-                    continue;
-                }
+            if (handle.IsCancelled || handle.State == CoroutineState.Cancelled)
+                yield break;
+
+            if (handle.State == CoroutineState.Paused)
+            {
+                yield return null;
+                continue;
+            }
+
+            // 每次迭代前验活：目标已销毁则安全终止
+            if (!IsTargetAlive(handle.Target))
+            {
+                Debug.LogWarning($"[CoroutineManager] 协程 {coroutineId} 的目标对象已销毁，安全终止");
+                handle.State = CoroutineState.Completed;
+                ReturnCoroutineHandleToPool(handle);
+                _activeCoroutines.Remove(coroutineId);
+                yield break;
             }
 
             if (!enumerator.MoveNext())
             {
-                if (_activeCoroutines.TryGetValue(coroutineId, out var handle1))
-                {
-                    handle1.State = CoroutineState.Completed;
-                    ReturnCoroutineHandleToPool(handle1);
-                    _activeCoroutines.Remove(coroutineId);
-                }
+                handle.State = CoroutineState.Completed;
+                ReturnCoroutineHandleToPool(handle);
+                _activeCoroutines.Remove(coroutineId);
                 yield break;
             }
 
@@ -329,8 +350,7 @@ public class CoroutineManager : MonoGlobalManager
             if (!_activeCoroutines.ContainsKey(outerCorId) || _activeCoroutines[outerCorId].State == CoroutineState.Cancelled)
                 yield break;
 
-            // 修复无效判断逻辑
-            if (target != null && target.Equals(null))
+            if (!IsTargetAlive(target))
                 yield break;
 
             yield return new WaitForSeconds(interval);
@@ -353,34 +373,61 @@ public class CoroutineManager : MonoGlobalManager
     }
 
     /// <summary>
-    /// 修复无效空值判断，使用Unity标准判空
+    /// 场景卸载时主动回收该场景的所有协程
     /// </summary>
-    void CleanupInvalidCoroutines()
+    void OnSceneUnloaded(Scene scene)
     {
         _tempCleanIds.Clear();
-        var activeScene = SceneManager.GetActiveScene();
-
         foreach (var kvp in _activeCoroutines)
         {
-            var handle = kvp.Value;
-            bool needClean = false;
-
-            // 修复：判断Unity对象是否被销毁
-            if (handle.Target != null && handle.Target.Equals(null))
-                needClean = true;
-            else if (handle.Target is Component comp && comp.gameObject.scene != activeScene)
-                needClean = true;
-            else if (handle.State is CoroutineState.Completed or CoroutineState.Cancelled)
-                needClean = true;
-
-            if (needClean)
+            var target = kvp.Value.Target;
+            // 从未设置target → 跳过（ReferenceEquals区分"真null"和"Unity已销毁对象"）
+            if (ReferenceEquals(target, null)) continue;
+            // target已被销毁（属于已卸载场景）或target明确来自该场景 → 清理
+            if (target == null
+                || (target is GameObject go && go.scene == scene)
+                || (target is Component comp && comp.gameObject.scene == scene))
+            {
                 _tempCleanIds.Add(kvp.Key);
+            }
         }
 
         foreach (var id in _tempCleanIds)
         {
             if (_activeCoroutines.TryGetValue(id, out var handle))
             {
+                handle.State = CoroutineState.Cancelled;
+                if (handle.Coroutine != null)
+                    StopCoroutine(handle.Coroutine);
+                ReturnCoroutineHandleToPool(handle);
+                _activeCoroutines.Remove(id);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 定时清理已失效的协程（目标销毁 / 已完成 / 已取消）
+    /// </summary>
+    void CleanupInvalidCoroutines()
+    {
+        _tempCleanIds.Clear();
+
+        foreach (var kvp in _activeCoroutines)
+        {
+            var handle = kvp.Value;
+            if (!IsTargetAlive(handle.Target)
+                || handle.State is CoroutineState.Completed or CoroutineState.Cancelled)
+            {
+                _tempCleanIds.Add(kvp.Key);
+            }
+        }
+
+        foreach (var id in _tempCleanIds)
+        {
+            if (_activeCoroutines.TryGetValue(id, out var handle))
+            {
+                if (handle.Coroutine != null)
+                    StopCoroutine(handle.Coroutine);
                 ReturnCoroutineHandleToPool(handle);
                 _activeCoroutines.Remove(id);
             }

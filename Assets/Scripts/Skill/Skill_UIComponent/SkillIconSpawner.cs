@@ -51,7 +51,7 @@ public class SkillIconSpawner : MonoBehaviour
 
     public void UnloadSkills()
     {
-        GameRoot.GetManager<CoroutineManager>().StartCoroutine(UnloadIcons());
+        GameRoot.GetManager<CoroutineManager>().StartCoroutine(UnloadIcons(), this);
     }
     IEnumerator UnloadIcons()
     {
@@ -129,7 +129,7 @@ public class SkillIconSpawner : MonoBehaviour
     /// </summary>
     void LoadWholeSlots(int slotNum)
     {
-        GameRoot.GetManager<CoroutineManager>().StartCoroutine(LoadAllSlots(slotNum));
+        GameRoot.GetManager<CoroutineManager>().StartCoroutine(LoadAllSlots(slotNum), this);
 
     }
 
@@ -146,7 +146,7 @@ public class SkillIconSpawner : MonoBehaviour
     List<SkillIcon> LoadSkillIcons(List<SkillData> skillDatas, bool canDrag)
     {
         skillIcons.Clear();
-        GameRoot.GetManager<CoroutineManager>().StartCoroutine(LoadAllIcons(skillDatas, canDrag));
+        GameRoot.GetManager<CoroutineManager>().StartCoroutine(LoadAllIcons(skillDatas, canDrag), this);
         return skillIcons;
     }
 

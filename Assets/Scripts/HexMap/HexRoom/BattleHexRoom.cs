@@ -61,7 +61,7 @@ public class BattleHexRoom : IHexRoom
         //读取敌人信息，并进入战斗场景
         //将玩家信息先进行注册
         EventCenter.EventTrigger(E_EventType.PlayerBeforeIntoBattle);
-        Debug.Log("进入战斗房间"+num++);
+        Debug.Log(roomTag+"--进入战斗房间"+num++);
         gameBattleManager.CheckBattleEnemy(roomTag);
         GameRoot.GetManager<UIManager>().OpenPanel<BattlePanel>(E_UIPanelType.BattlePanel);  
     }

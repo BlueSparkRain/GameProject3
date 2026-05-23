@@ -49,5 +49,8 @@ public interface IBattlable
     E_Camp Camp { get; }             // 阵营
     bool IsAlive { get; }            // 是否存活
     public BattleDamageHandler battlerDataHandler { get; set; }
-    //
+
+    E_WeaknessType selfWeakness {  get; set; }
+
+    bool GetWeakAttack(E_WeaknessType attackWeakType);
 }

@@ -6,10 +6,16 @@ public class Player : IBattlable
     public Player() { }
 
     public BattleDamageHandler battlerDataHandler { get; set; }
+    public E_WeaknessType selfWeakness { get ; set; }
 
     public Player(BattleDamageHandler _damageHandle)
     {
         battlerDataHandler = _damageHandle;
+    }
+
+    public bool GetWeakAttack(E_WeaknessType attackWeakType)
+    { 
+        return selfWeakness == attackWeakType;
     }
 }
 

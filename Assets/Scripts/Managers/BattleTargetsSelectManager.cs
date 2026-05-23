@@ -7,14 +7,17 @@ using UnityEngine;
 /// </summary>
 public class BattleTargetsSelectManager : MonoSceneManager
 {
-    private List<Battle_Controller> playerControllers = new List<Battle_Controller>();
-    private List<Battle_Controller> enemyControllers = new List<Battle_Controller>();
+    //private List<Battle_Controller> playerControllers = new List<Battle_Controller>();
+    //private List<Battle_Controller> enemyControllers = new List<Battle_Controller>();
+
+    private List<BattlerStateTag> playerControllers = new List<BattlerStateTag>();
+    private List<BattlerStateTag> enemyControllers = new List<BattlerStateTag>();
 
     //记录本局战斗中所有的技能释放者，方便技能初始化时分配目标
     protected override void MgrOnInit()
     {
         base.MgrOnInit();
-        EventCenter.AddEventListener<Battle_Controller>(E_EventType.CharacterDead, CheckBattleEnd);
+        EventCenter.AddEventListener<BattlerStateTag>(E_EventType.Battle_CharacterDead, CheckBattleEnd);
     }
 
     /// <summary>
@@ -22,12 +25,17 @@ public class BattleTargetsSelectManager : MonoSceneManager
     /// </summary>
     /// <param name="isPlayer"></param>
     /// <param name="battleController"></param>
-    public void RegisterSkiller(bool isPlayer, Battle_Controller battleController)
+    //public void RegisterSkiller(bool isPlayer, Battle_Controller battleController)
+    //{
+    //    (isPlayer ? playerControllers : enemyControllers).Add(battleController);
+    //}
+
+    public void RegisterSkiller(bool isPlayer, BattlerStateTag battleController)
     {
         (isPlayer ? playerControllers : enemyControllers).Add(battleController);
     }
 
-    void CheckBattleEnd(Battle_Controller characterBattle_Controller)
+    void CheckBattleEnd(BattlerStateTag characterBattle_Controller)
     {
         if (PlayerWinBattle())
         {
@@ -35,6 +43,7 @@ public class BattleTargetsSelectManager : MonoSceneManager
             GameRoot.GetManager<UIManager>().OpenPanel<MessagePanel>(E_UIPanelType.MessagePanel,
                 p => p.SetMessage("你获胜了", () =>
                 {
+                    GameRoot.GetManager<VitalityPointsManager>().AdjustVolityPoints(+1);
                     GameRoot.GetManager<SceneSwitchManager>().SwitchSceneAsync("MapScene");
                 }));
             return;
@@ -45,6 +54,7 @@ public class BattleTargetsSelectManager : MonoSceneManager
             GameRoot.GetManager<UIManager>().OpenPanel<MessagePanel>(E_UIPanelType.MessagePanel,
                 p => p.SetMessage("你失败了", () =>
                 {
+                    GameRoot.GetManager<VitalityPointsManager>().AdjustVolityPoints(-1);
                     GameRoot.GetManager<SceneSwitchManager>().SwitchSceneAsync("MapScene");
                     //GameRoot.GetManager<UIManager>().HidePanel(E_UIPanelType.MessagePanel);
                 }));
@@ -58,7 +68,7 @@ public class BattleTargetsSelectManager : MonoSceneManager
         Debug.Log(playerControllers.Count + "??玩家人数");
         foreach (var battler in playerControllers)
         {
-            if (!battler.charcaterDead)
+            if (!battler.State_Dead)
                 return false;
         }
         return true;
@@ -68,7 +78,7 @@ public class BattleTargetsSelectManager : MonoSceneManager
         Debug.Log(enemyControllers.Count + "??敌人人数");
         foreach (var battler in enemyControllers)
         {
-            if (!battler.charcaterDead)
+            if (!battler.State_Dead)
                 return false;
         }
         return true;
@@ -78,9 +88,9 @@ public class BattleTargetsSelectManager : MonoSceneManager
     /// </summary>
     /// <param name="skillTargetType"></param>
     /// <returns></returns>
-    public List<Battle_Controller> GetSkillTarget(E_SkillTargetType skillTargetType)
+    public List<BattlerStateTag> GetSkillTarget(E_SkillTargetType skillTargetType)
     {
-        List<Battle_Controller> targets = new List<Battle_Controller>();
+        List<BattlerStateTag> targets = new List<BattlerStateTag>();
 
         switch (skillTargetType)
         {
@@ -94,15 +104,6 @@ public class BattleTargetsSelectManager : MonoSceneManager
                 for (int i = 0; i < playerControllers.Count; i++)
                     targets.Add(playerControllers[i]);
                 break;
-            //case E_SkillTargetType.对敌方单体:
-            //    int randomIndex2 = UnityEngine.Random.Range(0, enemyControllers.Count);
-            //    //Debug.Log(randomIndex2 +" "+ enemyControllers.Count);
-            //    targets.Add(enemyControllers[randomIndex2]);
-            //    break;
-            //case E_SkillTargetType.对敌方全体:
-            //    for (int i = 0; i < enemyControllers.Count; i++)
-            //        targets.Add(enemyControllers[i]);
-            //break;
             case E_SkillTargetType.对N目标:
 
                 break;

@@ -39,13 +39,7 @@ public class Skill_20 : SkillBase
     {
         Debug.Log("$$$$$--技能20--$$$$$");
     }
-
-    public override void SkillEnhanceSingle(IBattlable target)
-    {
-
-    }
-
-    public override void SkillExcuteSingle(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target)
     {
 
     }
@@ -62,12 +56,8 @@ public class Skill_21 : SkillBase
         Debug.Log("$$$$$--技能21--$$$$$");
     }
 
-    public override void SkillEnhanceSingle(IBattlable target)
-    {
 
-    }
-
-    public override void SkillExcuteSingle(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target)
     {
 
     }
@@ -83,12 +73,8 @@ public class Skill_22 : SkillBase
         Debug.Log("$$$$$--技能22--$$$$$");
     }
 
-    public override void SkillEnhanceSingle(IBattlable target)
-    {
 
-    }
-
-    public override void SkillExcuteSingle(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target)
     {
 
     }
@@ -104,12 +90,9 @@ public class Skill_23 : SkillBase
         Debug.Log("$$$$$--技能23--$$$$$");
     }
 
-    public override void SkillEnhanceSingle(IBattlable target)
-    {
+    
 
-    }
-
-    public override void SkillExcuteSingle(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target)
     {
 
     }
@@ -124,12 +107,8 @@ public class Skill_24 : SkillBase
         Debug.Log("$$$$$--技能24--$$$$$");
     }
 
-    public override void SkillEnhanceSingle(IBattlable target)
-    {
-
-    }
-
-    public override void SkillExcuteSingle(IBattlable target)
+ 
+    public override void SkillEffect_Base(IBattlable target)
     {
 
     }
@@ -145,12 +124,8 @@ public class Skill_25 : SkillBase
         Debug.Log("$$$$$--技能25--$$$$$");
     }
 
-    public override void SkillEnhanceSingle(IBattlable target)
-    {
 
-    }
-
-    public override void SkillExcuteSingle(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target)
     {
 
     }
@@ -166,12 +141,7 @@ public class Skill_26 : SkillBase
         Debug.Log("$$$$$--技能26--$$$$$");
     }
 
-    public override void SkillEnhanceSingle(IBattlable target)
-    {
-
-    }
-
-    public override void SkillExcuteSingle(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target)
     {
 
     }
@@ -187,12 +157,7 @@ public class Skill_27 : SkillBase
         Debug.Log("$$$$$--技能27--$$$$$");
     }
 
-    public override void SkillEnhanceSingle(IBattlable target)
-    {
-
-    }
-
-    public override void SkillExcuteSingle(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target)
     {
 
     }
@@ -208,12 +173,8 @@ public class Skill_28 : SkillBase
         Debug.Log("$$$$$--技能28--$$$$$");
     }
 
-    public override void SkillEnhanceSingle(IBattlable target)
-    {
 
-    }
-
-    public override void SkillExcuteSingle(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target)
     {
 
     }
@@ -228,13 +189,7 @@ public class Skill_29 : SkillBase
     {
         Debug.Log("$$$$$--技能29--$$$$$");
     }
-
-    public override void SkillEnhanceSingle(IBattlable target)
-    {
-
-    }
-
-    public override void SkillExcuteSingle(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target)
     {
 
     }
@@ -253,12 +208,8 @@ public class Skill_30 : SkillBase
         Debug.Log("$$$$$--技能30--$$$$$");
     }
 
-    public override void SkillEnhanceSingle(IBattlable target)
-    {
 
-    }
-
-    public override void SkillExcuteSingle(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target)
     {
 
     }
@@ -275,12 +226,9 @@ public class Skill_31 : SkillBase
         Debug.Log("$$$$$--技能31--$$$$$");
     }
 
-    public override void SkillEnhanceSingle(IBattlable target)
-    {
 
-    }
 
-    public override void SkillExcuteSingle(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target)
     {
 
     }
@@ -296,12 +244,9 @@ public class Skill_32 : SkillBase
         Debug.Log("$$$$$--技能32--$$$$$");
     }
 
-    public override void SkillEnhanceSingle(IBattlable target)
-    {
 
-    }
 
-    public override void SkillExcuteSingle(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target)
     {
 
     }
@@ -317,12 +262,8 @@ public class Skill_33 : SkillBase
         Debug.Log("$$$$$--技能33--$$$$$");
     }
 
-    public override void SkillEnhanceSingle(IBattlable target)
-    {
 
-    }
-
-    public override void SkillExcuteSingle(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target)
     {
 
     }
@@ -338,12 +279,9 @@ public class Skill_34 : SkillBase
         Debug.Log("$$$$$--技能34--$$$$$");
     }
 
-    public override void SkillEnhanceSingle(IBattlable target)
-    {
 
-    }
 
-    public override void SkillExcuteSingle(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target)
     {
 
     }
@@ -359,12 +297,8 @@ public class Skill_35 : SkillBase
         Debug.Log("$$$$$--技能35--$$$$$");
     }
 
-    public override void SkillEnhanceSingle(IBattlable target)
-    {
 
-    }
-
-    public override void SkillExcuteSingle(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target)
     {
 
     }
@@ -380,12 +314,8 @@ public class Skill_36 : SkillBase
         Debug.Log("$$$$$--技能36--$$$$$");
     }
 
-    public override void SkillEnhanceSingle(IBattlable target)
-    {
 
-    }
-
-    public override void SkillExcuteSingle(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target)
     {
 
     }
@@ -394,19 +324,14 @@ public class Skill_36 : SkillBase
 /// （37）获得【迅雷连锁】状态（物理攻击技能附带雷弱点攻击伤害）持续20S
 /// </summary>
 [SkillID(37)]
-public class Skill_37 : SkillBase
-{
+public class Skill_37 : SkillBase{
     public Skill_37(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
     {
         Debug.Log("$$$$$--技能37--$$$$$");
     }
 
-    public override void SkillEnhanceSingle(IBattlable target)
-    {
 
-    }
-
-    public override void SkillExcuteSingle(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target)
     {
 
     }
@@ -422,12 +347,8 @@ public class Skill_38 : SkillBase
         Debug.Log("$$$$$--技能38--$$$$$");
     }
 
-    public override void SkillEnhanceSingle(IBattlable target)
-    {
 
-    }
-
-    public override void SkillExcuteSingle(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target)
     {
 
     }
@@ -443,12 +364,7 @@ public class Skill_39 : SkillBase
         Debug.Log("$$$$$--技能39--$$$$$");
     }
 
-    public override void SkillEnhanceSingle(IBattlable target)
-    {
-
-    }
-
-    public override void SkillExcuteSingle(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target)
     {
 
     }

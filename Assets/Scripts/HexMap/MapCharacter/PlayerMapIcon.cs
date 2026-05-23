@@ -41,7 +41,7 @@ public class PlayerMapIcon : MonoBehaviour
         //玩家操控角色需要更新UI数据
         var levelUpHandler=charcaterTrans.GetComponent<CharacterLevelUpHandler>();
         levelUpHandler.EXPUIUpdateEvent += levelBox.UpdateMapPlayerIconUI;
-        levelUpHandler.InitLevelHandler();
+        //levelUpHandler.InitLevelHandler();
 
         characterSOData = ResourcesLoader.FindCharaterSO(_characterType); 
         characterImage.sprite = characterSOData.characterSprite;

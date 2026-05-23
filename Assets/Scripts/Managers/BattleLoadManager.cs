@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 
@@ -24,17 +25,23 @@ public class BattleLoadManager : MonoSceneManager
         var battlerObj = Instantiate(ResourcesLoader.FindBattleCharacterObj(),Vector3.zero,Quaternion.identity, PlayerAreaContent);
         //battlerObj.transform.SetParent(PlayerAreaContent);
         //一段动画，表示卡牌弹出
-        battlerObj.transform.position = PlayerAreaStartPivot.position + Vector3.right * (playerIndex++) * offset;
+        Vector3 targetPos = PlayerAreaStartPivot.position + Vector3.right * (playerIndex++) * offset;
+        battlerObj.transform.DOMove(targetPos, 0.5f).SetEase(Ease.OutBounce).From(targetPos+new Vector3(0, -800, 0));
         //卡牌出场完毕后，统一开始战斗
         battlerObj.GetComponent<BattleHandler>().InitBattler(data);
     }
     public void LoadAEnemy(CharacterData data)
     {
         var battlerObj = Instantiate(ResourcesLoader.FindBattleCharacterObj(), Vector3.zero, Quaternion.identity, EnemyAreaContent);
-        battlerObj.transform.position = EnemyAreaStartPivot.position + Vector3.right * (enemyIndex++) * offset;
+
+        Vector3 targetPos = EnemyAreaStartPivot.position + Vector3.right * (enemyIndex++) * offset;
+        battlerObj.transform.DOMove(targetPos, 0.5f).SetEase(Ease.OutBounce).From(targetPos + new Vector3(0, 800, 0));
+        //battlerObj.transform.position = EnemyAreaStartPivot.position + Vector3.right * (enemyIndex++) * offset;
         battlerObj.GetComponent<BattleHandler>().InitBattler(data);
 
     }
+
+   
 
     public override void MgrUpdate(float deltaTime)
     {

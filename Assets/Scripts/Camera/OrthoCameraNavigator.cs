@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -47,8 +48,8 @@ public class OrthoCameraNavigator : MonoSceneManager
     public float mapBackBound = -15f;    // Z最小
     public float mapFrontBound = 50f;   // Z最大
 
-    [Header("聚焦配置")]
-    public float focusSmoothTime = 1.5f;
+    //[Header("聚焦配置")]
+    //public float focusSmoothTime = 1.5f;
     #endregion
 
     #region 私有变量
@@ -61,6 +62,9 @@ public class OrthoCameraNavigator : MonoSceneManager
     private float _targetOrthographicSize;
     private Vector2 _edgeMoveDirection;
     private bool _isFocusing;
+
+    //启用相机漫游
+    bool use_CamPan;
     #endregion
 
     #region 初始化
@@ -93,6 +97,19 @@ public class OrthoCameraNavigator : MonoSceneManager
         if (!enabled) _isDragging = false;
     }
 
+    protected override void MgrOnInit()
+    {
+        base.MgrOnInit();
+        EventCenter.AddEventListener(E_EventType.FreezeCamPan, () => use_CamPan = false);
+        EventCenter.AddEventListener(E_EventType.UnFreezeCamPan, () => use_CamPan = true);
+    }
+    protected override void MgrOnDispose()
+    {
+        base.MgrOnDispose();
+        EventCenter.RemoveEventListener(E_EventType.FreezeCamPan, () => use_CamPan = false);
+        EventCenter.RemoveEventListener(E_EventType.UnFreezeCamPan, () => use_CamPan = true);
+    }
+
     protected override void Awake()
     {
         base.Awake();
@@ -114,23 +131,24 @@ public class OrthoCameraNavigator : MonoSceneManager
         if (_isFocusing) return;
         if (!_isDragEnabled || _cachedCamTransform == null) return;
 
+        //滚轮放大
         HandleScrollWheel();
+        //WASD漫游
         HandleWASDMovement();
+        //屏幕边缘漫游
         HandleMouseEdgeMovement();
-
+        //鼠标拖拽漫游
         if (Input.GetMouseButtonDown(0))
         {
             _isDragging = true;
             _lastMouseScreenPos = Input.mousePosition;
             return;
         }
-
         if (Input.GetMouseButtonUp(0))
         {
             _isDragging = false;
             return;
         }
-
         if (_isDragging) UpdateDragTargetPos();
     }
     #endregion
@@ -163,7 +181,7 @@ public class OrthoCameraNavigator : MonoSceneManager
             _edgeMoveDirection.y * speed
         );
 
-        _targetCamPos += moveDelta*30;
+        _targetCamPos += moveDelta * 30;
         _targetCamPos.y = _cachedCamTransform.position.y; // 锁死Y
 
         if (enableMapBounds) _targetCamPos = ClampCameraBounds(_targetCamPos);
@@ -187,7 +205,7 @@ public class OrthoCameraNavigator : MonoSceneManager
 
         // 核心修改：XZ移动
         Vector3 moveDelta = new Vector3(h * speed, 0, v * speed);
-        _targetCamPos += moveDelta*10;
+        _targetCamPos += moveDelta * 10;
         _targetCamPos.y = _cachedCamTransform.position.y;
 
         if (enableMapBounds) _targetCamPos = ClampCameraBounds(_targetCamPos);
@@ -257,27 +275,35 @@ public class OrthoCameraNavigator : MonoSceneManager
     /// <summary>
     /// 平滑聚焦：相机XZ=目标XZ，Y保持俯视高度，目标居中屏幕
     /// </summary>
-    public void FocusOnTarget(GameObject target)
+    public void FocusOnTarget(GameObject target,float focusSmoothTime = 1.5f)
     {
-        if (target == null || _cachedCamTransform == null || _isFocusing) return;
-
+        //if (target == null || _cachedCamTransform == null || _isFocusing) return;
+        if (target == null || _cachedCamTransform == null ) return;
         _isFocusing = true;
+
         _cachedCamTransform.DOKill();
         _isDragging = false;
 
-        // 🔥 终极正确：相机 Y 固定，只移动 XZ 对齐目标
+        // 相机 Y 固定，只移动 XZ 对齐目标
         Vector3 targetPos = target.transform.position;
         Vector3 finalPos = new Vector3(
-            targetPos.x+1,
-            _cachedCamTransform.position.y, // 永久固定高空Y，绝不改变！
-            targetPos.z-3
+            targetPos.x + 1,
+            _cachedCamTransform.position.y, // 固定高空Y
+            targetPos.z - 3
         );
 
         _targetCamPos = finalPos;
         _cachedCamTransform.DOMove(finalPos, focusSmoothTime)
             .SetEase(Ease.OutCubic)
             .SetUpdate(true)
+                   //.OnComplete(() => { });
             .OnComplete(() => _isFocusing = false);
+    }
+    IEnumerator Flash()
+    {
+        _isFocusing = true;
+        yield return new WaitForSeconds(0.3f);
+        _isFocusing = false;
     }
 
     /// <summary>
@@ -293,7 +319,7 @@ public class OrthoCameraNavigator : MonoSceneManager
         Vector3 finalPos = new Vector3(
             target.transform.position.x,
             _cachedCamTransform.position.y,
-            target.transform.position.z-5
+            target.transform.position.z - 5
         );
 
         _cachedCamTransform.position = finalPos;

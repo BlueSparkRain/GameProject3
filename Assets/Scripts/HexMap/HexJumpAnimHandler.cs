@@ -15,11 +15,11 @@ public class HexJumpAnimHandler : MonoBehaviour
     [Tooltip("基础动画时长")]
     public float baseDuration = 0.15f;
     [Tooltip("动画缓动曲线")]
-    public Ease jumpEase = Ease.OutCubic;
+    public Ease jumpEase = Ease.InOutBounce;
 
 
     [Header("(可行走)地形高度差")]
-    float heightDistance = 0.4f;
+    float heightDistance = 0.2f;
     float baseHeightDuration = 0.2f;
     private Transform _selfTrans;
     private Vector3 _originalPos; // 记录初始位置，避免跳动后偏移
@@ -46,7 +46,7 @@ public class HexJumpAnimHandler : MonoBehaviour
         float actualHeight = baseJumpHeight * (1 - distanceRatio);
         if (actualHeight < 0.01f) actualHeight = 0.01f; // 避免高度为0
 
-        float rand_Height = Random.Range(1f, 2f);
+        float rand_Height = Random.Range(0.8f, 1.5f);
         float rand_Duration = Random.Range(0.5f, 1f);
 
         // 执行跳动动画
@@ -63,7 +63,7 @@ public class HexJumpAnimHandler : MonoBehaviour
 
     public void WalkableUpAnim()
     {
-        float rand_Height = Random.Range(0.9f, 1.1f);
+        float rand_Height = Random.Range(0.5f, 0.6f);
         float rand_Duration = Random.Range(0.5f, 0.8f);
         _selfTrans.DOLocalMoveY(_originalPos.y + heightDistance * rand_Height,
             baseHeightDuration * rand_Duration).SetEase(jumpEase);
@@ -73,7 +73,7 @@ public class HexJumpAnimHandler : MonoBehaviour
     public void CloudeAppear(Transform _cloudeTrans) {
         cloudeTrans= _cloudeTrans;
         Vector3 cloudeStartPos = cloudeTrans.position;
-        cloudeTrans.DOLocalMoveY(-8f, baseHeightDuration * 4)
+        cloudeTrans.DOLocalMoveY(-9f, baseHeightDuration * 3)
             .SetEase(jumpEase)
             .OnComplete(()=> cloudeTrans.GetComponent<CloudFloatOptimized>().DoCloudeAnim());
     }
@@ -86,8 +86,8 @@ public class HexJumpAnimHandler : MonoBehaviour
             cloudeDisappear = true;
             cloudeTrans.GetComponent<CloudFloatOptimized>().StopCloudAnim();
             Vector3 cloudeStartPos = cloudeTrans.position;
-            cloudeTrans.DOScale(2, baseHeightDuration * 8);
-            cloudeTrans.DOLocalMoveY(90f, baseHeightDuration * 10).SetEase(jumpEase).OnComplete(
+            cloudeTrans.DOScale(0f, baseHeightDuration * 3);
+            cloudeTrans.DOLocalMoveY(10f, baseHeightDuration * 10).SetEase(jumpEase).OnComplete(
                 ()=> GameRoot.GetManager<ObjectPoolManager>().ReturnPool(E_PoolType.RoomCloude_房间遮云,cloudeTrans.gameObject));
         }
     }

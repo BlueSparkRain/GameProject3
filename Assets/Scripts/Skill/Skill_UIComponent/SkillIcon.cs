@@ -58,16 +58,14 @@ public class SkillIcon : MonoBehaviour
     /// 将一个具体的BattleSkill关联给此Icon
     /// </summary>
     /// <param name="skill"></param>
-    public void InitBattleSkill(SkillBase skill)
-    {
+    public void InitBattleSkill(SkillBase skill){
         currentSkill = skill;
     }
 
     /// <summary>
     /// 技能被禁用
     /// </summary>
-    public void FreezeIcon(bool freeze)
-    {
+    public void FreezeIcon(bool freeze){
         isFreezzing = freeze;
         //可能出现一个锁链的UI_Image
     }
@@ -86,19 +84,16 @@ public class SkillIcon : MonoBehaviour
     /// </summary>
     public void IconCycleUpdate(float currentSP)
     {
-        if (isFreezzing || currentSkill == null)
-        {
-            Debug.Log("卡卡单独");
+        if (isFreezzing || currentSkill == null){
+            Debug.Log("本技能暂时冻结中");
             return;
         }
 
-        if (skillTimer > -0.01)
-        {
+        if (skillTimer > -0.01){
             skillCoolDownImage.fillAmount = skillTimer / skillData.skill_CoolDown;
             skillTimer -= Time.deltaTime;
         }
-        else
-        {
+        else{
             //根据是否有蓝来通知Skiller释放对应的技能
             CheckSkillCanExcute(currentSP);
             if (hasNoSP)
@@ -111,6 +106,13 @@ public class SkillIcon : MonoBehaviour
             //技能释放者消耗蓝量
             EventCenter.EventTrigger(E_EventType.SkillExcute,skillData.skill_sp_cost);
         }
+    }
+    /// <summary>
+    /// 技能被打断：计时器归零并冻结，当角色力竭状态恢复后再重新计时
+    /// </summary>
+    public void SkillBreak() {
+        isFreezzing = true;
+        skillTimer = skillData.skill_CoolDown;
     }
 
 }

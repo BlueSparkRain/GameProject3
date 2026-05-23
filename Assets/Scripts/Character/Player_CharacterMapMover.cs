@@ -2,6 +2,7 @@ using Core;
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -45,8 +46,7 @@ public class Player_CharacterMapMover : IMapMoveable
         this.characterType = characterType;
         this.charcaterTrans = charcaterTrans;
         coroutineManager = GameRoot.GetManager<CoroutineManager>();
-
-        coroutineManager.StartCoroutine(WaitMapIcon());
+        coroutineManager.StartCoroutine(WaitMapIcon(), charcaterTrans);
     }
 
 
@@ -102,13 +102,18 @@ public class Player_CharacterMapMover : IMapMoveable
     {
         //仅仅包含对于MapIcon的禁用操作
         EventCenter.EventTrigger(E_EventType.Mover_PlayerStartMove);
-        coroutineManager.StartCoroutine(MoveAnim(path));
+        coroutineManager.StartCoroutine(MoveAnim(path), charcaterTrans);
 
     }
 
 
     IEnumerator MoveAnim(List<HexRoomTag> roomPath)
     {
+        if (roomPath.Last() != null)
+        {
+            //寻找终点，相机缓慢平移到目标点
+            GameRoot.GetManager<OrthoCameraNavigator>().FocusOnTarget(roomPath.Last().gameObject,3);
+        }
         moveStop = remain_Acionpoints <= 0;
         //Debug.Log("Mover开始移动：路径长度" + roomPath.Count);
         isMoving = true;
@@ -124,7 +129,7 @@ public class Player_CharacterMapMover : IMapMoveable
                 Debug.Log("Mover被打断，剩余移动点" + remain_Acionpoints);
                 break;
             }
-            var targetPos = roomPath[i].transform.position + Vector3.up * 0.6f;
+            var targetPos = roomPath[i].transform.position + Vector3.up * 0.8f;
             MagicAnimExtens.PerfectJump_WorldAnim(charcaterTrans,targetPos);
 
             //更新当前房间

@@ -19,6 +19,17 @@ public class GameBattleManager : IGlobalManager
     int max_enemyNum = 3;
 
 
+    public void MgrInit(GameRoot gameRoot)
+    {
+        delay = new WaitForSeconds(spawnInterval);
+        EventCenter.AddEventListener(E_EventType.PlayerOutBattle, UnregisterCharacterToBattle);
+    }
+    public void MgrDispose()
+    {
+        EventCenter.RemoveEventListener(E_EventType.PlayerOutBattle, UnregisterCharacterToBattle);
+    }
+    public void MgrUpdate(float deltatime) { }
+
     /// <summary>
     /// [MapScene]注册一个玩家角色数据
     /// 通过
@@ -79,8 +90,10 @@ public class GameBattleManager : IGlobalManager
     /// </summary>
     void UnregisterCharacterToBattle(){
         Debug.Log("玩家脱战，已清空对战注册信息");
+        Debug.Log($"清除前{playersData.Count}---{enemysData.Count}");
         playersData.Clear();
         enemysData.Clear();
+        Debug.Log($"清除后{playersData.Count}---{enemysData.Count}");
     }
 
     /// <summary>
@@ -115,12 +128,5 @@ public class GameBattleManager : IGlobalManager
             }
         }
     }
-    public void MgrInit(GameRoot gameRoot){
-        WaitForSeconds delay = new WaitForSeconds(spawnInterval);
-        EventCenter.AddEventListener(E_EventType.PlayerOutBattle,UnregisterCharacterToBattle);
-    }
-    public void MgrDispose(){
-        EventCenter.RemoveEventListener(E_EventType.PlayerOutBattle,UnregisterCharacterToBattle);
-    }
-    public void MgrUpdate(float deltatime){}
+  
 }

@@ -417,6 +417,20 @@ public enum E_EventType
     Editor_Terrain_ExitEdit,
 
     /// <summary>
+    /// 禁用鼠标漫游
+    /// </summary>
+    FreezeCamPan,
+    /// <summary>
+    /// 恢复鼠标漫游
+    /// </summary>
+    UnFreezeCamPan,
+
+    /// <summary>
+    ///角色升级
+    /// </summary>
+    Character_Upgrade,
+
+    /// <summary>
     ///登记MapSkiller
     /// </summary>
     Character_Skiller_Regist,
@@ -435,7 +449,22 @@ public enum E_EventType
     Map_GetASkill,
     Battle_LoadASkill,
     BattleEnd,
-    CharacterDead,
+    
+    /// <summary>
+    /// 战斗的角色死亡
+    /// </summary>
+    Battle_CharacterDead,
+
+    /// <summary>
+    /// 战斗的角色力竭
+    /// </summary>
+    Battle_CharacterBreak,
+
+    /// <summary>
+    /// 力竭角色恢复
+    /// </summary>
+    Battle_CharacterBreakRefresh,
+
     LoadObjPool,
     E_DataSave,
     E_KillABoss,
@@ -469,6 +498,8 @@ public enum E_EventType
     /// 调整玩家活力点数
     /// </summary>
     AdjustVitalityPoints,
+
+    UpdateUIVitalityPoints,
 
     /// <summary>
     /// 新的行动回合
