@@ -232,7 +232,7 @@ Camera:
   near clip plane: 0.01
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
+  orthographic: 1
   orthographic size: 4.5
   m_Depth: -1
   m_CullingMask:
@@ -919,6 +919,65 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1084592460
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1084592462}
+  - component: {fileID: 1084592461}
+  m_Layer: 0
+  m_Name: RegionTexMapper
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1084592461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1084592460}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f76081abf29629f469bc1d6bab6572a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minRow: 10
+  maxRow: 20
+  minCol: 10
+  maxCol: 20
+  regionTexture: {fileID: 2800000, guid: e2e7b8902bff0fc4e89d533e8a79383c, type: 3}
+  tiling: {x: 1.8, y: 1.93}
+  offset: {x: -0.1, y: -0.07}
+  textureOpacity: 1
+  fadeDuration: 0.5
+  maxRandomDelay: 1.5
+  faceScale: {x: 0.55, y: 0.55, z: 0.55}
+  faceHeight: 0.6
+  mappingEnabled: 1
+  faceChildName: HexFace
+  showRangeGizmo: 1
+--- !u!4 &1084592462
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1084592460}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.60833025, y: -1.6659327, z: -0.77690846}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1110076303
 GameObject:
   m_ObjectHideFlags: 0
@@ -1364,6 +1423,65 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1233572598}
   m_CullTransparentMesh: 1
+--- !u!1 &1422259306
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1422259308}
+  - component: {fileID: 1422259307}
+  m_Layer: 0
+  m_Name: RegionTexMapper_Test
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1422259307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1422259306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f76081abf29629f469bc1d6bab6572a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minRow: 0
+  maxRow: 40
+  minCol: 0
+  maxCol: 40
+  regionTexture: {fileID: 2800000, guid: c4b909edd32c3954db2c3d8f10cac630, type: 3}
+  tiling: {x: 1, y: 1}
+  offset: {x: 0, y: 0}
+  textureOpacity: 1
+  fadeDuration: 0.5
+  maxRandomDelay: 1.5
+  faceScale: {x: 0.55, y: 0.55, z: 0.55}
+  faceHeight: 0.6
+  mappingEnabled: 1
+  faceChildName: HexFace
+  showRangeGizmo: 1
+--- !u!4 &1422259308
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1422259306}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.60833025, y: -1.6659327, z: -0.77690846}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1819255552
 GameObject:
   m_ObjectHideFlags: 0
@@ -1914,3 +2032,5 @@ SceneRoots:
   - {fileID: 831071024}
   - {fileID: 765766260}
   - {fileID: 50609260}
+  - {fileID: 1084592462}
+  - {fileID: 1422259308}

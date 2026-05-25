@@ -8,10 +8,13 @@ public class BattleDamageHandler : MonoBehaviour
     BattleDamager_Magic magic_damageChecker;
     BattleDamager_Physic physic_damageChecker;
     Battle_Controller battleController;
+    BattleBuffHandler buffHandler;
+    public BattleBuffHandler BattleBuffHandler => buffHandler;
     public Battle_Controller BattleController=>battleController;
-    public void InitDataHandler(BattleMVCHandler mvcHandler)
+    public void InitDataHandler(BattleMVCHandler mvcHandler, BattleBuffHandler buffHandler)
     {
         battleController = mvcHandler.BattleController;
+        this.buffHandler = buffHandler;
         magic_damageChecker = new BattleDamager_Magic(battleController);
         physic_damageChecker = new BattleDamager_Physic(battleController);
     }
@@ -68,7 +71,6 @@ public class BattleDamageHandler : MonoBehaviour
     /// <param name="damageValue"></param>
     public void GetDamage(E_Skill_DamageType damageType, float damageValue)
     {
-        Debug.Log("擦撒德哈的是粉色粉色粉色"+damageValue);
         switch (damageType)
         {
             case E_Skill_DamageType.物理:

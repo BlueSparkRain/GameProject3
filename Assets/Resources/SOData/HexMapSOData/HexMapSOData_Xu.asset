@@ -12,8378 +12,3788 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c60c10d4693db6045a74bc3d72d1fb2c, type: 3}
   m_Name: HexMapSOData_Xu
   m_EditorClassIdentifier: 
-  mapRadius: 30
+  mapRadius: 20
   savedCells:
   - row: 0
-    col: 15
-    type: 0
-  - row: 0
-    col: 16
-    type: 0
-  - row: 0
-    col: 17
-    type: 0
-  - row: 0
-    col: 18
-    type: 0
-  - row: 0
-    col: 19
-    type: 0
-  - row: 0
-    col: 20
-    type: 0
-  - row: 0
-    col: 21
-    type: 0
-  - row: 0
-    col: 22
-    type: 0
-  - row: 0
-    col: 23
-    type: 0
-  - row: 0
-    col: 24
-    type: 0
-  - row: 0
-    col: 25
-    type: 0
-  - row: 0
-    col: 26
-    type: 0
-  - row: 0
-    col: 27
-    type: 0
-  - row: 0
-    col: 28
-    type: 0
-  - row: 0
-    col: 29
-    type: 0
-  - row: 0
-    col: 30
-    type: 0
-  - row: 0
-    col: 31
-    type: 0
-  - row: 0
-    col: 32
-    type: 0
-  - row: 0
-    col: 33
-    type: 0
-  - row: 0
-    col: 34
-    type: 0
-  - row: 0
-    col: 35
-    type: 0
-  - row: 0
-    col: 36
-    type: 0
-  - row: 0
-    col: 37
-    type: 0
-  - row: 0
-    col: 38
-    type: 0
-  - row: 0
-    col: 39
-    type: 0
-  - row: 0
-    col: 40
-    type: 0
-  - row: 0
-    col: 41
-    type: 0
-  - row: 0
-    col: 42
-    type: 0
-  - row: 0
-    col: 43
-    type: 0
-  - row: 0
-    col: 44
-    type: 0
-  - row: 0
-    col: 45
-    type: 0
-  - row: 1
-    col: 14
-    type: 0
-  - row: 1
-    col: 15
-    type: 0
-  - row: 1
-    col: 16
-    type: 0
-  - row: 1
-    col: 17
-    type: 0
-  - row: 1
-    col: 18
-    type: 0
-  - row: 1
-    col: 19
-    type: 0
-  - row: 1
-    col: 20
-    type: 0
-  - row: 1
-    col: 21
-    type: 0
-  - row: 1
-    col: 22
-    type: 0
-  - row: 1
-    col: 23
-    type: 0
-  - row: 1
-    col: 24
-    type: 0
-  - row: 1
-    col: 25
-    type: 0
-  - row: 1
-    col: 26
-    type: 0
-  - row: 1
-    col: 27
-    type: 0
-  - row: 1
-    col: 28
-    type: 0
-  - row: 1
-    col: 29
-    type: 0
-  - row: 1
-    col: 30
-    type: 0
-  - row: 1
-    col: 31
-    type: 0
-  - row: 1
-    col: 32
-    type: 0
-  - row: 1
-    col: 33
-    type: 0
-  - row: 1
-    col: 34
-    type: 0
-  - row: 1
-    col: 35
-    type: 0
-  - row: 1
-    col: 36
-    type: 0
-  - row: 1
-    col: 37
-    type: 0
-  - row: 1
-    col: 38
-    type: 0
-  - row: 1
-    col: 39
-    type: 0
-  - row: 1
-    col: 40
-    type: 0
-  - row: 1
-    col: 41
-    type: 0
-  - row: 1
-    col: 42
-    type: 0
-  - row: 1
-    col: 43
-    type: 0
-  - row: 1
-    col: 44
-    type: 0
-  - row: 1
-    col: 45
-    type: 0
-  - row: 2
-    col: 14
-    type: 0
-  - row: 2
-    col: 15
-    type: 0
-  - row: 2
-    col: 16
-    type: 0
-  - row: 2
-    col: 17
-    type: 0
-  - row: 2
-    col: 18
-    type: 0
-  - row: 2
-    col: 19
-    type: 0
-  - row: 2
-    col: 20
-    type: 0
-  - row: 2
-    col: 21
-    type: 0
-  - row: 2
-    col: 22
-    type: 0
-  - row: 2
-    col: 23
-    type: 0
-  - row: 2
-    col: 24
-    type: 0
-  - row: 2
-    col: 25
-    type: 0
-  - row: 2
-    col: 26
-    type: 0
-  - row: 2
-    col: 27
-    type: 0
-  - row: 2
-    col: 28
-    type: 0
-  - row: 2
-    col: 29
-    type: 0
-  - row: 2
-    col: 30
-    type: 0
-  - row: 2
-    col: 31
-    type: 0
-  - row: 2
-    col: 32
-    type: 0
-  - row: 2
-    col: 33
-    type: 0
-  - row: 2
-    col: 34
-    type: 0
-  - row: 2
-    col: 35
-    type: 0
-  - row: 2
-    col: 36
-    type: 0
-  - row: 2
-    col: 37
-    type: 0
-  - row: 2
-    col: 38
-    type: 0
-  - row: 2
-    col: 39
-    type: 0
-  - row: 2
-    col: 40
-    type: 0
-  - row: 2
-    col: 41
-    type: 0
-  - row: 2
-    col: 42
-    type: 0
-  - row: 2
-    col: 43
-    type: 0
-  - row: 2
-    col: 44
-    type: 0
-  - row: 2
-    col: 45
-    type: 0
-  - row: 2
-    col: 46
-    type: 0
-  - row: 3
-    col: 13
-    type: 0
-  - row: 3
-    col: 14
-    type: 0
-  - row: 3
-    col: 15
-    type: 0
-  - row: 3
-    col: 16
-    type: 0
-  - row: 3
-    col: 17
-    type: 0
-  - row: 3
-    col: 18
-    type: 0
-  - row: 3
-    col: 19
-    type: 0
-  - row: 3
-    col: 20
-    type: 0
-  - row: 3
-    col: 21
-    type: 0
-  - row: 3
-    col: 22
-    type: 0
-  - row: 3
-    col: 23
-    type: 0
-  - row: 3
-    col: 24
-    type: 0
-  - row: 3
-    col: 25
-    type: 0
-  - row: 3
-    col: 26
-    type: 0
-  - row: 3
-    col: 27
-    type: 0
-  - row: 3
-    col: 28
-    type: 0
-  - row: 3
-    col: 29
-    type: 0
-  - row: 3
-    col: 30
-    type: 0
-  - row: 3
-    col: 31
-    type: 0
-  - row: 3
-    col: 32
-    type: 0
-  - row: 3
-    col: 33
-    type: 0
-  - row: 3
-    col: 34
-    type: 0
-  - row: 3
-    col: 35
-    type: 0
-  - row: 3
-    col: 36
-    type: 0
-  - row: 3
-    col: 37
-    type: 0
-  - row: 3
-    col: 38
-    type: 0
-  - row: 3
-    col: 39
-    type: 0
-  - row: 3
-    col: 40
-    type: 0
-  - row: 3
-    col: 41
-    type: 0
-  - row: 3
-    col: 42
-    type: 0
-  - row: 3
-    col: 43
-    type: 0
-  - row: 3
-    col: 44
-    type: 0
-  - row: 3
-    col: 45
-    type: 0
-  - row: 3
-    col: 46
-    type: 0
-  - row: 4
-    col: 13
-    type: 0
-  - row: 4
-    col: 14
-    type: 0
-  - row: 4
-    col: 15
-    type: 0
-  - row: 4
-    col: 16
-    type: 0
-  - row: 4
-    col: 17
-    type: 0
-  - row: 4
-    col: 18
-    type: 0
-  - row: 4
-    col: 19
-    type: 0
-  - row: 4
-    col: 20
-    type: 0
-  - row: 4
-    col: 21
-    type: 0
-  - row: 4
-    col: 22
-    type: 0
-  - row: 4
-    col: 23
-    type: 0
-  - row: 4
-    col: 24
-    type: 0
-  - row: 4
-    col: 25
-    type: 0
-  - row: 4
-    col: 26
-    type: 0
-  - row: 4
-    col: 27
-    type: 0
-  - row: 4
-    col: 28
-    type: 0
-  - row: 4
-    col: 29
-    type: 0
-  - row: 4
-    col: 30
-    type: 0
-  - row: 4
-    col: 31
-    type: 0
-  - row: 4
-    col: 32
-    type: 0
-  - row: 4
-    col: 33
-    type: 0
-  - row: 4
-    col: 34
-    type: 0
-  - row: 4
-    col: 35
-    type: 0
-  - row: 4
-    col: 36
-    type: 0
-  - row: 4
-    col: 37
-    type: 0
-  - row: 4
-    col: 38
-    type: 0
-  - row: 4
-    col: 39
-    type: 0
-  - row: 4
-    col: 40
-    type: 0
-  - row: 4
-    col: 41
-    type: 0
-  - row: 4
-    col: 42
-    type: 0
-  - row: 4
-    col: 43
-    type: 0
-  - row: 4
-    col: 44
-    type: 0
-  - row: 4
-    col: 45
-    type: 0
-  - row: 4
-    col: 46
-    type: 0
-  - row: 4
-    col: 47
-    type: 0
-  - row: 5
-    col: 12
-    type: 0
-  - row: 5
-    col: 13
-    type: 0
-  - row: 5
-    col: 14
-    type: 0
-  - row: 5
-    col: 15
-    type: 0
-  - row: 5
-    col: 16
-    type: 0
-  - row: 5
-    col: 17
-    type: 0
-  - row: 5
-    col: 18
-    type: 0
-  - row: 5
-    col: 19
-    type: 0
-  - row: 5
-    col: 20
-    type: 0
-  - row: 5
-    col: 21
-    type: 0
-  - row: 5
-    col: 22
-    type: 0
-  - row: 5
-    col: 23
-    type: 0
-  - row: 5
-    col: 24
-    type: 0
-  - row: 5
-    col: 25
-    type: 0
-  - row: 5
-    col: 26
-    type: 0
-  - row: 5
-    col: 27
-    type: 0
-  - row: 5
-    col: 28
-    type: 0
-  - row: 5
-    col: 29
-    type: 0
-  - row: 5
-    col: 30
-    type: 0
-  - row: 5
-    col: 31
-    type: 0
-  - row: 5
-    col: 32
-    type: 0
-  - row: 5
-    col: 33
-    type: 0
-  - row: 5
-    col: 34
-    type: 0
-  - row: 5
-    col: 35
-    type: 0
-  - row: 5
-    col: 36
-    type: 0
-  - row: 5
-    col: 37
-    type: 0
-  - row: 5
-    col: 38
-    type: 0
-  - row: 5
-    col: 39
-    type: 0
-  - row: 5
-    col: 40
-    type: 0
-  - row: 5
-    col: 41
-    type: 0
-  - row: 5
-    col: 42
-    type: 0
-  - row: 5
-    col: 43
-    type: 0
-  - row: 5
-    col: 44
-    type: 0
-  - row: 5
-    col: 45
-    type: 0
-  - row: 5
-    col: 46
-    type: 0
-  - row: 5
-    col: 47
-    type: 0
-  - row: 6
-    col: 12
-    type: 0
-  - row: 6
-    col: 13
-    type: 0
-  - row: 6
-    col: 14
-    type: 0
-  - row: 6
-    col: 15
-    type: 0
-  - row: 6
-    col: 16
-    type: 0
-  - row: 6
-    col: 17
-    type: 0
-  - row: 6
-    col: 18
-    type: 0
-  - row: 6
-    col: 19
-    type: 0
-  - row: 6
-    col: 20
-    type: 0
-  - row: 6
-    col: 21
-    type: 0
-  - row: 6
-    col: 22
-    type: 0
-  - row: 6
-    col: 23
-    type: 0
-  - row: 6
-    col: 24
-    type: 0
-  - row: 6
-    col: 25
-    type: 0
-  - row: 6
-    col: 26
-    type: 0
-  - row: 6
-    col: 27
-    type: 0
-  - row: 6
-    col: 28
-    type: 0
-  - row: 6
-    col: 29
-    type: 0
-  - row: 6
-    col: 30
-    type: 0
-  - row: 6
-    col: 31
-    type: 0
-  - row: 6
-    col: 32
-    type: 0
-  - row: 6
-    col: 33
-    type: 0
-  - row: 6
-    col: 34
-    type: 0
-  - row: 6
-    col: 35
-    type: 0
-  - row: 6
-    col: 36
-    type: 0
-  - row: 6
-    col: 37
-    type: 0
-  - row: 6
-    col: 38
-    type: 0
-  - row: 6
-    col: 39
-    type: 0
-  - row: 6
-    col: 40
-    type: 0
-  - row: 6
-    col: 41
-    type: 0
-  - row: 6
-    col: 42
-    type: 0
-  - row: 6
-    col: 43
-    type: 0
-  - row: 6
-    col: 44
-    type: 0
-  - row: 6
-    col: 45
-    type: 0
-  - row: 6
-    col: 46
-    type: 0
-  - row: 6
-    col: 47
-    type: 0
-  - row: 6
-    col: 48
-    type: 0
-  - row: 7
-    col: 11
-    type: 0
-  - row: 7
-    col: 12
-    type: 0
-  - row: 7
-    col: 13
-    type: 0
-  - row: 7
-    col: 14
-    type: 0
-  - row: 7
-    col: 15
-    type: 0
-  - row: 7
-    col: 16
-    type: 0
-  - row: 7
-    col: 17
-    type: 0
-  - row: 7
-    col: 18
-    type: 0
-  - row: 7
-    col: 19
-    type: 0
-  - row: 7
-    col: 20
-    type: 0
-  - row: 7
-    col: 21
-    type: 0
-  - row: 7
-    col: 22
-    type: 0
-  - row: 7
-    col: 23
-    type: 0
-  - row: 7
-    col: 24
-    type: 0
-  - row: 7
-    col: 25
-    type: 0
-  - row: 7
-    col: 26
-    type: 0
-  - row: 7
-    col: 27
-    type: 0
-  - row: 7
-    col: 28
-    type: 0
-  - row: 7
-    col: 29
-    type: 0
-  - row: 7
-    col: 30
-    type: 0
-  - row: 7
-    col: 31
-    type: 0
-  - row: 7
-    col: 32
-    type: 0
-  - row: 7
-    col: 33
-    type: 0
-  - row: 7
-    col: 34
-    type: 0
-  - row: 7
-    col: 35
-    type: 0
-  - row: 7
-    col: 36
-    type: 0
-  - row: 7
-    col: 37
-    type: 0
-  - row: 7
-    col: 38
-    type: 0
-  - row: 7
-    col: 39
-    type: 0
-  - row: 7
-    col: 40
-    type: 0
-  - row: 7
-    col: 41
-    type: 0
-  - row: 7
-    col: 42
-    type: 0
-  - row: 7
-    col: 43
-    type: 0
-  - row: 7
-    col: 44
-    type: 0
-  - row: 7
-    col: 45
-    type: 0
-  - row: 7
-    col: 46
-    type: 0
-  - row: 7
-    col: 47
-    type: 0
-  - row: 7
-    col: 48
-    type: 0
-  - row: 8
-    col: 11
-    type: 0
-  - row: 8
-    col: 12
-    type: 0
-  - row: 8
-    col: 13
-    type: 0
-  - row: 8
-    col: 14
-    type: 0
-  - row: 8
-    col: 15
-    type: 0
-  - row: 8
-    col: 16
-    type: 0
-  - row: 8
-    col: 17
-    type: 0
-  - row: 8
-    col: 18
-    type: 0
-  - row: 8
-    col: 19
-    type: 0
-  - row: 8
-    col: 20
-    type: 0
-  - row: 8
-    col: 21
-    type: 0
-  - row: 8
-    col: 22
-    type: 0
-  - row: 8
-    col: 23
-    type: 0
-  - row: 8
-    col: 24
-    type: 0
-  - row: 8
-    col: 25
-    type: 0
-  - row: 8
-    col: 26
-    type: 0
-  - row: 8
-    col: 27
-    type: 0
-  - row: 8
-    col: 28
-    type: 0
-  - row: 8
-    col: 29
-    type: 0
-  - row: 8
-    col: 30
-    type: 0
-  - row: 8
-    col: 31
-    type: 0
-  - row: 8
-    col: 32
-    type: 0
-  - row: 8
-    col: 33
-    type: 0
-  - row: 8
-    col: 34
-    type: 0
-  - row: 8
-    col: 35
-    type: 0
-  - row: 8
-    col: 36
-    type: 0
-  - row: 8
-    col: 37
-    type: 0
-  - row: 8
-    col: 38
-    type: 0
-  - row: 8
-    col: 39
-    type: 0
-  - row: 8
-    col: 40
-    type: 0
-  - row: 8
-    col: 41
-    type: 0
-  - row: 8
-    col: 42
-    type: 0
-  - row: 8
-    col: 43
-    type: 0
-  - row: 8
-    col: 44
-    type: 0
-  - row: 8
-    col: 45
-    type: 0
-  - row: 8
-    col: 46
-    type: 0
-  - row: 8
-    col: 47
-    type: 0
-  - row: 8
-    col: 48
-    type: 0
-  - row: 8
-    col: 49
-    type: 0
-  - row: 9
     col: 10
     type: 0
-  - row: 9
+  - row: 0
     col: 11
     type: 0
-  - row: 9
+  - row: 0
     col: 12
     type: 0
-  - row: 9
+  - row: 0
     col: 13
     type: 0
-  - row: 9
+  - row: 0
     col: 14
     type: 0
-  - row: 9
+  - row: 0
     col: 15
     type: 0
-  - row: 9
+  - row: 0
     col: 16
     type: 0
-  - row: 9
+  - row: 0
     col: 17
     type: 0
-  - row: 9
+  - row: 0
     col: 18
     type: 0
-  - row: 9
+  - row: 0
     col: 19
     type: 0
-  - row: 9
+  - row: 0
     col: 20
     type: 0
-  - row: 9
+  - row: 0
     col: 21
     type: 0
-  - row: 9
+  - row: 0
     col: 22
     type: 0
-  - row: 9
+  - row: 0
     col: 23
     type: 0
-  - row: 9
+  - row: 0
     col: 24
     type: 0
-  - row: 9
+  - row: 0
     col: 25
     type: 0
-  - row: 9
+  - row: 0
     col: 26
     type: 0
-  - row: 9
+  - row: 0
     col: 27
     type: 0
-  - row: 9
+  - row: 0
     col: 28
     type: 0
-  - row: 9
+  - row: 0
     col: 29
     type: 0
-  - row: 9
+  - row: 0
     col: 30
     type: 0
-  - row: 9
-    col: 31
-    type: 0
-  - row: 9
-    col: 32
-    type: 0
-  - row: 9
-    col: 33
-    type: 0
-  - row: 9
-    col: 34
-    type: 0
-  - row: 9
-    col: 35
-    type: 0
-  - row: 9
-    col: 36
-    type: 0
-  - row: 9
-    col: 37
-    type: 0
-  - row: 9
-    col: 38
-    type: 0
-  - row: 9
-    col: 39
-    type: 0
-  - row: 9
-    col: 40
-    type: 0
-  - row: 9
-    col: 41
-    type: 0
-  - row: 9
-    col: 42
-    type: 0
-  - row: 9
-    col: 43
-    type: 0
-  - row: 9
-    col: 44
-    type: 0
-  - row: 9
-    col: 45
-    type: 0
-  - row: 9
-    col: 46
-    type: 0
-  - row: 9
-    col: 47
-    type: 0
-  - row: 9
-    col: 48
-    type: 0
-  - row: 9
-    col: 49
-    type: 0
-  - row: 10
-    col: 10
-    type: 0
-  - row: 10
-    col: 11
-    type: 0
-  - row: 10
-    col: 12
-    type: 0
-  - row: 10
-    col: 13
-    type: 0
-  - row: 10
-    col: 14
-    type: 0
-  - row: 10
-    col: 15
-    type: 0
-  - row: 10
-    col: 16
-    type: 0
-  - row: 10
-    col: 17
-    type: 0
-  - row: 10
-    col: 18
-    type: 0
-  - row: 10
-    col: 19
-    type: 0
-  - row: 10
-    col: 20
-    type: 0
-  - row: 10
-    col: 21
-    type: 0
-  - row: 10
-    col: 22
-    type: 0
-  - row: 10
-    col: 23
-    type: 0
-  - row: 10
-    col: 24
-    type: 0
-  - row: 10
-    col: 25
-    type: 0
-  - row: 10
-    col: 26
-    type: 0
-  - row: 10
-    col: 27
-    type: 0
-  - row: 10
-    col: 28
-    type: 0
-  - row: 10
-    col: 29
-    type: 0
-  - row: 10
-    col: 30
-    type: 0
-  - row: 10
-    col: 31
-    type: 0
-  - row: 10
-    col: 32
-    type: 0
-  - row: 10
-    col: 33
-    type: 0
-  - row: 10
-    col: 34
-    type: 0
-  - row: 10
-    col: 35
-    type: 0
-  - row: 10
-    col: 36
-    type: 0
-  - row: 10
-    col: 37
-    type: 0
-  - row: 10
-    col: 38
-    type: 0
-  - row: 10
-    col: 39
-    type: 0
-  - row: 10
-    col: 40
-    type: 0
-  - row: 10
-    col: 41
-    type: 0
-  - row: 10
-    col: 42
-    type: 0
-  - row: 10
-    col: 43
-    type: 0
-  - row: 10
-    col: 44
-    type: 0
-  - row: 10
-    col: 45
-    type: 0
-  - row: 10
-    col: 46
-    type: 0
-  - row: 10
-    col: 47
-    type: 0
-  - row: 10
-    col: 48
-    type: 0
-  - row: 10
-    col: 49
-    type: 0
-  - row: 10
-    col: 50
-    type: 0
-  - row: 11
+  - row: 1
     col: 9
     type: 0
-  - row: 11
+  - row: 1
     col: 10
     type: 0
-  - row: 11
+  - row: 1
     col: 11
     type: 0
-  - row: 11
+  - row: 1
     col: 12
     type: 0
-  - row: 11
+  - row: 1
     col: 13
     type: 0
-  - row: 11
+  - row: 1
     col: 14
     type: 0
-  - row: 11
+  - row: 1
     col: 15
     type: 0
-  - row: 11
+  - row: 1
     col: 16
     type: 0
-  - row: 11
+  - row: 1
     col: 17
     type: 0
-  - row: 11
+  - row: 1
     col: 18
     type: 0
-  - row: 11
+  - row: 1
     col: 19
     type: 0
-  - row: 11
+  - row: 1
     col: 20
     type: 0
-  - row: 11
+  - row: 1
     col: 21
     type: 0
-  - row: 11
+  - row: 1
     col: 22
     type: 0
-  - row: 11
+  - row: 1
     col: 23
     type: 0
-  - row: 11
+  - row: 1
     col: 24
     type: 0
-  - row: 11
+  - row: 1
     col: 25
     type: 0
-  - row: 11
+  - row: 1
     col: 26
     type: 0
-  - row: 11
+  - row: 1
     col: 27
     type: 0
-  - row: 11
+  - row: 1
     col: 28
     type: 0
-  - row: 11
+  - row: 1
     col: 29
     type: 0
-  - row: 11
+  - row: 1
     col: 30
     type: 0
-  - row: 11
-    col: 31
-    type: 0
-  - row: 11
-    col: 32
-    type: 0
-  - row: 11
-    col: 33
-    type: 0
-  - row: 11
-    col: 34
-    type: 0
-  - row: 11
-    col: 35
-    type: 0
-  - row: 11
-    col: 36
-    type: 0
-  - row: 11
-    col: 37
-    type: 0
-  - row: 11
-    col: 38
-    type: 0
-  - row: 11
-    col: 39
-    type: 0
-  - row: 11
-    col: 40
-    type: 0
-  - row: 11
-    col: 41
-    type: 0
-  - row: 11
-    col: 42
-    type: 0
-  - row: 11
-    col: 43
-    type: 0
-  - row: 11
-    col: 44
-    type: 0
-  - row: 11
-    col: 45
-    type: 0
-  - row: 11
-    col: 46
-    type: 0
-  - row: 11
-    col: 47
-    type: 0
-  - row: 11
-    col: 48
-    type: 0
-  - row: 11
-    col: 49
-    type: 0
-  - row: 11
-    col: 50
-    type: 0
-  - row: 12
+  - row: 2
     col: 9
     type: 0
-  - row: 12
+  - row: 2
     col: 10
     type: 0
-  - row: 12
+  - row: 2
     col: 11
     type: 0
-  - row: 12
+  - row: 2
     col: 12
     type: 0
-  - row: 12
+  - row: 2
     col: 13
     type: 0
-  - row: 12
+  - row: 2
     col: 14
     type: 0
-  - row: 12
+  - row: 2
     col: 15
     type: 0
-  - row: 12
+  - row: 2
     col: 16
     type: 0
-  - row: 12
+  - row: 2
     col: 17
     type: 0
-  - row: 12
+  - row: 2
     col: 18
     type: 0
-  - row: 12
+  - row: 2
     col: 19
     type: 0
-  - row: 12
+  - row: 2
     col: 20
     type: 0
-  - row: 12
+  - row: 2
     col: 21
     type: 0
-  - row: 12
+  - row: 2
     col: 22
     type: 0
-  - row: 12
+  - row: 2
     col: 23
     type: 0
-  - row: 12
+  - row: 2
     col: 24
     type: 0
-  - row: 12
+  - row: 2
     col: 25
     type: 0
-  - row: 12
+  - row: 2
     col: 26
     type: 0
-  - row: 12
+  - row: 2
     col: 27
     type: 0
-  - row: 12
+  - row: 2
     col: 28
     type: 0
-  - row: 12
+  - row: 2
     col: 29
     type: 0
-  - row: 12
+  - row: 2
     col: 30
     type: 0
-  - row: 12
+  - row: 2
     col: 31
     type: 0
-  - row: 12
-    col: 32
-    type: 0
-  - row: 12
-    col: 33
-    type: 0
-  - row: 12
-    col: 34
-    type: 0
-  - row: 12
-    col: 35
-    type: 0
-  - row: 12
-    col: 36
-    type: 0
-  - row: 12
-    col: 37
-    type: 0
-  - row: 12
-    col: 38
-    type: 0
-  - row: 12
-    col: 39
-    type: 0
-  - row: 12
-    col: 40
-    type: 0
-  - row: 12
-    col: 41
-    type: 0
-  - row: 12
-    col: 42
-    type: 0
-  - row: 12
-    col: 43
-    type: 0
-  - row: 12
-    col: 44
-    type: 0
-  - row: 12
-    col: 45
-    type: 0
-  - row: 12
-    col: 46
-    type: 0
-  - row: 12
-    col: 47
-    type: 0
-  - row: 12
-    col: 48
-    type: 0
-  - row: 12
-    col: 49
-    type: 0
-  - row: 12
-    col: 50
-    type: 0
-  - row: 12
-    col: 51
-    type: 0
-  - row: 13
+  - row: 3
     col: 8
     type: 0
-  - row: 13
+  - row: 3
     col: 9
     type: 0
-  - row: 13
+  - row: 3
     col: 10
     type: 0
-  - row: 13
+  - row: 3
     col: 11
     type: 0
-  - row: 13
+  - row: 3
     col: 12
     type: 0
-  - row: 13
+  - row: 3
     col: 13
     type: 0
-  - row: 13
+  - row: 3
     col: 14
     type: 0
-  - row: 13
+  - row: 3
     col: 15
     type: 0
-  - row: 13
+  - row: 3
     col: 16
     type: 0
-  - row: 13
+  - row: 3
     col: 17
     type: 0
-  - row: 13
+  - row: 3
     col: 18
     type: 0
-  - row: 13
+  - row: 3
     col: 19
     type: 0
-  - row: 13
+  - row: 3
     col: 20
     type: 0
-  - row: 13
+  - row: 3
     col: 21
     type: 0
-  - row: 13
+  - row: 3
     col: 22
     type: 0
-  - row: 13
+  - row: 3
     col: 23
     type: 0
-  - row: 13
+  - row: 3
     col: 24
     type: 0
-  - row: 13
+  - row: 3
     col: 25
     type: 0
-  - row: 13
+  - row: 3
     col: 26
     type: 0
-  - row: 13
+  - row: 3
     col: 27
     type: 0
-  - row: 13
+  - row: 3
     col: 28
     type: 0
-  - row: 13
+  - row: 3
     col: 29
     type: 0
-  - row: 13
+  - row: 3
     col: 30
     type: 0
-  - row: 13
+  - row: 3
     col: 31
     type: 0
-  - row: 13
-    col: 32
-    type: 0
-  - row: 13
-    col: 33
-    type: 0
-  - row: 13
-    col: 34
-    type: 0
-  - row: 13
-    col: 35
-    type: 0
-  - row: 13
-    col: 36
-    type: 0
-  - row: 13
-    col: 37
-    type: 0
-  - row: 13
-    col: 38
-    type: 0
-  - row: 13
-    col: 39
-    type: 0
-  - row: 13
-    col: 40
-    type: 0
-  - row: 13
-    col: 41
-    type: 0
-  - row: 13
-    col: 42
-    type: 0
-  - row: 13
-    col: 43
-    type: 0
-  - row: 13
-    col: 44
-    type: 0
-  - row: 13
-    col: 45
-    type: 0
-  - row: 13
-    col: 46
-    type: 0
-  - row: 13
-    col: 47
-    type: 0
-  - row: 13
-    col: 48
-    type: 0
-  - row: 13
-    col: 49
-    type: 0
-  - row: 13
-    col: 50
-    type: 0
-  - row: 13
-    col: 51
-    type: 0
-  - row: 14
+  - row: 4
     col: 8
     type: 0
-  - row: 14
+  - row: 4
     col: 9
     type: 0
-  - row: 14
+  - row: 4
     col: 10
     type: 0
-  - row: 14
+  - row: 4
     col: 11
     type: 0
-  - row: 14
+  - row: 4
     col: 12
     type: 0
-  - row: 14
+  - row: 4
     col: 13
     type: 0
-  - row: 14
+  - row: 4
     col: 14
     type: 0
-  - row: 14
+  - row: 4
     col: 15
     type: 0
-  - row: 14
+  - row: 4
     col: 16
     type: 0
-  - row: 14
+  - row: 4
     col: 17
     type: 0
-  - row: 14
+  - row: 4
     col: 18
     type: 0
-  - row: 14
+  - row: 4
     col: 19
     type: 0
-  - row: 14
+  - row: 4
     col: 20
     type: 0
-  - row: 14
+  - row: 4
     col: 21
     type: 0
-  - row: 14
+  - row: 4
     col: 22
     type: 0
-  - row: 14
+  - row: 4
     col: 23
     type: 0
-  - row: 14
+  - row: 4
     col: 24
     type: 0
-  - row: 14
+  - row: 4
     col: 25
     type: 0
-  - row: 14
+  - row: 4
     col: 26
     type: 0
-  - row: 14
+  - row: 4
     col: 27
     type: 0
-  - row: 14
+  - row: 4
     col: 28
     type: 0
-  - row: 14
+  - row: 4
     col: 29
     type: 0
-  - row: 14
+  - row: 4
     col: 30
     type: 0
-  - row: 14
+  - row: 4
     col: 31
     type: 0
-  - row: 14
+  - row: 4
     col: 32
     type: 0
-  - row: 14
-    col: 33
-    type: 0
-  - row: 14
-    col: 34
-    type: 0
-  - row: 14
-    col: 35
-    type: 0
-  - row: 14
-    col: 36
-    type: 0
-  - row: 14
-    col: 37
-    type: 0
-  - row: 14
-    col: 38
-    type: 0
-  - row: 14
-    col: 39
-    type: 0
-  - row: 14
-    col: 40
-    type: 0
-  - row: 14
-    col: 41
-    type: 0
-  - row: 14
-    col: 42
-    type: 0
-  - row: 14
-    col: 43
-    type: 0
-  - row: 14
-    col: 44
-    type: 0
-  - row: 14
-    col: 45
-    type: 0
-  - row: 14
-    col: 46
-    type: 0
-  - row: 14
-    col: 47
-    type: 0
-  - row: 14
-    col: 48
-    type: 0
-  - row: 14
-    col: 49
-    type: 0
-  - row: 14
-    col: 50
-    type: 0
-  - row: 14
-    col: 51
-    type: 0
-  - row: 14
-    col: 52
-    type: 0
-  - row: 15
+  - row: 5
     col: 7
     type: 0
-  - row: 15
+  - row: 5
     col: 8
     type: 0
-  - row: 15
+  - row: 5
     col: 9
     type: 0
-  - row: 15
+  - row: 5
     col: 10
     type: 0
-  - row: 15
+  - row: 5
     col: 11
     type: 0
-  - row: 15
+  - row: 5
     col: 12
     type: 0
-  - row: 15
+  - row: 5
     col: 13
     type: 0
-  - row: 15
+  - row: 5
     col: 14
     type: 0
-  - row: 15
+  - row: 5
     col: 15
     type: 0
-  - row: 15
+  - row: 5
     col: 16
     type: 0
-  - row: 15
+  - row: 5
     col: 17
     type: 0
-  - row: 15
+  - row: 5
     col: 18
     type: 0
-  - row: 15
+  - row: 5
     col: 19
     type: 0
-  - row: 15
+  - row: 5
     col: 20
     type: 0
-  - row: 15
+  - row: 5
     col: 21
     type: 0
-  - row: 15
+  - row: 5
     col: 22
     type: 0
-  - row: 15
+  - row: 5
     col: 23
     type: 0
-  - row: 15
+  - row: 5
     col: 24
     type: 0
-  - row: 15
+  - row: 5
     col: 25
     type: 0
-  - row: 15
+  - row: 5
     col: 26
     type: 0
-  - row: 15
+  - row: 5
     col: 27
     type: 0
-  - row: 15
+  - row: 5
     col: 28
     type: 0
-  - row: 15
+  - row: 5
     col: 29
     type: 0
-  - row: 15
+  - row: 5
     col: 30
     type: 0
-  - row: 15
+  - row: 5
     col: 31
     type: 0
-  - row: 15
+  - row: 5
     col: 32
     type: 0
-  - row: 15
-    col: 33
-    type: 0
-  - row: 15
-    col: 34
-    type: 0
-  - row: 15
-    col: 35
-    type: 0
-  - row: 15
-    col: 36
-    type: 0
-  - row: 15
-    col: 37
-    type: 0
-  - row: 15
-    col: 38
-    type: 0
-  - row: 15
-    col: 39
-    type: 0
-  - row: 15
-    col: 40
-    type: 0
-  - row: 15
-    col: 41
-    type: 0
-  - row: 15
-    col: 42
-    type: 0
-  - row: 15
-    col: 43
-    type: 0
-  - row: 15
-    col: 44
-    type: 0
-  - row: 15
-    col: 45
-    type: 0
-  - row: 15
-    col: 46
-    type: 0
-  - row: 15
-    col: 47
-    type: 0
-  - row: 15
-    col: 48
-    type: 0
-  - row: 15
-    col: 49
-    type: 0
-  - row: 15
-    col: 50
-    type: 0
-  - row: 15
-    col: 51
-    type: 0
-  - row: 15
-    col: 52
-    type: 0
-  - row: 16
+  - row: 6
     col: 7
     type: 0
-  - row: 16
+  - row: 6
     col: 8
     type: 0
-  - row: 16
+  - row: 6
     col: 9
     type: 0
-  - row: 16
+  - row: 6
     col: 10
     type: 0
-  - row: 16
+  - row: 6
     col: 11
     type: 0
-  - row: 16
+  - row: 6
     col: 12
     type: 0
-  - row: 16
+  - row: 6
     col: 13
     type: 0
-  - row: 16
+  - row: 6
     col: 14
     type: 0
-  - row: 16
+  - row: 6
     col: 15
     type: 0
-  - row: 16
+  - row: 6
     col: 16
     type: 0
-  - row: 16
+  - row: 6
     col: 17
     type: 0
-  - row: 16
+  - row: 6
     col: 18
     type: 0
-  - row: 16
+  - row: 6
     col: 19
     type: 0
-  - row: 16
+  - row: 6
     col: 20
     type: 0
-  - row: 16
+  - row: 6
     col: 21
     type: 0
-  - row: 16
+  - row: 6
     col: 22
     type: 0
-  - row: 16
+  - row: 6
     col: 23
     type: 0
-  - row: 16
+  - row: 6
     col: 24
     type: 0
-  - row: 16
+  - row: 6
     col: 25
     type: 0
-  - row: 16
+  - row: 6
     col: 26
     type: 0
-  - row: 16
+  - row: 6
     col: 27
     type: 0
-  - row: 16
+  - row: 6
     col: 28
     type: 0
-  - row: 16
+  - row: 6
     col: 29
     type: 0
-  - row: 16
+  - row: 6
     col: 30
     type: 0
-  - row: 16
+  - row: 6
     col: 31
     type: 0
-  - row: 16
+  - row: 6
     col: 32
     type: 0
-  - row: 16
+  - row: 6
     col: 33
     type: 0
-  - row: 16
-    col: 34
-    type: 0
-  - row: 16
-    col: 35
-    type: 0
-  - row: 16
-    col: 36
-    type: 0
-  - row: 16
-    col: 37
-    type: 0
-  - row: 16
-    col: 38
-    type: 0
-  - row: 16
-    col: 39
-    type: 0
-  - row: 16
-    col: 40
-    type: 0
-  - row: 16
-    col: 41
-    type: 0
-  - row: 16
-    col: 42
-    type: 0
-  - row: 16
-    col: 43
-    type: 0
-  - row: 16
-    col: 44
-    type: 0
-  - row: 16
-    col: 45
-    type: 0
-  - row: 16
-    col: 46
-    type: 0
-  - row: 16
-    col: 47
-    type: 0
-  - row: 16
-    col: 48
-    type: 0
-  - row: 16
-    col: 49
-    type: 0
-  - row: 16
-    col: 50
-    type: 0
-  - row: 16
-    col: 51
-    type: 0
-  - row: 16
-    col: 52
-    type: 0
-  - row: 16
-    col: 53
-    type: 0
-  - row: 17
+  - row: 7
     col: 6
     type: 0
-  - row: 17
+  - row: 7
     col: 7
     type: 0
-  - row: 17
+  - row: 7
     col: 8
     type: 0
-  - row: 17
+  - row: 7
     col: 9
     type: 0
-  - row: 17
+  - row: 7
     col: 10
     type: 0
-  - row: 17
+  - row: 7
     col: 11
     type: 0
-  - row: 17
+  - row: 7
     col: 12
     type: 0
-  - row: 17
+  - row: 7
     col: 13
     type: 0
-  - row: 17
+  - row: 7
     col: 14
     type: 0
-  - row: 17
+  - row: 7
     col: 15
     type: 0
-  - row: 17
+  - row: 7
     col: 16
     type: 0
-  - row: 17
+  - row: 7
     col: 17
     type: 0
-  - row: 17
+  - row: 7
     col: 18
     type: 0
-  - row: 17
+  - row: 7
     col: 19
     type: 0
-  - row: 17
+  - row: 7
     col: 20
     type: 0
-  - row: 17
+  - row: 7
     col: 21
     type: 0
-  - row: 17
+  - row: 7
     col: 22
     type: 0
-  - row: 17
+  - row: 7
     col: 23
     type: 0
-  - row: 17
+  - row: 7
     col: 24
     type: 0
-  - row: 17
+  - row: 7
     col: 25
     type: 0
-  - row: 17
+  - row: 7
     col: 26
     type: 0
-  - row: 17
+  - row: 7
     col: 27
     type: 0
-  - row: 17
+  - row: 7
     col: 28
     type: 0
-  - row: 17
+  - row: 7
     col: 29
     type: 0
-  - row: 17
+  - row: 7
     col: 30
     type: 0
-  - row: 17
+  - row: 7
     col: 31
     type: 0
-  - row: 17
+  - row: 7
     col: 32
     type: 0
-  - row: 17
+  - row: 7
     col: 33
     type: 0
-  - row: 17
-    col: 34
-    type: 0
-  - row: 17
-    col: 35
-    type: 0
-  - row: 17
-    col: 36
-    type: 0
-  - row: 17
-    col: 37
-    type: 0
-  - row: 17
-    col: 38
-    type: 0
-  - row: 17
-    col: 39
-    type: 0
-  - row: 17
-    col: 40
-    type: 0
-  - row: 17
-    col: 41
-    type: 0
-  - row: 17
-    col: 42
-    type: 0
-  - row: 17
-    col: 43
-    type: 0
-  - row: 17
-    col: 44
-    type: 0
-  - row: 17
-    col: 45
-    type: 0
-  - row: 17
-    col: 46
-    type: 0
-  - row: 17
-    col: 47
-    type: 0
-  - row: 17
-    col: 48
-    type: 0
-  - row: 17
-    col: 49
-    type: 0
-  - row: 17
-    col: 50
-    type: 0
-  - row: 17
-    col: 51
-    type: 0
-  - row: 17
-    col: 52
-    type: 0
-  - row: 17
-    col: 53
-    type: 0
-  - row: 18
+  - row: 8
     col: 6
     type: 0
-  - row: 18
+  - row: 8
     col: 7
     type: 0
-  - row: 18
+  - row: 8
     col: 8
     type: 0
-  - row: 18
+  - row: 8
     col: 9
     type: 0
-  - row: 18
+  - row: 8
     col: 10
     type: 0
-  - row: 18
+  - row: 8
     col: 11
     type: 0
-  - row: 18
+  - row: 8
     col: 12
     type: 0
-  - row: 18
+  - row: 8
     col: 13
     type: 0
-  - row: 18
+  - row: 8
     col: 14
     type: 0
-  - row: 18
+  - row: 8
     col: 15
     type: 0
-  - row: 18
+  - row: 8
     col: 16
     type: 0
-  - row: 18
+  - row: 8
     col: 17
     type: 0
-  - row: 18
+  - row: 8
     col: 18
     type: 0
-  - row: 18
+  - row: 8
     col: 19
-    type: 1
-  - row: 18
+    type: 0
+  - row: 8
     col: 20
-    type: 1
-  - row: 18
+    type: 0
+  - row: 8
     col: 21
-    type: 1
-  - row: 18
+    type: 0
+  - row: 8
     col: 22
     type: 0
-  - row: 18
+  - row: 8
     col: 23
     type: 0
-  - row: 18
+  - row: 8
     col: 24
     type: 0
-  - row: 18
+  - row: 8
     col: 25
     type: 0
-  - row: 18
+  - row: 8
     col: 26
     type: 0
-  - row: 18
+  - row: 8
     col: 27
     type: 0
-  - row: 18
+  - row: 8
     col: 28
     type: 0
-  - row: 18
+  - row: 8
     col: 29
     type: 0
-  - row: 18
+  - row: 8
     col: 30
     type: 0
-  - row: 18
+  - row: 8
     col: 31
     type: 0
-  - row: 18
+  - row: 8
     col: 32
     type: 0
-  - row: 18
+  - row: 8
     col: 33
     type: 0
-  - row: 18
+  - row: 8
     col: 34
     type: 0
-  - row: 18
-    col: 35
-    type: 0
-  - row: 18
-    col: 36
-    type: 0
-  - row: 18
-    col: 37
-    type: 0
-  - row: 18
-    col: 38
-    type: 0
-  - row: 18
-    col: 39
-    type: 0
-  - row: 18
-    col: 40
-    type: 0
-  - row: 18
-    col: 41
-    type: 0
-  - row: 18
-    col: 42
-    type: 0
-  - row: 18
-    col: 43
-    type: 0
-  - row: 18
-    col: 44
-    type: 0
-  - row: 18
-    col: 45
-    type: 0
-  - row: 18
-    col: 46
-    type: 0
-  - row: 18
-    col: 47
-    type: 0
-  - row: 18
-    col: 48
-    type: 0
-  - row: 18
-    col: 49
-    type: 0
-  - row: 18
-    col: 50
-    type: 0
-  - row: 18
-    col: 51
-    type: 0
-  - row: 18
-    col: 52
-    type: 0
-  - row: 18
-    col: 53
-    type: 0
-  - row: 18
-    col: 54
-    type: 0
-  - row: 19
+  - row: 9
     col: 5
     type: 0
-  - row: 19
+  - row: 9
     col: 6
     type: 0
-  - row: 19
+  - row: 9
     col: 7
     type: 0
-  - row: 19
+  - row: 9
     col: 8
     type: 0
-  - row: 19
+  - row: 9
     col: 9
     type: 0
-  - row: 19
+  - row: 9
     col: 10
     type: 0
-  - row: 19
+  - row: 9
     col: 11
     type: 0
-  - row: 19
+  - row: 9
     col: 12
     type: 0
-  - row: 19
+  - row: 9
     col: 13
     type: 0
-  - row: 19
+  - row: 9
     col: 14
     type: 0
-  - row: 19
+  - row: 9
     col: 15
     type: 0
-  - row: 19
+  - row: 9
     col: 16
-    type: 1
-  - row: 19
+    type: 0
+  - row: 9
     col: 17
-    type: 1
-  - row: 19
+    type: 0
+  - row: 9
     col: 18
-    type: 1
-  - row: 19
+    type: 0
+  - row: 9
     col: 19
+    type: 0
+  - row: 9
+    col: 20
+    type: 0
+  - row: 9
+    col: 21
+    type: 0
+  - row: 9
+    col: 22
+    type: 0
+  - row: 9
+    col: 23
+    type: 0
+  - row: 9
+    col: 24
+    type: 0
+  - row: 9
+    col: 25
+    type: 0
+  - row: 9
+    col: 26
+    type: 0
+  - row: 9
+    col: 27
+    type: 0
+  - row: 9
+    col: 28
+    type: 0
+  - row: 9
+    col: 29
+    type: 0
+  - row: 9
+    col: 30
+    type: 0
+  - row: 9
+    col: 31
+    type: 0
+  - row: 9
+    col: 32
+    type: 0
+  - row: 9
+    col: 33
+    type: 0
+  - row: 9
+    col: 34
+    type: 0
+  - row: 10
+    col: 5
+    type: 0
+  - row: 10
+    col: 6
+    type: 0
+  - row: 10
+    col: 7
+    type: 0
+  - row: 10
+    col: 8
+    type: 0
+  - row: 10
+    col: 9
+    type: 0
+  - row: 10
+    col: 10
+    type: 0
+  - row: 10
+    col: 11
+    type: 0
+  - row: 10
+    col: 12
+    type: 0
+  - row: 10
+    col: 13
+    type: 0
+  - row: 10
+    col: 14
+    type: 0
+  - row: 10
+    col: 15
+    type: 0
+  - row: 10
+    col: 16
+    type: 0
+  - row: 10
+    col: 17
+    type: 0
+  - row: 10
+    col: 18
+    type: 0
+  - row: 10
+    col: 19
+    type: 0
+  - row: 10
+    col: 20
+    type: 0
+  - row: 10
+    col: 21
+    type: 0
+  - row: 10
+    col: 22
+    type: 0
+  - row: 10
+    col: 23
+    type: 0
+  - row: 10
+    col: 24
+    type: 0
+  - row: 10
+    col: 25
+    type: 0
+  - row: 10
+    col: 26
+    type: 0
+  - row: 10
+    col: 27
+    type: 0
+  - row: 10
+    col: 28
+    type: 0
+  - row: 10
+    col: 29
+    type: 0
+  - row: 10
+    col: 30
+    type: 0
+  - row: 10
+    col: 31
+    type: 0
+  - row: 10
+    col: 32
+    type: 0
+  - row: 10
+    col: 33
+    type: 0
+  - row: 10
+    col: 34
+    type: 0
+  - row: 10
+    col: 35
+    type: 0
+  - row: 11
+    col: 4
+    type: 0
+  - row: 11
+    col: 5
+    type: 0
+  - row: 11
+    col: 6
+    type: 0
+  - row: 11
+    col: 7
+    type: 0
+  - row: 11
+    col: 8
+    type: 0
+  - row: 11
+    col: 9
+    type: 0
+  - row: 11
+    col: 10
+    type: 0
+  - row: 11
+    col: 11
+    type: 0
+  - row: 11
+    col: 12
+    type: 3
+  - row: 11
+    col: 13
+    type: 0
+  - row: 11
+    col: 14
+    type: 0
+  - row: 11
+    col: 15
+    type: 0
+  - row: 11
+    col: 16
+    type: 0
+  - row: 11
+    col: 17
+    type: 0
+  - row: 11
+    col: 18
+    type: 0
+  - row: 11
+    col: 19
+    type: 0
+  - row: 11
+    col: 20
+    type: 0
+  - row: 11
+    col: 21
+    type: 0
+  - row: 11
+    col: 22
+    type: 0
+  - row: 11
+    col: 23
+    type: 0
+  - row: 11
+    col: 24
+    type: 0
+  - row: 11
+    col: 25
+    type: 0
+  - row: 11
+    col: 26
+    type: 0
+  - row: 11
+    col: 27
+    type: 0
+  - row: 11
+    col: 28
+    type: 0
+  - row: 11
+    col: 29
+    type: 0
+  - row: 11
+    col: 30
+    type: 0
+  - row: 11
+    col: 31
+    type: 0
+  - row: 11
+    col: 32
+    type: 0
+  - row: 11
+    col: 33
+    type: 0
+  - row: 11
+    col: 34
+    type: 0
+  - row: 11
+    col: 35
+    type: 0
+  - row: 12
+    col: 4
+    type: 0
+  - row: 12
+    col: 5
+    type: 0
+  - row: 12
+    col: 6
+    type: 0
+  - row: 12
+    col: 7
+    type: 0
+  - row: 12
+    col: 8
+    type: 0
+  - row: 12
+    col: 9
+    type: 0
+  - row: 12
+    col: 10
+    type: 0
+  - row: 12
+    col: 11
+    type: 1
+  - row: 12
+    col: 12
+    type: 3
+  - row: 12
+    col: 13
+    type: 3
+  - row: 12
+    col: 14
     type: 9
-  - row: 19
-    col: 20
-    type: 1
-  - row: 19
-    col: 21
-    type: 1
-  - row: 19
-    col: 22
-    type: 0
-  - row: 19
-    col: 23
-    type: 0
-  - row: 19
-    col: 24
-    type: 0
-  - row: 19
-    col: 25
-    type: 0
-  - row: 19
-    col: 26
-    type: 0
-  - row: 19
-    col: 27
-    type: 0
-  - row: 19
-    col: 28
-    type: 0
-  - row: 19
-    col: 29
-    type: 0
-  - row: 19
-    col: 30
-    type: 0
-  - row: 19
-    col: 31
-    type: 0
-  - row: 19
-    col: 32
-    type: 0
-  - row: 19
-    col: 33
-    type: 0
-  - row: 19
-    col: 34
-    type: 0
-  - row: 19
-    col: 35
-    type: 0
-  - row: 19
-    col: 36
-    type: 0
-  - row: 19
-    col: 37
-    type: 0
-  - row: 19
-    col: 38
-    type: 0
-  - row: 19
-    col: 39
-    type: 0
-  - row: 19
-    col: 40
-    type: 0
-  - row: 19
-    col: 41
-    type: 0
-  - row: 19
-    col: 42
-    type: 0
-  - row: 19
-    col: 43
-    type: 0
-  - row: 19
-    col: 44
-    type: 0
-  - row: 19
-    col: 45
-    type: 0
-  - row: 19
-    col: 46
-    type: 0
-  - row: 19
-    col: 47
-    type: 0
-  - row: 19
-    col: 48
-    type: 0
-  - row: 19
-    col: 49
-    type: 0
-  - row: 19
-    col: 50
-    type: 0
-  - row: 19
-    col: 51
-    type: 0
-  - row: 19
-    col: 52
-    type: 0
-  - row: 19
-    col: 53
-    type: 0
-  - row: 19
-    col: 54
-    type: 0
-  - row: 20
-    col: 5
-    type: 0
-  - row: 20
-    col: 6
-    type: 0
-  - row: 20
-    col: 7
-    type: 0
-  - row: 20
-    col: 8
-    type: 0
-  - row: 20
-    col: 9
-    type: 0
-  - row: 20
-    col: 10
-    type: 0
-  - row: 20
-    col: 11
-    type: 0
-  - row: 20
-    col: 12
-    type: 0
-  - row: 20
-    col: 13
-    type: 0
-  - row: 20
-    col: 14
-    type: 1
-  - row: 20
+  - row: 12
     col: 15
     type: 1
-  - row: 20
+  - row: 12
     col: 16
     type: 1
-  - row: 20
+  - row: 12
     col: 17
     type: 1
-  - row: 20
+  - row: 12
     col: 18
-    type: 6
-  - row: 20
-    col: 19
-    type: 2
-  - row: 20
-    col: 20
-    type: 1
-  - row: 20
-    col: 21
-    type: 1
-  - row: 20
-    col: 22
-    type: 1
-  - row: 20
-    col: 23
-    type: 0
-  - row: 20
-    col: 24
-    type: 0
-  - row: 20
-    col: 25
-    type: 0
-  - row: 20
-    col: 26
-    type: 0
-  - row: 20
-    col: 27
-    type: 0
-  - row: 20
-    col: 28
-    type: 0
-  - row: 20
-    col: 29
-    type: 0
-  - row: 20
-    col: 30
-    type: 0
-  - row: 20
-    col: 31
-    type: 0
-  - row: 20
-    col: 32
-    type: 0
-  - row: 20
-    col: 33
-    type: 0
-  - row: 20
-    col: 34
-    type: 0
-  - row: 20
-    col: 35
-    type: 0
-  - row: 20
-    col: 36
-    type: 0
-  - row: 20
-    col: 37
-    type: 0
-  - row: 20
-    col: 38
-    type: 0
-  - row: 20
-    col: 39
-    type: 0
-  - row: 20
-    col: 40
-    type: 0
-  - row: 20
-    col: 41
-    type: 0
-  - row: 20
-    col: 42
-    type: 0
-  - row: 20
-    col: 43
-    type: 0
-  - row: 20
-    col: 44
-    type: 0
-  - row: 20
-    col: 45
-    type: 0
-  - row: 20
-    col: 46
-    type: 0
-  - row: 20
-    col: 47
-    type: 0
-  - row: 20
-    col: 48
-    type: 0
-  - row: 20
-    col: 49
-    type: 0
-  - row: 20
-    col: 50
-    type: 0
-  - row: 20
-    col: 51
-    type: 0
-  - row: 20
-    col: 52
-    type: 0
-  - row: 20
-    col: 53
-    type: 0
-  - row: 20
-    col: 54
-    type: 0
-  - row: 20
-    col: 55
-    type: 0
-  - row: 21
-    col: 4
-    type: 0
-  - row: 21
-    col: 5
-    type: 0
-  - row: 21
-    col: 6
-    type: 0
-  - row: 21
-    col: 7
     type: 8
-  - row: 21
-    col: 8
-    type: 1
-  - row: 21
-    col: 9
-    type: 1
-  - row: 21
-    col: 10
-    type: 3
-  - row: 21
-    col: 11
-    type: 2
-  - row: 21
-    col: 12
-    type: 2
-  - row: 21
-    col: 13
-    type: 1
-  - row: 21
-    col: 14
-    type: 3
-  - row: 21
-    col: 15
-    type: 1
-  - row: 21
-    col: 16
-    type: 1
-  - row: 21
-    col: 17
-    type: 1
-  - row: 21
-    col: 18
-    type: 6
-  - row: 21
+  - row: 12
     col: 19
-    type: 1
-  - row: 21
+    type: 0
+  - row: 12
     col: 20
-    type: 1
-  - row: 21
+    type: 0
+  - row: 12
     col: 21
-    type: 1
-  - row: 21
+    type: 0
+  - row: 12
     col: 22
     type: 0
-  - row: 21
+  - row: 12
     col: 23
     type: 0
-  - row: 21
+  - row: 12
     col: 24
     type: 0
-  - row: 21
+  - row: 12
     col: 25
     type: 0
-  - row: 21
+  - row: 12
     col: 26
     type: 0
-  - row: 21
+  - row: 12
     col: 27
     type: 0
-  - row: 21
+  - row: 12
     col: 28
     type: 0
-  - row: 21
+  - row: 12
     col: 29
     type: 0
-  - row: 21
+  - row: 12
     col: 30
     type: 0
-  - row: 21
+  - row: 12
     col: 31
     type: 0
-  - row: 21
+  - row: 12
     col: 32
     type: 0
-  - row: 21
+  - row: 12
     col: 33
     type: 0
-  - row: 21
+  - row: 12
     col: 34
     type: 0
-  - row: 21
+  - row: 12
     col: 35
     type: 0
-  - row: 21
+  - row: 12
     col: 36
     type: 0
-  - row: 21
-    col: 37
+  - row: 13
+    col: 3
     type: 0
-  - row: 21
-    col: 38
-    type: 0
-  - row: 21
-    col: 39
-    type: 0
-  - row: 21
-    col: 40
-    type: 0
-  - row: 21
-    col: 41
-    type: 0
-  - row: 21
-    col: 42
-    type: 0
-  - row: 21
-    col: 43
-    type: 0
-  - row: 21
-    col: 44
-    type: 0
-  - row: 21
-    col: 45
-    type: 0
-  - row: 21
-    col: 46
-    type: 0
-  - row: 21
-    col: 47
-    type: 0
-  - row: 21
-    col: 48
-    type: 0
-  - row: 21
-    col: 49
-    type: 0
-  - row: 21
-    col: 50
-    type: 0
-  - row: 21
-    col: 51
-    type: 0
-  - row: 21
-    col: 52
-    type: 0
-  - row: 21
-    col: 53
-    type: 0
-  - row: 21
-    col: 54
-    type: 0
-  - row: 21
-    col: 55
-    type: 0
-  - row: 22
+  - row: 13
     col: 4
     type: 0
-  - row: 22
+  - row: 13
     col: 5
     type: 0
-  - row: 22
+  - row: 13
     col: 6
     type: 0
-  - row: 22
+  - row: 13
     col: 7
-    type: 1
-  - row: 22
+    type: 0
+  - row: 13
     col: 8
-    type: 1
-  - row: 22
+    type: 0
+  - row: 13
     col: 9
-    type: 1
-  - row: 22
+    type: 0
+  - row: 13
     col: 10
     type: 1
-  - row: 22
+  - row: 13
     col: 11
-    type: 2
-  - row: 22
+    type: 1
+  - row: 13
     col: 12
-    type: 2
-  - row: 22
+    type: 1
+  - row: 13
     col: 13
-    type: 2
-  - row: 22
+    type: 1
+  - row: 13
     col: 14
-    type: 3
-  - row: 22
+    type: 1
+  - row: 13
     col: 15
-    type: 3
-  - row: 22
+    type: 1
+  - row: 13
     col: 16
     type: 1
-  - row: 22
+  - row: 13
     col: 17
     type: 1
-  - row: 22
+  - row: 13
     col: 18
     type: 1
-  - row: 22
+  - row: 13
     col: 19
+    type: 1
+  - row: 13
+    col: 20
+    type: 0
+  - row: 13
+    col: 21
+    type: 0
+  - row: 13
+    col: 22
+    type: 0
+  - row: 13
+    col: 23
+    type: 0
+  - row: 13
+    col: 24
+    type: 0
+  - row: 13
+    col: 25
+    type: 0
+  - row: 13
+    col: 26
+    type: 0
+  - row: 13
+    col: 27
+    type: 0
+  - row: 13
+    col: 28
+    type: 0
+  - row: 13
+    col: 29
+    type: 0
+  - row: 13
+    col: 30
+    type: 0
+  - row: 13
+    col: 31
+    type: 0
+  - row: 13
+    col: 32
+    type: 0
+  - row: 13
+    col: 33
+    type: 0
+  - row: 13
+    col: 34
+    type: 0
+  - row: 13
+    col: 35
+    type: 0
+  - row: 13
+    col: 36
+    type: 0
+  - row: 14
+    col: 3
+    type: 0
+  - row: 14
+    col: 4
+    type: 0
+  - row: 14
+    col: 5
+    type: 0
+  - row: 14
+    col: 6
+    type: 0
+  - row: 14
+    col: 7
+    type: 0
+  - row: 14
+    col: 8
+    type: 0
+  - row: 14
+    col: 9
+    type: 0
+  - row: 14
+    col: 10
+    type: 1
+  - row: 14
+    col: 11
+    type: 1
+  - row: 14
+    col: 12
+    type: 1
+  - row: 14
+    col: 13
+    type: 1
+  - row: 14
+    col: 14
+    type: 1
+  - row: 14
+    col: 15
+    type: 1
+  - row: 14
+    col: 16
+    type: 1
+  - row: 14
+    col: 17
+    type: 1
+  - row: 14
+    col: 18
+    type: 1
+  - row: 14
+    col: 19
+    type: 1
+  - row: 14
+    col: 20
+    type: 1
+  - row: 14
+    col: 21
+    type: 0
+  - row: 14
+    col: 22
+    type: 0
+  - row: 14
+    col: 23
+    type: 0
+  - row: 14
+    col: 24
+    type: 0
+  - row: 14
+    col: 25
+    type: 0
+  - row: 14
+    col: 26
+    type: 0
+  - row: 14
+    col: 27
+    type: 0
+  - row: 14
+    col: 28
+    type: 0
+  - row: 14
+    col: 29
+    type: 0
+  - row: 14
+    col: 30
+    type: 0
+  - row: 14
+    col: 31
+    type: 0
+  - row: 14
+    col: 32
+    type: 0
+  - row: 14
+    col: 33
+    type: 0
+  - row: 14
+    col: 34
+    type: 0
+  - row: 14
+    col: 35
+    type: 0
+  - row: 14
+    col: 36
+    type: 0
+  - row: 14
+    col: 37
+    type: 0
+  - row: 15
+    col: 2
+    type: 0
+  - row: 15
+    col: 3
+    type: 0
+  - row: 15
+    col: 4
+    type: 0
+  - row: 15
+    col: 5
+    type: 0
+  - row: 15
+    col: 6
+    type: 0
+  - row: 15
+    col: 7
+    type: 0
+  - row: 15
+    col: 8
+    type: 0
+  - row: 15
+    col: 9
+    type: 1
+  - row: 15
+    col: 10
+    type: 1
+  - row: 15
+    col: 11
     type: 5
-  - row: 22
-    col: 20
-    type: 1
-  - row: 22
-    col: 21
-    type: 1
-  - row: 22
-    col: 22
-    type: 1
-  - row: 22
-    col: 23
-    type: 0
-  - row: 22
-    col: 24
-    type: 0
-  - row: 22
-    col: 25
-    type: 0
-  - row: 22
-    col: 26
-    type: 0
-  - row: 22
-    col: 27
-    type: 0
-  - row: 22
-    col: 28
-    type: 0
-  - row: 22
-    col: 29
-    type: 0
-  - row: 22
-    col: 30
-    type: 0
-  - row: 22
-    col: 31
-    type: 0
-  - row: 22
-    col: 32
-    type: 0
-  - row: 22
-    col: 33
-    type: 0
-  - row: 22
-    col: 34
-    type: 0
-  - row: 22
-    col: 35
-    type: 0
-  - row: 22
-    col: 36
-    type: 0
-  - row: 22
-    col: 37
-    type: 0
-  - row: 22
-    col: 38
-    type: 0
-  - row: 22
-    col: 39
-    type: 0
-  - row: 22
-    col: 40
-    type: 0
-  - row: 22
-    col: 41
-    type: 0
-  - row: 22
-    col: 42
-    type: 0
-  - row: 22
-    col: 43
-    type: 0
-  - row: 22
-    col: 44
-    type: 0
-  - row: 22
-    col: 45
-    type: 0
-  - row: 22
-    col: 46
-    type: 0
-  - row: 22
-    col: 47
-    type: 0
-  - row: 22
-    col: 48
-    type: 0
-  - row: 22
-    col: 49
-    type: 0
-  - row: 22
-    col: 50
-    type: 0
-  - row: 22
-    col: 51
-    type: 0
-  - row: 22
-    col: 52
-    type: 0
-  - row: 22
-    col: 53
-    type: 0
-  - row: 22
-    col: 54
-    type: 0
-  - row: 22
-    col: 55
-    type: 0
-  - row: 22
-    col: 56
-    type: 0
-  - row: 23
-    col: 3
-    type: 0
-  - row: 23
-    col: 4
-    type: 0
-  - row: 23
-    col: 5
-    type: 0
-  - row: 23
-    col: 6
-    type: 0
-  - row: 23
-    col: 7
-    type: 1
-  - row: 23
-    col: 8
-    type: 1
-  - row: 23
-    col: 9
-    type: 1
-  - row: 23
-    col: 10
-    type: 2
-  - row: 23
-    col: 11
-    type: 2
-  - row: 23
+  - row: 15
     col: 12
-    type: 1
-  - row: 23
-    col: 13
-    type: 3
-  - row: 23
-    col: 14
-    type: 3
-  - row: 23
-    col: 15
-    type: 2
-  - row: 23
-    col: 16
-    type: 1
-  - row: 23
-    col: 17
-    type: 1
-  - row: 23
-    col: 18
-    type: 1
-  - row: 23
-    col: 19
-    type: 5
-  - row: 23
-    col: 20
-    type: 1
-  - row: 23
-    col: 21
-    type: 1
-  - row: 23
-    col: 22
-    type: 1
-  - row: 23
-    col: 23
     type: 0
-  - row: 23
-    col: 24
-    type: 0
-  - row: 23
-    col: 25
-    type: 0
-  - row: 23
-    col: 26
-    type: 0
-  - row: 23
-    col: 27
-    type: 0
-  - row: 23
-    col: 28
-    type: 0
-  - row: 23
-    col: 29
-    type: 0
-  - row: 23
-    col: 30
-    type: 0
-  - row: 23
-    col: 31
-    type: 0
-  - row: 23
-    col: 32
-    type: 0
-  - row: 23
-    col: 33
-    type: 0
-  - row: 23
-    col: 34
-    type: 0
-  - row: 23
-    col: 35
-    type: 0
-  - row: 23
-    col: 36
-    type: 0
-  - row: 23
-    col: 37
-    type: 0
-  - row: 23
-    col: 38
-    type: 0
-  - row: 23
-    col: 39
-    type: 0
-  - row: 23
-    col: 40
-    type: 0
-  - row: 23
-    col: 41
-    type: 0
-  - row: 23
-    col: 42
-    type: 0
-  - row: 23
-    col: 43
-    type: 0
-  - row: 23
-    col: 44
-    type: 0
-  - row: 23
-    col: 45
-    type: 0
-  - row: 23
-    col: 46
-    type: 0
-  - row: 23
-    col: 47
-    type: 0
-  - row: 23
-    col: 48
-    type: 0
-  - row: 23
-    col: 49
-    type: 0
-  - row: 23
-    col: 50
-    type: 0
-  - row: 23
-    col: 51
-    type: 0
-  - row: 23
-    col: 52
-    type: 0
-  - row: 23
-    col: 53
-    type: 0
-  - row: 23
-    col: 54
-    type: 0
-  - row: 23
-    col: 55
-    type: 0
-  - row: 23
-    col: 56
-    type: 0
-  - row: 24
-    col: 3
-    type: 0
-  - row: 24
-    col: 4
-    type: 0
-  - row: 24
-    col: 5
-    type: 0
-  - row: 24
-    col: 6
-    type: 0
-  - row: 24
-    col: 7
-    type: 0
-  - row: 24
-    col: 8
-    type: 1
-  - row: 24
-    col: 9
-    type: 1
-  - row: 24
-    col: 10
-    type: 1
-  - row: 24
-    col: 11
-    type: 1
-  - row: 24
-    col: 12
-    type: 2
-  - row: 24
+  - row: 15
     col: 13
     type: 1
-  - row: 24
+  - row: 15
     col: 14
     type: 1
-  - row: 24
+  - row: 15
     col: 15
-    type: 3
-  - row: 24
+    type: 1
+  - row: 15
     col: 16
-    type: 3
-  - row: 24
+    type: 1
+  - row: 15
     col: 17
-    type: 1
-  - row: 24
+    type: 0
+  - row: 15
     col: 18
-    type: 1
-  - row: 24
+    type: 0
+  - row: 15
     col: 19
-    type: 1
-  - row: 24
+    type: 0
+  - row: 15
     col: 20
-    type: 1
-  - row: 24
+    type: 0
+  - row: 15
     col: 21
-    type: 1
-  - row: 24
+    type: 0
+  - row: 15
     col: 22
-    type: 1
-  - row: 24
+    type: 0
+  - row: 15
     col: 23
     type: 0
-  - row: 24
+  - row: 15
     col: 24
     type: 0
-  - row: 24
+  - row: 15
     col: 25
     type: 0
-  - row: 24
+  - row: 15
     col: 26
     type: 0
-  - row: 24
+  - row: 15
     col: 27
     type: 0
-  - row: 24
+  - row: 15
     col: 28
     type: 0
-  - row: 24
+  - row: 15
     col: 29
     type: 0
-  - row: 24
+  - row: 15
     col: 30
     type: 0
-  - row: 24
+  - row: 15
     col: 31
     type: 0
-  - row: 24
+  - row: 15
     col: 32
     type: 0
-  - row: 24
+  - row: 15
     col: 33
     type: 0
-  - row: 24
+  - row: 15
     col: 34
     type: 0
-  - row: 24
+  - row: 15
     col: 35
     type: 0
-  - row: 24
+  - row: 15
     col: 36
     type: 0
-  - row: 24
+  - row: 15
     col: 37
     type: 0
-  - row: 24
-    col: 38
-    type: 0
-  - row: 24
-    col: 39
-    type: 0
-  - row: 24
-    col: 40
-    type: 0
-  - row: 24
-    col: 41
-    type: 0
-  - row: 24
-    col: 42
-    type: 0
-  - row: 24
-    col: 43
-    type: 0
-  - row: 24
-    col: 44
-    type: 0
-  - row: 24
-    col: 45
-    type: 0
-  - row: 24
-    col: 46
-    type: 0
-  - row: 24
-    col: 47
-    type: 0
-  - row: 24
-    col: 48
-    type: 0
-  - row: 24
-    col: 49
-    type: 0
-  - row: 24
-    col: 50
-    type: 0
-  - row: 24
-    col: 51
-    type: 0
-  - row: 24
-    col: 52
-    type: 0
-  - row: 24
-    col: 53
-    type: 0
-  - row: 24
-    col: 54
-    type: 0
-  - row: 24
-    col: 55
-    type: 0
-  - row: 24
-    col: 56
-    type: 0
-  - row: 24
-    col: 57
-    type: 0
-  - row: 25
+  - row: 16
     col: 2
     type: 0
-  - row: 25
+  - row: 16
     col: 3
     type: 0
-  - row: 25
+  - row: 16
     col: 4
     type: 0
-  - row: 25
+  - row: 16
     col: 5
     type: 0
-  - row: 25
+  - row: 16
     col: 6
     type: 0
-  - row: 25
+  - row: 16
     col: 7
     type: 0
-  - row: 25
-    col: 8
-    type: 1
-  - row: 25
-    col: 9
-    type: 1
-  - row: 25
-    col: 10
-    type: 1
-  - row: 25
-    col: 11
-    type: 1
-  - row: 25
-    col: 12
-    type: 1
-  - row: 25
-    col: 13
-    type: 1
-  - row: 25
-    col: 14
-    type: 1
-  - row: 25
-    col: 15
-    type: 1
-  - row: 25
-    col: 16
-    type: 1
-  - row: 25
-    col: 17
-    type: 1
-  - row: 25
-    col: 18
-    type: 10
-  - row: 25
-    col: 19
-    type: 1
-  - row: 25
-    col: 20
-    type: 1
-  - row: 25
-    col: 21
-    type: 7
-  - row: 25
-    col: 22
-    type: 1
-  - row: 25
-    col: 23
-    type: 0
-  - row: 25
-    col: 24
-    type: 0
-  - row: 25
-    col: 25
-    type: 0
-  - row: 25
-    col: 26
-    type: 0
-  - row: 25
-    col: 27
-    type: 0
-  - row: 25
-    col: 28
-    type: 0
-  - row: 25
-    col: 29
-    type: 0
-  - row: 25
-    col: 30
-    type: 0
-  - row: 25
-    col: 31
-    type: 0
-  - row: 25
-    col: 32
-    type: 0
-  - row: 25
-    col: 33
-    type: 0
-  - row: 25
-    col: 34
-    type: 0
-  - row: 25
-    col: 35
-    type: 0
-  - row: 25
-    col: 36
-    type: 0
-  - row: 25
-    col: 37
-    type: 0
-  - row: 25
-    col: 38
-    type: 0
-  - row: 25
-    col: 39
-    type: 0
-  - row: 25
-    col: 40
-    type: 0
-  - row: 25
-    col: 41
-    type: 0
-  - row: 25
-    col: 42
-    type: 0
-  - row: 25
-    col: 43
-    type: 0
-  - row: 25
-    col: 44
-    type: 0
-  - row: 25
-    col: 45
-    type: 0
-  - row: 25
-    col: 46
-    type: 0
-  - row: 25
-    col: 47
-    type: 0
-  - row: 25
-    col: 48
-    type: 0
-  - row: 25
-    col: 49
-    type: 0
-  - row: 25
-    col: 50
-    type: 0
-  - row: 25
-    col: 51
-    type: 0
-  - row: 25
-    col: 52
-    type: 0
-  - row: 25
-    col: 53
-    type: 0
-  - row: 25
-    col: 54
-    type: 0
-  - row: 25
-    col: 55
-    type: 0
-  - row: 25
-    col: 56
-    type: 0
-  - row: 25
-    col: 57
-    type: 0
-  - row: 26
-    col: 2
-    type: 0
-  - row: 26
-    col: 3
-    type: 0
-  - row: 26
-    col: 4
-    type: 0
-  - row: 26
-    col: 5
-    type: 0
-  - row: 26
-    col: 6
-    type: 0
-  - row: 26
-    col: 7
-    type: 0
-  - row: 26
+  - row: 16
     col: 8
     type: 0
-  - row: 26
+  - row: 16
     col: 9
     type: 0
-  - row: 26
+  - row: 16
     col: 10
     type: 1
-  - row: 26
+  - row: 16
     col: 11
     type: 1
-  - row: 26
+  - row: 16
     col: 12
     type: 1
-  - row: 26
+  - row: 16
     col: 13
     type: 1
-  - row: 26
+  - row: 16
     col: 14
     type: 1
-  - row: 26
+  - row: 16
     col: 15
     type: 1
-  - row: 26
+  - row: 16
     col: 16
     type: 1
-  - row: 26
+  - row: 16
     col: 17
-    type: 1
-  - row: 26
+    type: 2
+  - row: 16
     col: 18
-    type: 1
-  - row: 26
+    type: 2
+  - row: 16
     col: 19
-    type: 1
-  - row: 26
+    type: 0
+  - row: 16
     col: 20
-    type: 1
-  - row: 26
+    type: 0
+  - row: 16
     col: 21
-    type: 1
-  - row: 26
+    type: 0
+  - row: 16
     col: 22
     type: 0
-  - row: 26
+  - row: 16
     col: 23
     type: 0
-  - row: 26
+  - row: 16
     col: 24
     type: 0
-  - row: 26
+  - row: 16
     col: 25
     type: 0
-  - row: 26
+  - row: 16
     col: 26
     type: 0
-  - row: 26
+  - row: 16
     col: 27
     type: 0
-  - row: 26
+  - row: 16
     col: 28
     type: 0
-  - row: 26
+  - row: 16
     col: 29
     type: 0
-  - row: 26
+  - row: 16
     col: 30
     type: 0
-  - row: 26
+  - row: 16
     col: 31
     type: 0
-  - row: 26
+  - row: 16
     col: 32
     type: 0
-  - row: 26
+  - row: 16
     col: 33
     type: 0
-  - row: 26
+  - row: 16
     col: 34
     type: 0
-  - row: 26
+  - row: 16
     col: 35
     type: 0
-  - row: 26
+  - row: 16
     col: 36
     type: 0
-  - row: 26
+  - row: 16
     col: 37
     type: 0
-  - row: 26
+  - row: 16
     col: 38
     type: 0
-  - row: 26
-    col: 39
-    type: 0
-  - row: 26
-    col: 40
-    type: 0
-  - row: 26
-    col: 41
-    type: 0
-  - row: 26
-    col: 42
-    type: 0
-  - row: 26
-    col: 43
-    type: 0
-  - row: 26
-    col: 44
-    type: 0
-  - row: 26
-    col: 45
-    type: 0
-  - row: 26
-    col: 46
-    type: 0
-  - row: 26
-    col: 47
-    type: 0
-  - row: 26
-    col: 48
-    type: 0
-  - row: 26
-    col: 49
-    type: 0
-  - row: 26
-    col: 50
-    type: 0
-  - row: 26
-    col: 51
-    type: 0
-  - row: 26
-    col: 52
-    type: 0
-  - row: 26
-    col: 53
-    type: 0
-  - row: 26
-    col: 54
-    type: 0
-  - row: 26
-    col: 55
-    type: 0
-  - row: 26
-    col: 56
-    type: 0
-  - row: 26
-    col: 57
-    type: 0
-  - row: 26
-    col: 58
-    type: 0
-  - row: 27
+  - row: 17
     col: 1
     type: 0
-  - row: 27
+  - row: 17
     col: 2
     type: 0
-  - row: 27
+  - row: 17
     col: 3
     type: 0
-  - row: 27
+  - row: 17
     col: 4
     type: 0
-  - row: 27
+  - row: 17
     col: 5
     type: 0
-  - row: 27
+  - row: 17
     col: 6
     type: 0
-  - row: 27
+  - row: 17
     col: 7
     type: 0
-  - row: 27
+  - row: 17
     col: 8
     type: 0
-  - row: 27
+  - row: 17
     col: 9
     type: 0
-  - row: 27
+  - row: 17
     col: 10
-    type: 0
-  - row: 27
+    type: 1
+  - row: 17
     col: 11
-    type: 0
-  - row: 27
+    type: 1
+  - row: 17
     col: 12
     type: 1
-  - row: 27
+  - row: 17
     col: 13
     type: 1
-  - row: 27
+  - row: 17
     col: 14
     type: 1
-  - row: 27
+  - row: 17
     col: 15
     type: 1
-  - row: 27
+  - row: 17
     col: 16
-    type: 1
-  - row: 27
+    type: 2
+  - row: 17
     col: 17
-    type: 1
-  - row: 27
+    type: 2
+  - row: 17
     col: 18
-    type: 1
-  - row: 27
+    type: 2
+  - row: 17
     col: 19
-    type: 1
-  - row: 27
+    type: 0
+  - row: 17
     col: 20
     type: 0
-  - row: 27
+  - row: 17
     col: 21
     type: 0
-  - row: 27
+  - row: 17
     col: 22
     type: 0
-  - row: 27
+  - row: 17
     col: 23
     type: 0
-  - row: 27
+  - row: 17
     col: 24
     type: 0
-  - row: 27
+  - row: 17
     col: 25
     type: 0
-  - row: 27
+  - row: 17
     col: 26
     type: 0
-  - row: 27
+  - row: 17
     col: 27
     type: 0
-  - row: 27
+  - row: 17
     col: 28
     type: 0
-  - row: 27
+  - row: 17
     col: 29
     type: 0
-  - row: 27
+  - row: 17
     col: 30
     type: 0
-  - row: 27
+  - row: 17
     col: 31
     type: 0
-  - row: 27
+  - row: 17
     col: 32
     type: 0
-  - row: 27
+  - row: 17
     col: 33
     type: 0
-  - row: 27
+  - row: 17
     col: 34
     type: 0
-  - row: 27
+  - row: 17
     col: 35
     type: 0
-  - row: 27
+  - row: 17
     col: 36
     type: 0
-  - row: 27
+  - row: 17
     col: 37
     type: 0
-  - row: 27
+  - row: 17
     col: 38
     type: 0
-  - row: 27
-    col: 39
-    type: 0
-  - row: 27
-    col: 40
-    type: 0
-  - row: 27
-    col: 41
-    type: 0
-  - row: 27
-    col: 42
-    type: 0
-  - row: 27
-    col: 43
-    type: 0
-  - row: 27
-    col: 44
-    type: 0
-  - row: 27
-    col: 45
-    type: 0
-  - row: 27
-    col: 46
-    type: 0
-  - row: 27
-    col: 47
-    type: 0
-  - row: 27
-    col: 48
-    type: 0
-  - row: 27
-    col: 49
-    type: 0
-  - row: 27
-    col: 50
-    type: 0
-  - row: 27
-    col: 51
-    type: 0
-  - row: 27
-    col: 52
-    type: 0
-  - row: 27
-    col: 53
-    type: 0
-  - row: 27
-    col: 54
-    type: 0
-  - row: 27
-    col: 55
-    type: 0
-  - row: 27
-    col: 56
-    type: 0
-  - row: 27
-    col: 57
-    type: 0
-  - row: 27
-    col: 58
-    type: 0
-  - row: 28
+  - row: 18
     col: 1
     type: 0
-  - row: 28
+  - row: 18
     col: 2
     type: 0
-  - row: 28
+  - row: 18
     col: 3
     type: 0
-  - row: 28
+  - row: 18
     col: 4
     type: 0
-  - row: 28
+  - row: 18
     col: 5
     type: 0
-  - row: 28
+  - row: 18
     col: 6
     type: 0
-  - row: 28
+  - row: 18
     col: 7
     type: 0
-  - row: 28
+  - row: 18
     col: 8
     type: 0
-  - row: 28
+  - row: 18
     col: 9
     type: 0
-  - row: 28
+  - row: 18
     col: 10
     type: 0
-  - row: 28
+  - row: 18
     col: 11
-    type: 0
-  - row: 28
+    type: 1
+  - row: 18
     col: 12
-    type: 0
-  - row: 28
+    type: 1
+  - row: 18
     col: 13
-    type: 0
-  - row: 28
+    type: 1
+  - row: 18
     col: 14
-    type: 0
-  - row: 28
+    type: 1
+  - row: 18
     col: 15
-    type: 0
-  - row: 28
+    type: 1
+  - row: 18
     col: 16
-    type: 1
-  - row: 28
+    type: 0
+  - row: 18
     col: 17
-    type: 3
-  - row: 28
+    type: 2
+  - row: 18
     col: 18
-    type: 1
-  - row: 28
+    type: 0
+  - row: 18
     col: 19
-    type: 1
-  - row: 28
+    type: 0
+  - row: 18
     col: 20
     type: 0
-  - row: 28
+  - row: 18
     col: 21
     type: 0
-  - row: 28
+  - row: 18
     col: 22
     type: 0
-  - row: 28
+  - row: 18
     col: 23
     type: 0
-  - row: 28
+  - row: 18
     col: 24
     type: 0
-  - row: 28
+  - row: 18
     col: 25
     type: 0
-  - row: 28
+  - row: 18
     col: 26
     type: 0
-  - row: 28
+  - row: 18
     col: 27
     type: 0
-  - row: 28
+  - row: 18
     col: 28
     type: 0
-  - row: 28
+  - row: 18
     col: 29
     type: 0
-  - row: 28
+  - row: 18
     col: 30
     type: 0
-  - row: 28
+  - row: 18
     col: 31
     type: 0
-  - row: 28
+  - row: 18
     col: 32
     type: 0
-  - row: 28
+  - row: 18
     col: 33
     type: 0
-  - row: 28
+  - row: 18
     col: 34
     type: 0
-  - row: 28
+  - row: 18
     col: 35
     type: 0
-  - row: 28
+  - row: 18
     col: 36
     type: 0
-  - row: 28
+  - row: 18
     col: 37
     type: 0
-  - row: 28
+  - row: 18
     col: 38
     type: 0
-  - row: 28
+  - row: 18
     col: 39
     type: 0
-  - row: 28
-    col: 40
-    type: 0
-  - row: 28
-    col: 41
-    type: 0
-  - row: 28
-    col: 42
-    type: 0
-  - row: 28
-    col: 43
-    type: 0
-  - row: 28
-    col: 44
-    type: 0
-  - row: 28
-    col: 45
-    type: 0
-  - row: 28
-    col: 46
-    type: 0
-  - row: 28
-    col: 47
-    type: 0
-  - row: 28
-    col: 48
-    type: 0
-  - row: 28
-    col: 49
-    type: 0
-  - row: 28
-    col: 50
-    type: 0
-  - row: 28
-    col: 51
-    type: 0
-  - row: 28
-    col: 52
-    type: 0
-  - row: 28
-    col: 53
-    type: 0
-  - row: 28
-    col: 54
-    type: 0
-  - row: 28
-    col: 55
-    type: 0
-  - row: 28
-    col: 56
-    type: 0
-  - row: 28
-    col: 57
-    type: 0
-  - row: 28
-    col: 58
-    type: 0
-  - row: 28
-    col: 59
-    type: 0
-  - row: 29
+  - row: 19
     col: 0
     type: 0
-  - row: 29
+  - row: 19
     col: 1
     type: 0
-  - row: 29
+  - row: 19
     col: 2
     type: 0
-  - row: 29
+  - row: 19
     col: 3
     type: 0
-  - row: 29
+  - row: 19
     col: 4
     type: 0
-  - row: 29
+  - row: 19
     col: 5
     type: 0
-  - row: 29
+  - row: 19
     col: 6
     type: 0
-  - row: 29
+  - row: 19
     col: 7
     type: 0
-  - row: 29
+  - row: 19
     col: 8
     type: 0
-  - row: 29
+  - row: 19
     col: 9
     type: 0
-  - row: 29
+  - row: 19
     col: 10
     type: 0
-  - row: 29
+  - row: 19
     col: 11
-    type: 0
-  - row: 29
+    type: 1
+  - row: 19
     col: 12
-    type: 0
-  - row: 29
+    type: 1
+  - row: 19
     col: 13
-    type: 0
-  - row: 29
+    type: 1
+  - row: 19
     col: 14
-    type: 0
-  - row: 29
+    type: 1
+  - row: 19
     col: 15
     type: 0
-  - row: 29
+  - row: 19
     col: 16
-    type: 1
-  - row: 29
+    type: 0
+  - row: 19
     col: 17
-    type: 1
-  - row: 29
+    type: 0
+  - row: 19
     col: 18
-    type: 2
-  - row: 29
+    type: 0
+  - row: 19
     col: 19
     type: 0
-  - row: 29
+  - row: 19
     col: 20
     type: 0
-  - row: 29
+  - row: 19
     col: 21
     type: 0
-  - row: 29
+  - row: 19
     col: 22
     type: 0
-  - row: 29
+  - row: 19
     col: 23
     type: 0
-  - row: 29
+  - row: 19
     col: 24
     type: 0
-  - row: 29
+  - row: 19
     col: 25
     type: 0
-  - row: 29
+  - row: 19
     col: 26
     type: 0
-  - row: 29
+  - row: 19
     col: 27
     type: 0
-  - row: 29
+  - row: 19
     col: 28
     type: 0
-  - row: 29
+  - row: 19
     col: 29
     type: 0
-  - row: 29
+  - row: 19
     col: 30
     type: 0
-  - row: 29
+  - row: 19
     col: 31
     type: 0
-  - row: 29
+  - row: 19
     col: 32
     type: 0
-  - row: 29
+  - row: 19
     col: 33
     type: 0
-  - row: 29
+  - row: 19
     col: 34
     type: 0
-  - row: 29
+  - row: 19
     col: 35
     type: 0
-  - row: 29
+  - row: 19
     col: 36
     type: 0
-  - row: 29
+  - row: 19
     col: 37
     type: 0
-  - row: 29
+  - row: 19
     col: 38
     type: 0
-  - row: 29
+  - row: 19
     col: 39
     type: 0
-  - row: 29
-    col: 40
-    type: 0
-  - row: 29
-    col: 41
-    type: 0
-  - row: 29
-    col: 42
-    type: 0
-  - row: 29
-    col: 43
-    type: 0
-  - row: 29
-    col: 44
-    type: 0
-  - row: 29
-    col: 45
-    type: 0
-  - row: 29
-    col: 46
-    type: 0
-  - row: 29
-    col: 47
-    type: 0
-  - row: 29
-    col: 48
-    type: 0
-  - row: 29
-    col: 49
-    type: 0
-  - row: 29
-    col: 50
-    type: 0
-  - row: 29
-    col: 51
-    type: 0
-  - row: 29
-    col: 52
-    type: 0
-  - row: 29
-    col: 53
-    type: 0
-  - row: 29
-    col: 54
-    type: 0
-  - row: 29
-    col: 55
-    type: 0
-  - row: 29
-    col: 56
-    type: 0
-  - row: 29
-    col: 57
-    type: 0
-  - row: 29
-    col: 58
-    type: 0
-  - row: 29
-    col: 59
-    type: 0
-  - row: 30
+  - row: 20
     col: 0
     type: 0
-  - row: 30
+  - row: 20
     col: 1
     type: 0
-  - row: 30
+  - row: 20
     col: 2
     type: 0
-  - row: 30
+  - row: 20
     col: 3
     type: 0
-  - row: 30
+  - row: 20
     col: 4
     type: 0
-  - row: 30
+  - row: 20
     col: 5
     type: 0
-  - row: 30
+  - row: 20
     col: 6
     type: 0
-  - row: 30
+  - row: 20
     col: 7
     type: 0
-  - row: 30
+  - row: 20
     col: 8
     type: 0
-  - row: 30
+  - row: 20
     col: 9
     type: 0
-  - row: 30
+  - row: 20
     col: 10
     type: 0
-  - row: 30
+  - row: 20
     col: 11
     type: 0
-  - row: 30
+  - row: 20
     col: 12
     type: 0
-  - row: 30
+  - row: 20
     col: 13
     type: 0
-  - row: 30
+  - row: 20
     col: 14
     type: 0
-  - row: 30
+  - row: 20
     col: 15
     type: 0
-  - row: 30
+  - row: 20
     col: 16
     type: 0
-  - row: 30
+  - row: 20
     col: 17
-    type: 1
-  - row: 30
+    type: 0
+  - row: 20
     col: 18
-    type: 1
-  - row: 30
+    type: 0
+  - row: 20
     col: 19
-    type: 2
-  - row: 30
+    type: 0
+  - row: 20
     col: 20
     type: 0
-  - row: 30
+  - row: 20
     col: 21
     type: 0
-  - row: 30
+  - row: 20
     col: 22
     type: 0
-  - row: 30
+  - row: 20
     col: 23
     type: 0
-  - row: 30
+  - row: 20
     col: 24
     type: 0
-  - row: 30
+  - row: 20
     col: 25
     type: 0
-  - row: 30
+  - row: 20
     col: 26
     type: 0
-  - row: 30
+  - row: 20
     col: 27
     type: 0
-  - row: 30
+  - row: 20
     col: 28
     type: 0
-  - row: 30
+  - row: 20
     col: 29
     type: 0
-  - row: 30
+  - row: 20
     col: 30
     type: 0
-  - row: 30
+  - row: 20
     col: 31
     type: 0
-  - row: 30
+  - row: 20
     col: 32
     type: 0
-  - row: 30
+  - row: 20
     col: 33
     type: 0
-  - row: 30
+  - row: 20
     col: 34
     type: 0
-  - row: 30
+  - row: 20
     col: 35
     type: 0
-  - row: 30
+  - row: 20
     col: 36
     type: 0
-  - row: 30
+  - row: 20
     col: 37
     type: 0
-  - row: 30
+  - row: 20
     col: 38
     type: 0
-  - row: 30
+  - row: 20
     col: 39
     type: 0
-  - row: 30
+  - row: 20
     col: 40
     type: 0
-  - row: 30
-    col: 41
-    type: 0
-  - row: 30
-    col: 42
-    type: 0
-  - row: 30
-    col: 43
-    type: 0
-  - row: 30
-    col: 44
-    type: 0
-  - row: 30
-    col: 45
-    type: 0
-  - row: 30
-    col: 46
-    type: 0
-  - row: 30
-    col: 47
-    type: 0
-  - row: 30
-    col: 48
-    type: 0
-  - row: 30
-    col: 49
-    type: 0
-  - row: 30
-    col: 50
-    type: 0
-  - row: 30
-    col: 51
-    type: 0
-  - row: 30
-    col: 52
-    type: 0
-  - row: 30
-    col: 53
-    type: 0
-  - row: 30
-    col: 54
-    type: 0
-  - row: 30
-    col: 55
-    type: 0
-  - row: 30
-    col: 56
-    type: 0
-  - row: 30
-    col: 57
-    type: 0
-  - row: 30
-    col: 58
-    type: 0
-  - row: 30
-    col: 59
-    type: 0
-  - row: 30
-    col: 60
-    type: 0
-  - row: 31
+  - row: 21
     col: 0
     type: 0
-  - row: 31
+  - row: 21
     col: 1
     type: 0
-  - row: 31
+  - row: 21
     col: 2
     type: 0
-  - row: 31
+  - row: 21
     col: 3
     type: 0
-  - row: 31
+  - row: 21
     col: 4
     type: 0
-  - row: 31
+  - row: 21
     col: 5
     type: 0
-  - row: 31
+  - row: 21
     col: 6
     type: 0
-  - row: 31
+  - row: 21
     col: 7
     type: 0
-  - row: 31
+  - row: 21
     col: 8
     type: 0
-  - row: 31
+  - row: 21
     col: 9
     type: 0
-  - row: 31
+  - row: 21
     col: 10
     type: 0
-  - row: 31
+  - row: 21
     col: 11
     type: 0
-  - row: 31
+  - row: 21
     col: 12
     type: 0
-  - row: 31
+  - row: 21
     col: 13
     type: 0
-  - row: 31
+  - row: 21
     col: 14
     type: 0
-  - row: 31
+  - row: 21
     col: 15
     type: 0
-  - row: 31
+  - row: 21
     col: 16
     type: 0
-  - row: 31
+  - row: 21
     col: 17
-    type: 1
-  - row: 31
+    type: 0
+  - row: 21
     col: 18
-    type: 1
-  - row: 31
+    type: 0
+  - row: 21
     col: 19
-    type: 2
-  - row: 31
+    type: 0
+  - row: 21
     col: 20
     type: 0
-  - row: 31
+  - row: 21
     col: 21
     type: 0
-  - row: 31
+  - row: 21
     col: 22
     type: 0
-  - row: 31
+  - row: 21
     col: 23
     type: 0
-  - row: 31
+  - row: 21
     col: 24
     type: 0
-  - row: 31
+  - row: 21
     col: 25
     type: 0
-  - row: 31
+  - row: 21
     col: 26
     type: 0
-  - row: 31
+  - row: 21
     col: 27
     type: 0
-  - row: 31
+  - row: 21
     col: 28
     type: 0
-  - row: 31
+  - row: 21
     col: 29
     type: 0
-  - row: 31
+  - row: 21
     col: 30
     type: 0
-  - row: 31
+  - row: 21
     col: 31
     type: 0
-  - row: 31
+  - row: 21
     col: 32
     type: 0
-  - row: 31
+  - row: 21
     col: 33
     type: 0
-  - row: 31
+  - row: 21
     col: 34
     type: 0
-  - row: 31
+  - row: 21
     col: 35
     type: 0
-  - row: 31
+  - row: 21
     col: 36
     type: 0
-  - row: 31
+  - row: 21
     col: 37
     type: 0
-  - row: 31
+  - row: 21
     col: 38
     type: 0
-  - row: 31
+  - row: 21
     col: 39
     type: 0
-  - row: 31
-    col: 40
-    type: 0
-  - row: 31
-    col: 41
-    type: 0
-  - row: 31
-    col: 42
-    type: 0
-  - row: 31
-    col: 43
-    type: 0
-  - row: 31
-    col: 44
-    type: 0
-  - row: 31
-    col: 45
-    type: 0
-  - row: 31
-    col: 46
-    type: 0
-  - row: 31
-    col: 47
-    type: 0
-  - row: 31
-    col: 48
-    type: 0
-  - row: 31
-    col: 49
-    type: 0
-  - row: 31
-    col: 50
-    type: 0
-  - row: 31
-    col: 51
-    type: 0
-  - row: 31
-    col: 52
-    type: 0
-  - row: 31
-    col: 53
-    type: 0
-  - row: 31
-    col: 54
-    type: 0
-  - row: 31
-    col: 55
-    type: 0
-  - row: 31
-    col: 56
-    type: 0
-  - row: 31
-    col: 57
-    type: 0
-  - row: 31
-    col: 58
-    type: 0
-  - row: 31
-    col: 59
-    type: 0
-  - row: 32
+  - row: 22
     col: 1
     type: 0
-  - row: 32
+  - row: 22
     col: 2
     type: 0
-  - row: 32
+  - row: 22
     col: 3
     type: 0
-  - row: 32
+  - row: 22
     col: 4
     type: 0
-  - row: 32
+  - row: 22
     col: 5
     type: 0
-  - row: 32
+  - row: 22
     col: 6
     type: 0
-  - row: 32
+  - row: 22
     col: 7
     type: 0
-  - row: 32
+  - row: 22
     col: 8
     type: 0
-  - row: 32
+  - row: 22
     col: 9
     type: 0
-  - row: 32
+  - row: 22
     col: 10
     type: 0
-  - row: 32
+  - row: 22
     col: 11
     type: 0
-  - row: 32
+  - row: 22
     col: 12
     type: 0
-  - row: 32
+  - row: 22
     col: 13
     type: 0
-  - row: 32
+  - row: 22
     col: 14
     type: 0
-  - row: 32
+  - row: 22
     col: 15
-    type: 1
-  - row: 32
+    type: 0
+  - row: 22
     col: 16
-    type: 1
-  - row: 32
+    type: 0
+  - row: 22
     col: 17
-    type: 1
-  - row: 32
+    type: 0
+  - row: 22
     col: 18
-    type: 1
-  - row: 32
+    type: 0
+  - row: 22
     col: 19
-    type: 2
-  - row: 32
+    type: 0
+  - row: 22
     col: 20
     type: 0
-  - row: 32
+  - row: 22
     col: 21
     type: 0
-  - row: 32
+  - row: 22
     col: 22
     type: 0
-  - row: 32
+  - row: 22
     col: 23
     type: 0
-  - row: 32
+  - row: 22
     col: 24
     type: 0
-  - row: 32
+  - row: 22
     col: 25
     type: 0
-  - row: 32
+  - row: 22
     col: 26
     type: 0
-  - row: 32
+  - row: 22
     col: 27
     type: 0
-  - row: 32
+  - row: 22
     col: 28
     type: 0
-  - row: 32
+  - row: 22
     col: 29
     type: 0
-  - row: 32
+  - row: 22
     col: 30
     type: 0
-  - row: 32
+  - row: 22
     col: 31
     type: 0
-  - row: 32
+  - row: 22
     col: 32
     type: 0
-  - row: 32
+  - row: 22
     col: 33
     type: 0
-  - row: 32
+  - row: 22
     col: 34
     type: 0
-  - row: 32
+  - row: 22
     col: 35
     type: 0
-  - row: 32
+  - row: 22
     col: 36
     type: 0
-  - row: 32
+  - row: 22
     col: 37
     type: 0
-  - row: 32
+  - row: 22
     col: 38
     type: 0
-  - row: 32
+  - row: 22
     col: 39
     type: 0
-  - row: 32
-    col: 40
-    type: 0
-  - row: 32
-    col: 41
-    type: 0
-  - row: 32
-    col: 42
-    type: 0
-  - row: 32
-    col: 43
-    type: 0
-  - row: 32
-    col: 44
-    type: 0
-  - row: 32
-    col: 45
-    type: 0
-  - row: 32
-    col: 46
-    type: 0
-  - row: 32
-    col: 47
-    type: 0
-  - row: 32
-    col: 48
-    type: 0
-  - row: 32
-    col: 49
-    type: 0
-  - row: 32
-    col: 50
-    type: 0
-  - row: 32
-    col: 51
-    type: 0
-  - row: 32
-    col: 52
-    type: 0
-  - row: 32
-    col: 53
-    type: 0
-  - row: 32
-    col: 54
-    type: 0
-  - row: 32
-    col: 55
-    type: 0
-  - row: 32
-    col: 56
-    type: 0
-  - row: 32
-    col: 57
-    type: 0
-  - row: 32
-    col: 58
-    type: 0
-  - row: 32
-    col: 59
-    type: 0
-  - row: 33
+  - row: 23
     col: 1
     type: 0
-  - row: 33
+  - row: 23
     col: 2
     type: 0
-  - row: 33
+  - row: 23
     col: 3
     type: 0
-  - row: 33
+  - row: 23
     col: 4
     type: 0
-  - row: 33
+  - row: 23
     col: 5
     type: 0
-  - row: 33
+  - row: 23
     col: 6
     type: 0
-  - row: 33
+  - row: 23
     col: 7
     type: 0
-  - row: 33
+  - row: 23
     col: 8
     type: 0
-  - row: 33
+  - row: 23
     col: 9
     type: 0
-  - row: 33
+  - row: 23
     col: 10
     type: 0
-  - row: 33
+  - row: 23
     col: 11
     type: 0
-  - row: 33
+  - row: 23
     col: 12
     type: 0
-  - row: 33
+  - row: 23
     col: 13
     type: 0
-  - row: 33
+  - row: 23
     col: 14
     type: 0
-  - row: 33
+  - row: 23
     col: 15
-    type: 1
-  - row: 33
+    type: 0
+  - row: 23
     col: 16
-    type: 1
-  - row: 33
+    type: 0
+  - row: 23
     col: 17
-    type: 3
-  - row: 33
+    type: 0
+  - row: 23
     col: 18
-    type: 1
-  - row: 33
+    type: 0
+  - row: 23
     col: 19
     type: 0
-  - row: 33
+  - row: 23
     col: 20
     type: 0
-  - row: 33
+  - row: 23
     col: 21
     type: 0
-  - row: 33
+  - row: 23
     col: 22
     type: 0
-  - row: 33
+  - row: 23
     col: 23
     type: 0
-  - row: 33
+  - row: 23
     col: 24
     type: 0
-  - row: 33
+  - row: 23
     col: 25
     type: 0
-  - row: 33
+  - row: 23
     col: 26
     type: 0
-  - row: 33
+  - row: 23
     col: 27
     type: 0
-  - row: 33
+  - row: 23
     col: 28
     type: 0
-  - row: 33
+  - row: 23
     col: 29
     type: 0
-  - row: 33
+  - row: 23
     col: 30
     type: 0
-  - row: 33
+  - row: 23
     col: 31
     type: 0
-  - row: 33
+  - row: 23
     col: 32
     type: 0
-  - row: 33
+  - row: 23
     col: 33
     type: 0
-  - row: 33
+  - row: 23
     col: 34
     type: 0
-  - row: 33
+  - row: 23
     col: 35
     type: 0
-  - row: 33
+  - row: 23
     col: 36
     type: 0
-  - row: 33
+  - row: 23
     col: 37
     type: 0
-  - row: 33
+  - row: 23
     col: 38
     type: 0
-  - row: 33
-    col: 39
-    type: 0
-  - row: 33
-    col: 40
-    type: 0
-  - row: 33
-    col: 41
-    type: 0
-  - row: 33
-    col: 42
-    type: 0
-  - row: 33
-    col: 43
-    type: 0
-  - row: 33
-    col: 44
-    type: 0
-  - row: 33
-    col: 45
-    type: 0
-  - row: 33
-    col: 46
-    type: 0
-  - row: 33
-    col: 47
-    type: 0
-  - row: 33
-    col: 48
-    type: 0
-  - row: 33
-    col: 49
-    type: 0
-  - row: 33
-    col: 50
-    type: 0
-  - row: 33
-    col: 51
-    type: 0
-  - row: 33
-    col: 52
-    type: 0
-  - row: 33
-    col: 53
-    type: 0
-  - row: 33
-    col: 54
-    type: 0
-  - row: 33
-    col: 55
-    type: 0
-  - row: 33
-    col: 56
-    type: 0
-  - row: 33
-    col: 57
-    type: 0
-  - row: 33
-    col: 58
-    type: 0
-  - row: 34
+  - row: 24
     col: 2
     type: 0
-  - row: 34
+  - row: 24
     col: 3
     type: 0
-  - row: 34
+  - row: 24
     col: 4
     type: 0
-  - row: 34
+  - row: 24
     col: 5
     type: 0
-  - row: 34
+  - row: 24
     col: 6
     type: 0
-  - row: 34
+  - row: 24
     col: 7
     type: 0
-  - row: 34
+  - row: 24
     col: 8
     type: 0
-  - row: 34
+  - row: 24
     col: 9
     type: 0
-  - row: 34
+  - row: 24
     col: 10
     type: 0
-  - row: 34
+  - row: 24
     col: 11
     type: 0
-  - row: 34
+  - row: 24
     col: 12
     type: 0
-  - row: 34
+  - row: 24
     col: 13
     type: 0
-  - row: 34
+  - row: 24
     col: 14
     type: 0
-  - row: 34
+  - row: 24
     col: 15
     type: 0
-  - row: 34
+  - row: 24
     col: 16
     type: 0
-  - row: 34
+  - row: 24
     col: 17
-    type: 1
-  - row: 34
+    type: 0
+  - row: 24
     col: 18
-    type: 1
-  - row: 34
+    type: 0
+  - row: 24
     col: 19
     type: 0
-  - row: 34
+  - row: 24
     col: 20
     type: 0
-  - row: 34
+  - row: 24
     col: 21
     type: 0
-  - row: 34
+  - row: 24
     col: 22
     type: 0
-  - row: 34
+  - row: 24
     col: 23
     type: 0
-  - row: 34
+  - row: 24
     col: 24
     type: 0
-  - row: 34
+  - row: 24
     col: 25
     type: 0
-  - row: 34
+  - row: 24
     col: 26
     type: 0
-  - row: 34
+  - row: 24
     col: 27
     type: 0
-  - row: 34
+  - row: 24
     col: 28
     type: 0
-  - row: 34
+  - row: 24
     col: 29
     type: 0
-  - row: 34
+  - row: 24
     col: 30
     type: 0
-  - row: 34
+  - row: 24
     col: 31
     type: 0
-  - row: 34
+  - row: 24
     col: 32
     type: 0
-  - row: 34
+  - row: 24
     col: 33
     type: 0
-  - row: 34
+  - row: 24
     col: 34
     type: 0
-  - row: 34
+  - row: 24
     col: 35
     type: 0
-  - row: 34
+  - row: 24
     col: 36
     type: 0
-  - row: 34
+  - row: 24
     col: 37
     type: 0
-  - row: 34
+  - row: 24
     col: 38
     type: 0
-  - row: 34
-    col: 39
-    type: 0
-  - row: 34
-    col: 40
-    type: 0
-  - row: 34
-    col: 41
-    type: 0
-  - row: 34
-    col: 42
-    type: 0
-  - row: 34
-    col: 43
-    type: 0
-  - row: 34
-    col: 44
-    type: 0
-  - row: 34
-    col: 45
-    type: 0
-  - row: 34
-    col: 46
-    type: 0
-  - row: 34
-    col: 47
-    type: 0
-  - row: 34
-    col: 48
-    type: 0
-  - row: 34
-    col: 49
-    type: 0
-  - row: 34
-    col: 50
-    type: 0
-  - row: 34
-    col: 51
-    type: 0
-  - row: 34
-    col: 52
-    type: 0
-  - row: 34
-    col: 53
-    type: 0
-  - row: 34
-    col: 54
-    type: 0
-  - row: 34
-    col: 55
-    type: 0
-  - row: 34
-    col: 56
-    type: 0
-  - row: 34
-    col: 57
-    type: 0
-  - row: 34
-    col: 58
-    type: 0
-  - row: 35
+  - row: 25
     col: 2
     type: 0
-  - row: 35
+  - row: 25
     col: 3
     type: 0
-  - row: 35
+  - row: 25
     col: 4
     type: 0
-  - row: 35
+  - row: 25
     col: 5
     type: 0
-  - row: 35
+  - row: 25
     col: 6
     type: 0
-  - row: 35
+  - row: 25
     col: 7
     type: 0
-  - row: 35
+  - row: 25
     col: 8
     type: 0
-  - row: 35
+  - row: 25
     col: 9
     type: 0
-  - row: 35
+  - row: 25
     col: 10
     type: 0
-  - row: 35
+  - row: 25
     col: 11
     type: 0
-  - row: 35
+  - row: 25
     col: 12
     type: 0
-  - row: 35
+  - row: 25
     col: 13
     type: 0
-  - row: 35
+  - row: 25
     col: 14
     type: 0
-  - row: 35
+  - row: 25
     col: 15
     type: 0
-  - row: 35
+  - row: 25
     col: 16
     type: 0
-  - row: 35
+  - row: 25
     col: 17
     type: 0
-  - row: 35
+  - row: 25
     col: 18
     type: 0
-  - row: 35
+  - row: 25
     col: 19
     type: 0
-  - row: 35
+  - row: 25
     col: 20
     type: 0
-  - row: 35
+  - row: 25
     col: 21
     type: 0
-  - row: 35
+  - row: 25
     col: 22
     type: 0
-  - row: 35
+  - row: 25
     col: 23
     type: 0
-  - row: 35
+  - row: 25
     col: 24
     type: 0
-  - row: 35
+  - row: 25
     col: 25
     type: 0
-  - row: 35
+  - row: 25
     col: 26
     type: 0
-  - row: 35
+  - row: 25
     col: 27
     type: 0
-  - row: 35
+  - row: 25
     col: 28
     type: 0
-  - row: 35
+  - row: 25
     col: 29
     type: 0
-  - row: 35
+  - row: 25
     col: 30
     type: 0
-  - row: 35
+  - row: 25
     col: 31
     type: 0
-  - row: 35
+  - row: 25
     col: 32
     type: 0
-  - row: 35
+  - row: 25
     col: 33
     type: 0
-  - row: 35
+  - row: 25
     col: 34
     type: 0
-  - row: 35
+  - row: 25
     col: 35
     type: 0
-  - row: 35
+  - row: 25
     col: 36
     type: 0
-  - row: 35
+  - row: 25
     col: 37
     type: 0
-  - row: 35
-    col: 38
-    type: 0
-  - row: 35
-    col: 39
-    type: 0
-  - row: 35
-    col: 40
-    type: 0
-  - row: 35
-    col: 41
-    type: 0
-  - row: 35
-    col: 42
-    type: 0
-  - row: 35
-    col: 43
-    type: 0
-  - row: 35
-    col: 44
-    type: 0
-  - row: 35
-    col: 45
-    type: 0
-  - row: 35
-    col: 46
-    type: 0
-  - row: 35
-    col: 47
-    type: 0
-  - row: 35
-    col: 48
-    type: 0
-  - row: 35
-    col: 49
-    type: 0
-  - row: 35
-    col: 50
-    type: 0
-  - row: 35
-    col: 51
-    type: 0
-  - row: 35
-    col: 52
-    type: 0
-  - row: 35
-    col: 53
-    type: 0
-  - row: 35
-    col: 54
-    type: 0
-  - row: 35
-    col: 55
-    type: 0
-  - row: 35
-    col: 56
-    type: 0
-  - row: 35
-    col: 57
-    type: 0
-  - row: 36
+  - row: 26
     col: 3
     type: 0
-  - row: 36
+  - row: 26
     col: 4
     type: 0
-  - row: 36
+  - row: 26
     col: 5
     type: 0
-  - row: 36
+  - row: 26
     col: 6
     type: 0
-  - row: 36
+  - row: 26
     col: 7
     type: 0
-  - row: 36
+  - row: 26
     col: 8
     type: 0
-  - row: 36
+  - row: 26
     col: 9
     type: 0
-  - row: 36
+  - row: 26
     col: 10
     type: 0
-  - row: 36
+  - row: 26
     col: 11
     type: 0
-  - row: 36
+  - row: 26
     col: 12
     type: 0
-  - row: 36
+  - row: 26
     col: 13
     type: 0
-  - row: 36
+  - row: 26
     col: 14
     type: 0
-  - row: 36
+  - row: 26
     col: 15
     type: 0
-  - row: 36
+  - row: 26
     col: 16
     type: 0
-  - row: 36
+  - row: 26
     col: 17
     type: 0
-  - row: 36
+  - row: 26
     col: 18
     type: 0
-  - row: 36
+  - row: 26
     col: 19
     type: 0
-  - row: 36
+  - row: 26
     col: 20
     type: 0
-  - row: 36
+  - row: 26
     col: 21
     type: 0
-  - row: 36
+  - row: 26
     col: 22
     type: 0
-  - row: 36
+  - row: 26
     col: 23
     type: 0
-  - row: 36
+  - row: 26
     col: 24
     type: 0
-  - row: 36
+  - row: 26
     col: 25
     type: 0
-  - row: 36
+  - row: 26
     col: 26
     type: 0
-  - row: 36
+  - row: 26
     col: 27
     type: 0
-  - row: 36
+  - row: 26
     col: 28
     type: 0
-  - row: 36
+  - row: 26
     col: 29
     type: 0
-  - row: 36
+  - row: 26
     col: 30
     type: 0
-  - row: 36
+  - row: 26
     col: 31
     type: 0
-  - row: 36
+  - row: 26
     col: 32
     type: 0
-  - row: 36
+  - row: 26
     col: 33
     type: 0
-  - row: 36
+  - row: 26
     col: 34
     type: 0
-  - row: 36
+  - row: 26
     col: 35
     type: 0
-  - row: 36
+  - row: 26
     col: 36
     type: 0
-  - row: 36
+  - row: 26
     col: 37
     type: 0
-  - row: 36
-    col: 38
-    type: 0
-  - row: 36
-    col: 39
-    type: 0
-  - row: 36
-    col: 40
-    type: 0
-  - row: 36
-    col: 41
-    type: 0
-  - row: 36
-    col: 42
-    type: 0
-  - row: 36
-    col: 43
-    type: 0
-  - row: 36
-    col: 44
-    type: 0
-  - row: 36
-    col: 45
-    type: 0
-  - row: 36
-    col: 46
-    type: 0
-  - row: 36
-    col: 47
-    type: 0
-  - row: 36
-    col: 48
-    type: 0
-  - row: 36
-    col: 49
-    type: 0
-  - row: 36
-    col: 50
-    type: 0
-  - row: 36
-    col: 51
-    type: 0
-  - row: 36
-    col: 52
-    type: 0
-  - row: 36
-    col: 53
-    type: 0
-  - row: 36
-    col: 54
-    type: 0
-  - row: 36
-    col: 55
-    type: 0
-  - row: 36
-    col: 56
-    type: 0
-  - row: 36
-    col: 57
-    type: 0
-  - row: 37
+  - row: 27
     col: 3
     type: 0
-  - row: 37
+  - row: 27
     col: 4
     type: 0
-  - row: 37
+  - row: 27
     col: 5
     type: 0
-  - row: 37
+  - row: 27
     col: 6
     type: 0
-  - row: 37
+  - row: 27
     col: 7
     type: 0
-  - row: 37
+  - row: 27
     col: 8
     type: 0
-  - row: 37
+  - row: 27
     col: 9
     type: 0
-  - row: 37
+  - row: 27
     col: 10
     type: 0
-  - row: 37
+  - row: 27
     col: 11
     type: 0
-  - row: 37
+  - row: 27
     col: 12
     type: 0
-  - row: 37
+  - row: 27
     col: 13
     type: 0
-  - row: 37
+  - row: 27
     col: 14
     type: 0
-  - row: 37
+  - row: 27
     col: 15
     type: 0
-  - row: 37
+  - row: 27
     col: 16
     type: 0
-  - row: 37
+  - row: 27
     col: 17
     type: 0
-  - row: 37
+  - row: 27
     col: 18
     type: 0
-  - row: 37
+  - row: 27
     col: 19
     type: 0
-  - row: 37
+  - row: 27
     col: 20
     type: 0
-  - row: 37
+  - row: 27
     col: 21
     type: 0
-  - row: 37
+  - row: 27
     col: 22
     type: 0
-  - row: 37
+  - row: 27
     col: 23
     type: 0
-  - row: 37
+  - row: 27
     col: 24
     type: 0
-  - row: 37
+  - row: 27
     col: 25
     type: 0
-  - row: 37
+  - row: 27
     col: 26
     type: 0
-  - row: 37
+  - row: 27
     col: 27
     type: 0
-  - row: 37
+  - row: 27
     col: 28
     type: 0
-  - row: 37
+  - row: 27
     col: 29
     type: 0
-  - row: 37
+  - row: 27
     col: 30
     type: 0
-  - row: 37
+  - row: 27
     col: 31
     type: 0
-  - row: 37
+  - row: 27
     col: 32
     type: 0
-  - row: 37
+  - row: 27
     col: 33
     type: 0
-  - row: 37
+  - row: 27
     col: 34
     type: 0
-  - row: 37
+  - row: 27
     col: 35
     type: 0
-  - row: 37
+  - row: 27
     col: 36
     type: 0
-  - row: 37
-    col: 37
-    type: 0
-  - row: 37
-    col: 38
-    type: 0
-  - row: 37
-    col: 39
-    type: 0
-  - row: 37
-    col: 40
-    type: 0
-  - row: 37
-    col: 41
-    type: 0
-  - row: 37
-    col: 42
-    type: 0
-  - row: 37
-    col: 43
-    type: 0
-  - row: 37
-    col: 44
-    type: 0
-  - row: 37
-    col: 45
-    type: 0
-  - row: 37
-    col: 46
-    type: 0
-  - row: 37
-    col: 47
-    type: 0
-  - row: 37
-    col: 48
-    type: 0
-  - row: 37
-    col: 49
-    type: 0
-  - row: 37
-    col: 50
-    type: 0
-  - row: 37
-    col: 51
-    type: 0
-  - row: 37
-    col: 52
-    type: 0
-  - row: 37
-    col: 53
-    type: 0
-  - row: 37
-    col: 54
-    type: 0
-  - row: 37
-    col: 55
-    type: 0
-  - row: 37
-    col: 56
-    type: 0
-  - row: 38
+  - row: 28
     col: 4
     type: 0
-  - row: 38
+  - row: 28
     col: 5
     type: 0
-  - row: 38
+  - row: 28
     col: 6
     type: 0
-  - row: 38
+  - row: 28
     col: 7
     type: 0
-  - row: 38
+  - row: 28
     col: 8
     type: 0
-  - row: 38
+  - row: 28
     col: 9
     type: 0
-  - row: 38
+  - row: 28
     col: 10
     type: 0
-  - row: 38
+  - row: 28
     col: 11
     type: 0
-  - row: 38
+  - row: 28
     col: 12
     type: 0
-  - row: 38
+  - row: 28
     col: 13
     type: 0
-  - row: 38
+  - row: 28
     col: 14
     type: 0
-  - row: 38
+  - row: 28
     col: 15
     type: 0
-  - row: 38
+  - row: 28
     col: 16
     type: 0
-  - row: 38
+  - row: 28
     col: 17
     type: 0
-  - row: 38
+  - row: 28
     col: 18
     type: 0
-  - row: 38
+  - row: 28
     col: 19
     type: 0
-  - row: 38
+  - row: 28
     col: 20
     type: 0
-  - row: 38
+  - row: 28
     col: 21
     type: 0
-  - row: 38
+  - row: 28
     col: 22
     type: 0
-  - row: 38
+  - row: 28
     col: 23
     type: 0
-  - row: 38
+  - row: 28
     col: 24
     type: 0
-  - row: 38
+  - row: 28
     col: 25
     type: 0
-  - row: 38
+  - row: 28
     col: 26
     type: 0
-  - row: 38
+  - row: 28
     col: 27
     type: 0
-  - row: 38
+  - row: 28
     col: 28
     type: 0
-  - row: 38
+  - row: 28
     col: 29
     type: 0
-  - row: 38
+  - row: 28
     col: 30
     type: 0
-  - row: 38
+  - row: 28
     col: 31
     type: 0
-  - row: 38
+  - row: 28
     col: 32
     type: 0
-  - row: 38
+  - row: 28
     col: 33
     type: 0
-  - row: 38
+  - row: 28
     col: 34
     type: 0
-  - row: 38
+  - row: 28
     col: 35
     type: 0
-  - row: 38
+  - row: 28
     col: 36
     type: 0
-  - row: 38
-    col: 37
-    type: 0
-  - row: 38
-    col: 38
-    type: 0
-  - row: 38
-    col: 39
-    type: 0
-  - row: 38
-    col: 40
-    type: 0
-  - row: 38
-    col: 41
-    type: 0
-  - row: 38
-    col: 42
-    type: 0
-  - row: 38
-    col: 43
-    type: 0
-  - row: 38
-    col: 44
-    type: 0
-  - row: 38
-    col: 45
-    type: 0
-  - row: 38
-    col: 46
-    type: 0
-  - row: 38
-    col: 47
-    type: 0
-  - row: 38
-    col: 48
-    type: 0
-  - row: 38
-    col: 49
-    type: 0
-  - row: 38
-    col: 50
-    type: 0
-  - row: 38
-    col: 51
-    type: 0
-  - row: 38
-    col: 52
-    type: 0
-  - row: 38
-    col: 53
-    type: 0
-  - row: 38
-    col: 54
-    type: 0
-  - row: 38
-    col: 55
-    type: 0
-  - row: 38
-    col: 56
-    type: 0
-  - row: 39
+  - row: 29
     col: 4
     type: 0
-  - row: 39
+  - row: 29
     col: 5
     type: 0
-  - row: 39
+  - row: 29
     col: 6
     type: 0
-  - row: 39
+  - row: 29
     col: 7
     type: 0
-  - row: 39
+  - row: 29
     col: 8
     type: 0
-  - row: 39
+  - row: 29
     col: 9
     type: 0
-  - row: 39
+  - row: 29
     col: 10
     type: 0
-  - row: 39
+  - row: 29
     col: 11
     type: 0
-  - row: 39
+  - row: 29
     col: 12
     type: 0
-  - row: 39
+  - row: 29
     col: 13
     type: 0
-  - row: 39
+  - row: 29
     col: 14
     type: 0
-  - row: 39
+  - row: 29
     col: 15
     type: 0
-  - row: 39
+  - row: 29
     col: 16
     type: 0
-  - row: 39
+  - row: 29
     col: 17
     type: 0
-  - row: 39
+  - row: 29
     col: 18
     type: 0
-  - row: 39
+  - row: 29
     col: 19
     type: 0
-  - row: 39
+  - row: 29
     col: 20
     type: 0
-  - row: 39
+  - row: 29
     col: 21
     type: 0
-  - row: 39
+  - row: 29
     col: 22
     type: 0
-  - row: 39
+  - row: 29
     col: 23
     type: 0
-  - row: 39
+  - row: 29
     col: 24
     type: 0
-  - row: 39
+  - row: 29
     col: 25
     type: 0
-  - row: 39
+  - row: 29
     col: 26
     type: 0
-  - row: 39
+  - row: 29
     col: 27
     type: 0
-  - row: 39
+  - row: 29
     col: 28
     type: 0
-  - row: 39
+  - row: 29
     col: 29
     type: 0
-  - row: 39
+  - row: 29
     col: 30
     type: 0
-  - row: 39
+  - row: 29
     col: 31
     type: 0
-  - row: 39
+  - row: 29
     col: 32
     type: 0
-  - row: 39
+  - row: 29
     col: 33
     type: 0
-  - row: 39
+  - row: 29
     col: 34
     type: 0
-  - row: 39
+  - row: 29
     col: 35
     type: 0
-  - row: 39
-    col: 36
-    type: 0
-  - row: 39
-    col: 37
-    type: 0
-  - row: 39
-    col: 38
-    type: 0
-  - row: 39
-    col: 39
-    type: 0
-  - row: 39
-    col: 40
-    type: 0
-  - row: 39
-    col: 41
-    type: 0
-  - row: 39
-    col: 42
-    type: 0
-  - row: 39
-    col: 43
-    type: 0
-  - row: 39
-    col: 44
-    type: 0
-  - row: 39
-    col: 45
-    type: 0
-  - row: 39
-    col: 46
-    type: 0
-  - row: 39
-    col: 47
-    type: 0
-  - row: 39
-    col: 48
-    type: 0
-  - row: 39
-    col: 49
-    type: 0
-  - row: 39
-    col: 50
-    type: 0
-  - row: 39
-    col: 51
-    type: 0
-  - row: 39
-    col: 52
-    type: 0
-  - row: 39
-    col: 53
-    type: 0
-  - row: 39
-    col: 54
-    type: 0
-  - row: 39
-    col: 55
-    type: 0
-  - row: 40
+  - row: 30
     col: 5
     type: 0
-  - row: 40
+  - row: 30
     col: 6
     type: 0
-  - row: 40
+  - row: 30
     col: 7
     type: 0
-  - row: 40
+  - row: 30
     col: 8
     type: 0
-  - row: 40
+  - row: 30
     col: 9
     type: 0
-  - row: 40
+  - row: 30
     col: 10
     type: 0
-  - row: 40
+  - row: 30
     col: 11
     type: 0
-  - row: 40
+  - row: 30
     col: 12
     type: 0
-  - row: 40
+  - row: 30
     col: 13
     type: 0
-  - row: 40
+  - row: 30
     col: 14
     type: 0
-  - row: 40
+  - row: 30
     col: 15
     type: 0
-  - row: 40
+  - row: 30
     col: 16
     type: 0
-  - row: 40
+  - row: 30
     col: 17
     type: 0
-  - row: 40
+  - row: 30
     col: 18
     type: 0
-  - row: 40
+  - row: 30
     col: 19
     type: 0
-  - row: 40
+  - row: 30
     col: 20
     type: 0
-  - row: 40
+  - row: 30
     col: 21
     type: 0
-  - row: 40
+  - row: 30
     col: 22
     type: 0
-  - row: 40
+  - row: 30
     col: 23
     type: 0
-  - row: 40
+  - row: 30
     col: 24
     type: 0
-  - row: 40
+  - row: 30
     col: 25
     type: 0
-  - row: 40
+  - row: 30
     col: 26
     type: 0
-  - row: 40
+  - row: 30
     col: 27
     type: 0
-  - row: 40
+  - row: 30
     col: 28
     type: 0
-  - row: 40
+  - row: 30
     col: 29
     type: 0
-  - row: 40
+  - row: 30
     col: 30
     type: 0
-  - row: 40
+  - row: 30
     col: 31
     type: 0
-  - row: 40
+  - row: 30
     col: 32
     type: 0
-  - row: 40
+  - row: 30
     col: 33
     type: 0
-  - row: 40
+  - row: 30
     col: 34
     type: 0
-  - row: 40
+  - row: 30
     col: 35
     type: 0
-  - row: 40
-    col: 36
-    type: 0
-  - row: 40
-    col: 37
-    type: 0
-  - row: 40
-    col: 38
-    type: 0
-  - row: 40
-    col: 39
-    type: 0
-  - row: 40
-    col: 40
-    type: 0
-  - row: 40
-    col: 41
-    type: 0
-  - row: 40
-    col: 42
-    type: 0
-  - row: 40
-    col: 43
-    type: 0
-  - row: 40
-    col: 44
-    type: 0
-  - row: 40
-    col: 45
-    type: 0
-  - row: 40
-    col: 46
-    type: 0
-  - row: 40
-    col: 47
-    type: 0
-  - row: 40
-    col: 48
-    type: 0
-  - row: 40
-    col: 49
-    type: 0
-  - row: 40
-    col: 50
-    type: 0
-  - row: 40
-    col: 51
-    type: 0
-  - row: 40
-    col: 52
-    type: 0
-  - row: 40
-    col: 53
-    type: 0
-  - row: 40
-    col: 54
-    type: 0
-  - row: 40
-    col: 55
-    type: 0
-  - row: 41
+  - row: 31
     col: 5
     type: 0
-  - row: 41
+  - row: 31
     col: 6
     type: 0
-  - row: 41
+  - row: 31
     col: 7
     type: 0
-  - row: 41
+  - row: 31
     col: 8
     type: 0
-  - row: 41
+  - row: 31
     col: 9
     type: 0
-  - row: 41
+  - row: 31
     col: 10
     type: 0
-  - row: 41
+  - row: 31
     col: 11
     type: 0
-  - row: 41
+  - row: 31
     col: 12
     type: 0
-  - row: 41
+  - row: 31
     col: 13
     type: 0
-  - row: 41
+  - row: 31
     col: 14
     type: 0
-  - row: 41
+  - row: 31
     col: 15
     type: 0
-  - row: 41
+  - row: 31
     col: 16
     type: 0
-  - row: 41
+  - row: 31
     col: 17
     type: 0
-  - row: 41
+  - row: 31
     col: 18
     type: 0
-  - row: 41
+  - row: 31
     col: 19
     type: 0
-  - row: 41
+  - row: 31
     col: 20
     type: 0
-  - row: 41
+  - row: 31
     col: 21
     type: 0
-  - row: 41
+  - row: 31
     col: 22
     type: 0
-  - row: 41
+  - row: 31
     col: 23
     type: 0
-  - row: 41
+  - row: 31
     col: 24
     type: 0
-  - row: 41
+  - row: 31
     col: 25
     type: 0
-  - row: 41
+  - row: 31
     col: 26
     type: 0
-  - row: 41
+  - row: 31
     col: 27
     type: 0
-  - row: 41
+  - row: 31
     col: 28
     type: 0
-  - row: 41
+  - row: 31
     col: 29
     type: 0
-  - row: 41
+  - row: 31
     col: 30
     type: 0
-  - row: 41
+  - row: 31
     col: 31
     type: 0
-  - row: 41
+  - row: 31
     col: 32
     type: 0
-  - row: 41
+  - row: 31
     col: 33
     type: 0
-  - row: 41
+  - row: 31
     col: 34
     type: 0
-  - row: 41
-    col: 35
-    type: 0
-  - row: 41
-    col: 36
-    type: 0
-  - row: 41
-    col: 37
-    type: 0
-  - row: 41
-    col: 38
-    type: 0
-  - row: 41
-    col: 39
-    type: 0
-  - row: 41
-    col: 40
-    type: 0
-  - row: 41
-    col: 41
-    type: 0
-  - row: 41
-    col: 42
-    type: 0
-  - row: 41
-    col: 43
-    type: 0
-  - row: 41
-    col: 44
-    type: 0
-  - row: 41
-    col: 45
-    type: 0
-  - row: 41
-    col: 46
-    type: 0
-  - row: 41
-    col: 47
-    type: 0
-  - row: 41
-    col: 48
-    type: 0
-  - row: 41
-    col: 49
-    type: 0
-  - row: 41
-    col: 50
-    type: 0
-  - row: 41
-    col: 51
-    type: 0
-  - row: 41
-    col: 52
-    type: 0
-  - row: 41
-    col: 53
-    type: 0
-  - row: 41
-    col: 54
-    type: 0
-  - row: 42
+  - row: 32
     col: 6
     type: 0
-  - row: 42
+  - row: 32
     col: 7
     type: 0
-  - row: 42
+  - row: 32
     col: 8
     type: 0
-  - row: 42
+  - row: 32
     col: 9
     type: 0
-  - row: 42
+  - row: 32
     col: 10
     type: 0
-  - row: 42
+  - row: 32
     col: 11
     type: 0
-  - row: 42
+  - row: 32
     col: 12
     type: 0
-  - row: 42
+  - row: 32
     col: 13
     type: 0
-  - row: 42
+  - row: 32
     col: 14
     type: 0
-  - row: 42
+  - row: 32
     col: 15
     type: 0
-  - row: 42
+  - row: 32
     col: 16
     type: 0
-  - row: 42
+  - row: 32
     col: 17
     type: 0
-  - row: 42
+  - row: 32
     col: 18
     type: 0
-  - row: 42
+  - row: 32
     col: 19
     type: 0
-  - row: 42
+  - row: 32
     col: 20
     type: 0
-  - row: 42
+  - row: 32
     col: 21
     type: 0
-  - row: 42
+  - row: 32
     col: 22
     type: 0
-  - row: 42
+  - row: 32
     col: 23
     type: 0
-  - row: 42
+  - row: 32
     col: 24
     type: 0
-  - row: 42
+  - row: 32
     col: 25
     type: 0
-  - row: 42
+  - row: 32
     col: 26
     type: 0
-  - row: 42
+  - row: 32
     col: 27
     type: 0
-  - row: 42
+  - row: 32
     col: 28
     type: 0
-  - row: 42
+  - row: 32
     col: 29
     type: 0
-  - row: 42
+  - row: 32
     col: 30
     type: 0
-  - row: 42
+  - row: 32
     col: 31
     type: 0
-  - row: 42
+  - row: 32
     col: 32
     type: 0
-  - row: 42
+  - row: 32
     col: 33
     type: 0
-  - row: 42
+  - row: 32
     col: 34
     type: 0
-  - row: 42
-    col: 35
-    type: 0
-  - row: 42
-    col: 36
-    type: 0
-  - row: 42
-    col: 37
-    type: 0
-  - row: 42
-    col: 38
-    type: 0
-  - row: 42
-    col: 39
-    type: 0
-  - row: 42
-    col: 40
-    type: 0
-  - row: 42
-    col: 41
-    type: 0
-  - row: 42
-    col: 42
-    type: 0
-  - row: 42
-    col: 43
-    type: 0
-  - row: 42
-    col: 44
-    type: 0
-  - row: 42
-    col: 45
-    type: 0
-  - row: 42
-    col: 46
-    type: 0
-  - row: 42
-    col: 47
-    type: 0
-  - row: 42
-    col: 48
-    type: 0
-  - row: 42
-    col: 49
-    type: 0
-  - row: 42
-    col: 50
-    type: 0
-  - row: 42
-    col: 51
-    type: 0
-  - row: 42
-    col: 52
-    type: 0
-  - row: 42
-    col: 53
-    type: 0
-  - row: 42
-    col: 54
-    type: 0
-  - row: 43
+  - row: 33
     col: 6
     type: 0
-  - row: 43
+  - row: 33
     col: 7
     type: 0
-  - row: 43
+  - row: 33
     col: 8
     type: 0
-  - row: 43
+  - row: 33
     col: 9
     type: 0
-  - row: 43
+  - row: 33
     col: 10
     type: 0
-  - row: 43
+  - row: 33
     col: 11
     type: 0
-  - row: 43
+  - row: 33
     col: 12
     type: 0
-  - row: 43
+  - row: 33
     col: 13
     type: 0
-  - row: 43
+  - row: 33
     col: 14
     type: 0
-  - row: 43
+  - row: 33
     col: 15
     type: 0
-  - row: 43
+  - row: 33
     col: 16
     type: 0
-  - row: 43
+  - row: 33
     col: 17
     type: 0
-  - row: 43
+  - row: 33
     col: 18
     type: 0
-  - row: 43
+  - row: 33
     col: 19
     type: 0
-  - row: 43
+  - row: 33
     col: 20
     type: 0
-  - row: 43
+  - row: 33
     col: 21
     type: 0
-  - row: 43
+  - row: 33
     col: 22
     type: 0
-  - row: 43
+  - row: 33
     col: 23
     type: 0
-  - row: 43
+  - row: 33
     col: 24
     type: 0
-  - row: 43
+  - row: 33
     col: 25
     type: 0
-  - row: 43
+  - row: 33
     col: 26
     type: 0
-  - row: 43
+  - row: 33
     col: 27
     type: 0
-  - row: 43
+  - row: 33
     col: 28
     type: 0
-  - row: 43
+  - row: 33
     col: 29
     type: 0
-  - row: 43
+  - row: 33
     col: 30
     type: 0
-  - row: 43
+  - row: 33
     col: 31
     type: 0
-  - row: 43
+  - row: 33
     col: 32
     type: 0
-  - row: 43
+  - row: 33
     col: 33
     type: 0
-  - row: 43
-    col: 34
-    type: 0
-  - row: 43
-    col: 35
-    type: 0
-  - row: 43
-    col: 36
-    type: 0
-  - row: 43
-    col: 37
-    type: 0
-  - row: 43
-    col: 38
-    type: 0
-  - row: 43
-    col: 39
-    type: 0
-  - row: 43
-    col: 40
-    type: 0
-  - row: 43
-    col: 41
-    type: 0
-  - row: 43
-    col: 42
-    type: 0
-  - row: 43
-    col: 43
-    type: 0
-  - row: 43
-    col: 44
-    type: 0
-  - row: 43
-    col: 45
-    type: 0
-  - row: 43
-    col: 46
-    type: 0
-  - row: 43
-    col: 47
-    type: 0
-  - row: 43
-    col: 48
-    type: 0
-  - row: 43
-    col: 49
-    type: 0
-  - row: 43
-    col: 50
-    type: 0
-  - row: 43
-    col: 51
-    type: 0
-  - row: 43
-    col: 52
-    type: 0
-  - row: 43
-    col: 53
-    type: 0
-  - row: 44
+  - row: 34
     col: 7
     type: 0
-  - row: 44
+  - row: 34
     col: 8
     type: 0
-  - row: 44
+  - row: 34
     col: 9
     type: 0
-  - row: 44
+  - row: 34
     col: 10
     type: 0
-  - row: 44
+  - row: 34
     col: 11
     type: 0
-  - row: 44
+  - row: 34
     col: 12
     type: 0
-  - row: 44
+  - row: 34
     col: 13
     type: 0
-  - row: 44
+  - row: 34
     col: 14
     type: 0
-  - row: 44
+  - row: 34
     col: 15
     type: 0
-  - row: 44
+  - row: 34
     col: 16
     type: 0
-  - row: 44
+  - row: 34
     col: 17
     type: 0
-  - row: 44
+  - row: 34
     col: 18
     type: 0
-  - row: 44
+  - row: 34
     col: 19
     type: 0
-  - row: 44
+  - row: 34
     col: 20
     type: 0
-  - row: 44
+  - row: 34
     col: 21
     type: 0
-  - row: 44
+  - row: 34
     col: 22
     type: 0
-  - row: 44
+  - row: 34
     col: 23
     type: 0
-  - row: 44
+  - row: 34
     col: 24
     type: 0
-  - row: 44
+  - row: 34
     col: 25
     type: 0
-  - row: 44
+  - row: 34
     col: 26
     type: 0
-  - row: 44
+  - row: 34
     col: 27
     type: 0
-  - row: 44
+  - row: 34
     col: 28
     type: 0
-  - row: 44
+  - row: 34
     col: 29
     type: 0
-  - row: 44
+  - row: 34
     col: 30
     type: 0
-  - row: 44
+  - row: 34
     col: 31
     type: 0
-  - row: 44
+  - row: 34
     col: 32
     type: 0
-  - row: 44
+  - row: 34
     col: 33
     type: 0
-  - row: 44
-    col: 34
-    type: 0
-  - row: 44
-    col: 35
-    type: 0
-  - row: 44
-    col: 36
-    type: 0
-  - row: 44
-    col: 37
-    type: 0
-  - row: 44
-    col: 38
-    type: 0
-  - row: 44
-    col: 39
-    type: 0
-  - row: 44
-    col: 40
-    type: 0
-  - row: 44
-    col: 41
-    type: 0
-  - row: 44
-    col: 42
-    type: 0
-  - row: 44
-    col: 43
-    type: 0
-  - row: 44
-    col: 44
-    type: 0
-  - row: 44
-    col: 45
-    type: 0
-  - row: 44
-    col: 46
-    type: 0
-  - row: 44
-    col: 47
-    type: 0
-  - row: 44
-    col: 48
-    type: 0
-  - row: 44
-    col: 49
-    type: 0
-  - row: 44
-    col: 50
-    type: 0
-  - row: 44
-    col: 51
-    type: 0
-  - row: 44
-    col: 52
-    type: 0
-  - row: 44
-    col: 53
-    type: 0
-  - row: 45
+  - row: 35
     col: 7
     type: 0
-  - row: 45
+  - row: 35
     col: 8
     type: 0
-  - row: 45
+  - row: 35
     col: 9
     type: 0
-  - row: 45
+  - row: 35
     col: 10
     type: 0
-  - row: 45
+  - row: 35
     col: 11
     type: 0
-  - row: 45
+  - row: 35
     col: 12
     type: 0
-  - row: 45
+  - row: 35
     col: 13
     type: 0
-  - row: 45
+  - row: 35
     col: 14
     type: 0
-  - row: 45
+  - row: 35
     col: 15
     type: 0
-  - row: 45
+  - row: 35
     col: 16
     type: 0
-  - row: 45
+  - row: 35
     col: 17
     type: 0
-  - row: 45
+  - row: 35
     col: 18
     type: 0
-  - row: 45
+  - row: 35
     col: 19
     type: 0
-  - row: 45
+  - row: 35
     col: 20
     type: 0
-  - row: 45
+  - row: 35
     col: 21
     type: 0
-  - row: 45
+  - row: 35
     col: 22
     type: 0
-  - row: 45
+  - row: 35
     col: 23
     type: 0
-  - row: 45
+  - row: 35
     col: 24
     type: 0
-  - row: 45
+  - row: 35
     col: 25
     type: 0
-  - row: 45
+  - row: 35
     col: 26
     type: 0
-  - row: 45
+  - row: 35
     col: 27
     type: 0
-  - row: 45
+  - row: 35
     col: 28
     type: 0
-  - row: 45
+  - row: 35
     col: 29
     type: 0
-  - row: 45
+  - row: 35
     col: 30
     type: 0
-  - row: 45
+  - row: 35
     col: 31
     type: 0
-  - row: 45
+  - row: 35
     col: 32
     type: 0
-  - row: 45
-    col: 33
-    type: 0
-  - row: 45
-    col: 34
-    type: 0
-  - row: 45
-    col: 35
-    type: 0
-  - row: 45
-    col: 36
-    type: 0
-  - row: 45
-    col: 37
-    type: 0
-  - row: 45
-    col: 38
-    type: 0
-  - row: 45
-    col: 39
-    type: 0
-  - row: 45
-    col: 40
-    type: 0
-  - row: 45
-    col: 41
-    type: 0
-  - row: 45
-    col: 42
-    type: 0
-  - row: 45
-    col: 43
-    type: 0
-  - row: 45
-    col: 44
-    type: 0
-  - row: 45
-    col: 45
-    type: 0
-  - row: 45
-    col: 46
-    type: 0
-  - row: 45
-    col: 47
-    type: 0
-  - row: 45
-    col: 48
-    type: 0
-  - row: 45
-    col: 49
-    type: 0
-  - row: 45
-    col: 50
-    type: 0
-  - row: 45
-    col: 51
-    type: 0
-  - row: 45
-    col: 52
-    type: 0
-  - row: 46
+  - row: 36
     col: 8
     type: 0
-  - row: 46
+  - row: 36
     col: 9
     type: 0
-  - row: 46
+  - row: 36
     col: 10
     type: 0
-  - row: 46
+  - row: 36
     col: 11
     type: 0
-  - row: 46
+  - row: 36
     col: 12
     type: 0
-  - row: 46
+  - row: 36
     col: 13
     type: 0
-  - row: 46
+  - row: 36
     col: 14
     type: 0
-  - row: 46
+  - row: 36
     col: 15
     type: 0
-  - row: 46
+  - row: 36
     col: 16
     type: 0
-  - row: 46
+  - row: 36
     col: 17
     type: 0
-  - row: 46
+  - row: 36
     col: 18
     type: 0
-  - row: 46
+  - row: 36
     col: 19
     type: 0
-  - row: 46
+  - row: 36
     col: 20
     type: 0
-  - row: 46
+  - row: 36
     col: 21
     type: 0
-  - row: 46
+  - row: 36
     col: 22
     type: 0
-  - row: 46
+  - row: 36
     col: 23
     type: 0
-  - row: 46
+  - row: 36
     col: 24
     type: 0
-  - row: 46
+  - row: 36
     col: 25
     type: 0
-  - row: 46
+  - row: 36
     col: 26
     type: 0
-  - row: 46
+  - row: 36
     col: 27
     type: 0
-  - row: 46
+  - row: 36
     col: 28
     type: 0
-  - row: 46
+  - row: 36
     col: 29
     type: 0
-  - row: 46
+  - row: 36
     col: 30
     type: 0
-  - row: 46
+  - row: 36
     col: 31
     type: 0
-  - row: 46
+  - row: 36
     col: 32
     type: 0
-  - row: 46
-    col: 33
-    type: 0
-  - row: 46
-    col: 34
-    type: 0
-  - row: 46
-    col: 35
-    type: 0
-  - row: 46
-    col: 36
-    type: 0
-  - row: 46
-    col: 37
-    type: 0
-  - row: 46
-    col: 38
-    type: 0
-  - row: 46
-    col: 39
-    type: 0
-  - row: 46
-    col: 40
-    type: 0
-  - row: 46
-    col: 41
-    type: 0
-  - row: 46
-    col: 42
-    type: 0
-  - row: 46
-    col: 43
-    type: 0
-  - row: 46
-    col: 44
-    type: 0
-  - row: 46
-    col: 45
-    type: 0
-  - row: 46
-    col: 46
-    type: 0
-  - row: 46
-    col: 47
-    type: 0
-  - row: 46
-    col: 48
-    type: 0
-  - row: 46
-    col: 49
-    type: 0
-  - row: 46
-    col: 50
-    type: 0
-  - row: 46
-    col: 51
-    type: 0
-  - row: 46
-    col: 52
-    type: 0
-  - row: 47
+  - row: 37
     col: 8
     type: 0
-  - row: 47
+  - row: 37
     col: 9
     type: 0
-  - row: 47
+  - row: 37
     col: 10
     type: 0
-  - row: 47
+  - row: 37
     col: 11
     type: 0
-  - row: 47
+  - row: 37
     col: 12
     type: 0
-  - row: 47
+  - row: 37
     col: 13
     type: 0
-  - row: 47
+  - row: 37
     col: 14
     type: 0
-  - row: 47
+  - row: 37
     col: 15
     type: 0
-  - row: 47
+  - row: 37
     col: 16
     type: 0
-  - row: 47
+  - row: 37
     col: 17
     type: 0
-  - row: 47
+  - row: 37
     col: 18
     type: 0
-  - row: 47
+  - row: 37
     col: 19
     type: 0
-  - row: 47
+  - row: 37
     col: 20
     type: 0
-  - row: 47
+  - row: 37
     col: 21
     type: 0
-  - row: 47
+  - row: 37
     col: 22
     type: 0
-  - row: 47
+  - row: 37
     col: 23
     type: 0
-  - row: 47
+  - row: 37
     col: 24
     type: 0
-  - row: 47
+  - row: 37
     col: 25
     type: 0
-  - row: 47
+  - row: 37
     col: 26
     type: 0
-  - row: 47
+  - row: 37
     col: 27
     type: 0
-  - row: 47
+  - row: 37
     col: 28
     type: 0
-  - row: 47
+  - row: 37
     col: 29
     type: 0
-  - row: 47
+  - row: 37
     col: 30
     type: 0
-  - row: 47
+  - row: 37
     col: 31
     type: 0
-  - row: 47
-    col: 32
-    type: 0
-  - row: 47
-    col: 33
-    type: 0
-  - row: 47
-    col: 34
-    type: 0
-  - row: 47
-    col: 35
-    type: 0
-  - row: 47
-    col: 36
-    type: 0
-  - row: 47
-    col: 37
-    type: 0
-  - row: 47
-    col: 38
-    type: 0
-  - row: 47
-    col: 39
-    type: 0
-  - row: 47
-    col: 40
-    type: 0
-  - row: 47
-    col: 41
-    type: 0
-  - row: 47
-    col: 42
-    type: 0
-  - row: 47
-    col: 43
-    type: 0
-  - row: 47
-    col: 44
-    type: 0
-  - row: 47
-    col: 45
-    type: 0
-  - row: 47
-    col: 46
-    type: 0
-  - row: 47
-    col: 47
-    type: 0
-  - row: 47
-    col: 48
-    type: 0
-  - row: 47
-    col: 49
-    type: 0
-  - row: 47
-    col: 50
-    type: 0
-  - row: 47
-    col: 51
-    type: 0
-  - row: 48
+  - row: 38
     col: 9
     type: 0
-  - row: 48
+  - row: 38
     col: 10
     type: 0
-  - row: 48
+  - row: 38
     col: 11
     type: 0
-  - row: 48
+  - row: 38
     col: 12
     type: 0
-  - row: 48
+  - row: 38
     col: 13
     type: 0
-  - row: 48
+  - row: 38
     col: 14
     type: 0
-  - row: 48
+  - row: 38
     col: 15
     type: 0
-  - row: 48
+  - row: 38
     col: 16
     type: 0
-  - row: 48
+  - row: 38
     col: 17
     type: 0
-  - row: 48
+  - row: 38
     col: 18
     type: 0
-  - row: 48
+  - row: 38
     col: 19
     type: 0
-  - row: 48
+  - row: 38
     col: 20
     type: 0
-  - row: 48
+  - row: 38
     col: 21
     type: 0
-  - row: 48
+  - row: 38
     col: 22
     type: 0
-  - row: 48
+  - row: 38
     col: 23
     type: 0
-  - row: 48
+  - row: 38
     col: 24
     type: 0
-  - row: 48
+  - row: 38
     col: 25
     type: 0
-  - row: 48
+  - row: 38
     col: 26
     type: 0
-  - row: 48
+  - row: 38
     col: 27
     type: 0
-  - row: 48
+  - row: 38
     col: 28
     type: 0
-  - row: 48
+  - row: 38
     col: 29
     type: 0
-  - row: 48
+  - row: 38
     col: 30
     type: 0
-  - row: 48
+  - row: 38
     col: 31
     type: 0
-  - row: 48
-    col: 32
-    type: 0
-  - row: 48
-    col: 33
-    type: 0
-  - row: 48
-    col: 34
-    type: 0
-  - row: 48
-    col: 35
-    type: 0
-  - row: 48
-    col: 36
-    type: 0
-  - row: 48
-    col: 37
-    type: 0
-  - row: 48
-    col: 38
-    type: 0
-  - row: 48
-    col: 39
-    type: 0
-  - row: 48
-    col: 40
-    type: 0
-  - row: 48
-    col: 41
-    type: 0
-  - row: 48
-    col: 42
-    type: 0
-  - row: 48
-    col: 43
-    type: 0
-  - row: 48
-    col: 44
-    type: 0
-  - row: 48
-    col: 45
-    type: 0
-  - row: 48
-    col: 46
-    type: 0
-  - row: 48
-    col: 47
-    type: 0
-  - row: 48
-    col: 48
-    type: 0
-  - row: 48
-    col: 49
-    type: 0
-  - row: 48
-    col: 50
-    type: 0
-  - row: 48
-    col: 51
-    type: 0
-  - row: 49
+  - row: 39
     col: 9
     type: 0
-  - row: 49
+  - row: 39
     col: 10
     type: 0
-  - row: 49
+  - row: 39
     col: 11
     type: 0
-  - row: 49
+  - row: 39
     col: 12
     type: 0
-  - row: 49
+  - row: 39
     col: 13
     type: 0
-  - row: 49
+  - row: 39
     col: 14
     type: 0
-  - row: 49
+  - row: 39
     col: 15
     type: 0
-  - row: 49
+  - row: 39
     col: 16
     type: 0
-  - row: 49
+  - row: 39
     col: 17
     type: 0
-  - row: 49
+  - row: 39
     col: 18
     type: 0
-  - row: 49
+  - row: 39
     col: 19
     type: 0
-  - row: 49
+  - row: 39
     col: 20
     type: 0
-  - row: 49
+  - row: 39
     col: 21
     type: 0
-  - row: 49
+  - row: 39
     col: 22
     type: 0
-  - row: 49
+  - row: 39
     col: 23
     type: 0
-  - row: 49
+  - row: 39
     col: 24
     type: 0
-  - row: 49
+  - row: 39
     col: 25
     type: 0
-  - row: 49
+  - row: 39
     col: 26
     type: 0
-  - row: 49
+  - row: 39
     col: 27
     type: 0
-  - row: 49
+  - row: 39
     col: 28
     type: 0
-  - row: 49
+  - row: 39
     col: 29
     type: 0
-  - row: 49
+  - row: 39
     col: 30
     type: 0
-  - row: 49
-    col: 31
-    type: 0
-  - row: 49
-    col: 32
-    type: 0
-  - row: 49
-    col: 33
-    type: 0
-  - row: 49
-    col: 34
-    type: 0
-  - row: 49
-    col: 35
-    type: 0
-  - row: 49
-    col: 36
-    type: 0
-  - row: 49
-    col: 37
-    type: 0
-  - row: 49
-    col: 38
-    type: 0
-  - row: 49
-    col: 39
-    type: 0
-  - row: 49
-    col: 40
-    type: 0
-  - row: 49
-    col: 41
-    type: 0
-  - row: 49
-    col: 42
-    type: 0
-  - row: 49
-    col: 43
-    type: 0
-  - row: 49
-    col: 44
-    type: 0
-  - row: 49
-    col: 45
-    type: 0
-  - row: 49
-    col: 46
-    type: 0
-  - row: 49
-    col: 47
-    type: 0
-  - row: 49
-    col: 48
-    type: 0
-  - row: 49
-    col: 49
-    type: 0
-  - row: 49
-    col: 50
-    type: 0
-  - row: 50
+  - row: 40
     col: 10
     type: 0
-  - row: 50
+  - row: 40
     col: 11
     type: 0
-  - row: 50
+  - row: 40
     col: 12
     type: 0
-  - row: 50
+  - row: 40
     col: 13
     type: 0
-  - row: 50
+  - row: 40
     col: 14
     type: 0
-  - row: 50
+  - row: 40
     col: 15
     type: 0
-  - row: 50
+  - row: 40
     col: 16
     type: 0
-  - row: 50
+  - row: 40
     col: 17
     type: 0
-  - row: 50
+  - row: 40
     col: 18
     type: 0
-  - row: 50
+  - row: 40
     col: 19
     type: 0
-  - row: 50
+  - row: 40
     col: 20
     type: 0
-  - row: 50
+  - row: 40
     col: 21
     type: 0
-  - row: 50
+  - row: 40
     col: 22
     type: 0
-  - row: 50
+  - row: 40
     col: 23
     type: 0
-  - row: 50
+  - row: 40
     col: 24
     type: 0
-  - row: 50
+  - row: 40
     col: 25
     type: 0
-  - row: 50
+  - row: 40
     col: 26
     type: 0
-  - row: 50
+  - row: 40
     col: 27
     type: 0
-  - row: 50
+  - row: 40
     col: 28
     type: 0
-  - row: 50
+  - row: 40
     col: 29
     type: 0
-  - row: 50
+  - row: 40
     col: 30
-    type: 0
-  - row: 50
-    col: 31
-    type: 0
-  - row: 50
-    col: 32
-    type: 0
-  - row: 50
-    col: 33
-    type: 0
-  - row: 50
-    col: 34
-    type: 0
-  - row: 50
-    col: 35
-    type: 0
-  - row: 50
-    col: 36
-    type: 0
-  - row: 50
-    col: 37
-    type: 0
-  - row: 50
-    col: 38
-    type: 0
-  - row: 50
-    col: 39
-    type: 0
-  - row: 50
-    col: 40
-    type: 0
-  - row: 50
-    col: 41
-    type: 0
-  - row: 50
-    col: 42
-    type: 0
-  - row: 50
-    col: 43
-    type: 0
-  - row: 50
-    col: 44
-    type: 0
-  - row: 50
-    col: 45
-    type: 0
-  - row: 50
-    col: 46
-    type: 0
-  - row: 50
-    col: 47
-    type: 0
-  - row: 50
-    col: 48
-    type: 0
-  - row: 50
-    col: 49
-    type: 0
-  - row: 50
-    col: 50
-    type: 0
-  - row: 51
-    col: 10
-    type: 0
-  - row: 51
-    col: 11
-    type: 0
-  - row: 51
-    col: 12
-    type: 0
-  - row: 51
-    col: 13
-    type: 0
-  - row: 51
-    col: 14
-    type: 0
-  - row: 51
-    col: 15
-    type: 0
-  - row: 51
-    col: 16
-    type: 0
-  - row: 51
-    col: 17
-    type: 0
-  - row: 51
-    col: 18
-    type: 0
-  - row: 51
-    col: 19
-    type: 0
-  - row: 51
-    col: 20
-    type: 0
-  - row: 51
-    col: 21
-    type: 0
-  - row: 51
-    col: 22
-    type: 0
-  - row: 51
-    col: 23
-    type: 0
-  - row: 51
-    col: 24
-    type: 0
-  - row: 51
-    col: 25
-    type: 0
-  - row: 51
-    col: 26
-    type: 0
-  - row: 51
-    col: 27
-    type: 0
-  - row: 51
-    col: 28
-    type: 0
-  - row: 51
-    col: 29
-    type: 0
-  - row: 51
-    col: 30
-    type: 0
-  - row: 51
-    col: 31
-    type: 0
-  - row: 51
-    col: 32
-    type: 0
-  - row: 51
-    col: 33
-    type: 0
-  - row: 51
-    col: 34
-    type: 0
-  - row: 51
-    col: 35
-    type: 0
-  - row: 51
-    col: 36
-    type: 0
-  - row: 51
-    col: 37
-    type: 0
-  - row: 51
-    col: 38
-    type: 0
-  - row: 51
-    col: 39
-    type: 0
-  - row: 51
-    col: 40
-    type: 0
-  - row: 51
-    col: 41
-    type: 0
-  - row: 51
-    col: 42
-    type: 0
-  - row: 51
-    col: 43
-    type: 0
-  - row: 51
-    col: 44
-    type: 0
-  - row: 51
-    col: 45
-    type: 0
-  - row: 51
-    col: 46
-    type: 0
-  - row: 51
-    col: 47
-    type: 0
-  - row: 51
-    col: 48
-    type: 0
-  - row: 51
-    col: 49
-    type: 0
-  - row: 52
-    col: 11
-    type: 0
-  - row: 52
-    col: 12
-    type: 0
-  - row: 52
-    col: 13
-    type: 0
-  - row: 52
-    col: 14
-    type: 0
-  - row: 52
-    col: 15
-    type: 0
-  - row: 52
-    col: 16
-    type: 0
-  - row: 52
-    col: 17
-    type: 0
-  - row: 52
-    col: 18
-    type: 0
-  - row: 52
-    col: 19
-    type: 0
-  - row: 52
-    col: 20
-    type: 0
-  - row: 52
-    col: 21
-    type: 0
-  - row: 52
-    col: 22
-    type: 0
-  - row: 52
-    col: 23
-    type: 0
-  - row: 52
-    col: 24
-    type: 0
-  - row: 52
-    col: 25
-    type: 0
-  - row: 52
-    col: 26
-    type: 0
-  - row: 52
-    col: 27
-    type: 0
-  - row: 52
-    col: 28
-    type: 0
-  - row: 52
-    col: 29
-    type: 0
-  - row: 52
-    col: 30
-    type: 0
-  - row: 52
-    col: 31
-    type: 0
-  - row: 52
-    col: 32
-    type: 0
-  - row: 52
-    col: 33
-    type: 0
-  - row: 52
-    col: 34
-    type: 0
-  - row: 52
-    col: 35
-    type: 0
-  - row: 52
-    col: 36
-    type: 0
-  - row: 52
-    col: 37
-    type: 0
-  - row: 52
-    col: 38
-    type: 0
-  - row: 52
-    col: 39
-    type: 0
-  - row: 52
-    col: 40
-    type: 0
-  - row: 52
-    col: 41
-    type: 0
-  - row: 52
-    col: 42
-    type: 0
-  - row: 52
-    col: 43
-    type: 0
-  - row: 52
-    col: 44
-    type: 0
-  - row: 52
-    col: 45
-    type: 0
-  - row: 52
-    col: 46
-    type: 0
-  - row: 52
-    col: 47
-    type: 0
-  - row: 52
-    col: 48
-    type: 0
-  - row: 52
-    col: 49
-    type: 0
-  - row: 53
-    col: 11
-    type: 0
-  - row: 53
-    col: 12
-    type: 0
-  - row: 53
-    col: 13
-    type: 0
-  - row: 53
-    col: 14
-    type: 0
-  - row: 53
-    col: 15
-    type: 0
-  - row: 53
-    col: 16
-    type: 0
-  - row: 53
-    col: 17
-    type: 0
-  - row: 53
-    col: 18
-    type: 0
-  - row: 53
-    col: 19
-    type: 0
-  - row: 53
-    col: 20
-    type: 0
-  - row: 53
-    col: 21
-    type: 0
-  - row: 53
-    col: 22
-    type: 0
-  - row: 53
-    col: 23
-    type: 0
-  - row: 53
-    col: 24
-    type: 0
-  - row: 53
-    col: 25
-    type: 0
-  - row: 53
-    col: 26
-    type: 0
-  - row: 53
-    col: 27
-    type: 0
-  - row: 53
-    col: 28
-    type: 0
-  - row: 53
-    col: 29
-    type: 0
-  - row: 53
-    col: 30
-    type: 0
-  - row: 53
-    col: 31
-    type: 0
-  - row: 53
-    col: 32
-    type: 0
-  - row: 53
-    col: 33
-    type: 0
-  - row: 53
-    col: 34
-    type: 0
-  - row: 53
-    col: 35
-    type: 0
-  - row: 53
-    col: 36
-    type: 0
-  - row: 53
-    col: 37
-    type: 0
-  - row: 53
-    col: 38
-    type: 0
-  - row: 53
-    col: 39
-    type: 0
-  - row: 53
-    col: 40
-    type: 0
-  - row: 53
-    col: 41
-    type: 0
-  - row: 53
-    col: 42
-    type: 0
-  - row: 53
-    col: 43
-    type: 0
-  - row: 53
-    col: 44
-    type: 0
-  - row: 53
-    col: 45
-    type: 0
-  - row: 53
-    col: 46
-    type: 0
-  - row: 53
-    col: 47
-    type: 0
-  - row: 53
-    col: 48
-    type: 0
-  - row: 54
-    col: 12
-    type: 0
-  - row: 54
-    col: 13
-    type: 0
-  - row: 54
-    col: 14
-    type: 0
-  - row: 54
-    col: 15
-    type: 0
-  - row: 54
-    col: 16
-    type: 0
-  - row: 54
-    col: 17
-    type: 0
-  - row: 54
-    col: 18
-    type: 0
-  - row: 54
-    col: 19
-    type: 0
-  - row: 54
-    col: 20
-    type: 0
-  - row: 54
-    col: 21
-    type: 0
-  - row: 54
-    col: 22
-    type: 0
-  - row: 54
-    col: 23
-    type: 0
-  - row: 54
-    col: 24
-    type: 0
-  - row: 54
-    col: 25
-    type: 0
-  - row: 54
-    col: 26
-    type: 0
-  - row: 54
-    col: 27
-    type: 0
-  - row: 54
-    col: 28
-    type: 0
-  - row: 54
-    col: 29
-    type: 0
-  - row: 54
-    col: 30
-    type: 0
-  - row: 54
-    col: 31
-    type: 0
-  - row: 54
-    col: 32
-    type: 0
-  - row: 54
-    col: 33
-    type: 0
-  - row: 54
-    col: 34
-    type: 0
-  - row: 54
-    col: 35
-    type: 0
-  - row: 54
-    col: 36
-    type: 0
-  - row: 54
-    col: 37
-    type: 0
-  - row: 54
-    col: 38
-    type: 0
-  - row: 54
-    col: 39
-    type: 0
-  - row: 54
-    col: 40
-    type: 0
-  - row: 54
-    col: 41
-    type: 0
-  - row: 54
-    col: 42
-    type: 0
-  - row: 54
-    col: 43
-    type: 0
-  - row: 54
-    col: 44
-    type: 0
-  - row: 54
-    col: 45
-    type: 0
-  - row: 54
-    col: 46
-    type: 0
-  - row: 54
-    col: 47
-    type: 0
-  - row: 54
-    col: 48
-    type: 0
-  - row: 55
-    col: 12
-    type: 0
-  - row: 55
-    col: 13
-    type: 0
-  - row: 55
-    col: 14
-    type: 0
-  - row: 55
-    col: 15
-    type: 0
-  - row: 55
-    col: 16
-    type: 0
-  - row: 55
-    col: 17
-    type: 0
-  - row: 55
-    col: 18
-    type: 0
-  - row: 55
-    col: 19
-    type: 0
-  - row: 55
-    col: 20
-    type: 0
-  - row: 55
-    col: 21
-    type: 0
-  - row: 55
-    col: 22
-    type: 0
-  - row: 55
-    col: 23
-    type: 0
-  - row: 55
-    col: 24
-    type: 0
-  - row: 55
-    col: 25
-    type: 0
-  - row: 55
-    col: 26
-    type: 0
-  - row: 55
-    col: 27
-    type: 0
-  - row: 55
-    col: 28
-    type: 0
-  - row: 55
-    col: 29
-    type: 0
-  - row: 55
-    col: 30
-    type: 0
-  - row: 55
-    col: 31
-    type: 0
-  - row: 55
-    col: 32
-    type: 0
-  - row: 55
-    col: 33
-    type: 0
-  - row: 55
-    col: 34
-    type: 0
-  - row: 55
-    col: 35
-    type: 0
-  - row: 55
-    col: 36
-    type: 0
-  - row: 55
-    col: 37
-    type: 0
-  - row: 55
-    col: 38
-    type: 0
-  - row: 55
-    col: 39
-    type: 0
-  - row: 55
-    col: 40
-    type: 0
-  - row: 55
-    col: 41
-    type: 0
-  - row: 55
-    col: 42
-    type: 0
-  - row: 55
-    col: 43
-    type: 0
-  - row: 55
-    col: 44
-    type: 0
-  - row: 55
-    col: 45
-    type: 0
-  - row: 55
-    col: 46
-    type: 0
-  - row: 55
-    col: 47
-    type: 0
-  - row: 56
-    col: 13
-    type: 0
-  - row: 56
-    col: 14
-    type: 0
-  - row: 56
-    col: 15
-    type: 0
-  - row: 56
-    col: 16
-    type: 0
-  - row: 56
-    col: 17
-    type: 0
-  - row: 56
-    col: 18
-    type: 0
-  - row: 56
-    col: 19
-    type: 0
-  - row: 56
-    col: 20
-    type: 0
-  - row: 56
-    col: 21
-    type: 0
-  - row: 56
-    col: 22
-    type: 0
-  - row: 56
-    col: 23
-    type: 0
-  - row: 56
-    col: 24
-    type: 0
-  - row: 56
-    col: 25
-    type: 0
-  - row: 56
-    col: 26
-    type: 0
-  - row: 56
-    col: 27
-    type: 0
-  - row: 56
-    col: 28
-    type: 0
-  - row: 56
-    col: 29
-    type: 0
-  - row: 56
-    col: 30
-    type: 0
-  - row: 56
-    col: 31
-    type: 0
-  - row: 56
-    col: 32
-    type: 0
-  - row: 56
-    col: 33
-    type: 0
-  - row: 56
-    col: 34
-    type: 0
-  - row: 56
-    col: 35
-    type: 0
-  - row: 56
-    col: 36
-    type: 0
-  - row: 56
-    col: 37
-    type: 0
-  - row: 56
-    col: 38
-    type: 0
-  - row: 56
-    col: 39
-    type: 0
-  - row: 56
-    col: 40
-    type: 0
-  - row: 56
-    col: 41
-    type: 0
-  - row: 56
-    col: 42
-    type: 0
-  - row: 56
-    col: 43
-    type: 0
-  - row: 56
-    col: 44
-    type: 0
-  - row: 56
-    col: 45
-    type: 0
-  - row: 56
-    col: 46
-    type: 0
-  - row: 56
-    col: 47
-    type: 0
-  - row: 57
-    col: 13
-    type: 0
-  - row: 57
-    col: 14
-    type: 0
-  - row: 57
-    col: 15
-    type: 0
-  - row: 57
-    col: 16
-    type: 0
-  - row: 57
-    col: 17
-    type: 0
-  - row: 57
-    col: 18
-    type: 0
-  - row: 57
-    col: 19
-    type: 0
-  - row: 57
-    col: 20
-    type: 0
-  - row: 57
-    col: 21
-    type: 0
-  - row: 57
-    col: 22
-    type: 0
-  - row: 57
-    col: 23
-    type: 0
-  - row: 57
-    col: 24
-    type: 0
-  - row: 57
-    col: 25
-    type: 0
-  - row: 57
-    col: 26
-    type: 0
-  - row: 57
-    col: 27
-    type: 0
-  - row: 57
-    col: 28
-    type: 0
-  - row: 57
-    col: 29
-    type: 0
-  - row: 57
-    col: 30
-    type: 0
-  - row: 57
-    col: 31
-    type: 0
-  - row: 57
-    col: 32
-    type: 0
-  - row: 57
-    col: 33
-    type: 0
-  - row: 57
-    col: 34
-    type: 0
-  - row: 57
-    col: 35
-    type: 0
-  - row: 57
-    col: 36
-    type: 0
-  - row: 57
-    col: 37
-    type: 0
-  - row: 57
-    col: 38
-    type: 0
-  - row: 57
-    col: 39
-    type: 0
-  - row: 57
-    col: 40
-    type: 0
-  - row: 57
-    col: 41
-    type: 0
-  - row: 57
-    col: 42
-    type: 0
-  - row: 57
-    col: 43
-    type: 0
-  - row: 57
-    col: 44
-    type: 0
-  - row: 57
-    col: 45
-    type: 0
-  - row: 57
-    col: 46
-    type: 0
-  - row: 58
-    col: 14
-    type: 0
-  - row: 58
-    col: 15
-    type: 0
-  - row: 58
-    col: 16
-    type: 0
-  - row: 58
-    col: 17
-    type: 0
-  - row: 58
-    col: 18
-    type: 0
-  - row: 58
-    col: 19
-    type: 0
-  - row: 58
-    col: 20
-    type: 0
-  - row: 58
-    col: 21
-    type: 0
-  - row: 58
-    col: 22
-    type: 0
-  - row: 58
-    col: 23
-    type: 0
-  - row: 58
-    col: 24
-    type: 0
-  - row: 58
-    col: 25
-    type: 0
-  - row: 58
-    col: 26
-    type: 0
-  - row: 58
-    col: 27
-    type: 0
-  - row: 58
-    col: 28
-    type: 0
-  - row: 58
-    col: 29
-    type: 0
-  - row: 58
-    col: 30
-    type: 0
-  - row: 58
-    col: 31
-    type: 0
-  - row: 58
-    col: 32
-    type: 0
-  - row: 58
-    col: 33
-    type: 0
-  - row: 58
-    col: 34
-    type: 0
-  - row: 58
-    col: 35
-    type: 0
-  - row: 58
-    col: 36
-    type: 0
-  - row: 58
-    col: 37
-    type: 0
-  - row: 58
-    col: 38
-    type: 0
-  - row: 58
-    col: 39
-    type: 0
-  - row: 58
-    col: 40
-    type: 0
-  - row: 58
-    col: 41
-    type: 0
-  - row: 58
-    col: 42
-    type: 0
-  - row: 58
-    col: 43
-    type: 0
-  - row: 58
-    col: 44
-    type: 0
-  - row: 58
-    col: 45
-    type: 0
-  - row: 58
-    col: 46
-    type: 0
-  - row: 59
-    col: 14
-    type: 0
-  - row: 59
-    col: 15
-    type: 0
-  - row: 59
-    col: 16
-    type: 0
-  - row: 59
-    col: 17
-    type: 0
-  - row: 59
-    col: 18
-    type: 0
-  - row: 59
-    col: 19
-    type: 0
-  - row: 59
-    col: 20
-    type: 0
-  - row: 59
-    col: 21
-    type: 0
-  - row: 59
-    col: 22
-    type: 0
-  - row: 59
-    col: 23
-    type: 0
-  - row: 59
-    col: 24
-    type: 0
-  - row: 59
-    col: 25
-    type: 0
-  - row: 59
-    col: 26
-    type: 0
-  - row: 59
-    col: 27
-    type: 0
-  - row: 59
-    col: 28
-    type: 0
-  - row: 59
-    col: 29
-    type: 0
-  - row: 59
-    col: 30
-    type: 0
-  - row: 59
-    col: 31
-    type: 0
-  - row: 59
-    col: 32
-    type: 0
-  - row: 59
-    col: 33
-    type: 0
-  - row: 59
-    col: 34
-    type: 0
-  - row: 59
-    col: 35
-    type: 0
-  - row: 59
-    col: 36
-    type: 0
-  - row: 59
-    col: 37
-    type: 0
-  - row: 59
-    col: 38
-    type: 0
-  - row: 59
-    col: 39
-    type: 0
-  - row: 59
-    col: 40
-    type: 0
-  - row: 59
-    col: 41
-    type: 0
-  - row: 59
-    col: 42
-    type: 0
-  - row: 59
-    col: 43
-    type: 0
-  - row: 59
-    col: 44
-    type: 0
-  - row: 59
-    col: 45
-    type: 0
-  - row: 60
-    col: 15
-    type: 0
-  - row: 60
-    col: 16
-    type: 0
-  - row: 60
-    col: 17
-    type: 0
-  - row: 60
-    col: 18
-    type: 0
-  - row: 60
-    col: 19
-    type: 0
-  - row: 60
-    col: 20
-    type: 0
-  - row: 60
-    col: 21
-    type: 2
-  - row: 60
-    col: 22
-    type: 0
-  - row: 60
-    col: 23
-    type: 0
-  - row: 60
-    col: 24
-    type: 0
-  - row: 60
-    col: 25
-    type: 0
-  - row: 60
-    col: 26
-    type: 0
-  - row: 60
-    col: 27
-    type: 0
-  - row: 60
-    col: 28
-    type: 0
-  - row: 60
-    col: 29
-    type: 0
-  - row: 60
-    col: 30
-    type: 0
-  - row: 60
-    col: 31
-    type: 0
-  - row: 60
-    col: 32
-    type: 0
-  - row: 60
-    col: 33
-    type: 0
-  - row: 60
-    col: 34
-    type: 0
-  - row: 60
-    col: 35
-    type: 0
-  - row: 60
-    col: 36
-    type: 0
-  - row: 60
-    col: 37
-    type: 0
-  - row: 60
-    col: 38
-    type: 0
-  - row: 60
-    col: 39
-    type: 0
-  - row: 60
-    col: 40
-    type: 0
-  - row: 60
-    col: 41
-    type: 0
-  - row: 60
-    col: 42
-    type: 0
-  - row: 60
-    col: 43
-    type: 0
-  - row: 60
-    col: 44
-    type: 0
-  - row: 60
-    col: 45
     type: 0

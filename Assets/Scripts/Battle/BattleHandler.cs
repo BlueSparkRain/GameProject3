@@ -11,8 +11,10 @@ public class BattleHandler : MonoBehaviour
     IBattlable self;
     BattleMVCHandler MVCHandler;
     BattleSkillHandler skillHandler;
+    BattleBuffHandler buffHandler;
     BattleDamageHandler damageHandler;
     BattlerStateTag battlerStateTag;
+
     bool start=false;
     public void InitBattler(CharacterData characterData){
         bool isplayer = (characterData.characterType == E_CharacterType.P_1 ||
@@ -26,9 +28,14 @@ public class BattleHandler : MonoBehaviour
         //启动BattleMVC
         MVCHandler = GetComponentInChildren<BattleMVCHandler>();
         MVCHandler.InitMVCHandler(characterData,battlerStateTag);
+        
+        //启动Buff
+        buffHandler=GetComponent<BattleBuffHandler>();
+        buffHandler.InitBattleBufferHandle(self);
+
         //启动BattleDamageHandler
         damageHandler= GetComponentInChildren<BattleDamageHandler>();
-        damageHandler.InitDataHandler(MVCHandler);
+        damageHandler.InitDataHandler(MVCHandler,buffHandler);
 
         //启动BattleSkiller
         skillHandler = GetComponentInChildren<BattleSkillHandler>();
@@ -38,15 +45,10 @@ public class BattleHandler : MonoBehaviour
         Debug.Log(characterData.Character_Name + "-----本角色开始战斗");
     }
 
-
-    void Start()
-    {
-        
-    }
-
     void Update(){
         if (start) { 
             skillHandler.OnSkillerUpdate();
+            buffHandler.OnBuffUpdate();
         }   
     }
 }

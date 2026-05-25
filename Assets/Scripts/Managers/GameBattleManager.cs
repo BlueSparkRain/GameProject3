@@ -46,7 +46,6 @@ public class GameBattleManager : IGlobalManager
     public void CheckBattleEnemy(HexRoomTag roomTag)
     {
         if(!gameMapManager) gameMapManager=GameRoot.GetManager<GameMapManager>();
-        Debug.Log(roomTag+"?????????????????????????????????????");
         List<Vector2Int> radiusRowCols = HexCoordinateUtility.GetRowColsInRadius(roomTag.row,roomTag.col, battleRadius);
         Debug.Log("[GameBattleManager]-----开始检索到本场战斗敌人数量，样本数量:" + radiusRowCols.Count);
         for (int i = 0; i < radiusRowCols.Count ; i++)

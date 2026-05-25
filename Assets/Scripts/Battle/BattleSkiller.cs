@@ -53,8 +53,8 @@ public class BattleSkiller
 
         //测试！随机添加 5种技能
         for (int i = 0; i < 5; i++)
-            //normalSkillIDs.Add(Random.Range(0, 5));
-            normalSkillIDs.Add(Random.Range(0, 3));
+            normalSkillIDs.Add(Random.Range(0, 5));
+        //normalSkillIDs.Add(Random.Range(0, 3));
 
         for (int i = 0; i < normalSkillIDs.Count; i++)
         {

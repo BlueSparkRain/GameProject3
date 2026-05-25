@@ -1,7 +1,18 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git checkout *)"
+      "Bash(git checkout *)",
+      "Bash(iconv -f GBK -t UTF-8)",
+      "Bash(git fsck *)",
+      "Bash(python3 -c ' *)",
+      "Bash(cat)",
+      "Bash(python3 _restore_buff.py)",
+      "Bash(python _restore_buff.py)",
+      "Bash(python _fix_damage.py)",
+      "Bash(python _fix_iskill.py)",
+      "Bash(python -c \"open\\('Assets/Scripts/Battle/BattleBuffHandler.cs', 'r', encoding='gbk'\\).read\\(\\)\")",
+      "Bash(python -c \"open\\('Assets/Scripts/Battle/BattleDamageHandler.cs', 'r', encoding='gbk'\\).read\\(\\)\")",
+      "Bash(python -c \"lines = open\\('Assets/Scripts/Skill/Skill_Logic/ISkill.cs', 'r', encoding='gbk'\\).readlines\\(\\); [print\\(f'{i+1}: {l}', end=''\\) for i,l in enumerate\\(lines[50:62]\\)]\")"
     ]
   }
 }

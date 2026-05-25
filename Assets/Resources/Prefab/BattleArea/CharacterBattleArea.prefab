@@ -326,6 +326,7 @@ GameObject:
   - component: {fileID: 7924504396908485912}
   - component: {fileID: 7219113308112087172}
   - component: {fileID: 5312690628787135205}
+  - component: {fileID: 4068569276747696318}
   m_Layer: 5
   m_Name: CharacterBattleArea
   m_TagString: Untagged
@@ -460,6 +461,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1716789feebf0494e8c5be4117eabe72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BattleBuffHandler: {fileID: 0}
 --- !u!114 &5312690628787135205
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -473,6 +475,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewer: {fileID: 2663682674329803068}
+--- !u!114 &4068569276747696318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6703023380856288044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34a3e5c60c43e624db39e7a1f290adeb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8006753777164098351
 GameObject:
   m_ObjectHideFlags: 0

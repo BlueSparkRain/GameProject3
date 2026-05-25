@@ -116,7 +116,12 @@ public class HexMapInteractManager : MonoGlobalManager
     void OneMoverCloudeCheck()
     {
         HexRoomTag characterRoom = GameRoot.GetManager<MapMoverManager>().currentIMovable.currentRoom;
+        if (characterRoom)
+        {
         coroutineManager.StartCoroutine(TriggerCloudeDisappear(characterRoom.row, characterRoom.col));
+            
+        }
+        //coroutineManager = GameRoot.GetManager<CoroutineManager>();
     }
 
     /// <summary>

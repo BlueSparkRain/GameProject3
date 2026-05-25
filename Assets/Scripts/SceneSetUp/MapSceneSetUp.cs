@@ -11,7 +11,7 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load
     float x_Offset = 0.88f;//每行内的偏移
     float y_Offset = 0.8f;//相邻行的偏移
 
-    int MapRadius = 30;
+    int MapRadius = 20;
     public Transform MapPivot;
     GameMapManager gameMapManager;
     public Button EndRoundButton;

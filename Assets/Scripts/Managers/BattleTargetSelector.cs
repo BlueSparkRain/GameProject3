@@ -49,8 +49,7 @@ public static class BattleTargetSelector
         return targets;
     }
 
-    public static void RegisteABattler(IBattlable battler)
-    {
+    public static void RegisteABattler(IBattlable battler){
         AllBattleUnits.Add(battler);
         //Debug.Log("好的哈电话" + AllBattleUnits.Count + ":" + battler);
     }
@@ -68,5 +67,12 @@ public static class BattleTargetSelector
     // 工具：获取N个存活目标
     private static List<IBattlable> GetNAliveTargets(E_Camp camp, int count) =>
         AllBattleUnits.Where(u => u.Camp == camp && u.IsAlive).Take(count).ToList();
+
+    // 工具：获取随机N个存活目标
+    public static List<IBattlable> GetRandomNAliveTargets(E_Camp camp, int count) =>
+        AllBattleUnits.Where(u => u.Camp == camp && u.IsAlive)
+                      .OrderBy(_ => Random.value) // 核心：随机排序
+                      .Take(count)
+                      .ToList();
 }
 

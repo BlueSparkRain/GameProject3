@@ -16,7 +16,7 @@ MonoBehaviour:
   skill_Sprite: {fileID: 21300000, guid: 0389074d1deba1c448d45812db40c0df, type: 3}
   skill_Name: "\u81F4\u547D\u8282\u594F"
   skill_Description: "\u9020\u6210\u5251/\u67AA/\u5F13\u5F31\u70B9\u7684\u8F83\u4F4E\u4F24\u5BB3\uFF08\u521D\u59CB\u6280\u80FD\uFF09\uFF08\u65B9\u5411\u952E\u5207\u6362\u5F31\u70B9\u7C7B\u578B\uFF09"
-  skill_CoolDown_origin: 2
-  skill_sp_cost: 20
+  skill_CoolDown_origin: 3
+  skill_sp_cost: 10
   skill_ang_grow: 5
   skill_targetType: 0

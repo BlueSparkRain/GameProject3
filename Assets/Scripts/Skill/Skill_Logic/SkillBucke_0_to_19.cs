@@ -37,6 +37,7 @@ public class SkillBucke_0_to_19 { }
 public class Skill_BaseAttack : SkillBase
 {
     #region 技能基础Info
+    //float baseAttackValue = -2;
     float baseAttackValue = -10;
     float baseAttackRate = 0.1f;
     //决定伤害类型
@@ -89,7 +90,7 @@ public class Skill_1 : SkillBase
     }
     public override void SkillEffect_Base(IBattlable target)
     {
-        float healRate = (self.battlerDataHandler.BattleController
+        float healRate = (self.battleDamageHandler.BattleController
             .GetCharacterPropertyValue(E_CharacterPropertyType.CurrentLevel) / divRate) + 1;
         mdl_iSkill.SetModelState(E_BattleModelType.SP, baseHealValue, healRate);
         mdl_iSkill.Excute(self, target);
@@ -99,7 +100,7 @@ public class Skill_1 : SkillBase
     public override void SkillEffect_Enhence(IBattlable target, int henceTime)
     {
         Debug.Log($"[Skill 0]{self.Camp}发动强化技能1——等级{henceTime}");
-        float healRate = (self.battlerDataHandler.BattleController
+        float healRate = (self.battleDamageHandler.BattleController
           .GetCharacterPropertyValue(E_CharacterPropertyType.CurrentLevel) / divRate) + 1;
         ModelAdjust_Skill innerSkill = new ModelAdjust_Skill();
         innerSkill.SetModelState(E_BattleModelType.SP, baseHealValue, healRate);
@@ -166,7 +167,7 @@ public class Skill_2 : SkillBase
 /// </summary>
 [SkillID(3)]
 public class Skill_3 : SkillBase{
-    float baseDamageValue = 60;
+    float baseDamageValue = -1;
     float damageRate = 0.6f;
     Attack_Skill atk_iSkill;
     ModelAdjust_Skill mdl_iSkill;
@@ -195,16 +196,24 @@ public class Skill_3 : SkillBase{
 /// </summary>
 [SkillID(4)]
 public class Skill_4 : SkillBase{
-    //每次攻击我都要
+    float buffDuration = 5;
     public Skill_4(E_SkillTargetType _skillTargetType) : base(_skillTargetType){
         Debug.Log("$$$$$--技能4--$$$$$");
     }
 
     public override void SkillEffect_Enhence(IBattlable target, int henceTime){
-
+        CreateBuff(buffDuration+henceTime*20);
     }
     public override void SkillEffect_Base(IBattlable target){
         //为角色增加一个BUFF，在BUff生效期间内检测造成的伤害是不是物理伤害
+        CreateBuff(buffDuration);
+    }
+
+    void CreateBuff(float buffDuration) {
+        var buffHandle = self.battleDamageHandler.BattleBuffHandler;
+        BuffBase buff = new Buff_AdditiveAttack(E_BuffName.炽焰连锁, E_BuffPositive.正面, buffDuration, this, E_WeaknessType.火, 0.1f);
+        EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, buffHandle,
+           buff);
     }
 }
 
@@ -213,37 +222,48 @@ public class Skill_4 : SkillBase{
 /// </summary>
 [SkillID(5)]
 public class Skill_5 : SkillBase{
+    float buffDuration = 5;
+    float damageRate=0.4f;
+    /// <summary>
+    /// 打击间隔
+    /// </summary>
+    float attackInterval;
     public Skill_5(E_SkillTargetType _skillTargetType) : base(_skillTargetType){
         Debug.Log("$$$$$--技能5--$$$$$");
     }
-    public override void SkillEffect_Base(IBattlable target)
-    {
-
+    public override void SkillEffect_Base(IBattlable target){
+        //为角色增加一个BUFF，在BUff生效期间内检测造成的伤害是不是物理伤害
+        CreateBuff(buffDuration,damageRate);
     }
     public override void SkillEffect_Enhence(IBattlable target, int henceTime){
+        float _damageRate = damageRate + 0.2f * henceTime;
+        CreateBuff(buffDuration,_damageRate);
     }
 
-
+    void CreateBuff(float buffDuration,float _damageRate)
+    {
+        var buffHandle = self.battleDamageHandler.BattleBuffHandler;
+        E_Camp enemy_Camp = (self.Camp == E_Camp.玩家方 ? E_Camp.敌方 :E_Camp.玩家方);
+        BuffBase buff = new Buff_AutoDamage(E_BuffName.雷电场地, E_BuffPositive.正面, buffDuration,self,enemy_Camp,
+            E_WeaknessType.雷, _damageRate,attackInterval);
+        EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, buffHandle,
+           buff);
+    }
 }
-
 
 /// <summary>
 ///（6）获得【冰雪场地】状态（每4秒使敌方全体获得1层冻结），持续40S（中耗）（初始技能）
 /// </summary>
 [SkillID(6)]
-public class Skill_6 : SkillBase
-{
-    public Skill_6(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
-    {
+public class Skill_6 : SkillBase{
+    public Skill_6(E_SkillTargetType _skillTargetType) : base(_skillTargetType){
         Debug.Log("$$$$$--技能6--$$$$$");
     }
 
-    public override void SkillEffect_Enhence(IBattlable target, int henceTime)
-    {
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime){
+    
     }
-
-    public override void SkillEffect_Base(IBattlable target)
-    {
+    public override void SkillEffect_Base(IBattlable target){
 
     }
 }

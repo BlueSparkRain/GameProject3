@@ -46,9 +46,9 @@ public enum E_Camp
 // 技能不依赖具体角色，只依赖这个接口 → 极致解耦
 public interface IBattlable
 {
-    E_Camp Camp { get; }             // 阵营
+     E_Camp Camp { get; }             // 阵营
     bool IsAlive { get; }            // 是否存活
-    public BattleDamageHandler battlerDataHandler { get; set; }
+    public BattleDamageHandler battleDamageHandler { get; set; }
 
     E_WeaknessType selfWeakness {  get; set; }
 

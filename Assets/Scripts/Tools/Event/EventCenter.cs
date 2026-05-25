@@ -520,4 +520,13 @@ public enum E_EventType
     /// 调整经验值
     /// </summary>
     AdjustEXP,
+
+    /// <summary>
+    /// 角色获得一个BUFF
+    /// </summary>
+    Battle_RegisteBUFF,
+    /// <summary>
+    /// 进行了一次物理攻击
+    /// </summary>
+    Do_PhyAttack,
 }

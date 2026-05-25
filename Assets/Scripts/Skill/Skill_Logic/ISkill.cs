@@ -1,4 +1,5 @@
 using UnityEngine;
+using Core;
 
 public interface ISkill
 {
@@ -52,21 +53,24 @@ public class Attack_Skill : ISkill
     {
         E_Skill_DamageType damageType = DamageTypeChecker.GetDamageType(weaknessType);
         
-        float value = self.battlerDataHandler.DoDamage(damageType, baseAttackRate * baseAttackValue);
+        if (damageType == E_Skill_DamageType.物理)
+            EventCenter.EventTrigger(E_EventType.Do_PhyAttack, self.battleDamageHandler.BattleBuffHandler);
+
+        float value = self.battleDamageHandler.DoDamage(damageType, baseAttackRate * baseAttackValue);
 
         //检查攻击弱点状态（如是->结算伤害x2 + 削盾1点）
         if (target.GetWeakAttack(weaknessType))
         {
             value *= weakMulti;
-            target.battlerDataHandler.DoModelValue(E_BattleModelType.ShieldPoints,-1);
+            target.battleDamageHandler.DoModelValue(E_BattleModelType.ShieldPoints,-1);
 
-            Debug.Log($"{self.Camp}对{target.battlerDataHandler.name}发动一次[(弱点)]攻击:{baseAttackRate}*{baseAttackValue}*{weakMulti}*玩家攻击力=[税前伤害]{value}");
+            Debug.Log($"{self.Camp}对{target.battleDamageHandler.name}发动一次[(弱点)]攻击:{baseAttackRate}*{baseAttackValue}*{weakMulti}*玩家攻击力=[税前伤害]{value}");
         }
         else
         {
-            Debug.Log($"{self.Camp}对{target.battlerDataHandler.name}发动一次攻击:{baseAttackRate}*{baseAttackValue}*玩家攻击力=[税前伤害]{value}");
+            Debug.Log($"{self.Camp}对{target.battleDamageHandler.name}发动一次攻击:{baseAttackRate}*{baseAttackValue}*玩家攻击力=[税前伤害]{value}");
         }
-        target.battlerDataHandler.GetDamage(damageType, value);
+        target.battleDamageHandler.GetDamage(damageType, value);
     }
 }
 
@@ -98,8 +102,8 @@ public class ModelAdjust_Skill : ISkill
     public void Excute(IBattlable self, IBattlable target)
     {
         float value = baseAdjValue * skillRate;
-        self.battlerDataHandler.DoModelValue(modelType, value);
-        Debug.Log($"{self.Camp}对{target.battlerDataHandler.name}发动一次Model调整[{modelType}]：{value}");
+        self.battleDamageHandler.DoModelValue(modelType, value);
+        Debug.Log($"{self.Camp}对{target.battleDamageHandler.name}发动一次Model调整[{modelType}]：{value}");
     }
 }
 
@@ -130,8 +134,8 @@ public class PropertyAdjust_Skill : ISkill
     public void Excute(IBattlable self, IBattlable target)
     {
         float value = baseAdjValue * skillRate;
-        self.battlerDataHandler.DoPropertyValue(propertyType, value);
-        Debug.Log($"{self.Camp}对{target.battlerDataHandler.name}发动一次Property调整[{propertyType}]：{value}");
+        self.battleDamageHandler.DoPropertyValue(propertyType, value);
+        Debug.Log($"{self.Camp}对{target.battleDamageHandler.name}发动一次Property调整[{propertyType}]：{value}");
     }
 }
 

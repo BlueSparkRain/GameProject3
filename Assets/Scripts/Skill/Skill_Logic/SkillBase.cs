@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using static UnityEngine.GraphicsBuffer;
 
 public enum E_SkillLevel
 {
@@ -25,31 +24,38 @@ public abstract class SkillBase
 
     public E_SkillTargetType skillTargetType { get; set; }
 
-    public SkillBase(E_SkillTargetType _skillTargetType){
+    public SkillBase(E_SkillTargetType _skillTargetType)
+    {
         skillTargetType = _skillTargetType;
     }
 
-    void GetTargets(){
+    void GetTargets()
+    {
         targets = BattleTargetSelector.GetValidTargets(self, skillTargetType);
     }
 
-    public void GetCaster(IBattlable _caster){
+    public void GetCaster(IBattlable _caster)
+    {
         self = _caster;
     }
     /// <summary>
     /// 对所有目标一次释放单体技能
     /// </summary>
     /// <param name="casters"></param>
-    public void SkillExcute(E_SkillLevel skillLevel,int henceTime = 0) { 
+    public void SkillExcute(E_SkillLevel skillLevel, int henceTime = 0)
+    {
         GetTargets();
-        if (targets.Count <= 0){
+        if (targets.Count <= 0)
+        {
             UnityEngine.Debug.Log("何意味，无目标技能？");
             return;
         }
-        for (int i = 0; i < targets.Count; i++){
-            switch (skillLevel){
+        for (int i = 0; i < targets.Count; i++)
+        {
+            switch (skillLevel)
+            {
                 case E_SkillLevel.基础版本: SkillEffect_Base(targets[i]); break;
-                case E_SkillLevel.加强版本: SkillEffect_Enhence(targets[i],henceTime); break;
+                case E_SkillLevel.加强版本: SkillEffect_Enhence(targets[i], henceTime); break;
             }
         }
     }

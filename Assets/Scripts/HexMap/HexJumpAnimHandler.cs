@@ -63,7 +63,7 @@ public class HexJumpAnimHandler : MonoBehaviour
 
     public void WalkableUpAnim()
     {
-        float rand_Height = Random.Range(0.5f, 0.6f);
+        float rand_Height =0.5f; 
         float rand_Duration = Random.Range(0.5f, 0.8f);
         _selfTrans.DOLocalMoveY(_originalPos.y + heightDistance * rand_Height,
             baseHeightDuration * rand_Duration).SetEase(jumpEase);
