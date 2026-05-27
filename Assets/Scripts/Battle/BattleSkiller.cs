@@ -31,7 +31,7 @@ public class BattleSkiller
     }
 
     IBattlable self;//由上个场景中的战斗双方角色传输
-    public bool IsPlayer;
+    //public bool IsPlayer;
 
     bool DoCycle;
     //bool battleEnd;
@@ -51,15 +51,28 @@ public class BattleSkiller
         List<SkillData> normalSkillDatas = new List<SkillData>();
         //List<SkillData> atbSkillDatas = new List<SkillData>();
 
-        //测试！随机添加 5种技能
-        for (int i = 0; i < 5; i++)
-            normalSkillIDs.Add(Random.Range(0, 5));
-        //normalSkillIDs.Add(Random.Range(0, 3));
+        //////测试！随机添加 5种技能
+        //for (int i = 0; i < 5; i++)
+        //    normalSkillIDs.Add(Random.Range(0, 9));
+        ////normalSkillIDs.Add(Random.Range(0, 3));
 
-        for (int i = 0; i < normalSkillIDs.Count; i++)
+        //for (int i = 0; i < normalSkillIDs.Count; i++)
+        //{
+        //    var newSkillData = new SkillData(ResourcesLoader.FindSkillSOByID(normalSkillIDs[i]));
+        //    normalSkillDatas.Add(newSkillData);
+        //}
+
+        if (self.Camp == E_Camp.玩家方)
         {
-            var newSkillData = new SkillData(ResourcesLoader.FindSkillSOByID(normalSkillIDs[i]));
-            normalSkillDatas.Add(newSkillData);
+            normalSkillIDs.Add(10);
+            normalSkillIDs.Add(0);
+
+            for (int i = 0; i < normalSkillIDs.Count; i++)
+            {
+                var newSkillData = new SkillData(ResourcesLoader.FindSkillSOByID(normalSkillIDs[i]));
+                normalSkillDatas.Add(newSkillData);
+            }
+
         }
 
         #region 创建SkillIcon

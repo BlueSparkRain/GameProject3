@@ -470,7 +470,7 @@ MonoBehaviour:
   y_Offset: 0.75
   roomPrefab: {fileID: 3702633034361400875, guid: 486f7aeb145dc164ab92a609dab1c5da,
     type: 3}
-  MapRadius: 20
+  MapRadius: 25
   MapPivot: {fileID: 1110076308}
   MapSOData: {fileID: 11400000, guid: 12ce2fe71ded52c4394edbc48ae9b59e, type: 2}
   needDelay: 1
@@ -997,6 +997,65 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1682696805
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1682696807}
+  - component: {fileID: 1682696806}
+  m_Layer: 0
+  m_Name: RegionTexMapper
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1682696806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1682696805}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f76081abf29629f469bc1d6bab6572a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minRow: 10
+  maxRow: 35
+  minCol: 5
+  maxCol: 45
+  regionTexture: {fileID: 2800000, guid: d2eb571c004fa814dbf1eec37501e5f0, type: 3}
+  tiling: {x: 1, y: 1}
+  offset: {x: 0, y: 0}
+  textureOpacity: 0.8
+  fadeDuration: 0.5
+  maxRandomDelay: 1.5
+  faceScale: {x: 0.55, y: 0.55, z: 0.55}
+  faceHeight: 0.6
+  mappingEnabled: 1
+  faceChildName: HexFace
+  showRangeGizmo: 1
+--- !u!4 &1682696807
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1682696805}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.60833025, y: -1.6659327, z: -0.77690846}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1819255552
 GameObject:
   m_ObjectHideFlags: 0
@@ -1116,3 +1175,4 @@ SceneRoots:
   - {fileID: 2069549541}
   - {fileID: 1290934179}
   - {fileID: 1243377965}
+  - {fileID: 1682696807}

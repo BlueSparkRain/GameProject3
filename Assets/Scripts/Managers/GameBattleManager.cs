@@ -36,15 +36,14 @@ public class GameBattleManager : IGlobalManager
     /// </summary>
     /// <param name="data"></param>
     public void RegisterPlayerToBattle(CharacterData data){
-        Debug.Log("玩家数据加载了一份！！！！！！！！！！");
+        //Debug.Log("玩家数据加载了一份！");
         playersData.Add(data);
     }
     /// <summary>
     ///当玩家进入一个战斗房间时触发,将一定半径范围内的其他普通敌人拉入战斗
     /// </summary>
     /// <param name="roomTag"></param>
-    public void CheckBattleEnemy(HexRoomTag roomTag)
-    {
+    public void CheckBattleEnemy(HexRoomTag roomTag){
         if(!gameMapManager) gameMapManager=GameRoot.GetManager<GameMapManager>();
         List<Vector2Int> radiusRowCols = HexCoordinateUtility.GetRowColsInRadius(roomTag.row,roomTag.col, battleRadius);
         Debug.Log("[GameBattleManager]-----开始检索到本场战斗敌人数量，样本数量:" + radiusRowCols.Count);
@@ -66,7 +65,7 @@ public class GameBattleManager : IGlobalManager
                 }
             }
         }
-        Debug.Log("[GameBattleManager]-----检索到本场战斗" + enemysData.Count+"个敌人");
+        Debug.Log("[GameBattleManager]---检索到本场战斗" + enemysData.Count+"个敌人");
     }
 
     /// <summary>
@@ -112,14 +111,14 @@ public class GameBattleManager : IGlobalManager
         //寻找场景中的负责产生战斗对象的管理器
         BattleLoadManager battleLoadManager=GameRoot.GetManager<BattleLoadManager>();
         if (isPlayer){
-            Debug.Log("加载Battle：玩家" + datas.Count);
+            Debug.Log("加载Battle：PlayerCamp" + datas.Count);
             for (int i = 0; i < datas.Count; i++){
                 battleLoadManager.LoadAPlayer(datas[i]);
                 yield return delay;
             }
         }
         else {
-            Debug.Log("加载Battle：敌人"+datas.Count);
+            Debug.Log("加载Battle：EnemyCamp"+datas.Count);
             for (int i = 0; i < datas.Count; i++)
             {
                 battleLoadManager.LoadAEnemy(datas[i]);

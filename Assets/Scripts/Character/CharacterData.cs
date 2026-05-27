@@ -209,13 +209,13 @@ public class CharacterData : ICanSave_And_Load
         {
             case E_CharacterPropertyType.Phy_Flat_Penetration: if (!use_multi) phy_Flat_Penetration += value; else phy_Flat_Penetration *= value; break;
             case E_CharacterPropertyType.Mag_Flat_Penetration: if (!use_multi) mag_Flat_Penetration += value; break;
-            case E_CharacterPropertyType.Phy_Resistance: if (!use_multi) phy_Resistance += value; else phy_Resistance *= value; break;
-            case E_CharacterPropertyType.Mag_Resistance: if (!use_multi) mag_Resistance += value; else mag_Resistance *= value; break;
-            case E_CharacterPropertyType.Phy_Attack: if (!use_multi) phy_Attack += value; else phy_Attack *= value; break;
-            case E_CharacterPropertyType.Mag_Attack: if (!use_multi) magic_Attack += value; else magic_Attack *= value; break;
-            case E_CharacterPropertyType.Maximum_Mana: if (!use_multi) maximum_Mana += value; else maximum_Mana *= value; break;
-            case E_CharacterPropertyType.Mana_Regeneration: if (!use_multi) mana_Regeneration += value; else mana_Regeneration *= value; break;
-            case E_CharacterPropertyType.Maximum_Health: if (!use_multi) maximum_Health += value; else maximum_Health *= value; break;
+            case E_CharacterPropertyType.Phy_Resistance: if (!use_multi) phy_Resistance += (int)value; else phy_Resistance *= value; break;
+            case E_CharacterPropertyType.Mag_Resistance: if (!use_multi) mag_Resistance += (int)value; else mag_Resistance *= value; break;
+            case E_CharacterPropertyType.Phy_Attack: if (!use_multi) phy_Attack += (int)value; else phy_Attack *= value; break;
+            case E_CharacterPropertyType.Mag_Attack: if (!use_multi) magic_Attack += (int)value; else magic_Attack *= value; break;
+            case E_CharacterPropertyType.Maximum_Mana: if (!use_multi) maximum_Mana += (int)value; else maximum_Mana *= value; break;
+            case E_CharacterPropertyType.Mana_Regeneration: if (!use_multi) mana_Regeneration += (int)value; else mana_Regeneration *= value; break;
+            case E_CharacterPropertyType.Maximum_Health: if (!use_multi) maximum_Health += (int)value; else maximum_Health *= value; break;
             case E_CharacterPropertyType.Health_Regeneration: if (!use_multi) health_Regeneration += value; else phy_Resistance *= value; break;
             case E_CharacterPropertyType.Life_Steal: if (!use_multi) life_Steal += value; else life_Steal *= value; break;
             case E_CharacterPropertyType.Tenacity: if (!use_multi) tenacity += value; else tenacity *= value; break;

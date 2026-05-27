@@ -29,6 +29,9 @@ public class HexMapInteractManager : MonoGlobalManager
     WaitForSeconds cloudeDelay;
     CoroutineManager coroutineManager;
 
+    [Header("使用鼠标点击来聚焦相机视角")]
+    public bool UseMouseClickFacus = false;
+
     protected override void MgrOnInit()
     {
         base.MgrOnInit();
@@ -60,9 +63,12 @@ public class HexMapInteractManager : MonoGlobalManager
             HexRoomTag clickedRoomData = hit.collider.GetComponent<HexRoomTag>();
             if (clickedRoomData != null)
             {
-                if ((mousePosition.x < 185 || mousePosition.x > 500) && mousePosition.y > 400)
+                if (UseMouseClickFacus)
                 {
-                 GameRoot.GetManager<OrthoCameraNavigator>().FocusOnTarget(clickedRoomData.gameObject, 2);
+                    if ((mousePosition.x < 185 || mousePosition.x > 500) && mousePosition.y > 400)
+                    {
+                        GameRoot.GetManager<OrthoCameraNavigator>().FocusOnTarget(clickedRoomData.gameObject, 2);
+                    }
                 }
                 //触发半径内的所有房间跳动
                 TriggerRadiusJump(clickedRoomData.row, clickedRoomData.col);
@@ -75,8 +81,7 @@ public class HexMapInteractManager : MonoGlobalManager
 
             if (hexPathFindingManager.canTriggerMover)
             {
-
-                GameRoot.GetManager<AudioManager>().PlaySFX("Music/SFX/mambo");
+                //GameRoot.GetManager<AudioManager>().PlaySFX("Music/SFX/mambo");
                 hexPathFindingManager.SetPathFindState(false);
 
                 mapCharacterMoveChecker.MoverGo(hexPathFindingManager.TargetMoverPath);
@@ -118,7 +123,7 @@ public class HexMapInteractManager : MonoGlobalManager
         HexRoomTag characterRoom = GameRoot.GetManager<MapMoverManager>().currentIMovable.currentRoom;
         if (characterRoom)
         {
-        coroutineManager.StartCoroutine(TriggerCloudeDisappear(characterRoom.row, characterRoom.col));
+            coroutineManager.StartCoroutine(TriggerCloudeDisappear(characterRoom.row, characterRoom.col));
             
         }
         //coroutineManager = GameRoot.GetManager<CoroutineManager>();
@@ -137,7 +142,6 @@ public class HexMapInteractManager : MonoGlobalManager
         {
             if (mapManager.HexRoomMap.TryGetValue(rowCol, out HexRoomTag room))
             {
-                Debug.Log("开始清楚啊大哥还u达不到卡第八十九个！");
                 // 2.3 触发动画（动画组件无修改）
                 room.GetComponent<HexJumpAnimHandler>()?.CloudeDisAppear();
                 yield return cloudeDelay;

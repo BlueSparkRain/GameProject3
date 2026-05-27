@@ -6,13 +6,22 @@ using UnityEngine.UI;
 
 public class PlayerLevelBox : MonoBehaviour
 {
+
+    [Header("经验Circle条")]
+    public Image expCircleFillbar;
+    [Header("经验Circle条_Fast0.2")]
+    public Image expCircleFillbar_Fast;
+
+    [Header("等级文本")]
+    public TMP_Text levelText;
+
+    [Header("不使用经验Box//下方的字段都不使用")]
+    public bool UseLevelBox=true;
     //每次获取经验都会更新UI
     [Header("经验条")]
     public Image expFillbar;
     public Image expFillbarWhite;
 
-    [Header("经验Circle条")]
-    public Image expCircleFillbar;
 
     [Header("当前经验值文本")]
     public TMP_Text currentExpText;
@@ -20,48 +29,62 @@ public class PlayerLevelBox : MonoBehaviour
     [Header("据升级所需总经验值文本")]
     public TMP_Text nextExpGoalText;
 
-    [Header("等级文本")]
-    public TMP_Text levelText;
-
-    void Start()
-    {
-        expFillbar.fillAmount = 0;
-        expFillbarWhite.fillAmount = 0;
+    void Start(){
+        if (UseLevelBox){
+            expFillbar.fillAmount = 0;
+            expFillbarWhite.fillAmount = 0;
+        }
         expCircleFillbar.fillAmount = 0;
+        
+        if (expCircleFillbar_Fast != null)
+        expCircleFillbar_Fast.fillAmount = 0;
     }
 
     public void UpdateMapPlayerIconUI(int currenLevel,float currentEXP,float levelGoal,bool skip=false) {
-        levelText.text=currenLevel.ToString();
-        currentExpText.text=currentEXP.ToString(); 
-        nextExpGoalText.text=$"/{levelGoal}";
-
+        if (UseLevelBox){
+            currentExpText.text = currentEXP.ToString();
+            nextExpGoalText.text = $"/{levelGoal}";
+        }
+        levelText.text = currenLevel.ToString();
         float  targetfillamount= currentEXP/levelGoal;
         StartCoroutine(UpdateAnim(targetfillamount,skip));
     }
 
-    IEnumerator UpdateAnim(float targetfillamount , bool skip) { 
-        if (skip)
-        {
+    IEnumerator UpdateAnim(float targetfillamount , bool skip) {
+        if (skip){
             //跳级需要增加动画
-
-            StartCoroutine(TweenHelper.MakeLerp(expFillbarWhite.fillAmount, 1, 0.05f, val => expFillbarWhite.fillAmount = val));
-            StartCoroutine(TweenHelper.MakeLerp(expFillbar.fillAmount, 1, 0.15f, val => expFillbar.fillAmount = val));
-            StartCoroutine(TweenHelper.MakeLerp(expCircleFillbar.fillAmount, 1, 0.15f, val => expCircleFillbar.fillAmount = val));
+            if (UseLevelBox){
+                StartCoroutine(TweenHelper.MakeLerp(expFillbarWhite.fillAmount, 1, 0.05f, val => expFillbarWhite.fillAmount = val));
+                StartCoroutine(TweenHelper.MakeLerp(expFillbar.fillAmount, 1, 0.1f, val => expFillbar.fillAmount = val));
+            }
+            StartCoroutine(TweenHelper.MakeLerp(expCircleFillbar.fillAmount, 1, 0.1f, val => expCircleFillbar.fillAmount = val));
+            if (expCircleFillbar_Fast != null){
+                StartCoroutine(TweenHelper.MakeLerp(expCircleFillbar_Fast.fillAmount, 1, 0.1f, val => expCircleFillbar_Fast.fillAmount = val+0.02f));
+            }
             yield return new WaitForSeconds(0.2f);
-            expFillbarWhite.fillAmount = 0;
-            expFillbar.fillAmount = 0;
+
+            if (UseLevelBox){
+                expFillbarWhite.fillAmount = 0;
+                expFillbar.fillAmount = 0;
+                StartCoroutine(TweenHelper.MakeLerp(expFillbarWhite.fillAmount, targetfillamount, 0.05f, val => expFillbarWhite.fillAmount = val));
+                StartCoroutine(TweenHelper.MakeLerp(expFillbar.fillAmount, targetfillamount, 0.1f, val => expFillbar.fillAmount = val));
+            }
             expCircleFillbar.fillAmount = 0;
-            StartCoroutine(TweenHelper.MakeLerp(expFillbarWhite.fillAmount, targetfillamount, 0.05f, val => expFillbarWhite.fillAmount = val));
-            StartCoroutine(TweenHelper.MakeLerp(expFillbar.fillAmount, targetfillamount, 0.15f, val => expFillbar.fillAmount = val));
-            StartCoroutine(TweenHelper.MakeLerp(expCircleFillbar.fillAmount, targetfillamount, 0.15f, val => expCircleFillbar.fillAmount = val));
-
+            StartCoroutine(TweenHelper.MakeLerp(expCircleFillbar.fillAmount, targetfillamount, 0.1f, val => expCircleFillbar.fillAmount = val));
+            if (expCircleFillbar_Fast != null){
+                expCircleFillbar_Fast.fillAmount = 0;
+                StartCoroutine(TweenHelper.MakeLerp(expCircleFillbar_Fast.fillAmount, targetfillamount, 0.1f, val => expCircleFillbar_Fast.fillAmount = val+0.02f));
+            }
         }
-        else
-        {
-
-            StartCoroutine(TweenHelper.MakeLerp(expFillbarWhite.fillAmount, targetfillamount, 0.1f, val => expFillbarWhite.fillAmount = val));
-            StartCoroutine(TweenHelper.MakeLerp(expFillbar.fillAmount, targetfillamount, 0.3f, val => expFillbar.fillAmount = val));
-            StartCoroutine(TweenHelper.MakeLerp(expCircleFillbar.fillAmount, targetfillamount, 0.3f, val => expCircleFillbar.fillAmount = val));
+        else{
+            if (UseLevelBox){
+                StartCoroutine(TweenHelper.MakeLerp(expFillbarWhite.fillAmount, targetfillamount, 0.1f, val => expFillbarWhite.fillAmount = val));
+                StartCoroutine(TweenHelper.MakeLerp(expFillbar.fillAmount, targetfillamount, 0.2f, val => expFillbar.fillAmount = val));
+            }
+            StartCoroutine(TweenHelper.MakeLerp(expCircleFillbar.fillAmount, targetfillamount, 0.2f, val => expCircleFillbar.fillAmount = val));
+            if (expCircleFillbar_Fast != null){
+                StartCoroutine(TweenHelper.MakeLerp(expCircleFillbar_Fast.fillAmount, targetfillamount, 0.2f, val => expCircleFillbar_Fast.fillAmount = val+0.02f));
+            }
         }
     }
 }

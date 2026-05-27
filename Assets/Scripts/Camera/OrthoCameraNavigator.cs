@@ -64,7 +64,7 @@ public class OrthoCameraNavigator : MonoSceneManager
     private bool _isFocusing;
 
     //启用相机漫游
-    bool use_CamPan;
+    bool start = false;
     #endregion
 
     #region 初始化
@@ -97,17 +97,28 @@ public class OrthoCameraNavigator : MonoSceneManager
         if (!enabled) _isDragging = false;
     }
 
-    protected override void MgrOnInit()
+    bool use_CamPan=true;
+void Freeze()
+{
+    use_CamPan = false;
+    Debug.Log("[OrthoCameraNavigator]--冻结吧");
+}
+void UnFreeze()
+{
+    use_CamPan = true;
+    Debug.Log("[OrthoCameraNavigator]---解冻啦");
+}
+protected override void MgrOnInit()
     {
         base.MgrOnInit();
-        EventCenter.AddEventListener(E_EventType.FreezeCamPan, () => use_CamPan = false);
-        EventCenter.AddEventListener(E_EventType.UnFreezeCamPan, () => use_CamPan = true);
+        EventCenter.AddEventListener(E_EventType.FreezeCamPan, Freeze);
+        EventCenter.AddEventListener(E_EventType.UnFreezeCamPan, UnFreeze);
     }
     protected override void MgrOnDispose()
     {
         base.MgrOnDispose();
-        EventCenter.RemoveEventListener(E_EventType.FreezeCamPan, () => use_CamPan = false);
-        EventCenter.RemoveEventListener(E_EventType.UnFreezeCamPan, () => use_CamPan = true);
+        EventCenter.RemoveEventListener(E_EventType.FreezeCamPan, Freeze);
+        EventCenter.RemoveEventListener(E_EventType.UnFreezeCamPan, UnFreeze);
     }
 
     protected override void Awake()
@@ -122,12 +133,21 @@ public class OrthoCameraNavigator : MonoSceneManager
         _targetCamPos = _cachedCamTransform.position;
         _targetOrthographicSize = targetOrthographicCamera.orthographicSize;
         _isFocusing = false;
+        StartCoroutine(WaitStart());
+    }
+
+    IEnumerator WaitStart()
+    {
+        yield return new WaitForSeconds(3);
+        start = true;
+        Debug.Log("[OrthoCameraNavigator]---相机开始漫游");
     }
     #endregion
-
     #region 核心更新
     public override void MgrUpdate(float deltaTime)
     {
+        if (!use_CamPan) return;
+        if (!start) return;
         if (_isFocusing) return;
         if (!_isDragEnabled || _cachedCamTransform == null) return;
 
@@ -289,7 +309,7 @@ public class OrthoCameraNavigator : MonoSceneManager
         Vector3 finalPos = new Vector3(
             targetPos.x + 1,
             _cachedCamTransform.position.y, // 固定高空Y
-            targetPos.z - 3
+            targetPos.z - 1
         );
 
         _targetCamPos = finalPos;

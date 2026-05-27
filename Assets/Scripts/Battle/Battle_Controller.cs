@@ -17,13 +17,14 @@ public class Battle_Controller
     BattlerStateTag battlerStateTag;
 
 
-
     WaitForSeconds breakRefreshDelay;
     /// <summary>
     /// 力竭恢复时间
     /// </summary>
     float breakRefreshDuration = 5;
 
+    float modelUpdateTimer;
+    float modelUpdateInterval = 1;
     public Battle_Controller(CharacterData _charData, Battle_Viewer _viewer, BattlerStateTag _battlerStateTag){
         characterData = _charData;
         viewer = _viewer;
@@ -46,6 +47,7 @@ public class Battle_Controller
         model.OnShieldBreak += CharacterBreak;
 
         breakRefreshDelay=new WaitForSeconds(breakRefreshDuration);
+        modelUpdateTimer = modelUpdateInterval;
     }
 
     /// <summary>
@@ -81,14 +83,13 @@ public class Battle_Controller
         Debug.Log("角色力竭结束");
     }
 
-
     public float GetCharacterPropertyValue(E_CharacterPropertyType propertyType)=>characterData.GetProperty(propertyType);
  
     /// <summary>
     /// 修改角色的属性
     /// </summary>
-    public void AdjustCharacterPropertyValue(E_CharacterPropertyType propertyType, float targetValue){
-        CharacterData.AdjustProperty(propertyType, targetValue);
+    public void AdjustCharacterPropertyValue(E_CharacterPropertyType propertyType, float targetValue,bool useMulti=false){
+        CharacterData.AdjustProperty(propertyType, targetValue,useMulti);
     }
 
     /// <summary>
@@ -112,6 +113,19 @@ public class Battle_Controller
             E_BattleModelType.Max_ShieldPoints => model.MaxShieldPoints,
             _ => throw new ArgumentOutOfRangeException(nameof(modelType), modelType, null)
         };
+    }
+
+    /// <summary>
+    /// 每隔1s回复生命值和法力值
+    /// </summary>
+    public void OnBattleControlUpdate(){
+        if (modelUpdateTimer >= 0)
+            modelUpdateTimer -= Time.deltaTime;
+        else{
+            modelUpdateTimer = modelUpdateInterval;
+            AdjustCharacterModelValue(E_BattleModelType.SP,20);
+            AdjustCharacterModelValue(E_BattleModelType.AG,10);
+        }
     }
 }
 

@@ -53,19 +53,18 @@ public class Player_CharacterMapMover : IMapMoveable
     void PlayerGetMovePoints()
     {
         remain_Acionpoints = max_Actionpoints;
-        //EventCenter.EventTrigger(E_EventType.OneMoverEndRound,this);
         moveStop = remain_Acionpoints <= 0;
         mapIcon.SetMoveDot(remain_Acionpoints);
+        //此处如果不显式泛型参数，this会被推断为Player_CharacterMapMover导致执行失败！
+        EventCenter.EventTrigger<IMapMoveable>(E_EventType.OneMoverEndRound, this);
     }
 
     IEnumerator WaitMapIcon()
     {
         yield return new WaitForSeconds(1f);
         mapIcon = GameRoot.GetManager<MapMoverManager>().CreateNewMapIcon(this, charcaterTrans);
+        remain_Acionpoints = max_Actionpoints;
         mapIcon.SetMoveDot(remain_Acionpoints);
-
-        
-        PlayerGetMovePoints();
     }
 
     void OneTimeMove_MinusActionPoint(){ remain_Acionpoints--;}
@@ -129,7 +128,7 @@ public class Player_CharacterMapMover : IMapMoveable
                 Debug.Log("Mover被打断，剩余移动点" + remain_Acionpoints);
                 break;
             }
-            var targetPos = roomPath[i].transform.position + Vector3.up * 0.8f;
+            var targetPos = roomPath[i].transform.position + Vector3.up * 1.2f;
             MagicAnimExtens.PerfectJump_WorldAnim(charcaterTrans,targetPos);
 
             //更新当前房间

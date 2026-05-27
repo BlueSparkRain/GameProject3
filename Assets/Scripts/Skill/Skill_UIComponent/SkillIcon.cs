@@ -104,7 +104,7 @@ public class SkillIcon : MonoBehaviour
             currentSkill.SkillExcute(E_SkillLevel.基础版本);
             skillTimer = skillData.skill_CoolDown;
             //技能释放者消耗蓝量
-            EventCenter.EventTrigger(E_EventType.SkillExcute,skillData.skill_sp_cost);
+            EventCenter.EventTrigger<IBattlable, float>(E_EventType.SkillExcute,currentSkill.self,skillData.skill_sp_cost);
         }
     }
     /// <summary>

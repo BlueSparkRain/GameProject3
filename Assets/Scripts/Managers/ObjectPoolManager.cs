@@ -181,7 +181,7 @@ public class ObjectPoolManager : MonoGlobalManager
     {
         if (obj == null || !poolDataDic.ContainsKey(poolType)) return;
 
-        Debug.Log("回收物体：" + poolType);
+        //Debug.Log("回收物体：" + poolType);
         obj.transform.SetParent(poolDataDic[poolType].parent);
         obj.SetActive(false);
     }

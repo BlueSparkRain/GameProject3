@@ -57,7 +57,7 @@ public class MapSettingSceneSetUp : MonoBehaviour
             gameMapManager.CreateWholeMap();
     }
     IEnumerator WaitMapCreate() {
-        yield return new WaitForSeconds(4);
+        yield return new WaitForSeconds(1);
         gameMapManager.CreateWholeMap();
         
     }

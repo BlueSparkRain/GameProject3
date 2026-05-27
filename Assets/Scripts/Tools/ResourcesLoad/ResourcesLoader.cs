@@ -10,9 +10,12 @@ public static class ResourcesLoader
 
     [Header("SkillSO加载路径")]
     static string skillDataPath = "SOData/SkillSOData/";
-
-
-
+    
+    /// <summary>
+    /// 矩形MapIcon
+    /// </summary>
+    static string mapIcon_RectPrefabPath = "Prefab/MapUI/PlayerMapIcon";
+    static string mapIcon_CirclePrefabPath = "Prefab/MapUI/PlayerMapIcon_Circle";
 
     static string hexRoomPath = "Prefab/HexRoom/MapRoom";
     static string roomCloudePath = "Prefab/HexRoom/RoomCloude";
@@ -47,6 +50,13 @@ public static class ResourcesLoader
         return Resources.Load<GameObject>(mapCharacterPath+backStr);
     }
 
+    public static GameObject FindMapIcon_RectObj() {
+        return Resources.Load<GameObject>(mapIcon_RectPrefabPath);
+    }
+    public static GameObject FindMapIcon_CircleObj()
+    {
+        return Resources.Load<GameObject>(mapIcon_CirclePrefabPath);
+    }
     public static RoomModelSOData FindRoomModelSO(E_RoomModelType  roomModelType) {
         return Resources.Load<RoomModelSOData>(roomModelSOPath+roomModelType);
     }

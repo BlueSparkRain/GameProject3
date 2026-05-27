@@ -46,7 +46,8 @@ public class HexJumpAnimHandler : MonoBehaviour
         float actualHeight = baseJumpHeight * (1 - distanceRatio);
         if (actualHeight < 0.01f) actualHeight = 0.01f; // 避免高度为0
 
-        float rand_Height = Random.Range(0.8f, 1.5f);
+        float rand_Height = Random.Range(1.5f, 2.5f);
+        //float rand_Height = Random.Range(0.8f, 1.5f);
         float rand_Duration = Random.Range(0.5f, 1f);
 
         // 执行跳动动画

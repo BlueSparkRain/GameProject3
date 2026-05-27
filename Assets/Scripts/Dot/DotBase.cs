@@ -1,17 +1,24 @@
 public class DotBase
 {
-    int dot_count;
+    protected int dot_count;
     /// <summary>
     /// 当前Dot层数
     /// </summary>
     public int Dot_count => dot_count;
 
-    E_Dot dot_type;
+    protected E_Dot dot_type;
+
+    protected IBattlable self;
     public E_Dot Dot_type => dot_type;
-    public DotBase(E_Dot _dotType)
-    {
-        dot_count = 0;
+
+    /// <summary>
+    /// 弱点倍率
+    /// </summary>
+    protected float weakMulti = 2;
+    public DotBase(E_Dot _dotType,IBattlable _self,int _dotCount){
+        dot_count = _dotCount;
         dot_type = _dotType;
+        self = _self;
     }
 
     /// <summary>
@@ -22,5 +29,7 @@ public class DotBase
         dot_count += levelCount;
         if (dot_count < 0) dot_count = 0;
     }
-    public virtual void DotTrigger() { }
+    public virtual void OnDotTrigger() { }
+
+    public virtual void OnDotUpdate() { }
 }

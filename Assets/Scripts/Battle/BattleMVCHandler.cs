@@ -26,5 +26,9 @@ public class BattleMVCHandler : MonoBehaviour
         Debug.Log(battlemanager + "///");
         battlemanager.RegisterSkiller(isplayer, battlerStateTag);
     }
+
+    public void OnMVCHandlerUpdate() {
+        battleController.OnBattleControlUpdate();
+    }
 }
 

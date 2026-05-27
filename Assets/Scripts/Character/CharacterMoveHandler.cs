@@ -44,21 +44,17 @@ public class CharacterMapMoveHandle : MonoBehaviour, ICanSave_And_Load
         JsonSaver.InitData<MapMoverPosition>(this, uniqueId);
     }
 
-    void UpdateCurrentRoom(HexRoomTag hexRoomData)
-    {
+    void UpdateCurrentRoom(HexRoomTag hexRoomData){
         iMapMover.currentRoom = hexRoomData;
     }
-    void OnDrawGizmosSelected()
-    {
+    void OnDrawGizmosSelected(){
         Gizmos.color = Color.cyan;
         Gizmos.DrawLine(transform.position, transform.position + Vector3.down * 4);
     }
 
-    void OnDestroy()
-    {
-        // 重要：取消监听，防止内存泄漏
+    void OnDestroy(){
         JsonSaver.Save(moverPosData, moverPosData.uniqueId);
-        Debug.Log($"fsdffesfsefs已卸载，更新角色位置{currentRow},{currentCol}！--------------------------");
+        Debug.Log($"存档已更新角色Map位置{currentRow},{currentCol}");
 
     }
 
@@ -76,7 +72,7 @@ public class CharacterMapMoveHandle : MonoBehaviour, ICanSave_And_Load
         transform.DOScale(1, 0.2f).SetEase(Ease.OutQuart);
     }
     /// <summary>
-    /// ✅ 从【自己的存档】加载数据
+    /// 从【自己的存档】加载数据
     /// </summary>
     public void InitBySaveData()
     {
@@ -96,19 +92,13 @@ public class CharacterMapMoveHandle : MonoBehaviour, ICanSave_And_Load
     }
 
     /// <summary>
-    /// ✅ 无存档时，初始化默认数据
+    /// 无存档时，初始化默认数据
     /// </summary>
-    public void InitBySelf()
-    {
-
+    public void InitBySelf(){
         Debug.Log("未读取到存档");
-
-        if (!JsonSaver.HasValidData<MapMoverPosition>(uniqueId))
-        {
-
+        if (!JsonSaver.HasValidData<MapMoverPosition>(uniqueId)){
             HexRoomTag room = GameRoot.GetManager<GameMapManager>().GetRnadomRoom();
-            if (room == null)
-            {
+            if (room == null){
                 Debug.LogError("无法获取随机房间，地图可能未初始化");
                 return;
             }
@@ -120,7 +110,7 @@ public class CharacterMapMoveHandle : MonoBehaviour, ICanSave_And_Load
                 moverPosData = new MapMoverPosition(uniqueId);
             moverPosData.SetPos(currentRow, currentCol);
             JsonSaver.Save(moverPosData, uniqueId);
-            Debug.Log("ID第一次生成：" + uniqueId);
+            Debug.Log("ID首次生成：" + uniqueId);
         }
     }
 }

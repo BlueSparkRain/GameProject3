@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c17864d2e66c324dbfeff8567400938, type: 3}
+  m_Name: S_43
+  m_EditorClassIdentifier: 
+  skill_ID: 43
+  skill_Sprite: {fileID: 21300000, guid: ee40d72ece864764f9d17d015aedb524, type: 3}
+  skill_Name: "\u707C\u70ED\u7206\u53D1/\u971C\u51BB\u7206\u53D1/\u7206\u53D1"
+  skill_Description: "\u56DE\u590D{200*\uFF08\u7B49\u7EA7//10+1\uFF09}\u70B9\u6CD5\u529B\u503C\uFF08\u521D\u59CB\u6280\u80FD\uFF09"
+  skill_CoolDown_origin: 4
+  skill_sp_cost: 50
+  skill_ang_grow: 10
+  skill_targetType: 0

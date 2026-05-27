@@ -54,7 +54,7 @@ public class Attack_Skill : ISkill
         E_Skill_DamageType damageType = DamageTypeChecker.GetDamageType(weaknessType);
         
         if (damageType == E_Skill_DamageType.物理)
-            EventCenter.EventTrigger(E_EventType.Do_PhyAttack, self.battleDamageHandler.BattleBuffHandler);
+            EventCenter.EventTrigger(E_EventType.Do_PhyAttack, self.battleDamageHandler.BuffHandler);
 
         float value = self.battleDamageHandler.DoDamage(damageType, baseAttackRate * baseAttackValue);
 
@@ -92,15 +92,13 @@ public class ModelAdjust_Skill : ISkill
 
     float skillRate;
 
-    public void SetModelState(E_BattleModelType _modelType, float baseValue, float _multi_value)
-    {
+    public void SetModelState(E_BattleModelType _modelType, float baseValue, float _multi_value){
         skillRate = _multi_value;
         modelType = _modelType;
         baseAdjValue = baseValue;
     }
 
-    public void Excute(IBattlable self, IBattlable target)
-    {
+    public void Excute(IBattlable self, IBattlable target){
         float value = baseAdjValue * skillRate;
         self.battleDamageHandler.DoModelValue(modelType, value);
         Debug.Log($"{self.Camp}对{target.battleDamageHandler.name}发动一次Model调整[{modelType}]：{value}");
@@ -110,8 +108,7 @@ public class ModelAdjust_Skill : ISkill
 /// <summary>
 /// 一次Property效果组件（直接对target的Property属性调整）
 /// </summary>
-public class PropertyAdjust_Skill : ISkill
-{
+public class PropertyAdjust_Skill : ISkill{
     /// <summary>
     /// 调整的基础数值
     /// </summary>
@@ -133,7 +130,7 @@ public class PropertyAdjust_Skill : ISkill
 
     public void Excute(IBattlable self, IBattlable target)
     {
-        float value = baseAdjValue * skillRate;
+        int value =(int)(baseAdjValue * skillRate);
         self.battleDamageHandler.DoPropertyValue(propertyType, value);
         Debug.Log($"{self.Camp}对{target.battleDamageHandler.name}发动一次Property调整[{propertyType}]：{value}");
     }

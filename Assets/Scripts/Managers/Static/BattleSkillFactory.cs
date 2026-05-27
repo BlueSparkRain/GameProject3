@@ -80,7 +80,7 @@ public static class BattleSkillFactory
             if (_skillConstructors.TryGetValue(skillId, out var ctor))
             {
                 _skillMap[skillId] = () => ctor(targetType);
-                Debug.Log($"✅ 自动注册技能 ID:{skillId} 名称:{skillSo.skill_Name}");
+                Debug.Log($"注册技能 ID:{skillId}-{skillSo.skill_Name}");
             }
             else
             {

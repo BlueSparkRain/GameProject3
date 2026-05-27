@@ -91,6 +91,8 @@ public class SkillPanel : UIPanelBase
     {
         base.ExitAnimCallBack();
         canOpen = !canOpen;
+        //解锁相机
+        //EventCenter.EventTrigger(E_EventType.SwitchCamFreeze, false);
 
     }
 
@@ -105,6 +107,8 @@ public class SkillPanel : UIPanelBase
 
 
     }
+
+    
 
     protected override void OnInit()
     {
@@ -123,5 +127,6 @@ public class SkillPanel : UIPanelBase
     protected override void PlayExitAnim(Action onComplete)
     {
         base.PlayExitAnim(onComplete);
+
     }
 }

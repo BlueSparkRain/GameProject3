@@ -45,7 +45,7 @@ public class VitalityPointsManager :MonoGlobalManager, ICanSave_And_Load
         else
             valityPoint += transValue;
         //调整后需要保存数据
-        Debug.Log($"[VitalityPointsManager]活力点数变化---{transValue}");
+        Debug.Log($"[VitalityPointsManager]活力点数变化{transValue}");
         JsonSaver.Save<Save_VitalityPoins>(new Save_VitalityPoins(valityPoint, max_VitalityPoints));
         EventCenter.EventTrigger(E_EventType.UpdateUIVitalityPoints);
     }

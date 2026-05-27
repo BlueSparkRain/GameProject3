@@ -19,7 +19,10 @@ public static class EventCenter
     public static void AddEventListener(E_EventType name, UnityAction action)
     {
         if (eventDic.ContainsKey(name))
+        {
+            (eventDic[name] as EventInfo).actions -= action;
             (eventDic[name] as EventInfo).actions += action;
+        }
         else
             eventDic.Add(name, new EventInfo(action));
     }
@@ -81,7 +84,10 @@ public static class EventCenter
     public static void AddEventListener<T>(E_EventType name, UnityAction<T> action)
     {
         if (eventDic.ContainsKey(name))
+        {
+            (eventDic[name] as EventInfo<T>).actions -= action;
             (eventDic[name] as EventInfo<T>).actions += action;
+        }
         else
             eventDic.Add(name, new EventInfo<T>(action));
     }
@@ -92,7 +98,7 @@ public static class EventCenter
     public static void EventTrigger<T>(E_EventType name, T info)
     {
         if (eventDic.ContainsKey(name))
-            (eventDic[name] as EventInfo<T>).actions?.Invoke(info);
+            (eventDic[name] as EventInfo<T>)?.actions?.Invoke(info);
     }
 
     /// <summary>
@@ -140,14 +146,17 @@ public static class EventCenter
     public static void AddEventListener<T1, T2>(E_EventType name, UnityAction<T1, T2> action)
     {
         if (eventDic.ContainsKey(name))
+        {
+            (eventDic[name] as EventInfo<T1, T2>).actions -= action;
             (eventDic[name] as EventInfo<T1, T2>).actions += action;
+        }
         else
             eventDic.Add(name, new EventInfo<T1, T2>(action));
     }
     public static void EventTrigger<T1, T2>(E_EventType name, T1 arg1, T2 arg2)
     {
         if (eventDic.ContainsKey(name))
-            (eventDic[name] as EventInfo<T1, T2>).actions?.Invoke(arg1, arg2);
+            (eventDic[name] as EventInfo<T1, T2>)?.actions?.Invoke(arg1, arg2);
     }
     public static void RemoveEventListener<T1, T2>(E_EventType name, UnityAction<T1, T2> action)
     {
@@ -178,14 +187,17 @@ public static class EventCenter
     public static void AddEventListener<T1, T2, T3>(E_EventType name, UnityAction<T1, T2, T3> action)
     {
         if (eventDic.ContainsKey(name))
+        {
+            (eventDic[name] as EventInfo<T1, T2, T3>).actions -= action;
             (eventDic[name] as EventInfo<T1, T2, T3>).actions += action;
+        }
         else
             eventDic.Add(name, new EventInfo<T1, T2, T3>(action));
     }
     public static void EventTrigger<T1, T2, T3>(E_EventType name, T1 arg1, T2 arg2, T3 arg3)
     {
         if (eventDic.ContainsKey(name))
-            (eventDic[name] as EventInfo<T1, T2, T3>).actions?.Invoke(arg1, arg2, arg3);
+            (eventDic[name] as EventInfo<T1, T2, T3>)?.actions?.Invoke(arg1, arg2, arg3);
     }
     public static void RemoveEventListener<T1, T2, T3>(E_EventType name, UnityAction<T1, T2, T3> action)
     {
@@ -216,14 +228,17 @@ public static class EventCenter
     public static void AddEventListener<T1, T2, T3, T4>(E_EventType name, UnityAction<T1, T2, T3, T4> action)
     {
         if (eventDic.ContainsKey(name))
+        {
+            (eventDic[name] as EventInfo<T1, T2, T3, T4>).actions -= action;
             (eventDic[name] as EventInfo<T1, T2, T3, T4>).actions += action;
+        }
         else
             eventDic.Add(name, new EventInfo<T1, T2, T3, T4>(action));
     }
     public static void EventTrigger<T1, T2, T3, T4>(E_EventType name, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
     {
         if (eventDic.ContainsKey(name))
-            (eventDic[name] as EventInfo<T1, T2, T3, T4>).actions?.Invoke(arg1, arg2, arg3, arg4);
+            (eventDic[name] as EventInfo<T1, T2, T3, T4>)?.actions?.Invoke(arg1, arg2, arg3, arg4);
     }
     public static void RemoveEventListener<T1, T2, T3, T4>(E_EventType name, UnityAction<T1, T2, T3, T4> action)
     {
@@ -455,6 +470,8 @@ public enum E_EventType
     /// </summary>
     Battle_CharacterDead,
 
+
+
     /// <summary>
     /// 战斗的角色力竭
     /// </summary>
@@ -479,6 +496,12 @@ public enum E_EventType
     LoadMapEnd,
     SkillExcute,
 
+
+    /// <summary>
+    /// 呼叫技能面板
+    /// </summary>
+    CallSkillPanel,
+
     /// <summary>
     /// 玩家将进入战斗，注册角色数据信息
     /// </summary>
@@ -495,11 +518,17 @@ public enum E_EventType
     SkillSettle,
 
     /// <summary>
+    /// 切换相机冻结状态
+    /// </summary>
+    SwitchCamFreeze,
+    /// <summary>
     /// 调整玩家活力点数
     /// </summary>
     AdjustVitalityPoints,
 
     UpdateUIVitalityPoints,
+
+    UpdateRoundState,
 
     /// <summary>
     /// 新的行动回合
@@ -522,11 +551,22 @@ public enum E_EventType
     AdjustEXP,
 
     /// <summary>
-    /// 角色获得一个BUFF
+    /// 角色获得一个BUFF（计时消失）
     /// </summary>
     Battle_RegisteBUFF,
+
+    /// <summary>
+    /// 角色获得一个Dot（手段移除）
+    /// </summary>
+    Battle_RegisterDot,
     /// <summary>
     /// 进行了一次物理攻击
     /// </summary>
     Do_PhyAttack,
+
+    /// <summary>
+    /// 主动造成一次伤害（包括物理和魔法）
+    /// 检查是否触发造成伤害增幅BUFF
+    /// </summary>
+    Do_Damage,
 }

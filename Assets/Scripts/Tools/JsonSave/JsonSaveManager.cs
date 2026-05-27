@@ -136,13 +136,9 @@ public static class JsonSaver
     #endregion
 
     #region 保存数据
-    public static void Save<T>(T data) where T : class, IValidatable
-    {
-        try
-        {
-            Debug.Log(data+">>>>>>>>>>>>>>"+ data.IsValid());
-            if (data == null || !data.IsValid())
-            {
+    public static void Save<T>(T data) where T : class, IValidatable{
+        try{
+            if (data == null || !data.IsValid()){
 
                 Debug.LogError($"拒绝保存无效数据: {typeof(T).Name}");
                 return;
@@ -150,20 +146,15 @@ public static class JsonSaver
             string json = JsonUtility.ToJson(data, true);
             File.WriteAllText(GetSavePath<T>(), json);
         }
-        catch (Exception e)
-        {
+        catch (Exception e){
             Debug.LogError($"保存失败 {typeof(T).Name}: {e.Message}");
         }
     }
 
-    // ✅ 核心新增：按【唯一ID】保存单个角色的数据
-    public static void Save<T>(T data, string uniqueId) where T : class, IValidatable
-    {
-        try
-        {
-
-            if (data == null || !data.IsValid())
-            {
+    // 按【唯一ID】保存单个角色的数据
+    public static void Save<T>(T data, string uniqueId) where T : class, IValidatable{
+        try{
+            if (data == null || !data.IsValid()){
                 Debug.LogError($"拒绝保存无效角色数据 ID:{uniqueId}");
                 return;
             }
@@ -171,8 +162,7 @@ public static class JsonSaver
 
             File.WriteAllText(GetSavePath<T>(uniqueId), json);
         }
-        catch (Exception e)
-        {
+        catch (Exception e){
             Debug.LogError($"保存角色失败 ID:{uniqueId}: {e.Message}");
         }
     }

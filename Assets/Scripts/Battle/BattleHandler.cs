@@ -12,6 +12,7 @@ public class BattleHandler : MonoBehaviour
     BattleMVCHandler MVCHandler;
     BattleSkillHandler skillHandler;
     BattleBuffHandler buffHandler;
+    BattleDotHandler  dotHandler;
     BattleDamageHandler damageHandler;
     BattlerStateTag battlerStateTag;
 
@@ -23,32 +24,38 @@ public class BattleHandler : MonoBehaviour
 
         self = isplayer ? new Player(GetComponent<BattleDamageHandler>()) : new Enemy(GetComponent<BattleDamageHandler>());
         //注册战斗单位
-        BattleTargetSelector.RegisteABattler(self);
+        BattleTargetSelector.RegisteNewBattler(self);
         battlerStateTag = new BattlerStateTag();
-        //启动BattleMVC
+        //启动MVCHandler
         MVCHandler = GetComponentInChildren<BattleMVCHandler>();
         MVCHandler.InitMVCHandler(characterData,battlerStateTag);
         
-        //启动Buff
+        //启动BuffHandler
         buffHandler=GetComponent<BattleBuffHandler>();
-        buffHandler.InitBattleBufferHandle(self);
+        buffHandler.InitBattleBuffHandle(self);
+
+        //启动DotHandler
+        dotHandler=GetComponentInChildren<BattleDotHandler>();
+        dotHandler.InitBattleDotHandle(self);
 
         //启动BattleDamageHandler
         damageHandler= GetComponentInChildren<BattleDamageHandler>();
-        damageHandler.InitDataHandler(MVCHandler,buffHandler);
+        damageHandler.InitDataHandler(MVCHandler,buffHandler,dotHandler);
 
         //启动BattleSkiller
         skillHandler = GetComponentInChildren<BattleSkillHandler>();
         skillHandler.InitBattleSkillHandler(self, MVCHandler,battlerStateTag);
 
         start=true;
-        Debug.Log(characterData.Character_Name + "-----本角色开始战斗");
+        Debug.Log(characterData.Character_Name + "---加入战斗");
     }
 
     void Update(){
         if (start) { 
             skillHandler.OnSkillerUpdate();
             buffHandler.OnBuffUpdate();
+            dotHandler.OnDotUpdate();
+            MVCHandler.OnMVCHandlerUpdate();
         }   
     }
 }

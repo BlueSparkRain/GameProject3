@@ -42,6 +42,8 @@ public class UIPanelBase : MonoBehaviour
 
     public bool canOpen=true;
 
+    static int s_OpenPanelCount = 0;
+
 
     /// <summary>
     /// 面板唯一标识（类型+序号，如TestPanel_1）
@@ -99,6 +101,10 @@ public class UIPanelBase : MonoBehaviour
     /// <param name="sortingOrder">面板层级</param>
     public virtual void Show()
     {
+        //if (s_OpenPanelCount == 0)
+        EventCenter.EventTrigger(E_EventType.FreezeCamPan);
+        
+        s_OpenPanelCount++;
         gameObject.SetActive(true);
         canvasGroup.alpha = 1;
         canvasGroup.interactable = true;
@@ -125,6 +131,11 @@ public class UIPanelBase : MonoBehaviour
     {
         canvasGroup.interactable = false;
         canvasGroup.blocksRaycasts = false;
+
+        s_OpenPanelCount--;
+        //if (s_OpenPanelCount == 0)
+        EventCenter.EventTrigger(E_EventType.UnFreezeCamPan);
+
         if (!Anim_DoFadeIn)
             BeforeFadeOutAnimCallBack();
         else
@@ -203,7 +214,8 @@ public class UIPanelBase : MonoBehaviour
     /// <summary>
     /// 离场动画后回调
     /// </summary>
-    protected virtual void ExitAnimCallBack() { }
+    protected virtual void ExitAnimCallBack() {
+    }
 
     /// <summary>
     /// 淡出前执行的委托

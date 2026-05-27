@@ -9,12 +9,15 @@ public class BattleDamageHandler : MonoBehaviour
     BattleDamager_Physic physic_damageChecker;
     Battle_Controller battleController;
     BattleBuffHandler buffHandler;
-    public BattleBuffHandler BattleBuffHandler => buffHandler;
+    public BattleDotHandler DotHandler => dotHandler;
+    BattleDotHandler dotHandler;
+    public BattleBuffHandler BuffHandler => buffHandler;
     public Battle_Controller BattleController=>battleController;
-    public void InitDataHandler(BattleMVCHandler mvcHandler, BattleBuffHandler buffHandler)
+    public void InitDataHandler(BattleMVCHandler mvcHandler, BattleBuffHandler buffHandler,BattleDotHandler dotHandler)
     {
         battleController = mvcHandler.BattleController;
         this.buffHandler = buffHandler;
+        this.dotHandler = dotHandler;
         magic_damageChecker = new BattleDamager_Magic(battleController);
         physic_damageChecker = new BattleDamager_Physic(battleController);
     }
@@ -26,12 +29,13 @@ public class BattleDamageHandler : MonoBehaviour
     /// <param name="skillBaseDamage">技能的基础伤害</param>
     public float DoDamage(E_Skill_DamageType damageType, float skillBaseDamage)
     {
+        float damageBoomerRate =1.0f+buffHandler.GetDamageRate();
         switch (damageType)
         {
             case E_Skill_DamageType.物理:
-                return physic_damageChecker.DoDamage(skillBaseDamage);
+                return physic_damageChecker.DoDamage(skillBaseDamage* damageBoomerRate);
             case E_Skill_DamageType.魔法:
-                return magic_damageChecker.DoDamage(skillBaseDamage);
+                return magic_damageChecker.DoDamage(skillBaseDamage*damageBoomerRate);
         }
         return 0;
     }
@@ -95,6 +99,25 @@ public class BattleDamageHandler : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// 获取已损生命值
+    /// </summary>
+    public int GetLostHealth() {
+        return (int)(battleController.GetCharacterModelValue(E_BattleModelType.MAX_HP)-battleController.GetCharacterModelValue(E_BattleModelType.HP));
+    }
 
+    /// <summary>
+    /// 获取最大生命值
+    /// </summary>
+    public int GetMaxHealth() {
+        return (int)battleController.GetCharacterModelValue(E_BattleModelType.MAX_HP);
+    }
 
+    /// <summary>
+    /// 获取当前生命值
+    /// </summary>
+    public int GetCurrentHealth()
+    {
+        return (int)battleController.GetCharacterModelValue(E_BattleModelType.HP);
+    }
 }

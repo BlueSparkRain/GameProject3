@@ -16,9 +16,10 @@ public class HexRoomStyleHandler : MonoBehaviour
     {
         hexJumpAnimation = GetComponent<HexJumpAnimHandler>();
         roomTag = _roomTag;
-        Debug.Log("百迈纳多噶看到"+roomTag);
         //只有海洋不会产生云朵
 
+        //测试先不生成云
+        return;
         if (GetComponent<HexTerrainStyleHandler>().HexTerrainType != E_HexTerrainType.Obstacle_Ocean)
         {
             LoadRoomCloude();
@@ -28,7 +29,7 @@ public class HexRoomStyleHandler : MonoBehaviour
 
     void LoadRoomCloude()
     {
-        Debug.Log("大会的五点hi混合双打");
+
         var cloude = GameRoot.GetManager<ObjectPoolManager>().GetInstance(E_PoolType.RoomCloude_房间遮云);
         cloude.transform.position = transform.position + Vector3.up * 23f;
         hexJumpAnimation.CloudeAppear(cloude.transform);

@@ -9,12 +9,8 @@ public class MapSkillerCheker : MonoSceneManager
     //当前选中的角色skiller
     CharacterMapSkiller currentSkiller;
     UIManager uiManager;
-
     CharacterMapSkiller playerSkiller;
-
     public CharacterMapSkiller PlayerSkiller=>playerSkiller;
-
-
     public void UpdateSkillSettle(List<SkillData> restWholeDatas,
                                      List<SkillData> normalDatas,
                                      List<SkillData> atbDatas){
@@ -25,29 +21,24 @@ public class MapSkillerCheker : MonoSceneManager
     /// <summary>
     /// 更新当前操作的角色对象
     /// </summary>
-    void SelectCharacter_UpdateCurrentSkiller(CharacterMapSkiller skiller)
-    {
+    void SelectCharacter_UpdateCurrentSkiller(CharacterMapSkiller skiller){
         currentSkiller = skiller;
         Debug.Log("当前选中skiller:" + skiller.gameObject.name);
     }
-    protected override void MgrOnInit()
-    {
+    protected override void MgrOnInit(){
         base.MgrOnInit();
         //在Raycaster中进行操作对象的选择，如果为空，默认打开玩家自身的
         EventCenter.AddEventListener<CharacterMapSkiller>(E_EventType.Select_Characer, SelectCharacter_UpdateCurrentSkiller);
         EventCenter.AddEventListener<CharacterMapSkiller,bool>(E_EventType.Character_Skiller_Regist, RegisterSkiller);
         EventCenter.AddEventListener<CharacterMapSkiller, E_HexRoomType>(E_EventType.Mover_IntoSpecialRoom, DoSkillReward);
+        EventCenter.AddEventListener(E_EventType.CallSkillPanel,CallSkillPanel);
         uiManager = GameRoot.GetManager<UIManager>();
     }
     //角色（移动中断）进入特殊房间后获得的技能奖励
-    void DoSkillReward(CharacterMapSkiller skiller, E_HexRoomType roomType)
-    {
-        if (skillersRoomDic.ContainsKey(skiller))
-        {
+    void DoSkillReward(CharacterMapSkiller skiller, E_HexRoomType roomType){ 
+        if (skillersRoomDic.ContainsKey(skiller)){ 
             skillersRoomDic[skiller] = roomType;
-
-            switch (roomType)
-            {
+            switch (roomType){
                 case E_HexRoomType.None_无交互地形:
                     break;
                 case E_HexRoomType.Battle_LowLevel_战斗_杂鱼:
@@ -66,12 +57,9 @@ public class MapSkillerCheker : MonoSceneManager
         }
     }
     //每次移动结束后，如果对应的房间是特殊房间，立刻进行属性或技能的奖励
-
-    public override void MgrUpdate(float deltaTime)
-    {
+    public override void MgrUpdate(float deltaTime){
         //打开技能面板
-        if (Input.GetKeyDown(KeyCode.U))
-        {
+        if (Input.GetKeyDown(KeyCode.U)){
             if (currentSkiller != null && currentSkiller!=playerSkiller)
                 CallSkillPanel();
             else{
@@ -82,7 +70,18 @@ public class MapSkillerCheker : MonoSceneManager
         }
     }
 
+
     void CallSkillPanel() {
+        if (currentSkiller == null)
+            currentSkiller = playerSkiller;
+
+        var panel = uiManager.GetPanel<SkillPanel>(E_UIPanelType.SkillPanel);
+        if (panel != null && panel.gameObject.activeSelf)
+        {
+            panel.Hide();
+            return;
+        }
+
         uiManager.OpenPanel<SkillPanel>(E_UIPanelType.SkillPanel,
                      (p) => p.LoadSkillIconBySettle(
                          currentSkiller.canActSettle,
@@ -94,21 +93,15 @@ public class MapSkillerCheker : MonoSceneManager
                          currentSkiller.ATBSkillDatas
                      ));
     }
-    public void RegisterSkiller(CharacterMapSkiller mapSkiller,bool isPlayer=false)
-    {
+    public void RegisterSkiller(CharacterMapSkiller mapSkiller,bool isPlayer=false){
         if (!skillersRoomDic.ContainsKey(mapSkiller)) 
             skillersRoomDic.Add(mapSkiller, E_HexRoomType.None_无交互地形);
-        
         if (isPlayer){
-            Debug.Log("玩家！");
             playerSkiller = mapSkiller;
         }
     }
-
-    public void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
+    public void Update(){
+        if (Input.GetKeyDown(KeyCode.Space)){
             playerSkiller.GetNewSkill(Random.Range(0,5));
         }
     }

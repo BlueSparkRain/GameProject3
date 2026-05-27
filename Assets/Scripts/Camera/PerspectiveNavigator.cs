@@ -89,15 +89,24 @@ public class PerspectiveNavigator : MonoSceneManager
     protected override void MgrOnInit()
     {
         base.MgrOnInit();
-        EventCenter.AddEventListener(E_EventType.FreezeCamPan, () => use_CamPan = false);
-        EventCenter.AddEventListener(E_EventType.UnFreezeCamPan, () => use_CamPan = true);
+        EventCenter.AddEventListener(E_EventType.FreezeCamPan, Freeze);
+        EventCenter.AddEventListener(E_EventType.UnFreezeCamPan,UnFreeze);
+    }
+    void Freeze()
+    {
+        use_CamPan = false;
+        Debug.Log("-------冻结吧");
+    }
+    void UnFreeze() {
+        use_CamPan = true;
+        Debug.Log("-------解冻啦");
     }
 
     protected override void MgrOnDispose()
     {
         base.MgrOnDispose();
-        EventCenter.RemoveEventListener(E_EventType.FreezeCamPan, () => use_CamPan = false);
-        EventCenter.RemoveEventListener(E_EventType.UnFreezeCamPan, () => use_CamPan = true);
+        EventCenter.RemoveEventListener(E_EventType.FreezeCamPan, Freeze);
+        EventCenter.RemoveEventListener(E_EventType.UnFreezeCamPan, UnFreeze);
     }
 
     protected override void Awake()
@@ -121,9 +130,9 @@ public class PerspectiveNavigator : MonoSceneManager
     #region 核心更新
     public override void MgrUpdate(float deltaTime)
     {
+        if (!use_CamPan) return;
         if (_isFocusing) return;
         if (!_isDragEnabled || _cachedCamTransform == null) return;
-        if (!use_CamPan) return;
 
         HandleScrollWheel();
         HandleWASDMovement();

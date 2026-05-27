@@ -17,8 +17,6 @@ public static class BattleTargetSelector
     public static List<IBattlable> GetValidTargets(IBattlable caster, E_SkillTargetType type)
     {
         var targets = new List<IBattlable>();
-        Debug.Log(caster+"---??111");
-        Debug.Log(caster.Camp+"---??222");
         bool isPlayerCaster = caster.Camp == E_Camp.玩家方;
 
         switch (type)
@@ -49,9 +47,9 @@ public static class BattleTargetSelector
         return targets;
     }
 
-    public static void RegisteABattler(IBattlable battler){
+    public static void RegisteNewBattler(IBattlable battler){
         AllBattleUnits.Add(battler);
-        //Debug.Log("好的哈电话" + AllBattleUnits.Count + ":" + battler);
+        Debug.Log($"[BattleTargetSelector]---新增Battler：{battler.Camp},当前战斗人数{AllBattleUnits.Count} ");
     }
 
     // 工具：获取第一个存活目标

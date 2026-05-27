@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using Core;
+using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -128,6 +129,7 @@ public static class MagicAnimExtens
             totalDuration * 0.4f
         ).SetEase(Ease.InOutSine));
 
+        GameRoot.GetManager<AudioManager>().PlaySFX("Music/SFX/OneMove",default,0.5f,1.3f);
         // 阶段4：落地回弹复原 (85% ~ 100% 总时长)
         seq.Insert(totalDuration * 0.85f, charcaterTrans.DOScale(
             Vector3.one,

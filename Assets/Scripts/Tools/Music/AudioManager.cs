@@ -465,20 +465,20 @@ public class AudioManager : MonoGlobalManager
     /// <param name="pos">播放位置（3D音效生效）</param>
     /// <param name="volumeScale">音量缩放</param>
     /// <param name="spatialBlend">3D混合度</param>
-    public void PlaySFX(string sfxPath, Vector3 pos = default, float volumeScale = 1f, float spatialBlend = -1f)
+    public void PlaySFX(string sfxPath, Vector3 pos = default, float volumeScale = 1f, float volumePitch = 1, float spatialBlend = -1f)
     {
         // 加载音频Clip
         AudioClip sfxClip = LoadAudioClip(sfxPath);
         if (sfxClip == null) return;
 
         // 调用原始PlaySFX方法
-        PlaySFX(sfxClip, pos, volumeScale, spatialBlend);
+        PlaySFX(sfxClip, pos, volumeScale,volumePitch,spatialBlend);
     }
 
     /// <summary>
     /// 播放音效（核心逻辑）
     /// </summary>
-    public void PlaySFX(AudioClip sfxClip, Vector3 pos = default, float volumeScale = 1f, float spatialBlend = -1f)
+    public void PlaySFX(AudioClip sfxClip, Vector3 pos = default, float volumeScale = 1f,float volumePitch=1, float spatialBlend = -1f)
     {
         if (sfxClip == null)
         {
@@ -498,7 +498,7 @@ public class AudioManager : MonoGlobalManager
         source.volume = Mathf.Clamp01(sfxBaseVolume * volumeScale);
         source.transform.position = pos;
         source.spatialBlend = spatialBlend >= 0 ? Mathf.Clamp01(spatialBlend) : sfxDefaultSpatialBlend;
-
+        source.pitch = volumePitch;
         source.Play();
         // 播放完成后自动回收
         StartCoroutine(RecycleSfxAfterPlay(source, sfxClip.length));

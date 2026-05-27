@@ -23,17 +23,14 @@ public class PlayerMapIcon : MonoBehaviour
     //private CharacterLevelUpHandler levelUpHandler;
     [Header("经验Box")]
     public PlayerLevelBox  levelBox;   
-    private void Awake()
-    {
+    private void Awake(){
         EventCenter.AddEventListener(E_EventType.Mover_PlayerStartMove, MoverStartMove);
     }
-    private void OnDestroy()
-    {
+    private void OnDestroy(){
         EventCenter.RemoveEventListener(E_EventType.Mover_PlayerStartMove, MoverStartMove);
     }
 
-    public void InitIcon(E_CharacterType _characterType, Transform _charcaterTrans)
-    {
+    public void InitIcon(E_CharacterType _characterType, Transform _charcaterTrans){
         characterSelectButton.onClick.AddListener(OnClickIconButton);
         characterType = _characterType;
         charcaterTrans = _charcaterTrans;
@@ -42,19 +39,17 @@ public class PlayerMapIcon : MonoBehaviour
         var levelUpHandler=charcaterTrans.GetComponent<CharacterLevelUpHandler>();
         levelUpHandler.EXPUIUpdateEvent += levelBox.UpdateMapPlayerIconUI;
         //levelUpHandler.InitLevelHandler();
-
+        
         characterSOData = ResourcesLoader.FindCharaterSO(_characterType); 
         characterImage.sprite = characterSOData.characterSprite;
         characterNameText.text = characterSOData.characterName;
-
     }
 
     /// <summary>
     /// 设置本回合行动点
     /// </summary>
     /// <param name="value"></param>
-    public void SetMoveDot(int value)
-    {
+    public void SetMoveDot(int value){
         remainActionPoints = value;
         canMove = (remainActionPoints > 0 ? true : false);
     }
@@ -81,8 +76,7 @@ public class PlayerMapIcon : MonoBehaviour
         //相机将角色居中
     }
     bool isActive = false;
-    void OnClickIconButton()
-    {
+    void OnClickIconButton(){
         HexPathFindingManager hexPathFindingManager = GameRoot.GetManager<HexPathFindingManager>();
 
         if (GameRoot.GetManager<MapMoverManager>().GetTargetPlayerMover(this)==null)
@@ -106,13 +100,13 @@ public class PlayerMapIcon : MonoBehaviour
             SetCameraToCharacter();
 
             if (canMove){
-                characterSelectButton.GetComponent<Image>().color = Color.blue;
+                GameRoot.GetManager<AudioManager>().PlaySFX("Music/SFX/StartAction",default,0.3f,1.5f);
+                characterSelectButton.GetComponent<Image>().color = Color.cyan;// blue;
                 //激活寻路管理器寻路状态
                 hexPathFindingManager.SetPathFindState(true, remainActionPoints);
             }
             else{
                 hexPathFindingManager.SetPathFindState(false, remainActionPoints);
-
             }
         }
         else{

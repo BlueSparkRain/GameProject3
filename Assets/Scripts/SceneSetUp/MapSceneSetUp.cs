@@ -11,7 +11,7 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load
     float x_Offset = 0.88f;//每行内的偏移
     float y_Offset = 0.8f;//相邻行的偏移
 
-    int MapRadius = 20;
+    int MapRadius = 25;
     public Transform MapPivot;
     GameMapManager gameMapManager;
     public Button EndRoundButton;
@@ -20,6 +20,12 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load
     public TMP_Text roundUIText;
     [Header("Test-活力点数文本")]
     public TMP_Text vitalityPointsUIText;
+
+    [Header("玩家技能按钮")]
+    public Button PlayerSkillButton;
+    [Header("玩家装备按钮")]
+    public Button PlayerEquipmentButton;
+
     public bool needDelay = false;
     public float characterHeight = 1;
     private void UpdateRoundText()
@@ -27,13 +33,11 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load
         roundUIText.text = GameRoot.GetManager<GameRoundManager>().RoundNum.ToString();
     }
     private void UpdateValityText(){
-        Debug.Log("更新！！！！！！！！！");
         //存档里更新，每次加载场景后出现前再更新
         vitalityPointsUIText.text = GameRoot.GetManager<VitalityPointsManager>().valityPoint.ToString();
     }
 
     public void InitBySaveData(){
-        Debug.Log("没有重新加载哦");
         gameMapManager = GameRoot.GetManager<GameMapManager>();
         gameMapManager.GameMapManagerInit(y_Offset, x_Offset, MapRadius, MapPivot.position);
 
@@ -60,14 +64,23 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load
         //活力点数管理器
         gameRoot.RegisterGlobal_MonoManager<VitalityPointsManager>();
 
+        //回合记录管理器
+        gameRoot.RegisterGlobal_MonoManager<GameRoundManager>();
+
         gameMapManager = GameRoot.GetManager<GameMapManager>();
         gameMapManager.GameMapManagerInit(y_Offset, x_Offset, MapRadius, MapPivot.position);
 
         if (EndRoundButton)
         {
+            EndRoundButton.onClick.RemoveAllListeners();
             EndRoundButton.onClick.AddListener(() => EventCenter.EventTrigger(E_EventType.Player_RoundEnd));
-            EndRoundButton.onClick.AddListener(() => EventCenter.EventTrigger(E_EventType.OneMoverEndRound));
         }
+
+        PlayerSkillButton.onClick.RemoveAllListeners();
+        PlayerSkillButton.onClick.AddListener(() => EventCenter.EventTrigger(E_EventType.CallSkillPanel));
+        
+        //PlayerSkillButton.onClick.AddListener(() => GameRoot.GetManager<UIManager>().OpenPanel<SkillPanel>(E_UIPanelType.SkillPanel, (panel) => Debug.Log("打开技能面板")));
+
         ////测试代码
         //EventCenter.AddEventListener(E_EventType.NewRound, UpdateRoundText);
         //EventCenter.AddEventListener(E_EventType.UpdateUIVitalityPoints, UpdateValityText);
@@ -80,6 +93,7 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load
     }
     void Awake()
     {
+        EventCenter.ClearAllEvents();
         //读取是否加载过地图,如果加载过，忽略
         gameRoot = GameRoot.Instance;
         BattleSkillFactory.RegisterAllSkills();
@@ -92,17 +106,18 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load
         gameRoot.RegisterScene_MonoManager<CharacterRayCasterManager>();
         //混沌等级管理器
         gameRoot.RegisterScene_MonoManager<ChaosLevelManager>();
-        //回合记录管理器
-        gameRoot.RegisterScene_MonoManager<GameRoundManager>();
+
+
+        JsonSaver.InitData<FirstLoadMap>(this, JsonSaver.Load<FirstLoadMap>().GetState);
 
         //测试代码
-        EventCenter.AddEventListener(E_EventType.NewRound, UpdateRoundText);
+        //EventCenter.AddEventListener(E_EventType.NewRound, UpdateRoundText);
+        EventCenter.AddEventListener(E_EventType.UpdateRoundState, UpdateRoundText);
         EventCenter.AddEventListener(E_EventType.UpdateUIVitalityPoints, UpdateValityText);
-        JsonSaver.InitData<FirstLoadMap>(this, JsonSaver.Load<FirstLoadMap>().GetState);
     }
     private void Start()
     {
-        EventCenter.EventTrigger(E_EventType.NewRound);
+        EventCenter.EventTrigger(E_EventType.UpdateRoundState);
         EventCenter.EventTrigger(E_EventType.UpdateUIVitalityPoints);
     }
 

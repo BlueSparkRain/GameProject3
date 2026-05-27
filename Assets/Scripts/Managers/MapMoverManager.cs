@@ -7,7 +7,6 @@ public class MapMoverManager : MonoGlobalManager
 {
     public Transform mapIconParent;
     public IMapMoveable currentIMovable;
-    string mapIconPrefabPath = "Prefab/MapUI/PlayerMapIcon";
     HexPathFindingManager hexPathFindingManager;
     public override void MgrUpdate(float deltaTime) { }
     //玩家角色的映射
@@ -47,8 +46,8 @@ public class MapMoverManager : MonoGlobalManager
             iconNum = 0;
             mapIconParent = GameObject.FindWithTag("MapIconContent").transform;
         }
-        var newIcon = GameObject.Instantiate(Resources.Load<GameObject>(mapIconPrefabPath), mapIconParent).GetComponent<PlayerMapIcon>();
-        Debug.Log("newIcon擦首都奥我电话");
+
+        var newIcon = Instantiate( ResourcesLoader.FindMapIcon_CircleObj(), mapIconParent).GetComponent<PlayerMapIcon>();
         newIcon.transform.localScale = Vector3.zero;
         newIcon.GetComponent<RectTransform>().localPosition += new Vector3(200, 0, 0) * iconNum;
         newIcon.transform.DOLocalMoveY(120, 0.3f).From(-400);
@@ -67,7 +66,7 @@ public class MapMoverManager : MonoGlobalManager
     public void RegisterMoverPostion(IMapMoveable iMapMover, MapMoverPosition moverPosData)
     {
         posDic.Add(iMapMover, moverPosData);
-        Debug.Log("可移动MOver-位置数据保存-注册:" + posDic.Count);
+        Debug.Log("Mover位置数据保存-注册:" + posDic.Count);
     }
 
     /// <summary>
@@ -165,8 +164,10 @@ public class MapMoverManager : MonoGlobalManager
     /// <param name="mover"></param>
     void OneMoverEndRound(IMapMoveable mover)
     {
+        Debug.Log(mover+":Mover结束回合");
         if (roundMoveDic.ContainsKey(mover))
         {
+            Debug.Log("Mover她存在！");
             roundMoveDic[mover] = true;
         }
         CheckNewRound();
@@ -190,6 +191,7 @@ public class MapMoverManager : MonoGlobalManager
     /// </summary>
     void CheckNewRound()
     {
+        Debug.Log("MoverDic！Count"+roundMoveDic.Count);
         foreach (var item in roundMoveDic)
         {
             if (!item.Value)

@@ -43,7 +43,7 @@ public class HexTerrainStyleHandler : MonoBehaviour
             terrainSpriteRenderer.enabled = false; return; }
 
         terrainSOData = ResourcesLoader.FindTerrainData(hexTerrainType);
-        Debug.Log(hexTerrainType + " "+terrainSOData);
+        //Debug.Log(hexTerrainType + " "+terrainSOData);
         Sprite sprite = terrainSOData.sprites.GetRandomElement();
         terrainSpriteRenderer.sprite =sprite;
     }
@@ -57,8 +57,7 @@ public class HexTerrainStyleHandler : MonoBehaviour
         }
     }
     E_HexRoomType GetRoomType(){
-        switch (hexTerrainType)
-        {
+        switch (hexTerrainType){
             case E_HexTerrainType.Obstacle_Ocean: {
             return E_HexRoomType.None_无交互地形; }
             case E_HexTerrainType.Walkable_EmptyLand:{
@@ -94,8 +93,6 @@ public class HexTerrainStyleHandler : MonoBehaviour
         }
     }
 }
-
-
 
 public enum E_RoomModelType { 
     城镇,石头,树木,
