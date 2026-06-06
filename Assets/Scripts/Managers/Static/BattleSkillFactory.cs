@@ -5,7 +5,7 @@ using System.Reflection;
 using UnityEngine;
 
 /// <summary>
-/// ç»™æŠ€èƒ½ç±»æ ‡è®° ID çš„ç‰¹æ€§
+/// ¸ø¼¼ÄÜÀà±ê¼Ç ID µÄÌØĞÔ
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
 public class SkillIDAttribute : Attribute
@@ -15,25 +15,25 @@ public class SkillIDAttribute : Attribute
 }
 
 /// <summary>
-/// ã€å…¨å±€å”¯ä¸€ã€‘æŠ€èƒ½å·¥å‚ç®¡ç†å™¨
-/// æ‰€æœ‰è§’è‰²ï¼ˆç©å®¶/æ•Œäººï¼‰ç»Ÿä¸€ç”¨å®ƒåˆ›å»ºæŠ€èƒ½ï¼Œæ— ä»»ä½•å¤šä½™é€»è¾‘
+/// ¡¾È«¾ÖÎ¨Ò»¡¿¼¼ÄÜ¹¤³§¹ÜÀíÆ÷
+/// ËùÓĞ½ÇÉ«£¨Íæ¼Ò/µĞÈË£©Í³Ò»ÓÃËü´´½¨¼¼ÄÜ£¬ÎŞÈÎºÎ¶àÓàÂß¼­
 /// </summary>
 public static class BattleSkillFactory
 {
-    // æ ¸å¿ƒç¼“å­˜ï¼šæŠ€èƒ½ID â†’ æŠ€èƒ½åˆ›å»ºå§”æ‰˜ï¼ˆæœ€é«˜æ•ˆæ–¹å¼ï¼Œæ— åå°„ï¼‰
+    // ºËĞÄ»º´æ£º¼¼ÄÜID ¡ú ¼¼ÄÜ´´½¨Î¯ÍĞ£¨×î¸ßĞ§·½Ê½£¬ÎŞ·´Éä£©
     private static readonly Dictionary<int, Func<SkillBase>> _skillMap = new();
 
-    // ç¼“å­˜ï¼šID â†’ æ„é€ å‡½æ•° (TargetType)
+    // »º´æ£ºID ¡ú ¹¹Ôìº¯Êı (TargetType)
     private static readonly Dictionary<int, Func<E_SkillTargetType, SkillBase>> _skillConstructors = new();
 
     static BattleSkillFactory()
     {
-        // é™æ€æ„é€ ï¼šç¨‹åºå¯åŠ¨æ—¶æ‰«æä¸€æ¬¡æ‰€æœ‰æŠ€èƒ½ç±»
+        // ¾²Ì¬¹¹Ôì£º³ÌĞòÆô¶¯Ê±É¨ÃèÒ»´ÎËùÓĞ¼¼ÄÜÀà
         ScanAllSkillClasses();
     }
 
     /// <summary>
-    /// æ‰«ææ‰€æœ‰ç»§æ‰¿ SkillBase çš„ç±»ï¼Œå¹¶è¯»å– [SkillID] ç‰¹æ€§
+    /// É¨ÃèËùÓĞ¼Ì³Ğ SkillBase µÄÀà£¬²¢¶ÁÈ¡ [SkillID] ÌØĞÔ
     /// </summary>
     private static void ScanAllSkillClasses()
     {
@@ -46,11 +46,11 @@ public static class BattleSkillFactory
             var idAttr = type.GetCustomAttribute<SkillIDAttribute>();
             if (idAttr == null) continue;
 
-            // è·å–å¸¦ TargetType å‚æ•°çš„æ„é€ å‡½æ•°
+            // »ñÈ¡´ø TargetType ²ÎÊıµÄ¹¹Ôìº¯Êı
             var ctor = type.GetConstructor(new[] { typeof(E_SkillTargetType) });
             if (ctor == null)
             {
-                Debug.LogError($"æŠ€èƒ½ {type.Name} æ²¡æœ‰å¸¦ TargetType çš„æ„é€ å‡½æ•°ï¼");
+                Debug.LogError($"¼¼ÄÜ {type.Name} Ã»ÓĞ´ø TargetType µÄ¹¹Ôìº¯Êı£¡");
                 continue;
             }
 
@@ -60,31 +60,31 @@ public static class BattleSkillFactory
     }
 
     /// <summary>
-    /// å…¨è‡ªåŠ¨æ³¨å†Œæ‰€æœ‰æŠ€èƒ½ï¼ˆæ ¹æ® Resources ä¸­çš„ SkillSOï¼‰
-    /// å¤–éƒ¨æ¥å£å®Œå…¨ä¸å˜
+    /// È«×Ô¶¯×¢²áËùÓĞ¼¼ÄÜ£¨¸ù¾İ Resources ÖĞµÄ SkillSO£©
+    /// Íâ²¿½Ó¿ÚÍêÈ«²»±ä
     /// </summary>
     public static void RegisterAllSkills()
     {
         _skillMap.Clear();
 
-        // åŠ è½½æ‰€æœ‰æŠ€èƒ½SOï¼ˆä½ åŸæ¥çš„åŠ è½½æ–¹å¼ä¸å˜ï¼‰
+        // ¼ÓÔØËùÓĞ¼¼ÄÜSO£¨ÄãÔ­À´µÄ¼ÓÔØ·½Ê½²»±ä£©
         for (int i = 0; i < 1000; i++)
         {
             var skillSo = ResourcesLoader.FindSkillSOByID(i);
-            if (skillSo == null) break; // æ‰¾ä¸åˆ°å°±åœæ­¢
+            if (skillSo == null) break; // ÕÒ²»µ½¾ÍÍ£Ö¹
 
             int skillId = skillSo.skill_ID;
             E_SkillTargetType targetType = skillSo.skill_targetType;
 
-            // ä»æ„é€ å™¨ç¼“å­˜ä¸­è‡ªåŠ¨åˆ›å»ºå¯¹åº”æŠ€èƒ½
+            // ´Ó¹¹ÔìÆ÷»º´æÖĞ×Ô¶¯´´½¨¶ÔÓ¦¼¼ÄÜ
             if (_skillConstructors.TryGetValue(skillId, out var ctor))
             {
                 _skillMap[skillId] = () => ctor(targetType);
-                Debug.Log($"æ³¨å†ŒæŠ€èƒ½ ID:{skillId}-{skillSo.skill_Name}");
+                Debug.Log($"×¢²á¼¼ÄÜ ID:{skillId}-{skillSo.skill_Name}");
             }
             else
             {
-                Debug.LogError($" æœªæ‰¾åˆ°æŠ€èƒ½ ID {skillId} å¯¹åº”çš„ç±»ï¼Œè¯·æ£€æŸ¥ [SkillID] ç‰¹æ€§ï¼");
+                Debug.LogError($" Î´ÕÒµ½¼¼ÄÜ ID {skillId} ¶ÔÓ¦µÄÀà£¬Çë¼ì²é [SkillID] ÌØĞÔ£¡");
             }
         }
     }
@@ -107,20 +107,27 @@ public static class BattleSkillFactory
     }
 
     /// <summary>
-    /// æ ¹æ®å•ä¸ªIDåˆ›å»ºæŠ€èƒ½ï¼ˆä¾›ä»»æ„è§’è‰²ä½¿ç”¨ï¼‰ 
+    /// ¸ù¾İµ¥¸öID´´½¨¼¼ÄÜ£¨¹©ÈÎÒâ½ÇÉ«Ê¹ÓÃ£© 
     /// </summary>
     static SkillBase Create(int skillId)
     {
         if (_skillMap.TryGetValue(skillId, out var creator))
         {
-            return creator();
+            var skill = creator();
+            var so = ResourcesLoader.FindSkillSOByID(skillId);
+            if (so != null)
+            {
+                skill.AtbCost = so.skill_atb_cost;
+                skill.AngGrow = so.skill_ang_grow;
+            }
+            return skill;
         }
 
-        throw new KeyNotFoundException($"æŠ€èƒ½ID {skillId} æœªæ³¨å†Œ");
+        throw new KeyNotFoundException($"¼¼ÄÜID {skillId} Î´×¢²á");
     }
 
     /// <summary>
-    /// ã€æ ¸å¿ƒæ–¹æ³•ã€‘æ ¹æ®IDåˆ—è¡¨æ‰¹é‡åˆ›å»ºæŠ€èƒ½ï¼ˆå¯¹å±€å‰ç›´æ¥è°ƒç”¨ï¼‰
+    /// ¡¾ºËĞÄ·½·¨¡¿¸ù¾İIDÁĞ±íÅúÁ¿´´½¨¼¼ÄÜ£¨¶Ô¾ÖÇ°Ö±½Óµ÷ÓÃ£©
     /// </summary>
     static List<SkillBase> CreateBatch(List<int> skillIdList)
     {

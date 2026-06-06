@@ -182,7 +182,7 @@ public class MapMoverManager : MonoGlobalManager
         if (!roundMoveDic.ContainsKey(mover))
         {
             roundMoveDic.Add(mover, false);
-            Debug.Log("新添加一个Mover");
+            //Debug.Log("新添加一个Mover");
         }
     }
 

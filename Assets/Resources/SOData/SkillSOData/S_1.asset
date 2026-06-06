@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: S_1
   m_EditorClassIdentifier: 
   skill_ID: 1
+  skill_name: 1
   skill_Sprite: {fileID: 21300000, guid: ea9bb62832a6c084e8bee49cf0738e88, type: 3}
   skill_Name: "\u9B54\u529B\u590D\u539F"
   skill_Description: "\u56DE\u590D{200*\uFF08\u7B49\u7EA7//10+1\uFF09}\u70B9\u6CD5\u529B\u503C\uFF08\u521D\u59CB\u6280\u80FD\uFF09"

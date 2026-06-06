@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -94,6 +95,15 @@ public class CharacterData : ICanSave_And_Load
     /// </summary>
     private int maximum_ATB;
 
+    /// <summary>
+    /// 18.自动化技能槽数量
+    /// </summary>
+    private int autoSkillSlotCount;
+    /// <summary>
+    /// 19.ATB技能槽数量（当前已解锁数量）
+    /// </summary>
+    private int atbSkillSlotCount;
+
     public string Character_Name => Resources.Load<CharacterDataSO>(characterSO_ParentPath + characterType).characterName;
     public float Phy_Flat_Penetration => phy_Flat_Penetration;
     public float Mag_Flat_Penetration => mag_Flat_Penetration;
@@ -114,12 +124,64 @@ public class CharacterData : ICanSave_And_Load
     public int Maximum_ATB => maximum_ATB;
     #endregion
 
+    #region 技能槽位
+    public const int maxAtbSkillSlotCount = 9;
+    public int AutoSkillSlotCount => autoSkillSlotCount;
+    public int AtbSkillSlotCount => atbSkillSlotCount;
+    /// <summary>
+    /// 解锁ATB技能槽（通过游戏机制逐步解锁）
+    /// </summary>
+    public void UnlockAtbSlot(int count = 1)
+    {
+        atbSkillSlotCount = Mathf.Min(atbSkillSlotCount + count, maxAtbSkillSlotCount);
+        JsonSaver.Save(new Save_CharacterData(this), characterType.ToString());
+        Debug.Log($"[{characterType}] ATB槽位解锁至 {atbSkillSlotCount}/{maxAtbSkillSlotCount}");
+    }
+    #endregion
+
     public int CurrentLevel => currentLevel;
+    public float CurrentEXP => currentEXP;
+    public void SetCurrentEXP(float value) { currentEXP = value; }
 
     /// <summary>
     /// 18.角色当前等级
     /// </summary>
     private int currentLevel;
+
+    /// <summary>
+    /// 19.当前经验值
+    /// </summary>
+    private float currentEXP;
+
+    EquipHandler _equipHandler;
+    /// <summary>装备处理器——管理角色当前装备，提供绿值加成</summary>
+    public EquipHandler EquipHandler
+    {
+        get
+        {
+            if (_equipHandler == null)
+                _equipHandler = new EquipHandler();
+            return _equipHandler;
+        }
+    }
+
+    /// <summary>获取装备加成后的有效属性值(白值 + 绿值)</summary>
+    public float GetEffectiveProperty(E_CharacterPropertyType type)
+    {
+        return GetProperty(type) + EquipHandler.GetGreenBonus(type);
+    }
+
+    /// <summary>获取装备绿值加成</summary>
+    public float GetGreenBonus(E_CharacterPropertyType type)
+        => EquipHandler.GetGreenBonus(type);
+
+    /// <summary>获取装备护盾加成</summary>
+    public int GetShieldBonus()
+        => EquipHandler.GetShieldBonus();
+
+    /// <summary>获取当前装备弱点列表</summary>
+    public List<E_WeaknessType> GetEquipWeaknesses()
+        => EquipHandler.GetWeaknesses();
 
     public CharacterData(E_CharacterType _characterType) {
         characterType = _characterType;
@@ -149,6 +211,9 @@ public class CharacterData : ICanSave_And_Load
         shield_Amplification = characterSaveData.Shield_Amplification;
         maximum_ATB = characterSaveData.Maximum_ATB;
         currentLevel = characterSaveData.CurrentLevel;
+        currentEXP = characterSaveData.CurrentEXP;
+        autoSkillSlotCount = characterSaveData.AutoSkillSlotCount;
+        atbSkillSlotCount = characterSaveData.AtbSkillSlotCount;
     }
 
     public void InitBySelf()
@@ -172,6 +237,8 @@ public class CharacterData : ICanSave_And_Load
         heal_Amplification = characterData.Heal_Amplification;
         shield_Amplification = characterData.Shield_Amplification;
         maximum_ATB = characterData.Maximum_ATB;
+        autoSkillSlotCount = characterData.autoSkillSlotCount;
+        atbSkillSlotCount = characterData.atbSkillSlotCount;
         currentLevel = 1;
         JsonSaver.Save(new Save_CharacterData(this), characterType.ToString());
     }
@@ -260,7 +327,10 @@ public class Save_CharacterData : IValidatable
         Heal_Amplification = characterSaveData.Heal_Amplification;
         Shield_Amplification = characterSaveData.Shield_Amplification;
         Maximum_ATB = characterSaveData.Maximum_ATB;
+        AutoSkillSlotCount = characterSaveData.AutoSkillSlotCount;
+        AtbSkillSlotCount = characterSaveData.AtbSkillSlotCount;
         CurrentLevel = characterSaveData.CurrentLevel;
+        CurrentEXP = characterSaveData.CurrentEXP;
     }
     /// <summary>
     /// [Save]物理固穿
@@ -351,6 +421,21 @@ public class Save_CharacterData : IValidatable
     /// [Save]角色当前等级
     /// </summary>
     public int CurrentLevel;
+
+    /// <summary>
+    /// [Save]当前经验值（升级进度）
+    /// </summary>
+    public float CurrentEXP;
+
+    /// <summary>
+    /// [Save]自动化技能槽数量
+    /// </summary>
+    public int AutoSkillSlotCount;
+
+    /// <summary>
+    /// [Save]ATB技能槽数量（当前已解锁）
+    /// </summary>
+    public int AtbSkillSlotCount;
 
     public bool IsValid()
     {

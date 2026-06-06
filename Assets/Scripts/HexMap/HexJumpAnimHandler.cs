@@ -17,6 +17,15 @@ public class HexJumpAnimHandler : MonoBehaviour
     [Tooltip("动画缓动曲线")]
     public Ease jumpEase = Ease.InOutBounce;
 
+    [Header("悬浮配置")]
+    [Tooltip("鼠标悬浮时子物体上浮高度")]
+    public float hoverHeight = 0.5f;
+    [Tooltip("悬浮动画时长")]
+    public float hoverDuration = 0.1f;
+    [Tooltip("悬浮时透明度渐入时长（应比hoverDuration长约0.2s）")]
+    public float hoverFadeInDuration = 0.4f;
+    [Tooltip("悬浮结束时透明度渐出时长")]
+    public float hoverFadeOutDuration = 0.3f;
 
     [Header("(可行走)地形高度差")]
     float heightDistance = 0.2f;
@@ -25,8 +34,7 @@ public class HexJumpAnimHandler : MonoBehaviour
     private Vector3 _originalPos; // 记录初始位置，避免跳动后偏移
 
     private Transform cloudeTrans;
-    public void InitPos(Vector3 pos)
-    {
+    public void InitPos(Vector3 pos){
         _selfTrans = transform;
         transform.position = pos;
         _originalPos = _selfTrans.localPosition;
@@ -46,24 +54,21 @@ public class HexJumpAnimHandler : MonoBehaviour
         float actualHeight = baseJumpHeight * (1 - distanceRatio);
         if (actualHeight < 0.01f) actualHeight = 0.01f; // 避免高度为0
 
-        float rand_Height = Random.Range(1.5f, 2.5f);
+        float rand_Height = 2.0f;
         //float rand_Height = Random.Range(0.8f, 1.5f);
-        float rand_Duration = Random.Range(0.5f, 1f);
+        float rand_Duration = 0.5f;
 
         // 执行跳动动画
         _selfTrans.DOLocalMoveY(_originalPos.y + actualHeight * rand_Height, baseDuration * rand_Duration * 0.5f)
             .SetEase(jumpEase)
             .SetDelay(delay)
-            .OnComplete(() =>
-            {
+            .OnComplete(() =>{
                 // 回落动画
                 _selfTrans.DOLocalMoveY(_originalPos.y, baseDuration * 0.4f)
                     .SetEase(jumpEase);
             });
     }
-
-    public void WalkableUpAnim()
-    {
+    public void WalkableUpAnim(){
         float rand_Height =0.5f; 
         float rand_Duration = Random.Range(0.5f, 0.8f);
         _selfTrans.DOLocalMoveY(_originalPos.y + heightDistance * rand_Height,
@@ -90,6 +95,63 @@ public class HexJumpAnimHandler : MonoBehaviour
             cloudeTrans.DOScale(0f, baseHeightDuration * 3);
             cloudeTrans.DOLocalMoveY(10f, baseHeightDuration * 10).SetEase(jumpEase).OnComplete(
                 ()=> GameRoot.GetManager<ObjectPoolManager>().ReturnPool(E_PoolType.RoomCloude_房间遮云,cloudeTrans.gameObject));
+        }
+    }
+
+    Transform _firstChild;
+    SpriteRenderer _firstChildSprite;
+    Vector3 _childOriginalPos;
+    bool _childCached;
+
+    void Awake(){
+        CacheFirstChild();
+    }
+
+    void CacheFirstChild(){
+        if (_childCached && _firstChild != null) return;
+        if (transform.childCount > 0){
+            _firstChild = transform.GetChild(0);
+            _firstChildSprite = _firstChild.GetComponent<SpriteRenderer>();
+            _childOriginalPos = _firstChild.localPosition;
+            // 初始透明度设为0
+            if (_firstChildSprite != null)
+            {
+                var c = _firstChildSprite.color;
+                c.a = 0f;
+                _firstChildSprite.color = c;
+            }
+            _childCached = true;
+        }
+    }
+
+    public void HoverUp(){
+        CacheFirstChild();
+        if (_firstChild == null) return;
+        _firstChild.DOKill();
+        if (_firstChildSprite != null)
+        {
+            _firstChildSprite.DOKill();
+            var c = _firstChildSprite.color;
+            c.a = 0f;
+            _firstChildSprite.color = c;
+            _firstChildSprite.DOFade(1f, hoverFadeInDuration).SetEase(Ease.OutQuad);
+        }
+        _firstChild.DOLocalMoveZ(_childOriginalPos.z + hoverHeight * 10, hoverDuration).SetEase(Ease.OutQuad);
+    }
+
+    public void HoverDown(){
+        CacheFirstChild();
+        if (_firstChild == null) return;
+        _firstChild.DOKill();
+        if (_firstChildSprite != null){
+            _firstChildSprite.DOKill();
+            _firstChildSprite.DOFade(0f, hoverFadeOutDuration).SetEase(Ease.OutQuad)
+                .OnComplete(() =>{
+                    _firstChild.DOLocalMoveZ(_childOriginalPos.z, hoverDuration).SetEase(Ease.OutQuad);
+                });
+        }
+        else{
+            _firstChild.DOLocalMoveZ(_childOriginalPos.z, hoverDuration).SetEase(Ease.OutQuad);
         }
     }
 }

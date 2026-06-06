@@ -2,84 +2,95 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum E_Dot{
-    ¶³½á,×ÆÉÕ,¸Ğµç,
+    å†»ç»“,ç‡ƒçƒ§,æ„Ÿç”µ,
 }
 
 public enum E_BuffPositive
 {
-    ÕıÃæ, ¸ºÃæ
+    æ­£é¢, è´Ÿé¢
 }
 
 public enum E_BuffType
 {
-    ³ãÑæÁ¬Ëø,
-    Ñ¸À×Á¬Ëø_ÕıÃæ,
-    ±©Ñ©Á¬Ëø_ÕıÃæ,
-    À×µç·ç±©,
-    »ğÑæ·ç±©_ÕıÃæ,
-    ±ùÑ©·ç±©_ÕıÃæ,
-    ±ùÑ©³¡µØ,
-    »ğÑæ³¡µØ_ÕıÃæ,
-    
-    Îï¹¥¼ÓN,
-    Îï¹¥¼õN,
+    ç‚½ç„°è¿é”,
+    è¿…é›·ä¹‹å½±_æ­£é¢,
+    å†°é›ªé£æš´_æ­£é¢,
+    é›·ç”µé£æš´,
+    çƒˆç„°é£æš´_æ­£é¢,
+    å†°éœœé£æš´_æ­£é¢,
+    å†°é›ªåœºåœ°,
+    å¯’å†°åœºåœ°_æ­£é¢,
+    å¤§é­”æ³•åŒ–_æ­£é¢,
 
-    Ä§¹¥¼ÓN,
-    Ä§¹¥¼õN,
+    ç‰©æ”»åŠ N,
+    ç‰©æ”»å‡N,
 
-    Îï·À¼ÓN,
-    Îï·À¼õN,
+    é­”æ”»åŠ N,
+    é­”æ”»å‡N,
 
-    Ä§·À¼ÓN,
-    Ä§·À¼õN,
+    ç‰©é˜²åŠ N,
+    ç‰©é˜²å‡N,
 
-    ÉúÃüÍµÈ¡¼ÓN,
-    ÉúÃüÍµÈ¡¼õN,
-    
-    ÖÎÁÆĞ§¹û¼ÓN,
-    ÖÎÁÆĞ§¹û¼õN,
+    é­”é˜²åŠ N,
+    é­”é˜²å‡N,
 
-    À×µç³¡µØ,
-    Õ½Òâ_ÕıÃæ,
-    ÍË»¯_¸ºÃæ,
-    ´óÄ§·¨»¯_ÕıÃæ,
-    ³¬´óÄ§·¨»¯_ÕıÃæ,
-    Ò×Ëğ_¸ºÃæ,
-    Ä§Á¦ÊÕÊø_ÕıÃæ,
-    ÎŞË«_ÕıÃæ,
-    ÔÎÑ£_¸ºÃæ,
-    ×ÆÉËÖ®½£_ÕıÃæ,
-    ¶³½áÖ®¹­_ÕıÃæ,
-    ¸ĞµçÖ®Ç¹_ÕıÃæ,
+    ç”Ÿå‘½å·å–åŠ N,
+    ç”Ÿå‘½å·å–å‡N,
+
+    æ²»ç–—å¼ºåŒ–åŠ N,
+    æ²»ç–—å¼ºåŒ–å‡N,
+
+    é›·ç”µåœºåœ°,
+    æˆ˜æ„_æ­£é¢,
+    åœ£ç›¾_æ­£é¢,
+    é­”æ³•åå°„_æ­£é¢,
+    å…ƒç´ åå°„_æ­£é¢,
+    é˜²å¾¡_æ­£é¢,
+    é­”æ³•é˜²å¾¡_æ­£é¢,
+    é­”åŒ_æ­£é¢,
+    å‰‘æ™•_æ­£é¢,
+    å†°å†»ä¹‹è§¦_æ­£é¢,
+    ç‡ƒçƒ§ä¹‹è§¦_æ­£é¢,
+    ä¸­æ¯’ä¹‹æª_æ­£é¢,
+    è„†å¼±_è´Ÿé¢,
+    é€€åŒ–_è´Ÿé¢,
+    è¶…å¤§é­”æ³•åŒ–_æ­£é¢,
+    é­”åŠ›æ”¶æŸ_æ­£é¢,
+    æ— åŒ_æ­£é¢,
+    æ™•çœ©_è´Ÿé¢,
+    ç«ç„°åœºåœ°_æ­£é¢,
+    ç¼ä¼¤ä¹‹å‰‘_æ­£é¢,
+    å†»ç»“ä¹‹å¼“_æ­£é¢,
+    æ„Ÿç”µä¹‹æª_æ­£é¢,
 }
 
-//×´Ì¬Ğ§¹û Î¬¶È£º
-//Ã¿´Î½áËãÌØ¶¨ÀàĞÍÉËº¦£¨¶ÎÊıÓ°Ïì£©  ¸½´øÌØ¶¨ÈõµãÉËº¦
-//ÎªÄ¿±êÌí¼ÓDot±ê¼Ç
-//ÌØ¶¨/ÀàĞÍ ¼¼ÄÜÖØ¸´ÊÍ·Å
-//PropertyÔİÊ±ĞŞÕı
-//¡¾static¡¿Ôì³É ×îÖÕÉËº¦ ĞŞÕı
-//¼ä¸ô/Ö±½Ó ĞŞÕıModel
-//ÌØ¶¨£¨Á¦½ß£©×´Ì¬ÏÂ ÊÜµ½×îÖÕÉËº¦ĞŞÕı
-//ĞŞ¸Ä¼¼ÄÜµÄ ÊÍ·ÅÄ¿±ê
-//¡¾static¡¿»ñÈ¡µĞ·½×´Ì¬£¨Õı¸ºÃæ±ê¼Ç£©
-//¡¾static¡¿ÎªÄ¿±êÌí¼ÓÈõµã
-//Íâ²¿ÄÜ¹»»ñÈ¡µ½Ò»¸öbuffµÄÕı¸ºÃæÊôĞÔ
+//çŠ¶æ€æ•ˆæœ ç»´æŒ
+//æ¯æ¬¡è¿›è¡Œç‰¹å®šå±æ€§ä¼¤å®³ï¼ˆä¸è®ºå½±å“ï¼‰ é€ æˆç‰¹å®šå±æ€§ä¼¤å®³
+//ä¸ºç›®æ ‡é™„åŠ Dotå±‚æ•°
+//ç‰¹å®š/é‡å¤ æŠ€èƒ½é‡å¤é‡Šæ”¾
+//Propertyä¸´æ—¶è°ƒæ•´
+//ä¸ºstaticä¼¤å®³ æä¾›ä¼¤å®³å€ç‡
+//æ‘§æ¯/ç›´æ¥ ä¿®æ”¹Model
+//ç‰¹å®šæŠ€èƒ½è€…ï¼ˆçŠ¶æ€ï¼‰å—åˆ°ä¼¤å®³å¢åŠ 
+//ä¿®æ”¹æŠ€èƒ½çš„ é‡Šæ”¾ç›®æ ‡
+//ä¸ºstaticè·å–æ•Œæ–¹çŠ¶æ€ï¼ˆå¼ºå¼±åŒ–ï¼‰
+//ä¸ºstaticä¸ºç›®æ ‡é™„åŠ çŠ¶æ€
+//å¤–éƒ¨èƒ½å¤Ÿè·å–æŸä¸€ä¸ªbuffï¼ˆå¦‚ä¼¤å®³å€ç‡ï¼‰
 
 
-//½ÇÉ«³ÖÓĞÒ»¸öBuff×´Ì¬Tag
-//µ±»ñµÃ¶ÔÓ¦µÄ×´Ì¬¾Í»áÊµÀı³öÒ»ÖÖBuff£¬²¢¿ªÆô¼ÆÊ±
+//è§’è‰²è·å¾—ä¸€ä¸ªBuffçŠ¶æ€Tag
+//å½“éå†åˆ°å¯¹åº”çš„çŠ¶æ€å°±ä¼šå®ä¾‹åŒ–ä¸€ä¸ªBuffï¼ˆæ¯”å¦‚æ”»å‡»æ—¶ï¼‰
 public class BuffBase{
     protected E_BuffType buffType;
     public E_BuffType Buff_Type => buffType;
     protected E_BuffPositive buff_attr;
     /// <summary>
-    /// BUFFµÄÕı¸ºÃæÊôĞÔ
+    /// BUFFçš„æ­£è´Ÿå±æ€§
     /// </summary>
     public E_BuffPositive Buff_Attr => buff_attr;
     protected float buff_dura;
     /// <summary>
-    /// BUFFµÄ³ÖĞøÊ±¼ä
+    /// BUFFçš„æŒç»­æ—¶é—´
     /// </summary>
     public float Buff_Dura => buff_dura;
 
@@ -87,21 +98,22 @@ public class BuffBase{
         buff_attr = _BuffPositive;
         buff_dura = _buff_dura;
         buffType = _buffName;
-        Debug.Log($"»ñµÃBUFF:{_buffName},BUFFÊôĞÔ£º{_BuffPositive},BUFFÊ±³¤£º{_buff_dura}");
+        Debug.Log($"è·å¾—BUFF:{_buffName},BUFFå±æ€§ï¼š{_BuffPositive},BUFFæ—¶é—´ï¼š{_buff_dura}");
     }
     public virtual void OnBuffTrigger() { }
     public virtual void OnBuffUpdate() { }
+    public virtual void OnBuffRemove() { }
 }
 
 /// <summary>
-/// Buff_¸½´øÈõµã¹¥»÷
+/// Buff_é™„åŠ å±æ€§æ”»å‡»
 /// </summary>
 public class Buff_AdditiveAttack : BuffBase
 {
     SkillBase skillBase;
     E_WeaknessType weaknessType;
     float damageRate;
-    //Ö±½Ó»ñÈ¡µ½µ±Ç°¶ÔÏóµÄËùÓĞ
+    //ç›´æ¥è·å–å½“å‰æ”»å‡»çš„æ‰€æœ‰ç›®æ ‡
     public Buff_AdditiveAttack(E_BuffType _buffName, E_BuffPositive e_BuffPositive, float _buff_dura,
                    SkillBase skillBase, E_WeaknessType weaknessType, float damageRate) :
                    base(_buffName, e_BuffPositive, _buff_dura){
@@ -116,7 +128,7 @@ public class Buff_AdditiveAttack : BuffBase
 }
 
 /// <summary>
-/// Buff_¶ÔÄ¿±ê¼ä¸ô´¥·¢ÌØ¶¨ÈõµãÉËº¦
+/// Buff_å¯¹ç›®æ ‡é€ æˆç‰¹å®šå±æ€§ä¼¤å®³
 /// </summary>
 public class Buff_AutoDamage : BuffBase
 {
@@ -145,7 +157,7 @@ public class Buff_AutoDamage : BuffBase
         if (useRandomTarget)
             target = BattleTargetSelector.GetRandomNAliveTargets(myEnemy, 1);
         else
-            target = BattleTargetSelector.GetValidTargets(self, E_SkillTargetType.¶Ôµ¥Ìå);
+            target = BattleTargetSelector.GetValidTargets(self, E_SkillTargetType.å¯¹å•ä½“);
         BufferLogicBucket.AdditiveWeaknessAttack(self, target, weaknessType, damageRate);
         base.OnBuffTrigger();
     }
@@ -154,7 +166,7 @@ public class Buff_AutoDamage : BuffBase
         if (timer >= 0)
             timer -= Time.deltaTime;
         else{
-            Debug.Log("Buff_AutoDamage--´¥·¢Ğ§¹û");
+            Debug.Log("Buff_AutoDamage--æŒç»­æ•ˆæœ");
             OnBuffTrigger();
             timer = triggerInterval ;
         }
@@ -162,11 +174,11 @@ public class Buff_AutoDamage : BuffBase
 }
 
 /// <summary>
-/// ÎªÄ¿±ê£¨¼ä¸ô£©µ÷ÕûÌØ¶¨Dot²ãÊı
+/// ä¸ºç›®æ ‡ï¼ˆæ•Œæˆ‘æ–¹ï¼‰é™„åŠ ç‰¹å®šDotå±‚æ•°
 /// </summary>
 public class Buffer_AssignDot : BuffBase{
     /// <summary>
-    /// DotÀàĞÍ
+    /// Dotæ¨¡æ¿
     /// </summary>
     DotBase dot;
     int addPerTrigger;
@@ -175,7 +187,7 @@ public class Buffer_AssignDot : BuffBase{
 
     float triggerInterval;
     /// <summary>
-    /// Ä¿±êÉíÉÏµÄDot¿ØÖÆÆ÷
+    /// ç›®æ ‡èº«ä¸Šçš„Dotå¤„ç†å™¨
     /// </summary>
     BattleDotHandler targetDot;
     public Buffer_AssignDot(E_BuffType _buffName, E_BuffPositive _BuffPositive, float _buff_dura,DotBase _dot, BattleDotHandler _dotHandler, float _triggerInterval, int _addPerTrigger=1)
@@ -194,17 +206,17 @@ public class Buffer_AssignDot : BuffBase{
 
     public override void OnBuffUpdate(){
         base.OnBuffUpdate();
-        if (timer >= 0) 
+        if (timer >= 0)
             timer-= Time.deltaTime;
         else {
-            Debug.Log("Buffer_AssignDot--´¥·¢Ğ§¹û");
+            Debug.Log("Buffer_AssignDot--æŒç»­æ•ˆæœ");
             OnBuffTrigger();
             timer= triggerInterval;
         }
     }
 }
 /// <summary>
-/// BUFF_µ÷ÕûÊôĞÔÔöÒæ
+/// BUFF_è°ƒæ•´è§’è‰²å±æ€§
 /// </summary>
 public class Buff_AdjustProperty : BuffBase{
     public Buff_AdjustProperty(E_BuffType _buffName, E_BuffPositive _BuffPositive, float _buff_dura,
@@ -214,31 +226,32 @@ public class Buff_AdjustProperty : BuffBase{
         this.propertyType = PropertyType;
         timer = _buff_dura;
         battle_Controller.AdjustCharacterPropertyValue(propertyType, adjustValue);
-        Debug.Log($"ÊôĞÔÔöÒæBUFF ÉúĞ§£º{propertyType}µ÷Õû{adjustValue}");
+        Debug.Log($"è°ƒæ•´BUFF ç”Ÿæ•ˆï¼š{propertyType}å˜åŒ–{adjustValue}");
     }
     float adjustValue;
     float timer;
     Battle_Controller battle_Controller;
     E_CharacterPropertyType propertyType;
     public override void OnBuffTrigger(){
-        base.OnBuffTrigger();
-    }
+        base.OnBuffTrigger();}
+
     void ReSetProperty() {
         battle_Controller.AdjustCharacterPropertyValue(propertyType,-adjustValue);
-        Debug.Log($"ÊôĞÔÔöÒæBUFF Ê§Ğ§£¡£º{propertyType}µ÷Õû{-adjustValue}");
-    }
+        Debug.Log($"è°ƒæ•´BUFF å¤±æ•ˆï¼š{propertyType}å˜åŒ–{-adjustValue}");}
+
+    public override void OnBuffRemove() { ReSetProperty(); }
 
     public override void OnBuffUpdate(){
         base.OnBuffUpdate();
-        if (timer>=0) 
+        if (timer>=0)
             timer-=Time.deltaTime;
-        else 
+        else
             ReSetProperty();
     }
 }
 
 /// <summary>
-/// Buff_Ìá¹©Ôì³ÉÉËº¦Ôö·ù
+/// Buff_æä¾›é¢å¤–ä¼¤å®³å€ç‡
 /// </summary>
 public class Buff_DamageBoomer : BuffBase{
     public Buff_DamageBoomer(E_BuffType _buffName, E_BuffPositive _BuffPositive, float _buff_dura,
@@ -249,3 +262,168 @@ public class Buff_DamageBoomer : BuffBase{
     public float BoomerRate => boomerRate;
 }
 
+/// <summary>
+/// Buff_æŠ€èƒ½é‡æ”¾ï¼šå½“ç‰¹å®šä¼¤å®³ç±»å‹çš„æ”»å‡»æŠ€èƒ½é‡Šæ”¾æ—¶ï¼Œé¢å¤–é‡æ”¾Næ¬¡
+/// å¯å¤ç”¨ç»„ä»¶ï¼Œä¸ä¾èµ–SkillBaseï¼Œé€šè¿‡äº‹ä»¶é©±åŠ¨
+/// </summary>
+public class Buff_SkillRecast : BuffBase{
+    /// <summary>
+    /// é‡æ”¾æ¬¡æ•°
+    /// </summary>
+    int recastCount;
+
+    /// <summary>
+    /// æŠ€èƒ½ç‰ˆæœ¬
+    /// </summary>
+    E_SkillLevel skillLevel;
+    /// <summary>
+    /// å¼ºåŒ–æ¬¡æ•°
+    /// </summary>
+    int henctime;
+
+    bool _isRecasting;
+    SkillBase skill;
+    public void SetRecastContext(SkillBase _skill, E_SkillLevel _skillLevel, int _henctime){
+        skill = _skill; skillLevel = _skillLevel; henctime = _henctime;
+    }
+    public Buff_SkillRecast(E_BuffType _buffName, E_BuffPositive _BuffPositive, float _buff_dura,
+        int _recastCount = 1) : base(_buffName, _BuffPositive, _buff_dura){
+        recastCount = _recastCount;
+    
+    }
+
+    public override void OnBuffTrigger(){
+        base.OnBuffTrigger();
+        DoRecast();
+    }
+    public void DoRecast()
+    {
+        if (_isRecasting) return;
+        _isRecasting = true;
+        for (int i = 0; i < recastCount; i++){
+            Debug.Log($"[å¤§é­”æ³•åŒ–]é‡æ”¾æŠ€èƒ½:{skill.GetType().Name},æ¬¡æ•°:{i + 1}/{recastCount}");
+            skill.SkillExcute(skillLevel,henctime);
+        }
+        _isRecasting = false;
+    }
+}
+
+/// <summary>
+/// Buff_è„†å¼±ï¼šé™ä½åŒæŠ—ï¼Œæ¨¡æ‹Ÿå—ä¼¤å¢åŠ 
+/// </summary>
+public class Buff_Vulnerable : BuffBase{
+    Battle_Controller controller;
+    float phyReduce, magReduce;
+    float timer;
+
+    public Buff_Vulnerable(E_BuffType _buffName, E_BuffPositive _BuffPositive, float _buff_dura,
+        Battle_Controller _controller, float _phyReduce, float _magReduce)
+        : base(_buffName, _BuffPositive, _buff_dura){
+        controller = _controller;
+        phyReduce = _phyReduce;
+        magReduce = _magReduce;
+        timer = _buff_dura;
+        controller.AdjustCharacterPropertyValue(E_CharacterPropertyType.Phy_Resistance, -phyReduce);
+        controller.AdjustCharacterPropertyValue(E_CharacterPropertyType.Mag_Resistance, -magReduce);
+        Debug.Log($"è„†å¼±BUFFç”Ÿæ•ˆï¼šç‰©æŠ—-{phyReduce}ï¼Œé­”æŠ—-{magReduce}");
+    }
+
+    void Revert(){
+        controller.AdjustCharacterPropertyValue(E_CharacterPropertyType.Phy_Resistance, phyReduce);
+        controller.AdjustCharacterPropertyValue(E_CharacterPropertyType.Mag_Resistance, magReduce);
+        Debug.Log($"è„†å¼±BUFFå¤±æ•ˆï¼šç‰©æŠ—+{phyReduce}ï¼Œé­”æŠ—+{magReduce}");
+    }
+
+    public override void OnBuffRemove() { Revert(); }
+
+    public override void OnBuffUpdate(){
+        base.OnBuffUpdate();
+        if (timer >= 0)
+            timer -= Time.deltaTime;
+        else
+            Revert();
+    }
+}
+
+/// <summary>
+/// Buff_é™„é­”ï¼šç‰¹å®šå¼±ç‚¹æ”»å‡»é™„åŠ Dotå±‚æ•°
+/// </summary>
+public class Buff_DotOnAttack : BuffBase{
+    E_WeaknessType triggerWeakness;
+    E_Dot dotType;
+    IBattlable self;
+
+    public Buff_DotOnAttack(E_BuffType _buffName, E_BuffPositive _BuffPositive, float _buff_dura,
+        E_WeaknessType _triggerWeakness, E_Dot _dotType, IBattlable _self)
+        : base(_buffName, _BuffPositive, _buff_dura){
+        triggerWeakness = _triggerWeakness;
+        dotType = _dotType;
+        self = _self;
+    }
+
+    public override void OnBuffTrigger(){
+        base.OnBuffTrigger();
+    }
+
+    public void TryApplyDot(E_WeaknessType attackWeakness, IBattlable target){
+        if (attackWeakness == triggerWeakness){
+            DotBase dot = CreateDot(target);
+            if (dot != null)
+                EventCenter.EventTrigger(E_EventType.Battle_RegisterDot, target.battleDamageHandler.DotHandler, dot, 1);
+        }
+    }
+
+    DotBase CreateDot(IBattlable target){
+        switch (dotType){
+            case E_Dot.ç‡ƒçƒ§: return new Dot_Burn(E_Dot.ç‡ƒçƒ§, target, 1);
+            case E_Dot.å†»ç»“: return new Dot_Freeze(E_Dot.å†»ç»“, target, 1);
+            case E_Dot.æ„Ÿç”µ: return new Dot_Shock(E_Dot.æ„Ÿç”µ, target, 1);
+        }
+        return null;
+    }
+}
+
+public class Buff_FieldDot : BuffBase {
+    E_Dot dotType;
+    E_Camp enemyCamp;
+    IBattlable self;
+    float timer;
+    float triggerInterval;
+    int dotLayers;
+
+    public Buff_FieldDot(E_BuffType _buffName, E_BuffPositive _BuffPositive, float _buff_dura,
+        E_Dot _dotType, IBattlable _self, float _triggerInterval, int _dotLayers = 1)
+        : base(_buffName, _BuffPositive, _buff_dura) {
+        dotType = _dotType;
+        self = _self;
+        triggerInterval = _triggerInterval;
+        dotLayers = _dotLayers;
+        enemyCamp = self.Camp == E_Camp.ç©å®¶æ–¹ ? E_Camp.æ•Œæ–¹ : E_Camp.ç©å®¶æ–¹;
+        timer = 0;
+    }
+
+    public override void OnBuffUpdate() {
+        base.OnBuffUpdate();
+        if (timer >= 0)
+            timer -= Time.deltaTime;
+        else {
+            var enemies = BattleTargetSelector.GetAllAliveTargets(enemyCamp);
+            foreach (var enemy in enemies) {
+                DotBase dot = CreateDot(enemy);
+                if (dot != null)
+                    EventCenter.EventTrigger(E_EventType.Battle_RegisterDot,
+                        enemy.battleDamageHandler.DotHandler, dot, dotLayers);
+            }
+            timer = triggerInterval;
+        }
+    }
+
+    DotBase CreateDot(IBattlable target) {
+        switch (dotType) {
+            case E_Dot.ç‡ƒçƒ§: return new Dot_Burn(E_Dot.ç‡ƒçƒ§, target, dotLayers);
+            case E_Dot.å†»ç»“: return new Dot_Freeze(E_Dot.å†»ç»“, target, dotLayers);
+            case E_Dot.æ„Ÿç”µ: return new Dot_Shock(E_Dot.æ„Ÿç”µ, target, dotLayers);
+        }
+        return null;
+    }
+}

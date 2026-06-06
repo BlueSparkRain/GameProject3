@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c60c10d4693db6045a74bc3d72d1fb2c, type: 3}
   m_Name: HexMapSOData
   m_EditorClassIdentifier: 
-  mapRadius: 30
+  mapCols: 55
+  mapRows: 35
+  mapShape: 1
   savedCells:
   - row: 0
     col: 15

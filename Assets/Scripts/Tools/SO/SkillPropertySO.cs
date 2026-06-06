@@ -1,56 +1,133 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements.Experimental;
 
 [CreateAssetMenu(menuName = "SOData/SkillPropertyData", fileName = "SkillPropertyData")]
 public class SkillPropertySO : ScriptableObject
 {
-    [Header("æŠ€èƒ½ID")]
+    [Header("¼¼ÄÜID")]
     public int skill_ID;
 
-    [Header("æŠ€èƒ½å›¾æ ‡")]
+    [Header("¼¼ÄÜÃû³Æ")]
+    public E_SkillName skill_name;
+
+    [Header("¼¼ÄÜÍ¼±ê")]
     public Sprite skill_Sprite;
-    [Header("æŠ€èƒ½åç§°")]
+    [Header("¼¼ÄÜÃû³Æ")]
     public string skill_Name;
 
-    [Header("æŠ€èƒ½æè¿°")]
+    [Header("¼¼ÄÜÃèÊö")]
     [Multiline]
     public string skill_Description;
 
-    [Header("æŠ€èƒ½åˆå§‹å†·å´")]
+    [Header("¼¼ÄÜ³õÊ¼ÀäÈ´")]
     public float skill_CoolDown_origin;
 
-    [Header("æŠ€èƒ½æ³•åŠ›æ¶ˆè€—")]
+    [Header("¼¼ÄÜ·¨Á¦ÏûºÄ")]
     public float skill_sp_cost;
 
-    [Header("æŠ€èƒ½æ€’æ°”å¢é•¿")]
+    [Header("¼¼ÄÜATBÏûºÄ")]
+    public int skill_atb_cost;
+
+    [Header("¼¼ÄÜÅ­ÆøÔö³¤")]
     public float skill_ang_grow;
 
-    [Header("æŠ€èƒ½çš„ç›®æ ‡ç±»å‹")]
+    [Header("¼¼ÄÜµÄÄ¿±êÀàĞÍ")]
     public E_SkillTargetType skill_targetType;
 }
 public enum E_SkillTargetType
 {
-    å¯¹å•ä½“,
-    å¯¹Nç›®æ ‡,
-    å¯¹å…¨ä½“,
+    ¶Ôµ¥Ìå,
+    ¶ÔNÄ¿±ê,
+    ¶ÔÈ«Ìå,
 }
 
-//é˜µè¥æšä¸¾ï¼ˆè‡ªåŠ¨åŒºåˆ†æ•Œæˆ‘ï¼‰
+//ÕóÓªÃ¶¾Ù£¨×Ô¶¯Çø·ÖµĞÎÒ£©
 public enum E_Camp
 {
-    ç©å®¶æ–¹,  // ç©å®¶ã€å‹å†›
-    æ•Œæ–¹     // æ•Œäººã€æ€ªç‰©
+    Íæ¼Ò·½,  // Íæ¼Ò¡¢ÓÑ¾ü
+    µĞ·½     // µĞÈË¡¢¹ÖÎï
 }
 
-//æˆ˜æ–—å•ä½æ¥å£(æ‰€æœ‰è§’è‰²/æ•Œäººé€šç”¨)
-// æŠ€èƒ½ä¸ä¾èµ–å…·ä½“è§’è‰²ï¼Œåªä¾èµ–è¿™ä¸ªæ¥å£ â†’ æè‡´è§£è€¦
+//Õ½¶·µ¥Î»½Ó¿Ú(ËùÓĞ½ÇÉ«/µĞÈËÍ¨ÓÃ)
+// ¼¼ÄÜ²»ÒÀÀµ¾ßÌå½ÇÉ«£¬Ö»ÒÀÀµÕâ¸ö½Ó¿Ú ¡ú ¼«ÖÂ½âñî
 public interface IBattlable
 {
-     E_Camp Camp { get; }             // é˜µè¥
-    bool IsAlive { get; }            // æ˜¯å¦å­˜æ´»
+     E_Camp Camp { get; }
+    bool IsAlive { get; }
     public BattleDamageHandler battleDamageHandler { get; set; }
 
-    E_WeaknessType selfWeakness {  get; set; }
+    /// <summary>
+    /// µ±Ç°ÈõµãÁĞ±í£¨Ö§³Ö¶àÈõµã£¬Õ½¶·ÖĞ¿ÉÔöÉ¾£©
+    /// </summary>
+    List<E_WeaknessType> weaknesses { get; }
 
     bool GetWeakAttack(E_WeaknessType attackWeakType);
+
+    void AddWeakness(E_WeaknessType w);
+    void RemoveWeakness(E_WeaknessType w);
 }
+
+//public enum E_SkillName {
+//Õ¶_´Ì_Éä»÷,
+//Ä§Á¦¸´Ô­                          ,
+//Áé¹âÒ»ÉÁ                          ,
+//ÃÍ»÷Òªº¦                          ,
+//³ãÑæÁ¬Ëø                          ,
+//À×µç·ç±©                          ,
+//±ùËªÁìÓò                          ,
+//º£ÄÉ°Ù´¨                          ,
+//Á¦Á¿ÔöĞ§                          ,
+//Æø³Áµ¤Ìï                          ,
+//±³Ë®Ò»Õ½                          ,
+//´óÄ§·¨»¯                          ,
+//º®±ù_À×µç_»ğÑæÄ§·¨         ,
+//Ä§·¨ÔöĞ§                          ,
+//¼áÌú·À±Ú                          ,
+//ÃØÒø½á½ç                          ,
+//Á¦Á¿Èõ»¯                          ,
+//Ä§·¨Èõ»¯                          ,
+//·À±ÚÆÆ»µ                          ,
+//½á½çÆÆ»µ                          ,
+//¼³È¡                              ,
+//ÔÙÉú                              ,
+//¾»»¯Ö®ÒÇ                          ,
+//Ï£ÍûÖ®¸è                          ,
+//¾µÏñ·´Éä                          ,
+//ÎŞĞÄ³¤µ¶                          ,
+//½äĞÄ³¤Ç¹                          ,
+//ÕÛÉä                              ,
+//¶ÏÎ²ÇóÉú                          ,
+//ÊôĞÔ»ìÂÒ                          ,
+//ÈıÆ÷çÔÂÒ                          ,
+//Ê¶ÆÆ                              ,
+//Ê¨Íõá÷ÁÔ                          ,
+//ÇãÅè´óÓê                          ,
+//ÎŞ¾¡ÖÕ½á                          ,
+//³ËÊ¤×·»÷                          ,
+//ÏÈ·¢ÖÆÈË                          ,
+//Ñ¸À×Á¬Ëø                          ,
+//±©Ñ©Á¬Ëø                          ,
+//³¬´óÄ§·¨»¯                        ,
+//ÉñÊ¥Ä§·¨                          ,
+//¹ıÆØ                              ,
+//Ä§Á¦Äæ×ª                          ,
+//×ÆÈÈ_Ëª¶³_µç¸Ğ±¬·¢         ,
+//åçĞÇ                              ,
+//»ğÑæ·ç±©                          ,
+//±ùÑ©·ç±©                          ,
+//ÌìÏÂÎŞË«¼ÜÊÆ                      ,
+//ÎäÉñ°ÔÕ¶                          ,
+//»áĞÄÖ®Ç¹                          ,
+//ÔÉÊ¯                              ,
+//ÃàÀï²ØÕë                          ,
+//Âä¾®ÏÂÊ¯                          ,
+//ÃÍ»÷                              ,
+//ÍÌÊÉ                              ,
+//Ñ×½£¸½Ä§                          ,
+//Ëª¹­¸½Ä§                          ,
+//À×Ç¹¸½Ä§                          ,
+//»ğÑæÁìÓò                          ,
+//À×µçÁìÓò                          ,
+
+//}

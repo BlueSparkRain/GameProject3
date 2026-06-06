@@ -39,11 +39,11 @@ public class HexTerrainStyleHandler : MonoBehaviour
     /// 设置标识地块类型的精灵
     /// </summary>
     void SetTerrainSprite() {
+        if (terrainSpriteRenderer == null) return;
         if (!useTerrainSprite){ 
             terrainSpriteRenderer.enabled = false; return; }
 
         terrainSOData = ResourcesLoader.FindTerrainData(hexTerrainType);
-        //Debug.Log(hexTerrainType + " "+terrainSOData);
         Sprite sprite = terrainSOData.sprites.GetRandomElement();
         terrainSpriteRenderer.sprite =sprite;
     }
@@ -52,6 +52,7 @@ public class HexTerrainStyleHandler : MonoBehaviour
     /// 设置标识房间类型的精灵
     /// </summary>
     void SetRoomSprite(){
+        if (modelSpriteRenderer == null) return;
         if (modelSOData != null) {
             modelSpriteRenderer.sprite=modelSOData.roomSprites.GetRandomElement();
         }

@@ -998,8 +998,10 @@ MonoBehaviour:
   Anim_EaseType: 27
   Anim_BornPos: {x: -800, y: 100, z: 0}
   Anim_TargetTrans: {x: 200, y: 0, z: 0}
+  enableTimeScaleControl: 0
   Anim_DoFadeIn: 0
   Anim_NeedAlphaFadeIn: 1
+  freezeCameraOnOpen: 0
   canOpen: 1
   currentRoomPosText: {fileID: 2737567978207715321}
   currentRoomHasEditedText: {fileID: 7042925499230746745}

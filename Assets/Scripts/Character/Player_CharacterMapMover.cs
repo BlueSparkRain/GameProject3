@@ -1,5 +1,4 @@
 using Core;
-using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +13,8 @@ public class Player_CharacterMapMover : IMapMoveable
     public E_CharacterType CharacterType => characterType;
     E_CharacterType characterType;
 
-    public int max_Actionpoints = 7;
-    [Header("剩余行动点")]
-    public int remain_Acionpoints;
-
     CoroutineManager coroutineManager;
-    //MapMoverManager  moverChecker;
+    ActionPointsManager apManager;
 
     //玩家操控角色-需要与Icon交互
     PlayerMapIcon mapIcon;
@@ -45,6 +40,7 @@ public class Player_CharacterMapMover : IMapMoveable
 
         this.characterType = characterType;
         this.charcaterTrans = charcaterTrans;
+        apManager = GameRoot.GetManager<ActionPointsManager>();
         coroutineManager = GameRoot.GetManager<CoroutineManager>();
         coroutineManager.StartCoroutine(WaitMapIcon(), charcaterTrans);
     }
@@ -52,41 +48,36 @@ public class Player_CharacterMapMover : IMapMoveable
 
     void PlayerGetMovePoints()
     {
-        remain_Acionpoints = max_Actionpoints;
-        moveStop = remain_Acionpoints <= 0;
-        mapIcon.SetMoveDot(remain_Acionpoints);
-        //此处如果不显式泛型参数，this会被推断为Player_CharacterMapMover导致执行失败！
+        // 结余储存: 未用完的行动点存起来，上限=当前混沌等级
+        int chaosLevel = GameRoot.GetManager<ChaosLevelManager>()?.currentLevel ?? 1;
+        int storedPoints = Mathf.Min(apManager.RemainActionPoints, chaosLevel);
+
+        var (maxPoints, remainPoints) = apManager.EndRound(chaosLevel, storedPoints);
+        moveStop = remainPoints <= 0;
+        mapIcon.SetMoveDot(remainPoints);
         EventCenter.EventTrigger<IMapMoveable>(E_EventType.OneMoverEndRound, this);
     }
 
-    IEnumerator WaitMapIcon()
-    {
+    IEnumerator WaitMapIcon(){
         yield return new WaitForSeconds(1f);
         mapIcon = GameRoot.GetManager<MapMoverManager>().CreateNewMapIcon(this, charcaterTrans);
-        remain_Acionpoints = max_Actionpoints;
-        mapIcon.SetMoveDot(remain_Acionpoints);
+        mapIcon.SetMoveDot(apManager.RemainActionPoints);
     }
 
-    void OneTimeMove_MinusActionPoint(){ remain_Acionpoints--;}
+    void OneTimeMove_MinusActionPoint() { apManager.SpendActionPoints(1); }
 
-    void MoveStop()
-    {
+    void MoveStop(){
         moveStop = true;
         //将剩余行动点传递给寻路管理器
-        mapIcon?.SetMoveDot(remain_Acionpoints);
+        mapIcon?.SetMoveDot(apManager.RemainActionPoints);
     }
 
     /// <summary>
     /// 角色出生时更新数据
     /// </summary>
-    public void CharacterZeroMove()
-    {
+    public void CharacterZeroMove(){
         //更新当前房间
         EventCenter.EventTrigger(E_EventType.Mover_CheckCurrrentRoom, this as IMapMoveable, charcaterTrans.position);
-        //根据MoverChecker顺序来决定当前的Mover
-        //GameRoot.GetManager<MapMoverManager>().SetCurrentMover(this);
-
-        //玩家角色登场先走0步
         //设置当前Mover
         GameRoot.GetManager<MapMoverManager>().SetCurrentMover(this, charcaterTrans.position);
 
@@ -97,39 +88,27 @@ public class Player_CharacterMapMover : IMapMoveable
     }
 
 
-    public void DoMoveFunc(List<HexRoomTag> path)
-    {
+    public void DoMoveFunc(List<HexRoomTag> path){
         //仅仅包含对于MapIcon的禁用操作
         EventCenter.EventTrigger(E_EventType.Mover_PlayerStartMove);
         coroutineManager.StartCoroutine(MoveAnim(path), charcaterTrans);
-
     }
 
-
-    IEnumerator MoveAnim(List<HexRoomTag> roomPath)
-    {
-        if (roomPath.Last() != null)
-        {
+    IEnumerator MoveAnim(List<HexRoomTag> roomPath){
+        if (roomPath.Last() != null){
             //寻找终点，相机缓慢平移到目标点
-            GameRoot.GetManager<OrthoCameraNavigator>().FocusOnTarget(roomPath.Last().gameObject,3);
+            GameRoot.GetManager<OrthoCameraNavigator>().FocusOnTarget(roomPath.Last().gameObject, 3);
         }
-        moveStop = remain_Acionpoints <= 0;
+        moveStop = apManager.RemainActionPoints <= 0;
         //Debug.Log("Mover开始移动：路径长度" + roomPath.Count);
         isMoving = true;
-
-        for (int i = 0; i < roomPath.Count; i++)
-        {
-            if (moveStop)
-            {
-                //只有敌人AI才能直接应用房间的结果，玩家需经理房间后才能获得奖励
-                //EventCenter.EventTrigger(E_EventType.Mover_IntoSpecialRoom, GetComponent<CharacterMapSkiller>(),  currentRoom.roomType);
-                //EventCenter.EventTrigger(E_EventType.Mover_IntoSpecialRoom, GetComponent<CharacterMapSkiller>(), currentRoom.roomType);
-
-                Debug.Log("Mover被打断，剩余移动点" + remain_Acionpoints);
+        for (int i = 0; i < roomPath.Count; i++){
+            if (moveStop){
+                Debug.Log("Mover被打断，剩余移动点" + apManager.RemainActionPoints);
                 break;
             }
-            var targetPos = roomPath[i].transform.position + Vector3.up * 1.2f;
-            MagicAnimExtens.PerfectJump_WorldAnim(charcaterTrans,targetPos);
+            var targetPos = roomPath[i].transform.position + Vector3.up * GameRoot.GetManager<GameMapManager>().characterYOffset;
+            MagicAnimExtens.PerfectJump_WorldAnim(charcaterTrans, targetPos);
 
             //更新当前房间
             //更新行动点,清除视野内云朵

@@ -3,22 +3,23 @@ using Core.Interfaces;
 using UnityEngine;
 
 /// <summary>
-/// 定义所有加载对象的路径，并提供对应的加载接口
+/// 统一管理各类加载路径，并提供相应的加载接口
 /// </summary>
-public static class ResourcesLoader 
+public static class ResourcesLoader
 {
 
     [Header("SkillSO加载路径")]
     static string skillDataPath = "SOData/SkillSOData/";
-    
+
     /// <summary>
-    /// 矩形MapIcon
+    /// 加载MapIcon
     /// </summary>
     static string mapIcon_RectPrefabPath = "Prefab/MapUI/PlayerMapIcon";
     static string mapIcon_CirclePrefabPath = "Prefab/MapUI/PlayerMapIcon_Circle";
 
     static string hexRoomPath = "Prefab/HexRoom/MapRoom";
     static string roomCloudePath = "Prefab/HexRoom/RoomCloude";
+    static string hexFacePath = "Prefab/HexRoom/HexFace";
 
     static string skillSlotPath = "Prefab/SkillUI/SkillSlot";
     static string skillIconPath = "Prefab/SkillUI/SkillIcon";
@@ -36,11 +37,18 @@ public static class ResourcesLoader
 
     static string roomModelSOPath = "SOData/RoomModelSOData/";
 
+    static string weaknessConfigPath = "SOData/CharacterWeaknessConfig/Weakness_";
+    static string atbIntentionConfigPath = "SOData/ATBIntentionConfig/ATBIntention_";
+    static string autoSkillConfigPath = "SOData/AutoSkillConfig/AutoSkill_";
+
     public static GameObject FindHexRoomObj() {
         return Resources.Load<GameObject>(hexRoomPath);
     }
     public static GameObject FindRoomCloudeObj() {
         return Resources.Load<GameObject>(roomCloudePath);
+    }
+    public static GameObject FindHexFaceObj() {
+        return Resources.Load<GameObject>(hexFacePath);
     }
      public static GameObject FindSkillIconObj() {
         return Resources.Load<GameObject>(skillIconPath);
@@ -74,29 +82,38 @@ public static class ResourcesLoader
         return Resources.Load<CharcterPropertyGrowthSO>(characterGrowthSOPath + characterType);
     }
     /// <summary>
-    /// 根据技能ID返回对应的SkillSOData
+    /// 根据技能ID加载对应的SkillSOData
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
     public static SkillPropertySO FindSkillSOByID(int id)
     {
         return Resources.Load<SkillPropertySO>($"{skillDataPath}S_{id}");
     }
 
-
+    /// <summary>
+    /// 根据E_SkillName枚举查找对应的SkillPropertySO（枚举值即技能ID）
+    /// 返回的SO中包含 skill_ID、skill_Name 等完整数据。
+    /// </summary>
+    public static SkillPropertySO FindSkillSOBySkillName(E_SkillName name)
+    {
+        return FindSkillSOByID((int)name);
+    }
     public static GameObject FindSkillSlotObj() {
         return Resources.Load<GameObject>(skillSlotPath);
     }
-
-    public static MapSaveSOData FindMapSaveData(string mapdataBack)
-    {
+    public static MapSaveSOData FindMapSaveData(string mapdataBack){
         return Resources.Load<MapSaveSOData>(mapSaveDataPath+mapdataBack);
-
     }
-
-
     public static GameObject FindBattleCharacterObj() {
         return Resources.Load<GameObject>(battlerCharacterPath);
     }
-}     
+    public static CharacterWeaknessConfigSO FindWeaknessConfig(E_CharacterType characterType){
+        return Resources.Load<CharacterWeaknessConfigSO>(weaknessConfigPath + characterType);
+    }
+    public static ATBIntentionConfigSO FindATBIntentionConfig(E_CharacterType characterType){
+        return Resources.Load<ATBIntentionConfigSO>(atbIntentionConfigPath + characterType);
+    }
+    public static AutoSkillConfigSO FindAutoSkillConfig(E_CharacterType characterType){
+        return Resources.Load<AutoSkillConfigSO>(autoSkillConfigPath + characterType);
+    }
 
+}

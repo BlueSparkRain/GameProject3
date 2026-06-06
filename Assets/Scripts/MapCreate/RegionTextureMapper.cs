@@ -1,12 +1,11 @@
+using Core;
 using System.Collections.Generic;
 using UnityEngine;
-using Core;
 
 /// <summary>
 /// 区域纹理映射器 —— 独立于 GameMapManager 的组件。
-/// 按 (row, col) 范围找到房间面片 Renderer，所有面片共用一个 MaterialPropertyBlock。
-/// 每面随机延迟由 Shader 根据物体 pivot 世界坐标哈希在 GPU 端计算，
-/// 全局面片合用单 MPB — SRP Batcher 合批，CPU 零逐面开销。
+/// 通过 HexFaceTag 查找独立的面片（不再依赖 HexRoom 子物体），
+/// 所有面片共用一个 MaterialPropertyBlock。
 /// </summary>
 public class RegionTextureMapper : MonoBehaviour
 {
@@ -26,22 +25,13 @@ public class RegionTextureMapper : MonoBehaviour
     public float textureOpacity = 1f;
 
     [Header("渐变")]
-    [Tooltip("单个面片从 0→1 的渐变时长（秒）")]
     public float fadeDuration = 0.5f;
-    [Tooltip("面片随机延迟的最大值（秒）")]
     public float maxRandomDelay = 1.5f;
 
     [Header("面片控制")]
-    [Tooltip("面片缩放")]
     public Vector3 faceScale = Vector3.one;
-    [Tooltip("面片在房间上方的 Y 轴高度偏移")]
-    public float faceHeight = 0.15f;
-    [Tooltip("开启/关闭贴图映射（带动画过渡）")]
+    public float faceHeight = -9.7f;
     public bool mappingEnabled = true;
-
-    [Header("面片查找")]
-    [Tooltip("房间预制件中面片子物体的名称")]
-    public string faceChildName = "HexFace";
 
     [Header("调试")]
     public bool showRangeGizmo = true;
@@ -52,12 +42,10 @@ public class RegionTextureMapper : MonoBehaviour
     MaterialPropertyBlock _sharedMPB;
     bool _materialInitialized;
 
-    // 渐变状态
     float _transitionStartTime = -1f;
     float _fromOpacity;
     float _targetOpacity = 1f;
 
-    // 轮询缓存
     Texture2D _lastTex;
     Vector2 _lastTiling, _lastOffset;
     int _lastMinRow, _lastMaxRow, _lastMinCol, _lastMaxCol;
@@ -65,43 +53,37 @@ public class RegionTextureMapper : MonoBehaviour
     Vector3 _lastScale;
     float _lastHeight;
     bool _lastEnabled;
-    string _lastFaceName;
 
-    static readonly int ShaderProp_RegionMin       = Shader.PropertyToID("_RegionMin");
-    static readonly int ShaderProp_RegionSize      = Shader.PropertyToID("_RegionSize");
-    static readonly int ShaderProp_MainTex         = Shader.PropertyToID("_MainTex");
-    static readonly int ShaderProp_Tiling          = Shader.PropertyToID("_Tiling");
-    static readonly int ShaderProp_Offset          = Shader.PropertyToID("_Offset");
-    static readonly int ShaderProp_Opacity         = Shader.PropertyToID("_Opacity");
+    static readonly int ShaderProp_RegionMin = Shader.PropertyToID("_RegionMin");
+    static readonly int ShaderProp_RegionSize = Shader.PropertyToID("_RegionSize");
+    static readonly int ShaderProp_MainTex = Shader.PropertyToID("_MainTex");
+    static readonly int ShaderProp_Tiling = Shader.PropertyToID("_Tiling");
+    static readonly int ShaderProp_Offset = Shader.PropertyToID("_Offset");
+    static readonly int ShaderProp_Opacity = Shader.PropertyToID("_Opacity");
     static readonly int ShaderProp_TransitionStart = Shader.PropertyToID("_TransitionStartTime");
-    static readonly int ShaderProp_FadeDuration    = Shader.PropertyToID("_FadeDuration");
-    static readonly int ShaderProp_FromOpacity     = Shader.PropertyToID("_FromOpacity");
-    static readonly int ShaderProp_TargetOpacity   = Shader.PropertyToID("_TargetOpacity");
-    static readonly int ShaderProp_MaxRandomDelay  = Shader.PropertyToID("_MaxRandomDelay");
+    static readonly int ShaderProp_FadeDuration = Shader.PropertyToID("_FadeDuration");
+    static readonly int ShaderProp_FromOpacity = Shader.PropertyToID("_FromOpacity");
+    static readonly int ShaderProp_TargetOpacity = Shader.PropertyToID("_TargetOpacity");
+    static readonly int ShaderProp_MaxRandomDelay = Shader.PropertyToID("_MaxRandomDelay");
 
-    void Start()
-    {
+    void Start(){
         InitMaterial();
         EventCenter.AddEventListener(E_EventType.LoadMapEnd, OnLoadMapEnd);
         if (GameRoot.GetManager<GameMapManager>()?.HexRoomMap?.Count > 0)
             RefreshMapping();
     }
-
-    void OnDestroy()
-    {
+    void OnDestroy(){
         EventCenter.RemoveEventListener(E_EventType.LoadMapEnd, OnLoadMapEnd);
         ClearFaceCache();
-        if (_sharedMaterial != null)
-        {
+        if (_sharedMaterial != null){
             if (Application.isPlaying) Destroy(_sharedMaterial);
             else DestroyImmediate(_sharedMaterial);
         }
     }
 
-    void Update()
-    {
+    void Update(){
         bool propChanged = _lastTiling != tiling || _lastOffset != offset || _lastTex != regionTexture ||
-                           _lastOpacity != textureOpacity || _lastFaceName != faceChildName ||
+                           _lastOpacity != textureOpacity ||
                            _lastFadeDuration != fadeDuration || _lastMaxDelay != maxRandomDelay;
 
         bool transformChanged = _lastScale != faceScale || _lastHeight != faceHeight;
@@ -109,30 +91,21 @@ public class RegionTextureMapper : MonoBehaviour
 
         if (propChanged || enabledChanged)
             ApplySharedMPB();
-
         if (transformChanged)
             ApplyFaceTransforms();
-
         if (propChanged || transformChanged || enabledChanged)
             SaveLastParams();
-
         if (_lastMinRow != minRow || _lastMaxRow != maxRow ||
-            _lastMinCol != minCol || _lastMaxCol != maxCol)
-        {
+            _lastMinCol != minCol || _lastMaxCol != maxCol){
             RefreshMapping();
             SaveLastParams();
         }
-
         UpdateRendererEnabled();
     }
-
-    void InitMaterial()
-    {
+    void InitMaterial(){
         if (_materialInitialized) return;
-
         Shader shader = Shader.Find("Custom/RegionTextureMapper");
-        if (shader == null)
-        {
+        if (shader == null){
             Debug.LogError("[RegionTextureMapper] 找不到 Custom/RegionTextureMapper 着色器");
             return;
         }
@@ -146,13 +119,14 @@ public class RegionTextureMapper : MonoBehaviour
         if (!isActiveAndEnabled) return;
         StartCoroutine(DelayedRefreshCoro());
     }
-
+   
     System.Collections.IEnumerator DelayedRefreshCoro()
     {
         GameMapManager map = GameRoot.GetManager<GameMapManager>();
         int lastCount = 0;
         int stable = 0;
-        while (stable < 3)
+        // 等待HexRoomMap稳定（连续5次无变化，且>0），确保所有房间+HexFace创建完毕
+        while (stable < 5)
         {
             yield return new WaitForSeconds(0.1f);
             int count = map?.HexRoomMap?.Count ?? 0;
@@ -179,6 +153,19 @@ public class RegionTextureMapper : MonoBehaviour
         if (_sharedMaterial == null) InitMaterial();
         if (_sharedMaterial == null) return;
 
+        // 收集所有已初始化的 HexFaceTag，按 (row, col) 建立快速查找
+        // 跳过 faceRenderer==null 的（池子里未激活、未调用 Init 的实例）
+        var allFaces = FindObjectsOfType<HexFaceTag>();
+        var faceLookup = new Dictionary<Vector2Int, HexFaceTag>();
+        foreach (var face in allFaces)
+        {
+            if (face == null || face.faceRenderer == null) continue;
+            var key = new Vector2Int(face.row, face.col);
+            if (!faceLookup.ContainsKey(key))
+                faceLookup[key] = face;
+        }
+
+        // 遍历房间映射表，匹配范围内的 HexFace
         foreach (var kvp in map.HexRoomMap)
         {
             HexRoomTag room = kvp.Value;
@@ -188,30 +175,24 @@ public class RegionTextureMapper : MonoBehaviour
             int col = room.col;
             if (row < minRow || row > maxRow || col < minCol || col > maxCol) continue;
 
-            Transform faceTrans = room.transform.Find(faceChildName);
-            if (faceTrans == null) continue;
+            if (!faceLookup.TryGetValue(new Vector2Int(row, col), out var faceTag)) continue;
 
-            Renderer rend = faceTrans.GetComponent<Renderer>();
+            Renderer rend = faceTag.faceRenderer;
             if (rend == null) continue;
 
             rend.sharedMaterial = _sharedMaterial;
             rend.enabled = true;
             _faceRenderers.Add(rend);
-            _faceTransforms.Add(faceTrans);
+            _faceTransforms.Add(faceTag.transform);
         }
 
-        Debug.Log($"[RegionTextureMapper] 找到 {_faceRenderers.Count} 个面片 Renderer");
+        Debug.Log($"[RegionTextureMapper] 找到 {_faceRenderers.Count} 个独立 HexFace Renderer");
         ResetFadeTransition(fromZero: true);
         ApplySharedMPB();
         ApplyFaceTransforms();
         SaveLastParams();
     }
 
-    /// <summary>
-    /// 写入共享 MPB + 材质属性（仅参数变化时触发，非每帧）。
-    /// CBUFFER 内属性（_Opacity / _Transition 等）直接设到 Material，
-    /// CBUFFER 外属性（_RegionMin / _Tiling / _MaxRandomDelay 等）设到 MPB。
-    /// </summary>
     public void ApplySharedMPB()
     {
         GameMapManager map = GameRoot.GetManager<GameMapManager>();
@@ -219,7 +200,6 @@ public class RegionTextureMapper : MonoBehaviour
 
         ComputeWorldRegion(map, out Vector2 regionMin, out Vector2 regionSize);
 
-        // CBUFFER 外 — 通过 MPB，SRP Batcher 合批不冲突
         _sharedMPB.SetTexture(ShaderProp_MainTex, regionTexture);
         _sharedMPB.SetVector(ShaderProp_RegionMin, new Vector4(regionMin.x, regionMin.y, 0f, 0f));
         _sharedMPB.SetVector(ShaderProp_RegionSize, new Vector4(regionSize.x, regionSize.y, 0f, 0f));
@@ -227,7 +207,6 @@ public class RegionTextureMapper : MonoBehaviour
         _sharedMPB.SetVector(ShaderProp_Offset, new Vector4(offset.x, offset.y, 0f, 0f));
         _sharedMPB.SetFloat(ShaderProp_MaxRandomDelay, maxRandomDelay);
 
-        // CBUFFER 内 — 直接设到 Material 实例
         _sharedMaterial.SetFloat(ShaderProp_Opacity, textureOpacity);
         _sharedMaterial.SetFloat(ShaderProp_FadeDuration, Mathf.Max(0.001f, fadeDuration));
 
@@ -278,9 +257,9 @@ public class RegionTextureMapper : MonoBehaviour
                 continue;
             }
             t.localScale = faceScale;
-            Vector3 lp = t.localPosition;
-            lp.z = faceHeight;
-            t.localPosition = lp;
+            Vector3 pos = t.position;
+            pos.y = faceHeight;
+            t.position = pos;
         }
     }
 
@@ -328,7 +307,6 @@ public class RegionTextureMapper : MonoBehaviour
         _lastScale = faceScale;
         _lastHeight = faceHeight;
         _lastEnabled = mappingEnabled;
-        _lastFaceName = faceChildName;
     }
 
     void OnDrawGizmosSelected()

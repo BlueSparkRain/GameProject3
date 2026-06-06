@@ -2,373 +2,517 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SkillBucket_40_to_59{ }
+public class SkillBucket_40_to_59 { }
+
 /***
-£¨40£©  ÏûºÄËùÓĞ·¨Á¦Öµ£¬¶ÔÈ«ÌåµĞÈËÔì³ÉÄ§·¨ÉËº¦£¬Ã¿ÏûºÄ100·¨Á¦ÖµÔö·ù2%ÉËº¦
-£¨41£©  ¶ÔÈ«ÌåµĞÈËÔì³ÉÄ§·¨ÉËº¦£¬Ã¿Ôì³É¹ı1´Î²»Í¬ÈõµãÖÖÀàµÄ¹¥»÷ÉËº¦£¬ÉËº¦Ôö·ù10%
-£¨42£©  »ñµÃ¡¾Ä§Á¦ÊÕÊø¡¿×´Ì¬£¨ËùÓĞÒÔÈ«ÌåµĞÈËÎªÄ¿±êµÄÄ§·¨¹¥»÷¼¼ÄÜ»á±äÎªÒÔµĞ·½µ¥Ìå×÷ÎªÄ¿±êÇÒÔöÉË100%£©£¬³ÖĞø20S
-£¨43£©  Çå³ı1ÃûµĞÈËµÄËùÓĞ¡¾×ÆÉË/¶³½á/¸Ğµç¡¿²ãÊı£¬¶ÔÆäÔì³É»ğ/±ù/À×ÈõµãÉËº¦£¬Ã¿Çå³ı1²ãÔö·ù5%ÉËº¦£¨·½Ïò¼üÇĞ»»Çå³ıÀàĞÍ¼°¶ÔÓ¦ÈõµãÀàĞÍÉËº¦£©
-£¨44£©  ½«×ÔÉíÉúÃüÖµ½µµÍÖÁ1µã£¬¶ÔÈ«ÌåµĞÈËÔì³É´óÁ¿Ä§·¨ÉËº¦£¬Ã¿ÏûºÄ100ÉúÃüÖµÔö·ù5%ÉËº¦
-£¨45£©  »ñµÃ¡¾»ğÑæ·ç±©¡¿×´Ì¬£¨Ã¿10S¶Ô1ÃûËæ»úµĞÈËÔì³É0.4±¶ÂÊ»ğÈõµãÉËº¦£©£¬³ÖĞø30S
-£¨46£©  »ñµÃ¡¾±ùÑ©·ç±©¡¿×´Ì¬£¨Ã¿10S¶Ô1ÃûËæ»úµĞÈËÔì³É0.4±¶ÂÊ±ùÈõµãÉËº¦£©£¬³ÖĞø30S
-£¨47£©  »ñµÃ¡¾ÎŞË«¡¿×´Ì¬£¨ËùÓĞÎïÀí¹¥»÷¼¼ÄÜ»áÒÔµĞ·½È«Ìå×÷ÎªÄ¿±ê£©£¬³ÖĞø20S
-£¨48£©  ¶Ô1ÃûµĞÈËÔì³É³¬´óÁ¿½£ÈõµãÉËº¦
-£¨49£©  Ôì³ÉÖĞÁ¿Ç¹ÈõµãÉËº¦£¬´Ë´Î¹¥»÷25%¸ÅÂÊ±©»÷
-£¨50£©  ¶ÔËùÓĞµĞÈËÔì³É50%×î´óÉúÃüÖµÎïÀíÉËº¦£¨³¬¸ßºÄ£©
-£¨51£©  ÈôÖ®Ç°Ã»ÓĞÊÍ·Å¹ıÆäËûÎïÀí¹¥»÷¼¼ÄÜ£¬Ã¿´ÎÊÍ·Åºó»ù´¡±¶ÂÊÌáÉı0.2£¬¶Ô1ÃûµĞÈËÔì³ÉÉÙÁ¿Ç¹ÈõµãÉËº¦
-£¨52£©  ¶Ô1ÃûµĞÈËÔì³ÉÖĞÁ¿¹­ÉËº¦£¬ÆäATBÎª0Ê±£¬ÉËº¦*3
-£¨53£©  ¶Ô1ÃûµĞÈËÔì³É´óÁ¿ÎïÀíÉËº¦£¬Ê©¼Ó¡¾ÔÎÑ£¡¿×´Ì¬£¨ÎŞ·¨ÊÍ·Å¼¼ÄÜ£©³ÖĞø 10S£¬Ã¿´ÎÕ½¶·Ö»¿ÉÊÍ·Å1´Î
-£¨54£©  ¶Ô1ÃûµĞÈËÔì³É´óÁ¿ÎïÀíÉËº¦£¬Èç¹û»÷É±µĞÈËÔò»ñµÃ3ATBµãÊı
-£¨55£©  »ñµÃ¡¾×ÆÉËÖ®½£¡¿×´Ì¬£¨½£Èõµã¹¥»÷¼¼ÄÜ»á¸½´ø1²ã×ÆÉË£©£¬³ÖĞø20S
-£¨56£©  »ñµÃ¡¾¶³½áÖ®¹­¡¿×´Ì¬£¨¹­Èõµã¹¥»÷¼¼ÄÜ»á¸½´ø1²ã¶³½á£©£¬³ÖĞø20S
-£¨57£©  »ñµÃ¡¾¸ĞµçÖ®Ç¹¡¿×´Ì¬£¨Ç¹Èõµã¹¥»÷¼¼ÄÜ»á¸½´ø1²ã¸Ğµç£©£¬³ÖĞø20S
-£¨58£©  »ñµÃ¡¾»ğÑæ³¡µØ¡¿×´Ì¬£¨Ã¿4ÃëÊ¹µĞ·½È«Ìå»ñµÃ1²ã×ÆÉË£©£¬³ÖĞø40S£¨ÖĞºÄ£©
-£¨59£©  »ñµÃ¡¾À×µç³¡µØ¡¿×´Ì¬£¨Ã¿4ÃëÊ¹µĞ·½È«Ìå»ñµÃ1²ã¸Ğµç£©£¬³ÖĞø40S£¨ÖĞºÄ£©
+40  ç¥åœ£é­”æ³•    æ¶ˆè€—å…¨éƒ¨æ³•åŠ›å€¼ï¼Œå¯¹å…¨ä½“æ•Œäººé€ æˆé­”æ³•ä¼¤å®³ï¼Œæ¯æ¶ˆè€—100æ³•åŠ›å€¼ï¼Œä¼¤å®³å€ç‡+2%
+41  è¿‡æ›       å¯¹å…¨ä½“æ•Œäººé€ æˆé­”æ³•ä¼¤å®³ï¼Œæ¯åœ¨æˆ˜æ–—ä¸­æˆåŠŸé€ æˆè¿‡1ç§ä¸åŒå¼±ç‚¹çš„æ”»å‡»ä¼¤å®³ï¼Œä¼¤å®³å€ç‡+10%
+42  é­”åŠ›é€†è½¬    è·å¾—ã€é­”åŠ›æ”¶æŸã€‘çŠ¶æ€ï¼šå°†å…¨ä½“é­”æ³•æŠ€èƒ½å˜ä¸ºå•ä½“ä¸”ä¼¤å®³+100%ï¼ŒæŒç»­20S
+43  ç¼çƒ­çˆ†å‘/éœœå†»çˆ†å‘/ç”µæ„Ÿçˆ†å‘  æ¸…é™¤1åæ•Œäººèº«ä¸Šæ‰€æœ‰ã€ç‡ƒçƒ§/å†»ç»“/æ„Ÿç”µã€‘å±‚æ•°ï¼Œå¹¶æ ¹æ®æ¸…é™¤å±‚æ•°é€ æˆå¯¹åº”çš„ç«/å†°/é›·ä¼¤å®³ï¼Œæ¯å±‚+5%ï¼ˆæ–¹å‘é”®åˆ‡æ¢dotç±»å‹ï¼‰
+44  å½—æ˜Ÿ       æ¶ˆè€—å…¨éƒ¨ç”Ÿå‘½å€¼è‡³1ç‚¹ï¼Œå¯¹å…¨ä½“æ•Œäººé€ æˆé­”æ³•ä¼¤å®³ï¼Œæ¯æ¶ˆè€—100ç”Ÿå‘½å€¼ï¼Œä¼¤å®³å€ç‡+5%
+45  ç«ç„°é£æš´    è·å¾—ã€ç«ç„°é£æš´ã€‘çŠ¶æ€ï¼šæ¯5Så¯¹1åéšæœºæ•Œäººé€ æˆ0.4å€ç‡ç«å±æ€§ä¼¤å®³ï¼ŒæŒç»­15S
+46  å†°é›ªé£æš´    è·å¾—ã€å†°é›ªé£æš´ã€‘çŠ¶æ€ï¼šæ¯5Så¯¹1åéšæœºæ•Œäººé€ æˆ0.4å€ç‡å†°å±æ€§ä¼¤å®³ï¼ŒæŒç»­15S
+47  å¤©ä¸‹æ— åŒæ¶åŠ¿ è·å¾—ã€æ— åŒã€‘çŠ¶æ€ï¼šç‰©ç†æ”»å‡»æŠ€èƒ½å°†ç›®æ ‡å˜æ›´ä¸ºæ•Œæ–¹å…¨ä½“ï¼ŒæŒç»­20S
+48  æ­¦ç¥éœ¸æ–©   å¯¹1åæ•Œäººé€ æˆå·¨é‡å‰‘å¼±ç‚¹ä¼¤å®³
+49  ä¼šå¿ƒä¹‹æª   å¯¹1åæ•Œäººé€ æˆæªå¼±ç‚¹ä¼¤å®³ï¼Œ25%æ¦‚ç‡é€ æˆ2å€ä¼¤å®³
+50  é™¨çŸ³       å¯¹å…¨ä½“æ•Œäººé€ æˆ50%æœ€å¤§ç”Ÿå‘½å€¼ç‰©ç†ä¼¤å®³ï¼ˆé«˜è€—ï¼‰
+51  ç»µé‡Œè—é’ˆ   å¯¹1åæ•Œäººé€ æˆæªå¼±ç‚¹ä¼¤å®³ï¼Œæ¯æ¬¡é‡Šæ”¾åæ­¤æŠ€èƒ½å€ç‡+0.2ï¼ˆå¯å åŠ ï¼‰
+52  è½äº•ä¸‹çŸ³   å¯¹1åæ•Œäººé€ æˆå¼“å¼±ç‚¹ä¼¤å®³ï¼Œè‹¥ç›®æ ‡ATBä¸º0åˆ™ä¼¤å®³*3
+53  çŒ›å‡»       å¯¹1åæ•Œäººé€ æˆå¤§é‡ç‰©ç†ä¼¤å®³ï¼Œé™„åŠ ã€æ™•çœ©ã€‘çŠ¶æ€ï¼ˆæ— æ³•é‡Šæ”¾æŠ€èƒ½ï¼‰æŒç»­10Sï¼Œæ¯åœºæˆ˜æ–—åªèƒ½ä½¿ç”¨1æ¬¡
+54  åå™¬       å¯¹1åæ•Œäººé€ æˆå¤§é‡ç‰©ç†ä¼¤å®³ï¼Œè‹¥å‡»æ€ç›®æ ‡åˆ™è·å¾—3ç‚¹ATB
+55  ç‚å‰‘é™„é­”   è·å¾—ã€ç¼ä¼¤ä¹‹å‰‘ã€‘çŠ¶æ€ï¼šå‰‘å¼±ç‚¹æ”»å‡»é™„åŠ 1å±‚ç‡ƒçƒ§ï¼ŒæŒç»­10S
+56  éœœå¼“é™„é­”   è·å¾—ã€å†»ç»“ä¹‹å¼“ã€‘çŠ¶æ€ï¼šå¼“å¼±ç‚¹æ”»å‡»é™„åŠ 1å±‚å†»ç»“ï¼ŒæŒç»­10S
+57  é›·æªé™„é­”   è·å¾—ã€æ„Ÿç”µä¹‹æªã€‘çŠ¶æ€ï¼šæªå¼±ç‚¹æ”»å‡»é™„åŠ 1å±‚æ„Ÿç”µï¼ŒæŒç»­10S
+58  ç«ç„°é¢†åŸŸ   è·å¾—ã€ç«ç„°åœºåœ°ã€‘çŠ¶æ€ï¼šæ¯ç§’ä¸ºæ•Œæ–¹å…¨ä½“é™„åŠ 1å±‚ç‡ƒçƒ§ï¼ŒæŒç»­10S
+59  é›·ç”µé¢†åŸŸ   è·å¾—ã€é›·ç”µåœºåœ°ã€‘çŠ¶æ€ï¼šæ¯ç§’ä¸ºæ•Œæ–¹å…¨ä½“é™„åŠ 1å±‚æ„Ÿç”µï¼ŒæŒç»­10S
 ***/
 
 
 /// <summary>
-/// £¨20) »ñµÃ¡¾³ãÑæÁ¬Ëø¡¿×´Ì¬£¨ÎïÀí¹¥»÷¼¼ÄÜ¸½´ø»ğÈõµã¹¥»÷ÉËº¦£©³ÖĞø20S£¨³õÊ¼¼¼ÄÜ£©
+/// 40) ç¥åœ£é­”æ³•ï¼šæ¶ˆè€—å…¨éƒ¨æ³•åŠ›å€¼ï¼Œå¯¹å…¨ä½“æ•Œäººé€ æˆé­”æ³•ä¼¤å®³ï¼Œæ¯æ¶ˆè€—100æ³•åŠ›å€¼+2%å€ç‡
 /// </summary>
 [SkillID(40)]
 public class Skill_40 : SkillBase
 {
-    public Skill_40(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
-    {
-        Debug.Log("$$$$$--¼¼ÄÜ40--$$$$$");
-    }
+    float baseRate = 0.3f;
+    float ratePer100SP = 0.02f;
 
+    public Skill_40(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public override bool IsMagicType => true;
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        float currentSP = Controller.GetCharacterModelValue(E_BattleModelType.SP);
+        Controller.AdjustCharacterModelValue(E_BattleModelType.SP, -currentSP);
+        float bonusRate = (currentSP / 100f) * ratePer100SP;
+        float rate = baseRate + bonusRate;
+        Debug.Log($"[Skill 40]{self.Camp}æ¶ˆè€—å…¨éƒ¨SP({currentSP})ï¼Œå…‰ä¼¤å®³å€ç‡{rate}");
+        var atk = new Attack_Skill();
+        atk.SetAttackState(E_WeaknessType.å…‰, -1, rate);
+        atk.Excute(self, target);
     }
 }
 
 /// <summary>
-/// £¨21) »ñµÃ¡¾³ãÑæÁ¬Ëø¡¿×´Ì¬£¨ÎïÀí¹¥»÷¼¼ÄÜ¸½´ø»ğÈõµã¹¥»÷ÉËº¦£©³ÖĞø20S£¨³õÊ¼¼¼ÄÜ£©
+/// 41) è¿‡æ›ï¼šå¯¹å…¨ä½“æ•Œäººé€ æˆé­”æ³•ä¼¤å®³ï¼Œæ¯1ç§ä¸åŒå¼±ç‚¹+10%å€ç‡
 /// </summary>
 [SkillID(41)]
 public class Skill_41 : SkillBase
 {
-    public Skill_41(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
+    static HashSet<E_WeaknessType> recordedWeaknesses = new HashSet<E_WeaknessType>();
+    static int totalUniqueCount = 0;
+    float baseRate = 0.3f;
+    float ratePerWeakness = 0.1f;
+
+    public Skill_41(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public override bool IsMagicType => true;
+
+    public static void RecordWeakness(E_WeaknessType w)
     {
-        Debug.Log("$$$$$--¼¼ÄÜ41--$$$$$");
+        if (w != E_WeaknessType.æ—  && recordedWeaknesses.Add(w))
+        {
+            totalUniqueCount++;
+            Debug.Log($"[Skill_41]è®°å½•æ–°å¼±ç‚¹ç±»å‹:{w},å½“å‰ç´¯è®¡{totalUniqueCount}ç§");
+        }
     }
 
+    public static int GetUniqueWeaknessCount() => totalUniqueCount;
+
+    public static void ResetWeaknessRecord()
+    {
+        recordedWeaknesses.Clear();
+        totalUniqueCount = 0;
+    }
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        int uniqueCount = GetUniqueWeaknessCount();
+        float rate = baseRate + uniqueCount * ratePerWeakness;
+        Debug.Log($"[Skill 41]{self.Camp}å·²ä½¿ç”¨{uniqueCount}ç§å¼±ç‚¹ï¼Œå…‰ä¼¤å®³å€ç‡{rate}");
+        var atk = new Attack_Skill();
+        atk.SetAttackState(E_WeaknessType.å…‰, -1, rate);
+        atk.Excute(self, target);
     }
 }
+
 /// <summary>
-/// £¨12) »ñµÃ¡¾³ãÑæÁ¬Ëø¡¿×´Ì¬£¨ÎïÀí¹¥»÷¼¼ÄÜ¸½´ø»ğÈõµã¹¥»÷ÉËº¦£©³ÖĞø20S£¨³õÊ¼¼¼ÄÜ£©
+/// 42) é­”åŠ›é€†è½¬ï¼šè·å¾—ã€é­”åŠ›æ”¶æŸã€‘çŠ¶æ€ï¼ˆå…¨ä½“é­”æ³•â†’å•ä½“ï¼Œä¼¤å®³+100%ï¼‰ï¼ŒæŒç»­20S
 /// </summary>
 [SkillID(42)]
 public class Skill_42 : SkillBase
 {
-    public Skill_42(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
-    {
-        Debug.Log("$$$$$--¼¼ÄÜ42--$$$$$");
-    }
+    float buffDuration = 20f;
 
-
+    public Skill_42(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public override bool IsMagicType => true;
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        Debug.Log($"[Skill 42]{self.Camp}è·å¾—é­”åŠ›æ”¶æŸBUFFï¼ŒæŒç»­{buffDuration}S");
+        var buff = new BuffBase(E_BuffType.é­”åŠ›æ”¶æŸ_æ­£é¢, E_BuffPositive.æ­£é¢, buffDuration);
+        EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }
+
 /// <summary>
-/// £¨13) »ñµÃ¡¾³ãÑæÁ¬Ëø¡¿×´Ì¬£¨ÎïÀí¹¥»÷¼¼ÄÜ¸½´ø»ğÈõµã¹¥»÷ÉËº¦£©³ÖĞø20S£¨³õÊ¼¼¼ÄÜ£©
+/// 43) ç¼çƒ­/éœœå†»/ç”µæ„Ÿçˆ†å‘ï¼šæ¸…é™¤ç›®æ ‡èº«ä¸Šæ‰€æœ‰æŒ‡å®šDotå±‚æ•°ï¼Œæ ¹æ®å±‚æ•°é€ æˆå¯¹åº”å…ƒç´ ä¼¤å®³ï¼Œæ¯å±‚+5%
 /// </summary>
 [SkillID(43)]
 public class Skill_43 : SkillBase
 {
-    public Skill_43(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
-    {
-        Debug.Log("$$$$$--¼¼ÄÜ43--$$$$$");
-    }
+    float baseRate = 0.3f;
+    float ratePerLayer = 0.05f;
+    E_Dot selectedDot = E_Dot.ç‡ƒçƒ§;
 
+    public Skill_43(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public override bool IsMagicType => true;
+
+    public void SwitchDotType(E_Dot dot) { selectedDot = dot; }
+
+    E_WeaknessType GetWeaknessForDot(E_Dot dot)
+    {
+        switch (dot)
+        {
+            case E_Dot.ç‡ƒçƒ§: return E_WeaknessType.ç«;
+            case E_Dot.å†»ç»“: return E_WeaknessType.å†°;
+            case E_Dot.æ„Ÿç”µ: return E_WeaknessType.é›·;
+        }
+        return E_WeaknessType.ç«;
+    }
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        var dotHandler = target.battleDamageHandler.DotHandler;
+        int layers = dotHandler.ClearDotAndGetLayers(selectedDot);
+        float rate = baseRate + layers * ratePerLayer;
+        E_WeaknessType weakness = GetWeaknessForDot(selectedDot);
+        Debug.Log($"[Skill 43]{self.Camp}æ¸…é™¤ç›®æ ‡{selectedDot}Dot{layers}å±‚ï¼Œ{weakness}ä¼¤å®³å€ç‡{rate}");
+        var atk = new Attack_Skill();
+        atk.SetAttackState(weakness, -1, rate);
+        atk.Excute(self, target);
     }
 }
+
 /// <summary>
-/// £¨24) »ñµÃ¡¾³ãÑæÁ¬Ëø¡¿×´Ì¬£¨ÎïÀí¹¥»÷¼¼ÄÜ¸½´ø»ğÈõµã¹¥»÷ÉËº¦£©³ÖĞø20S£¨³õÊ¼¼¼ÄÜ£©
+/// 44) å½—æ˜Ÿï¼šæ¶ˆè€—å…¨éƒ¨ç”Ÿå‘½è‡³1ç‚¹ï¼Œå¯¹å…¨ä½“æ•Œäººé€ æˆé­”æ³•ä¼¤å®³ï¼Œæ¯æ¶ˆè€—100HP+5%å€ç‡
 /// </summary>
 [SkillID(44)]
 public class Skill_44 : SkillBase
 {
-    public Skill_44(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
-    {
-        Debug.Log("$$$$$--¼¼ÄÜ44--$$$$$");
-    }
+    float baseRate = 0.3f;
+    float ratePer100HP = 0.05f;
 
-
+    public Skill_44(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public override bool IsMagicType => true;
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        float currentHP = Controller.GetCharacterModelValue(E_BattleModelType.HP);
+        float hpConsumed = currentHP - 1;
+        Controller.AdjustCharacterModelValue(E_BattleModelType.HP, -hpConsumed);
+        float bonusRate = (hpConsumed / 100f) * ratePer100HP;
+        float rate = baseRate + bonusRate;
+        Debug.Log($"[Skill 44]{self.Camp}æ¶ˆè€—HP({hpConsumed})è‡³1ç‚¹ï¼Œå…‰ä¼¤å®³å€ç‡{rate}");
+        var atk = new Attack_Skill();
+        atk.SetAttackState(E_WeaknessType.å…‰, -1, rate);
+        atk.Excute(self, target);
     }
 }
+
 /// <summary>
-/// £¨25) »ñµÃ¡¾³ãÑæÁ¬Ëø¡¿×´Ì¬£¨ÎïÀí¹¥»÷¼¼ÄÜ¸½´ø»ğÈõµã¹¥»÷ÉËº¦£©³ÖĞø20S£¨³õÊ¼¼¼ÄÜ£©
+/// 45) ç«ç„°é£æš´ï¼šæ¯5Så¯¹1éšæœºæ•Œäººé€ æˆ0.4å€ç‡ç«å±æ€§ä¼¤å®³ï¼ŒæŒç»­15S
 /// </summary>
 [SkillID(45)]
 public class Skill_45 : SkillBase
 {
-    public Skill_45(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
-    {
-        Debug.Log("$$$$$--¼¼ÄÜ45--$$$$$");
-    }
+    float buffDuration = 15f;
+    float damageRate = 0.4f;
+    float triggerInterval = 5f;
 
+    public Skill_45(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public override bool IsMagicType => true;
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        E_Camp enemyCamp = self.Camp == E_Camp.ç©å®¶æ–¹ ? E_Camp.æ•Œæ–¹ : E_Camp.ç©å®¶æ–¹;
+        Debug.Log($"[Skill 45]{self.Camp}è·å¾—ç«ç„°é£æš´BUFFï¼ŒæŒç»­{buffDuration}S");
+        var buff = new Buff_AutoDamage(E_BuffType.çƒˆç„°é£æš´_æ­£é¢, E_BuffPositive.æ­£é¢, buffDuration,
+            self, enemyCamp, E_WeaknessType.ç«, damageRate, triggerInterval);
+        EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }
+
 /// <summary>
-/// £¨26) »ñµÃ¡¾³ãÑæÁ¬Ëø¡¿×´Ì¬£¨ÎïÀí¹¥»÷¼¼ÄÜ¸½´ø»ğÈõµã¹¥»÷ÉËº¦£©³ÖĞø20S£¨³õÊ¼¼¼ÄÜ£©
+/// 46) å†°é›ªé£æš´ï¼šæ¯5Så¯¹1éšæœºæ•Œäººé€ æˆ0.4å€ç‡å†°å±æ€§ä¼¤å®³ï¼ŒæŒç»­15S
 /// </summary>
 [SkillID(46)]
 public class Skill_46 : SkillBase
 {
-    public Skill_46(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
-    {
-        Debug.Log("$$$$$--¼¼ÄÜ46--$$$$$");
-    }
+    float buffDuration = 15f;
+    float damageRate = 0.4f;
+    float triggerInterval = 5f;
 
+    public Skill_46(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public override bool IsMagicType => true;
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        E_Camp enemyCamp = self.Camp == E_Camp.ç©å®¶æ–¹ ? E_Camp.æ•Œæ–¹ : E_Camp.ç©å®¶æ–¹;
+        Debug.Log($"[Skill 46]{self.Camp}è·å¾—å†°é›ªé£æš´BUFFï¼ŒæŒç»­{buffDuration}S");
+        var buff = new Buff_AutoDamage(E_BuffType.å†°é›ªé£æš´_æ­£é¢, E_BuffPositive.æ­£é¢, buffDuration,
+            self, enemyCamp, E_WeaknessType.å†°, damageRate, triggerInterval);
+        EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }
+
 /// <summary>
-/// £¨17) »ñµÃ¡¾³ãÑæÁ¬Ëø¡¿×´Ì¬£¨ÎïÀí¹¥»÷¼¼ÄÜ¸½´ø»ğÈõµã¹¥»÷ÉËº¦£©³ÖĞø20S£¨³õÊ¼¼¼ÄÜ£©
+/// 47) å¤©ä¸‹æ— åŒæ¶åŠ¿ï¼šè·å¾—ã€æ— åŒã€‘çŠ¶æ€ï¼ˆç‰©ç†æŠ€èƒ½ç›®æ ‡å˜å…¨ä½“ï¼‰ï¼ŒæŒç»­20S
 /// </summary>
 [SkillID(47)]
 public class Skill_47 : SkillBase
 {
-    public Skill_47(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
-    {
-        Debug.Log("$$$$$--¼¼ÄÜ47--$$$$$");
-    }
+    float buffDuration = 20f;
 
-
+    public Skill_47(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public override bool IsMagicType => false;
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        Debug.Log($"[Skill 47]{self.Camp}è·å¾—æ— åŒBUFFï¼ŒæŒç»­{buffDuration}S");
+        var buff = new BuffBase(E_BuffType.æ— åŒ_æ­£é¢, E_BuffPositive.æ­£é¢, buffDuration);
+        EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }
+
 /// <summary>
-/// £¨18) »ñµÃ¡¾³ãÑæÁ¬Ëø¡¿×´Ì¬£¨ÎïÀí¹¥»÷¼¼ÄÜ¸½´ø»ğÈõµã¹¥»÷ÉËº¦£©³ÖĞø20S£¨³õÊ¼¼¼ÄÜ£©
+/// 48) æ­¦ç¥éœ¸æ–©ï¼šå¯¹1åæ•Œäººé€ æˆå·¨é‡å‰‘å¼±ç‚¹ä¼¤å®³
 /// </summary>
 [SkillID(48)]
 public class Skill_48 : SkillBase
 {
-    public Skill_48(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
-    {
-        Debug.Log("$$$$$--¼¼ÄÜ48--$$$$$");
-    }
+    float baseAttackRate = 0.8f;
 
+    public Skill_48(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public override bool IsMagicType => false;
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        Debug.Log($"[Skill 48]{self.Camp}å‘åŠ¨æ­¦ç¥éœ¸æ–©ï¼Œå‰‘ä¼¤å®³å€ç‡{baseAttackRate}");
+        var atk = new Attack_Skill();
+        atk.SetAttackState(E_WeaknessType.å‰‘, -1, baseAttackRate);
+        atk.Excute(self, target);
     }
 }
+
 /// <summary>
-/// £¨15) »ñµÃ¡¾³ãÑæÁ¬Ëø¡¿×´Ì¬£¨ÎïÀí¹¥»÷¼¼ÄÜ¸½´ø»ğÈõµã¹¥»÷ÉËº¦£©³ÖĞø20S£¨³õÊ¼¼¼ÄÜ£©
+/// 49) ä¼šå¿ƒä¹‹æªï¼šå¯¹1åæ•Œäººé€ æˆæªå¼±ç‚¹ä¼¤å®³ï¼Œ25%æ¦‚ç‡é€ æˆ2å€ä¼¤å®³
 /// </summary>
 [SkillID(49)]
 public class Skill_49 : SkillBase
 {
-    public Skill_49(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
-    {
-        Debug.Log("$$$$$--¼¼ÄÜ49--$$$$$");
-    }
+    float baseAttackRate = 0.5f;
+    float critChance = 0.25f;
+    float critMulti = 2f;
 
+    public Skill_49(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public override bool IsMagicType => false;
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        bool isCrit = Random.value < critChance;
+        float rate = baseAttackRate * (isCrit ? critMulti : 1f);
+        Debug.Log($"[Skill 49]{self.Camp}å‘åŠ¨ä¼šå¿ƒä¹‹æªï¼Œæš´å‡»:{isCrit}ï¼Œæªä¼¤å®³å€ç‡{rate}");
+        var atk = new Attack_Skill();
+        atk.SetAttackState(E_WeaknessType.æª, -1, rate);
+        atk.Excute(self, target);
     }
 }
 
-
-
 /// <summary>
-/// £¨10) »ñµÃ¡¾³ãÑæÁ¬Ëø¡¿×´Ì¬£¨ÎïÀí¹¥»÷¼¼ÄÜ¸½´ø»ğÈõµã¹¥»÷ÉËº¦£©³ÖĞø20S£¨³õÊ¼¼¼ÄÜ£©
+/// 50) é™¨çŸ³ï¼šå¯¹å…¨ä½“æ•Œäººé€ æˆ50%æœ€å¤§ç”Ÿå‘½å€¼çš„ç‰©ç†ä¼¤å®³ï¼ˆé«˜è€—ï¼‰
 /// </summary>
 [SkillID(50)]
 public class Skill_50 : SkillBase
 {
-    public Skill_50(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
-    {
-        Debug.Log("$$$$$--¼¼ÄÜ50--$$$$$");
-    }
+    float hpRate = 0.5f;
 
-
+    public Skill_50(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public override bool IsMagicType => false;
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        float maxHP = self.battleDamageHandler.GetMaxHealth();
+        float damageVal = maxHP * hpRate;
+        Debug.Log($"[Skill 50]{self.Camp}å‘åŠ¨é™¨çŸ³ï¼Œæœ€å¤§HP{maxHP}ï¼ŒåŸºç¡€ä¼¤å®³å€¼{damageVal}");
+        var atk = new Attack_Skill();
+        atk.SetAttackState(E_WeaknessType.æ— , damageVal, 1f);
+        atk.Excute(self, target);
     }
 }
 
 /// <summary>
-/// £¨11) »ñµÃ¡¾³ãÑæÁ¬Ëø¡¿×´Ì¬£¨ÎïÀí¹¥»÷¼¼ÄÜ¸½´ø»ğÈõµã¹¥»÷ÉËº¦£©³ÖĞø20S£¨³õÊ¼¼¼ÄÜ£©
+/// 51) ç»µé‡Œè—é’ˆï¼šå¯¹1åæ•Œäººé€ æˆæªå¼±ç‚¹ä¼¤å®³ï¼Œæ¯æ¬¡é‡Šæ”¾åæ­¤æŠ€èƒ½å€ç‡+0.2ï¼ˆå¯å åŠ ï¼‰
 /// </summary>
 [SkillID(51)]
 public class Skill_51 : SkillBase
 {
-    public Skill_51(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
-    {
-        Debug.Log("$$$$$--¼¼ÄÜ51--$$$$$");
-    }
+    float cumulativeRate = 0.3f;
+    float rateIncrement = 0.2f;
+
+    public Skill_51(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public override bool IsMagicType => false;
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        Debug.Log($"[Skill 51]{self.Camp}å‘åŠ¨ç»µé‡Œè—é’ˆï¼Œå½“å‰å€ç‡{cumulativeRate}");
+        var atk = new Attack_Skill();
+        atk.SetAttackState(E_WeaknessType.æª, -1, cumulativeRate);
+        atk.Excute(self, target);
+        cumulativeRate += rateIncrement;
+        Debug.Log($"[Skill 51]å€ç‡æå‡è‡³{cumulativeRate}");
     }
 }
+
 /// <summary>
-/// £¨12) »ñµÃ¡¾³ãÑæÁ¬Ëø¡¿×´Ì¬£¨ÎïÀí¹¥»÷¼¼ÄÜ¸½´ø»ğÈõµã¹¥»÷ÉËº¦£©³ÖĞø20S£¨³õÊ¼¼¼ÄÜ£©
+/// 52) è½äº•ä¸‹çŸ³ï¼šå¯¹1åæ•Œäººé€ æˆå¼“å¼±ç‚¹ä¼¤å®³ï¼Œè‹¥ç›®æ ‡ATBä¸º0åˆ™ä¼¤å®³*3
 /// </summary>
 [SkillID(52)]
 public class Skill_52 : SkillBase
 {
-    public Skill_52(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
-    {
-        Debug.Log("$$$$$--¼¼ÄÜ52--$$$$$");
-    }
+    float baseAttackRate = 0.4f;
+    float atbZeroMulti = 3f;
+
+    public Skill_52(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public override bool IsMagicType => false;
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        float targetATB = target.battleDamageHandler.BattleController.GetCharacterModelValue(E_BattleModelType.ATBPoints);
+        bool atbZero = targetATB <= 0;
+        float rate = baseAttackRate * (atbZero ? atbZeroMulti : 1f);
+        Debug.Log($"[Skill 52]{self.Camp}å‘åŠ¨è½äº•ä¸‹çŸ³ï¼Œç›®æ ‡ATB:{targetATB}ï¼ŒATBä¸º0:{atbZero}ï¼Œå€ç‡{rate}");
+        var atk = new Attack_Skill();
+        atk.SetAttackState(E_WeaknessType.å¼“, -1, rate);
+        atk.Excute(self, target);
     }
 }
+
 /// <summary>
-/// £¨13) »ñµÃ¡¾³ãÑæÁ¬Ëø¡¿×´Ì¬£¨ÎïÀí¹¥»÷¼¼ÄÜ¸½´ø»ğÈõµã¹¥»÷ÉËº¦£©³ÖĞø20S£¨³õÊ¼¼¼ÄÜ£©
+/// 53) çŒ›å‡»ï¼šå¯¹1åæ•Œäººé€ æˆå¤§é‡ç‰©ç†ä¼¤å®³ï¼Œé™„åŠ ã€æ™•çœ©ã€‘çŠ¶æ€æŒç»­10Sï¼Œæ¯åœºæˆ˜æ–—åªèƒ½ä½¿ç”¨1æ¬¡
 /// </summary>
 [SkillID(53)]
 public class Skill_53 : SkillBase
 {
-    public Skill_53(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
-    {
-        Debug.Log("$$$$$--¼¼ÄÜ53--$$$$$");
-    }
+    bool usedThisBattle = false;
+    float baseAttackRate = 0.6f;
+    float stunDuration = 10f;
 
+    public Skill_53(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public override bool IsMagicType => false;
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        if (usedThisBattle)
+        {
+            Debug.Log("[Skill 53]æœ¬åœºæˆ˜æ–—å·²ä½¿ç”¨è¿‡çŒ›å‡»ï¼Œè·³è¿‡");
+            return;
+        }
+        usedThisBattle = true;
+        Debug.Log($"[Skill 53]{self.Camp}å‘åŠ¨çŒ›å‡»ï¼Œé™„åŠ æ™•çœ©{stunDuration}S");
+        var atk = new Attack_Skill();
+        atk.SetAttackState(E_WeaknessType.æ— , -1, baseAttackRate);
+        atk.Excute(self, target);
+        var stunBuff = new BuffBase(E_BuffType.æ™•çœ©_è´Ÿé¢, E_BuffPositive.è´Ÿé¢, stunDuration);
+        EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, target.battleDamageHandler.BuffHandler, stunBuff);
     }
 }
+
 /// <summary>
-/// £¨14) »ñµÃ¡¾³ãÑæÁ¬Ëø¡¿×´Ì¬£¨ÎïÀí¹¥»÷¼¼ÄÜ¸½´ø»ğÈõµã¹¥»÷ÉËº¦£©³ÖĞø20S£¨³õÊ¼¼¼ÄÜ£©
+/// 54) åå™¬ï¼šå¯¹1åæ•Œäººé€ æˆå¤§é‡ç‰©ç†ä¼¤å®³ï¼Œè‹¥å‡»æ€ç›®æ ‡åˆ™è·å¾—3ç‚¹ATB
 /// </summary>
 [SkillID(54)]
 public class Skill_54 : SkillBase
 {
-    public Skill_54(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
-    {
-        Debug.Log("$$$$$--¼¼ÄÜ54--$$$$$");
-    }
+    float baseAttackRate = 0.6f;
+    int atbGain = 3;
 
+    public Skill_54(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public override bool IsMagicType => false;
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        bool wasAlive = target.IsAlive;
+        Debug.Log($"[Skill 54]{self.Camp}å‘åŠ¨åå™¬");
+        var atk = new Attack_Skill();
+        atk.SetAttackState(E_WeaknessType.æ— , -1, baseAttackRate);
+        atk.Excute(self, target);
+        if (wasAlive && !target.IsAlive)
+        {
+            Controller.AdjustCharacterModelValue(E_BattleModelType.ATBPoints, atbGain);
+            Debug.Log($"[Skill 54]å‡»æ€ç›®æ ‡ï¼Œè·å¾—{atbGain}ATB");
+        }
     }
 }
+
 /// <summary>
-/// £¨15) »ñµÃ¡¾³ãÑæÁ¬Ëø¡¿×´Ì¬£¨ÎïÀí¹¥»÷¼¼ÄÜ¸½´ø»ğÈõµã¹¥»÷ÉËº¦£©³ÖĞø20S£¨³õÊ¼¼¼ÄÜ£©
+/// 55) ç‚å‰‘é™„é­”ï¼šè·å¾—ã€ç¼ä¼¤ä¹‹å‰‘ã€‘çŠ¶æ€ï¼ˆå‰‘æ”»å‡»é™„åŠ ç‡ƒçƒ§ï¼‰ï¼ŒæŒç»­10S
 /// </summary>
 [SkillID(55)]
 public class Skill_55 : SkillBase
 {
-    public Skill_55(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
-    {
-        Debug.Log("$$$$$--¼¼ÄÜ55--$$$$$");
-    }
+    float buffDuration = 10f;
 
+    public Skill_55(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public override bool IsMagicType => true;
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        Debug.Log($"[Skill 55]{self.Camp}è·å¾—ç¼ä¼¤ä¹‹å‰‘BUFFï¼ŒæŒç»­{buffDuration}S");
+        var buff = new Buff_DotOnAttack(E_BuffType.ç¼ä¼¤ä¹‹å‰‘_æ­£é¢, E_BuffPositive.æ­£é¢, buffDuration,
+            E_WeaknessType.å‰‘, E_Dot.ç‡ƒçƒ§, self);
+        EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }
+
 /// <summary>
-/// £¨16) »ñµÃ¡¾³ãÑæÁ¬Ëø¡¿×´Ì¬£¨ÎïÀí¹¥»÷¼¼ÄÜ¸½´ø»ğÈõµã¹¥»÷ÉËº¦£©³ÖĞø20S£¨³õÊ¼¼¼ÄÜ£©
+/// 56) éœœå¼“é™„é­”ï¼šè·å¾—ã€å†»ç»“ä¹‹å¼“ã€‘çŠ¶æ€ï¼ˆå¼“æ”»å‡»é™„åŠ å†»ç»“ï¼‰ï¼ŒæŒç»­10S
 /// </summary>
 [SkillID(56)]
 public class Skill_56 : SkillBase
 {
-    public Skill_56(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
-    {
-        Debug.Log("$$$$$--¼¼ÄÜ56--$$$$$");
-    }
+    float buffDuration = 10f;
 
+    public Skill_56(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public override bool IsMagicType => true;
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        Debug.Log($"[Skill 56]{self.Camp}è·å¾—å†»ç»“ä¹‹å¼“BUFFï¼ŒæŒç»­{buffDuration}S");
+        var buff = new Buff_DotOnAttack(E_BuffType.å†»ç»“ä¹‹å¼“_æ­£é¢, E_BuffPositive.æ­£é¢, buffDuration,
+            E_WeaknessType.å¼“, E_Dot.å†»ç»“, self);
+        EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }
+
 /// <summary>
-/// £¨17) »ñµÃ¡¾³ãÑæÁ¬Ëø¡¿×´Ì¬£¨ÎïÀí¹¥»÷¼¼ÄÜ¸½´ø»ğÈõµã¹¥»÷ÉËº¦£©³ÖĞø20S£¨³õÊ¼¼¼ÄÜ£©
+/// 57) é›·æªé™„é­”ï¼šè·å¾—ã€æ„Ÿç”µä¹‹æªã€‘çŠ¶æ€ï¼ˆæªæ”»å‡»é™„åŠ æ„Ÿç”µï¼‰ï¼ŒæŒç»­10S
 /// </summary>
 [SkillID(57)]
 public class Skill_57 : SkillBase
 {
-    public Skill_57(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
-    {
-        Debug.Log("$$$$$--¼¼ÄÜ57--$$$$$");
-    }
+    float buffDuration = 10f;
 
- 
+    public Skill_57(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public override bool IsMagicType => true;
+
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        Debug.Log($"[Skill 57]{self.Camp}è·å¾—æ„Ÿç”µä¹‹æªBUFFï¼ŒæŒç»­{buffDuration}S");
+        var buff = new Buff_DotOnAttack(E_BuffType.æ„Ÿç”µä¹‹æª_æ­£é¢, E_BuffPositive.æ­£é¢, buffDuration,
+            E_WeaknessType.æª, E_Dot.æ„Ÿç”µ, self);
+        EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }
+
 /// <summary>
-/// £¨18) »ñµÃ¡¾³ãÑæÁ¬Ëø¡¿×´Ì¬£¨ÎïÀí¹¥»÷¼¼ÄÜ¸½´ø»ğÈõµã¹¥»÷ÉËº¦£©³ÖĞø20S£¨³õÊ¼¼¼ÄÜ£©
+/// 58) ç«ç„°é¢†åŸŸï¼šæ¯ç§’ä¸ºæ•Œæ–¹å…¨ä½“é™„åŠ 1å±‚ç‡ƒçƒ§ï¼ŒæŒç»­10S
 /// </summary>
 [SkillID(58)]
 public class Skill_58 : SkillBase
 {
-    public Skill_58(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
-    {
-        Debug.Log("$$$$$--¼¼ÄÜ58--$$$$$");
-    }
+    float buffDuration = 10f;
+    float tickInterval = 1f;
+    int dotLayers = 1;
+
+    public Skill_58(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public override bool IsMagicType => true;
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        Debug.Log($"[Skill 58]{self.Camp}è·å¾—ç«ç„°åœºåœ°BUFFï¼ŒæŒç»­{buffDuration}S");
+        var buff = new Buff_FieldDot(E_BuffType.ç«ç„°åœºåœ°_æ­£é¢, E_BuffPositive.æ­£é¢, buffDuration,
+            E_Dot.ç‡ƒçƒ§, self, tickInterval, dotLayers);
+        EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }
+
 /// <summary>
-/// £¨15) »ñµÃ¡¾³ãÑæÁ¬Ëø¡¿×´Ì¬£¨ÎïÀí¹¥»÷¼¼ÄÜ¸½´ø»ğÈõµã¹¥»÷ÉËº¦£©³ÖĞø20S£¨³õÊ¼¼¼ÄÜ£©
+/// 59) é›·ç”µé¢†åŸŸï¼šæ¯ç§’ä¸ºæ•Œæ–¹å…¨ä½“é™„åŠ 1å±‚æ„Ÿç”µï¼ŒæŒç»­10S
 /// </summary>
 [SkillID(59)]
 public class Skill_59 : SkillBase
 {
-    public Skill_59(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
-    {
-        Debug.Log("$$$$$--¼¼ÄÜ59--$$$$$");
-    }
+    float buffDuration = 10f;
+    float tickInterval = 1f;
+    int dotLayers = 1;
 
-    public override void SkillEffect_Base(IBattlable target)
-    {
+    public Skill_59(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public override bool IsMagicType => true;
 
+    public override void SkillEffect_Base(IBattlable target){
+        Debug.Log($"[Skill 59]{self.Camp}è·å¾—é›·ç”µåœºåœ°BUFFï¼ŒæŒç»­{buffDuration}S");
+        var buff = new Buff_FieldDot(E_BuffType.é›·ç”µåœºåœ°, E_BuffPositive.æ­£é¢, buffDuration,
+            E_Dot.æ„Ÿç”µ, self, tickInterval, dotLayers);
+        EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }

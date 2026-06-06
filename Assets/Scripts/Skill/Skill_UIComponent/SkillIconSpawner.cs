@@ -1,4 +1,5 @@
 using Core;
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,170 +10,124 @@ using UnityEngine;
 /// </summary>
 public class SkillIconSpawner : MonoBehaviour
 {
-    //对于像技能配置UI，需挂三份：分别挂在三个区域。
-    //对于角色卡面上，需挂两份分别挂在 底部Normal区域 和 右侧ATB区域。
     public Transform slotsParent;
     private List<SkillSlot> slots = new List<SkillSlot>();
-
-    private WaitForSeconds iconDelay;
-    private WaitForSeconds slotDelay;
-    private WaitForSeconds unloadDelay;
-
     private List<SkillData> skillDatas = new List<SkillData>();
     public List<SkillData> SkillDatas => skillDatas;
-
-    //记录的所有Icon,用于回收
     private List<SkillIcon> currentIcons = new List<SkillIcon>();
     public List<SkillIcon> CurrentIcons => currentIcons;
 
-    [Header("槽位")]
+    [Header("槽位配置")]
     public bool bornBornSlot = false;
-    private void Start()
+
+    [Header("动画加载")]
+    [Tooltip("逐个加载时每个槽位的生成间隔（秒）")]
+    public float slotLoadInterval = 0.05f;
+
+    /// <summary>
+    /// 所有槽位+图标加载完成回调（仅协程版本触发）
+    /// </summary>
+    public System.Action onLoadComplete;
+
+    public List<SkillData> GetSettledSkilldatas()
     {
-        slotDelay = new WaitForSeconds(0.04f);
-        iconDelay = new WaitForSeconds(0.06f);
-        unloadDelay = new WaitForSeconds(0.02f);
-    }
-
-
-    //最好时每次交换后，直接更新skilldata数据。
-    public List<SkillData> GetSettledSkilldatas() { 
-        List<SkillData> icons=new List<SkillData>();
-
+        List<SkillData> icons = new List<SkillData>();
         for (int i = 0; i < slotsParent.childCount; i++)
         {
             var icon = slotsParent.GetChild(i).GetComponentInChildren<SkillIcon>();
-            if (icon!=null) {
+            if (icon != null)
                 icons.Add(icon.SkillData);
-            }
         }
         return icons;
     }
 
     public void UnloadSkills()
     {
-        GameRoot.GetManager<CoroutineManager>().StartCoroutine(UnloadIcons(), this);
-    }
-    IEnumerator UnloadIcons()
-    {
-        ObjectPoolManager pool = GameRoot.GetManager<ObjectPoolManager>();
-        for (int i = currentIcons.Count - 1; i >= 0; i--)
-        {
-            var icon = currentIcons[i];
-            currentIcons.Remove(icon);
+        foreach (var icon in currentIcons)
             SkillIconCaller.UnLoadSkillIcon(E_PoolType.SkillIcon_技能图标, icon.gameObject, 1);
-        }
+        currentIcons.Clear();
 
-        yield return unloadDelay;
-        //将所有的槽位和技能返回池中
-
-        for (int i = slots.Count - 1; i >= 0; i--)
+        foreach (var slot in slots)
         {
-            var slot = slots[i];
-            slots.Remove(slot);
-            slot.transform.SetParent(transform);//脱离GridLayout的束缚
+            slot.transform.SetParent(transform);
             SkillIconCaller.UnLoadSkillIcon(E_PoolType.SkillSlot_技能槽位, slot.gameObject, 1);
-            yield return unloadDelay;
+        }
+        slots.Clear();
+
+        for (int i = slotsParent.childCount - 1; i >= 0; i--)
+        {
+            var child = slotsParent.GetChild(i);
+            child.SetParent(null);
+            Destroy(child.gameObject);
         }
     }
 
-    public List<SkillIcon> LoadSlotsAndSkills(int slotNum, List<SkillData> skillDatas, bool canDrag, bool isImmeditely = false)
+    /// <summary>
+    /// 一次性加载所有槽位和技能（战斗中/需要立即就绪时使用）
+    /// </summary>
+    public List<SkillIcon> LoadSlotsAndSkills(int slotNum, List<SkillData> skillDatas, bool canDrag, bool isImmeditely = true)
     {
-        if (isImmeditely) LoadWholeSlotsImmeditely(slotNum); else LoadWholeSlots(slotNum);
+        //if (!isImmeditely)
+        //{
+        //    StartCoroutine(LoadSlotsAndSkillsCoroutine(slotNum, skillDatas, canDrag));
+        //    return null;
+        //}
+
+        UnloadSkills();
+
+        for (int i = 0; i < slotNum; i++)
+        {
+            var slot = SkillIconCaller.LoadSkillSlot(slotsParent);
+            slots.Add(slot);
+        }
+
         this.skillDatas = skillDatas;
-        currentIcons = isImmeditely ? LoadSkillIconsImmeditely(skillDatas, canDrag) : LoadSkillIcons(skillDatas, canDrag);
+        skillIcons.Clear();
+        for (int i = 0; i < skillDatas.Count; i++)
+        {
+            var newSkillIcon = SkillIconCaller.LoadSkillIcon(slots[i].transform, canDrag);
+            newSkillIcon.InitSkillIcon(skillDatas[i], slots[i], canDrag);
+            skillIcons.Add(newSkillIcon);
+        }
+
+        currentIcons = skillIcons;
         return currentIcons;
     }
 
-
-    Coroutine unload;
-    public void UnloadIconsImmeditle()
+    /// <summary>
+    /// 逐个加载槽位+技能（协程动画版本，适合面板打开时的入场效果）
+    /// 每隔 slotLoadInterval 秒生成一个槽位及其对应图标
+    /// </summary>
+    IEnumerator LoadSlotsAndSkillsCoroutine(int slotNum, List<SkillData> skillDatas, bool canDrag)
     {
-        if (unload == null)
-            return;
-        StopCoroutine(unload);
-        ObjectPoolManager pool = GameRoot.GetManager<ObjectPoolManager>();
+        UnloadSkills();
 
-        for (int i = currentIcons.Count - 1; i >= 0; i--)
-        {
-            var icon = currentIcons[i];
-            currentIcons.Remove(icon);
-            pool.ReturnPool(E_PoolType.SkillIcon_技能图标, currentIcons[i].gameObject);
-        }
+        this.skillDatas = skillDatas;
+        skillIcons.Clear();
 
-        //将所有的槽位和技能返回池中
-        for (int i = slots.Count - 1; i >= 0; i--)
-        {
-            var slot = slots[i];
-            slot.transform.SetParent(transform);//脱离GridLayout的束缚
-            pool.ReturnPool(E_PoolType.SkillSlot_技能槽位, slots[i].gameObject);
-            slots.Remove(slot);
+        WaitForSeconds delay = new WaitForSeconds(slotLoadInterval);
 
-        }
-    }
-    IEnumerator LoadAllSlots(int slotNum)
-    {
-
-        ObjectPoolManager pool = GameRoot.GetManager<ObjectPoolManager>();
         for (int i = 0; i < slotNum; i++)
         {
+            // 生成槽位
             var slot = SkillIconCaller.LoadSkillSlot(slotsParent);
             slots.Add(slot);
-            yield return slotDelay;
-        }
-    }
 
+            // 如果该位置有对应的技能数据，一并生成图标
+            if (i < skillDatas.Count)
+            {
+                var newSkillIcon = SkillIconCaller.LoadSkillIcon(slots[i].transform, canDrag);
+                newSkillIcon.InitSkillIcon(skillDatas[i], slots[i], canDrag);
+                skillIcons.Add(newSkillIcon);
+            }
+
+            yield return delay;
+        }
+
+        currentIcons = skillIcons;
+        onLoadComplete?.Invoke();
+        Debug.Log($"[SkillIconSpawner] 动画加载完成: {slotNum}槽位, {skillIcons.Count}图标");
+    }
 
     List<SkillIcon> skillIcons = new List<SkillIcon>();
-    /// <summary>
-    /// 有时可以选择直接生成所有槽位（比如Normal区域或ATB区域，槽位的数量是已知的）
-    /// </summary>
-    void LoadWholeSlots(int slotNum)
-    {
-        GameRoot.GetManager<CoroutineManager>().StartCoroutine(LoadAllSlots(slotNum), this);
-
-    }
-
-    void LoadWholeSlotsImmeditely(int slotNum)
-    {
-        ObjectPoolManager pool = GameRoot.GetManager<ObjectPoolManager>();
-        for (int i = 0; i < slotNum; i++)
-        {
-            var slot = SkillIconCaller.LoadSkillSlot(slotsParent);
-            slots.Add(slot);
-        }
-    }
-
-    List<SkillIcon> LoadSkillIcons(List<SkillData> skillDatas, bool canDrag)
-    {
-        skillIcons.Clear();
-        GameRoot.GetManager<CoroutineManager>().StartCoroutine(LoadAllIcons(skillDatas, canDrag), this);
-        return skillIcons;
-    }
-
-    List<SkillIcon> LoadSkillIconsImmeditely(List<SkillData> skillDatas, bool canDrag)
-    {
-        skillIcons.Clear();
-        for (int i = 0; i < skillDatas.Count; i++)
-        {
-            var newSkillIcon = SkillIconCaller.LoadSkillIcon(slots[i].transform, canDrag);
-            newSkillIcon.InitSkillIcon(skillDatas[i], slots[i],canDrag);
-            skillIcons.Add(newSkillIcon);
-        }
-        return skillIcons;
-    }
-
-    IEnumerator LoadAllIcons(List<SkillData> skillDatas, bool canDrag)
-    {
-        for (int i = 0; i < skillDatas.Count; i++)
-        {
-            var newSkillIcon = SkillIconCaller.LoadSkillIcon(slots[i].transform, canDrag);
-
-            Debug.Log("酱味大鸡:" + skillDatas[i].skill_Name);
-            newSkillIcon.InitSkillIcon(skillDatas[i], slots[i], canDrag);
-            skillIcons.Add(newSkillIcon);
-            yield return iconDelay;
-        }
-    }
-
 }

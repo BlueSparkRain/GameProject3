@@ -1,61 +1,115 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(BattleMVCHandler),
     typeof(BattleDamageHandler),
     typeof(BattleSkillHandler))]
-/// <summary>
-/// ¸ºÔğ±¾Õ½¶·¶ÔÏóÉÏËùÓĞ×é¼şµÄ³õÊ¼»¯
+[RequireComponent(typeof(BattleArtEffectHandller),
+    typeof(BattleDotHandler),
+    typeof(BattleBuffHandler))]
+[RequireComponent(typeof(BattleWeaknessHandler))]
 /// </summary>
 public class BattleHandler : MonoBehaviour
 {
     IBattlable self;
-    BattleMVCHandler MVCHandler;
+    public BattleMVCHandler MVCHandler;
     BattleSkillHandler skillHandler;
     BattleBuffHandler buffHandler;
     BattleDotHandler  dotHandler;
     BattleDamageHandler damageHandler;
     BattlerStateTag battlerStateTag;
+    BattleArtEffectHandller  artEffectHandller;
+    BattleWeaknessHandler weaknessHandler;
+
+    IMonsterAIComponent monsterAI;
+    CharacterData characterDataRef;
 
     bool start=false;
     public void InitBattler(CharacterData characterData){
-        bool isplayer = (characterData.characterType == E_CharacterType.P_1 ||
-                    characterData.characterType == E_CharacterType.P_2 ||
-                    characterData.characterType == E_CharacterType.P_3);
+        bool isplayer = (characterData.characterType == E_CharacterType.P_æµ·èºéª‘å£«);
 
         self = isplayer ? new Player(GetComponent<BattleDamageHandler>()) : new Enemy(GetComponent<BattleDamageHandler>());
-        //×¢²áÕ½¶·µ¥Î»
+        //æ³¨å†Œæˆ˜æ–—å•ä½
         BattleTargetSelector.RegisteNewBattler(self);
-        battlerStateTag = new BattlerStateTag();
-        //Æô¶¯MVCHandler
+        battlerStateTag = new BattlerStateTag { CharacterType = characterData.characterType };
+
+        // é¢„å…ˆåŠ è½½å¼±ç‚¹é…ç½®(å«æŠ¤ç›¾åˆå§‹å€¼ï¼Œä¾›MVCåˆå§‹åŒ–ä½¿ç”¨)
+        var weaknessConfig = ResourcesLoader.FindWeaknessConfig(characterData.characterType);
+
+        //åˆå§‹åŒ–MVCHandler
         MVCHandler = GetComponentInChildren<BattleMVCHandler>();
-        MVCHandler.InitMVCHandler(characterData,battlerStateTag);
-        
-        //Æô¶¯BuffHandler
+        MVCHandler.InitMVCHandler(isplayer, characterData, battlerStateTag,
+            weaknessConfig?.initialShieldPoints ?? 5);
+
+        //åˆå§‹åŒ–BuffHandler
         buffHandler=GetComponent<BattleBuffHandler>();
         buffHandler.InitBattleBuffHandle(self);
 
-        //Æô¶¯DotHandler
+        //åˆå§‹åŒ–DotHandler
         dotHandler=GetComponentInChildren<BattleDotHandler>();
         dotHandler.InitBattleDotHandle(self);
 
-        //Æô¶¯BattleDamageHandler
-        damageHandler= GetComponentInChildren<BattleDamageHandler>();
-        damageHandler.InitDataHandler(MVCHandler,buffHandler,dotHandler);
+        //åˆå§‹åŒ–WeaknessHandler
+        weaknessHandler = GetComponentInChildren<BattleWeaknessHandler>();
+        weaknessHandler.InitWeaknessHandle(self, weaknessConfig);
 
-        //Æô¶¯BattleSkiller
+        //åˆå§‹åŒ–BattleDamageHandler
+        damageHandler= GetComponentInChildren<BattleDamageHandler>();
+        damageHandler.InitDataHandler(MVCHandler,buffHandler,dotHandler,weaknessHandler);
+
+        //åˆå§‹åŒ–ArtEffectHandler
+        artEffectHandller = GetComponentInChildren<BattleArtEffectHandller>();
+        artEffectHandller.InitArtEffectHandler(damageHandler);
+
+        //åˆå§‹åŒ–BattleSkiller
         skillHandler = GetComponentInChildren<BattleSkillHandler>();
         skillHandler.InitBattleSkillHandler(self, MVCHandler,battlerStateTag);
 
+        characterDataRef = characterData;
+        InitMonsterAI(characterData);
+
         start=true;
-        Debug.Log(characterData.Character_Name + "---¼ÓÈëÕ½¶·");
+        Debug.Log(characterData.Character_Name + "---è¿›å…¥æˆ˜æ–—");
     }
 
     void Update(){
-        if (start) { 
+        if (start) {
             skillHandler.OnSkillerUpdate();
             buffHandler.OnBuffUpdate();
             dotHandler.OnDotUpdate();
             MVCHandler.OnMVCHandlerUpdate();
-        }   
+            monsterAI?.OnBattleUpdate(MVCHandler.BattleController, skillHandler.GetSkiller());
+        }
+    }
+
+    void InitMonsterAI(CharacterData characterData)
+    {
+        var skiller = skillHandler.GetSkiller();
+
+        // åŠ è½½è‡ªåŠ¨æŠ€èƒ½é…ç½®(ç”± normalSkillIconSpawner å¯¹æ‰€æœ‰è§’è‰²ç»Ÿä¸€ç›´æ¥è°ƒç”¨)
+        var autoSkillConfig = ResourcesLoader.FindAutoSkillConfig(characterData.characterType);
+        if (autoSkillConfig != null)
+            skiller.LoadAutoSkillsFromConfig(autoSkillConfig, characterData.AutoSkillSlotCount);
+
+        // åŠ è½½ATBæ„å›¾æŠ€èƒ½é…ç½®(ç”± atbSkillIconSpawner)
+        var atbConfig = ResourcesLoader.FindATBIntentionConfig(characterData.characterType);
+        if (atbConfig != null)
+        {
+            skiller.LoadActiveSkillsFromConfig(atbConfig, characterData.AtbSkillSlotCount);
+            skiller.InitATBIntention(MVCHandler.BattleController, atbConfig);
+        }
+
+        monsterAI = MonsterAIFactory.Create(characterData.characterType);
+        if (monsterAI != null)
+        {
+            monsterAI.OnBattleStart(MVCHandler.BattleController, skillHandler.GetSkiller());
+
+            var model = MVCHandler.BattleController.Model;
+            model.OnHPChanged += (currentHP, maxHP) =>
+            {
+                monsterAI.OnHPChanged(currentHP, maxHP,
+                    MVCHandler.BattleController, skillHandler.GetSkiller());
+            };
+        }
     }
 }

@@ -1,26 +1,28 @@
 using UnityEngine;
 /// <summary>
-/// åæœŸå¯æœ¬åœ°ä¿å­˜ä¸ºjsonæ–‡ä»¶
+/// ºóÆÚ¿É±¾µØ±£´æÎªjsonÎÄ¼ş
 /// </summary>
 public class SkillData
 {
-    //è®°å½•ä¸€ä»½æŠ€èƒ½å½“å‰çš„åŸºç¡€å±æ€§ï¼ŒMapIconå¯ä»¥é€šè¿‡è¯»å–ä¸€ä»½skillDataæ¥åŠ è½½ä¿¡æ¯
-    [Header("æŠ€èƒ½ID")]
+    //¼ÇÂ¼Ò»·İ¼¼ÄÜµ±Ç°µÄ»ù´¡ÊôĞÔ£¬MapIcon¿ÉÒÔÍ¨¹ı¶ÁÈ¡Ò»·İskillDataÀ´¼ÓÔØĞÅÏ¢
+    [Header("¼¼ÄÜID")]
     public int skill_ID;
-    [Header("[å½“å‰]æŠ€èƒ½å›¾æ ‡")]
+    [Header("[µ±Ç°]¼¼ÄÜÍ¼±ê")]
     public Sprite skill_Sprite;
-    [Header("æŠ€èƒ½åç§°")]
+    [Header("¼¼ÄÜÃû³Æ")]
     public string skill_Name;
-    [Header("æŠ€èƒ½æè¿°")]
+    [Header("¼¼ÄÜÃèÊö")]
     [Multiline]
     public string skill_Description;
-    [Header("[å½“å‰]æŠ€èƒ½å†·å´")]
+    [Header("[µ±Ç°]¼¼ÄÜÀäÈ´")]
     public float skill_CoolDown;
-    [Header("[å½“å‰]æŠ€èƒ½æ³•åŠ›æ¶ˆè€—")]
+    [Header("[µ±Ç°]¼¼ÄÜ·¨Á¦ÏûºÄ")]
     public float skill_sp_cost;
-    [Header("[å½“å‰]æŠ€èƒ½æ€’æ°”å¢é•¿")]
+    [Header("[µ±Ç°]¼¼ÄÜATBÏûºÄ")]
+    public int skill_atb_cost;
+    [Header("[µ±Ç°]¼¼ÄÜÅ­ÆøÔö³¤")]
     public float skill_ang_grow;
-    [Header("[å½“å‰]æŠ€èƒ½çš„ç›®æ ‡ç±»å‹")]
+    [Header("[µ±Ç°]¼¼ÄÜµÄÄ¿±êÀàĞÍ")]
     public E_SkillTargetType skill_targetType;
 
     public SkillData(SkillPropertySO sodata) { 
@@ -30,6 +32,7 @@ public class SkillData
         skill_Description=sodata.skill_Description;
         skill_CoolDown=sodata.skill_CoolDown_origin;
         skill_sp_cost=sodata.skill_sp_cost;
+        skill_atb_cost=sodata.skill_atb_cost;
         skill_ang_grow=sodata.skill_ang_grow;
         skill_targetType=sodata.skill_targetType;
     }

@@ -3,78 +3,88 @@ using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using DG.Tweening;
 using System.Collections;
+
 /// <summary>
-/// ¸ºÔğÊµÏÖSlot¿ÉÍÏ×§¹¦ÄÜ + ÊµÊ±¼ì²âÏÂ·½Ä¿±ê²ÛÎ»
+/// å®ç°SkillIconæ‹–æ‹½äº¤æ¢ + å®æ—¶æ£€æµ‹è·¯å¾„ä¸Šçš„ç›®æ ‡æ§½ä½
 /// </summary>
 public class SlotSwaperHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    [Header("»ù´¡ÉèÖÃ")]
+    [Header("ç¼–è¾‘è®¾ç½®")]
     /// <summary>
-    /// ÊÇ·ñ¿ÉÍÏ×§
+    /// æ˜¯å¦å¯æ‹–æ‹½
     /// </summary>
     public bool canDrag = true;
 
     /// <summary>
-    /// µ±Ç°¼¼ÄÜËùÔÚµÄ²ÛÎ»
+    /// å½“å‰æ‰€åœ¨çš„æ§½ä½
     /// </summary>
     private SkillSlot currentSlot;
     /// <summary>
-    /// ÍÏ×§Ê±Êó±êÏÂ·½µÄÄ¿±ê²ÛÎ»
+    /// æ‹–æ‹½æ—¶è·¯å¾„ä¸Šçš„ç›®æ ‡æ§½ä½
     /// </summary>
     private SkillSlot targetSlot;
 
-    // »º´æ×é¼ş
     private RectTransform _rectTransform;
-    // ÍÏ×§Ê±µÄÔ­Ê¼Î»ÖÃ
     private Vector3 _originPos;
-    // Ô­Ê¼¸¸ÎïÌå
     private Transform _originParent;
+
+    /// <summary>
+    /// æ‹–æ‹½æ—¶å›¾æ ‡çš„ä¸´æ—¶é¡¶å±‚çˆ¶èŠ‚ç‚¹ï¼ˆCanvasæ ¹èŠ‚ç‚¹ï¼Œä¿è¯æ¸²æŸ“åœ¨æœ€ä¸Šå±‚ï¼‰
+    /// </summary>
+    private static Transform _dragRoot;
 
     public void InitSlot(SkillSlot slot) {
         _rectTransform = GetComponent<RectTransform>();
         currentSlot = slot;
+        // å»¶è¿ŸæŸ¥æ‰¾Canvasæ ¹èŠ‚ç‚¹ï¼Œç¡®ä¿UIå·²åˆå§‹åŒ–
+        if (_dragRoot == null)
+            _dragRoot = GetTopCanvas(transform);
     }
+
     /// <summary>
-    /// ¿ªÊ¼ÍÏ×§£¨Ö»Ö´ĞĞÒ»´Î£©
+    /// å‘ä¸ŠæŸ¥æ‰¾Canvasæ ¹èŠ‚ç‚¹ä½œä¸ºæ‹–æ‹½é¡¶å±‚
     /// </summary>
+    static Transform GetTopCanvas(Transform t)
+    {
+        Canvas top = null;
+        var current = t;
+        while (current != null)
+        {
+            var canvas = current.GetComponent<Canvas>();
+            if (canvas != null)
+                top = canvas;
+            current = current.parent;
+        }
+        return top != null ? top.transform : t.root;
+    }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
-        // ²»¿ÉÍÏ×§Ö±½ÓÀ¹½Ø
         if (!canDrag) return;
 
-        // ¼ÇÂ¼Ô­Ê¼×´Ì¬
         _originPos = transform.position;
         _originParent = transform.parent;
 
-        // 1. ÍÑÀëÔ­¸¸ÎïÌå£¬·Åµ½Canvas¸ù½Úµã
-        //transform.SetParent(transform.root);
-        // 2. Ç¿ÖÆÉèÎªÍ¬¼¶×îºóÒ»¸ö ¡ú äÖÈ¾ÓÅÏÈ¼¶×î¸ß£¨×îÇ°·½£©
-
-
-        transform.SetParent(transform.parent.parent.parent);
+        // æå‡åˆ°Canvasæ ¹èŠ‚ç‚¹ + ç½®ä¸ºæœ€æœ«å±‚çº§ = æ¸²æŸ“åœ¨æ‰€æœ‰UIä¹‹ä¸Š
+        if (_dragRoot != null)
+            transform.SetParent(_dragRoot);
+        else
+            transform.SetParent(transform.root);
         transform.SetAsLastSibling();
+
         GetComponent<UnityEngine.UI.Graphic>().raycastTarget = false;
 
-        Debug.Log("¿ªÊ¼ÍÏ×§");
+        Debug.Log("å¼€å§‹æ‹–æ‹½");
     }
 
-    /// <summary>
-    /// ÍÏ×§ÖĞ£¨Ã¿Ö¡Ö´ĞĞ£¬±ØĞëÊµÏÖ£¡·ñÔòÍÏ²»¶¯£©
-    /// </summary>
     public void OnDrag(PointerEventData eventData)
     {
         if (!canDrag) return;
 
-        // ¡¾ºËĞÄ¡¿UI¸úËæÊó±êÒÆ¶¯
         _rectTransform.position = eventData.position;
-
-        // ¡¾ºËĞÄ¡¿ÊµÊ±¼ì²âÊó±êÏÂ·½µÄSlot
         DetectTargetSlot(eventData);
     }
 
-    /// <summary>
-    /// ½áÊøÍÏ×§£¨Ö»Ö´ĞĞÒ»´Î£©
-    /// </summary>
     public void OnEndDrag(PointerEventData eventData)
     {
         if (!canDrag) return;
@@ -85,61 +95,63 @@ public class SlotSwaperHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
         {
             targetSlot.SwapIcon(currentSlot);
             StartCoroutine(MoveToSlot(targetSlot));
-            Debug.Log($"³É¹¦·ÅÖÃµ½²ÛÎ»£º{targetSlot.name}");
+            Debug.Log($"æˆåŠŸç§»åŠ¨åˆ°æ§½ä½:{targetSlot.name}");
         }
         else
         {
-            transform.SetParent(_originParent);
-            transform.DOLocalMove(Vector3.zero, 0.2f);
-            Debug.Log("Î´¼ì²âµ½Ä¿±ê²ÛÎ»£¬»Ø¹éÔ­Î»");
+            StartCoroutine(ReturnToOrigin());
+            Debug.Log("æœªæ£€æµ‹åˆ°ç›®æ ‡æ§½ä½ï¼Œè¿”å›åŸä½ç½®");
         }
 
-        // Çå¿ÕÄ¿±ê²ÛÎ»
         targetSlot = null;
     }
 
-    /// <summary>
-    /// ÒÆ¶¯µ½Ä¿±ê²ÛµÄÎ»ÖÃ²¢·ÅÈë²ÛÄÚ
-    /// </summary>
-    /// <param name="slot"></param>
-    /// <returns></returns>
-    IEnumerator MoveToSlot(SkillSlot slot) {
+    IEnumerator MoveToSlot(SkillSlot slot)
+    {
+        // å…ˆåŠ¨ç”»ç§»åŠ¨åˆ°ç›®æ ‡æ§½ä½ä¸–ç•Œåæ ‡ï¼ˆæ­¤æ—¶å›¾æ ‡ä»åœ¨Canvasé¡¶å±‚ï¼‰
         yield return null;
-        if (transform.parent.parent.parent)
-        {
-            Debug.Log(transform.parent.parent.parent.gameObject.name + "ÈöµÍ¼¶µÄ");
-            transform.SetParent(transform.parent.parent.parent.parent.parent.parent);
-        }
-        transform.DOMove(slot.transform.position,0.2f);
-        yield return new WaitForSeconds(0.2f);
+        Tween moveTween = transform.DOMove(slot.transform.position, 0.2f);
+        yield return moveTween.WaitForCompletion();
+
+        // åŠ¨ç”»ç»“æŸååµŒå…¥ç›®æ ‡æ§½ä½
         transform.SetParent(slot.transform);
-        currentSlot= slot;
+        transform.localPosition = Vector3.zero;
+        currentSlot = slot;
         slot.SetIcon(GetComponent<SkillIcon>());
     }
 
-    public void MoveToTargetSlot(SkillSlot slot) {
+    IEnumerator ReturnToOrigin()
+    {
+        yield return null;
+        Tween moveTween = transform.DOMove(_originPos, 0.2f);
+        yield return moveTween.WaitForCompletion();
 
+        if (_originParent != null)
+        {
+            transform.SetParent(_originParent);
+            transform.localPosition = Vector3.zero;
+        }
+    }
+
+    public void MoveToTargetSlot(SkillSlot slot)
+    {
         StartCoroutine(MoveToSlot(slot));
     }
-    /// <summary>
-    /// ¡¾ºËĞÄ¹¦ÄÜ¡¿UIÉäÏß¼ì²â£º²éÕÒÊó±êÏÂ·½µÄSkillSlot
-    /// </summary>
+
     private void DetectTargetSlot(PointerEventData eventData)
     {
         targetSlot = null;
 
-        // UIÉäÏß¼ì²â½á¹ûÁĞ±í
         List<RaycastResult> results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(eventData, results);
 
-        // ±éÀúËùÓĞ»÷ÖĞµÄUI£¬ÕÒµ½µÚÒ»¸ö²ÛÎ»
         foreach (var hit in results)
         {
             SkillSlot slot = hit.gameObject.GetComponent<SkillSlot>();
             if (slot != null)
             {
                 targetSlot = slot;
-                Debug.Log($"µ±Ç°¿¿½üµÄ²ÛÎ»£º{slot.name}");
+                Debug.Log($"å½“å‰ç©¿è¿‡çš„æ§½ä½{slot.name}");
                 break;
             }
         }

@@ -2,46 +2,71 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// ¸ºÔğ¸÷ÖÖDotµÄ½áËãºÍ¸üĞÂ
+/// è´Ÿè´£ç®¡ç†Dotçš„æ³¨å†Œå’Œæ›´æ–°
 /// </summary>
 public class BattleDotHandler : MonoBehaviour{
     IBattlable self;
     Dictionary<E_Dot, DotBase> DotDic = new Dictionary<E_Dot, DotBase>();
+    bool _isTriggeringShock;
+
     public void InitBattleDotHandle(IBattlable _self){
         self = _self;
         EventCenter.AddEventListener<BattleDotHandler, DotBase,int>(E_EventType.Battle_RegisterDot, RegistDot);
+        EventCenter.AddEventListener<BattleDamageHandler, float>(E_EventType.Get_Damage, OnSelfGetDamage);
+    }
+
+    void OnSelfGetDamage(BattleDamageHandler damageHandler, float damageValue) {
+        if (_isTriggeringShock) return;
+        if (damageHandler != self.battleDamageHandler) return;
+        if (DotDic.TryGetValue(E_Dot.æ„Ÿç”µ, out var shockDot)) {
+            _isTriggeringShock = true;
+            shockDot.OnDotTrigger();
+            _isTriggeringShock = false;
+        }
     }
     /// <summary>
-    /// ±¾µ¥Î»»ñµÃÒ»ÖÖĞÂµÄBUFF£¨²»»áËæÊ±¼äÏûÊ§£©
-    /// ÖØ¸´»ñµÃ=²ãÊı¼Ó1
+    /// ç»™æœ¬å•ä½æ³¨å†Œä¸€ä¸ªæ–°çš„BUFFï¼ˆå¯å åŠ å±‚æ•°ï¼‰
+    /// é‡å¤æ³¨å†Œ=å±‚æ•°+1
     /// </summary>
-    /// <param name="dotHandle"></param>
-    /// <param name="dot"></param>
     void RegistDot(BattleDotHandler dotHandle, DotBase dot,int adjustCount){
-        //Ö»ÄÜ»ñµÃÃ»ÓĞµÄDot
+        //åªèƒ½å¯¹è‡ªèº«çš„Dotç”Ÿæ•ˆ
         if (dotHandle == this ){
             if (!DotDic.ContainsKey(dot.Dot_type)){
                 DotDic.Add(dot.Dot_type, dot);
-                Debug.Log(string.Format("{0} Ê×´Î»ñµÃ Dot:{1},µ±Ç°²ãÊı{2}", self.Camp, dot.Dot_type,dot.Dot_count));
+                Debug.Log(string.Format("{0} é¦–æ¬¡è·å¾— Dot:{1},å½“å‰å±‚æ•°{2}", self.Camp, dot.Dot_type,dot.Dot_count));
             }
             else {
-                //½«ĞÂÔöµÄ²ãÊıÖ±½Ó¼Óµ½ÒÑÓĞµÄDotÉÏ
-                Debug.Log(string.Format("{0} Dot:{1} µ±Ç°²ãÊı{2} ĞÂÔö²ãÊı{3}", self.Camp, dot.Dot_type,dot.Dot_count,adjustCount));
+                //æ–°å¢çš„å±‚æ•°ç›´æ¥åŠ åˆ°å·²å­˜åœ¨çš„Dotä¸Š
+                Debug.Log(string.Format("{0} Dot:{1} å½“å‰å±‚æ•°{2} å¢åŠ å±‚æ•°{3}", self.Camp, dot.Dot_type,dot.Dot_count,adjustCount));
                 DotDic[dot.Dot_type].AdjustDotLevel(adjustCount);
-                Debug.Log(string.Format("{0} Dot:{1} µ±Ç°²ãÊı{2} ²ãÊıÒÑ¸üĞÂ", self.Camp, dot.Dot_type,dot.Dot_count));
+                Debug.Log(string.Format("{0} Dot:{1} å½“å‰å±‚æ•°{2} å±‚æ•°å·²æ›´æ–°", self.Camp, dot.Dot_type,dot.Dot_count));
             }
         }
     }
     /// <summary>
-    /// ±¾µ¥Î»ÒÆ³ıÒ»ÖÖBUFF
+    /// ä»æœ¬å•ä½ç§»é™¤ä¸€ä¸ªBUFF
     /// </summary>
-    /// <param name="dotHandle"></param>
-    /// <param name="dot_type"></param>
     public void UnRegistDot(BattleDotHandler dotHandle, E_Dot dot_type){
         if (dotHandle == this && DotDic.ContainsKey(dot_type)){
-            Debug.Log(self.Camp + "ÒÑÒÆ³ıDot£º" + dot_type);
+            Debug.Log(self.Camp + "ç§»é™¤äº†Dotï¼š" + dot_type);
             DotDic.Remove(dot_type);
         }
+    }
+
+    public int GetDotLayers(E_Dot dotType) {
+        if (DotDic.TryGetValue(dotType, out var dot))
+            return dot.Dot_count;
+        return 0;
+    }
+
+    public int ClearDotAndGetLayers(E_Dot dotType) {
+        if (DotDic.TryGetValue(dotType, out var dot)) {
+            int layers = dot.Dot_count;
+            DotDic.Remove(dotType);
+            Debug.Log($"{self.Camp}æ¸…é™¤äº†Dotï¼š{dotType}ï¼Œå±‚æ•°{layers}");
+            return layers;
+        }
+        return 0;
     }
     public void OnDotUpdate(){
         if (DotDic.Count <= 0) return;

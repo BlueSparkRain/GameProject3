@@ -1,0 +1,79 @@
+﻿using System.Collections.Generic;
+
+public enum E_SkillLevel
+{
+    /// <summary>
+    /// 鑳屽寘鎶€鑷姩寰幆-鍩虹鐗堟湰
+    /// </summary>
+    鍩虹鐗堟湰,
+    /// <summary>
+    /// 浣跨敤>=1鐨?ATB鐐规暟
+    /// </summary>
+    鍔犲己鐗堟湰
+}
+
+public interface IHaveWeakable
+{
+    public void GetWeakness();
+}
+
+public abstract class SkillBase
+{
+    public IBattlable self { get; set; }
+    public List<IBattlable> targets { get; set; }
+
+    public E_SkillTargetType skillTargetType { get; set; }
+
+    public SkillBase(E_SkillTargetType _skillTargetType)
+    {
+        skillTargetType = _skillTargetType;
+    }
+
+    void GetTargets()
+    {
+        targets = BattleTargetSelector.GetValidTargets(self, skillTargetType);
+    }
+
+    public void GetCaster(IBattlable _caster)
+    {
+        self = _caster;
+    }
+    /// <summary>
+    /// 瀵规墍鏈夌洰鏍囦竴娆￠噴鏀惧崟浣撴妧鑳?
+    /// </summary>
+    /// <param name="casters"></param>
+    public void SkillExcute(E_SkillLevel skillLevel, int henceTime = 0)
+    {
+        GetTargets();
+        if (targets.Count <= 0)
+        {
+            UnityEngine.Debug.Log("浣曟剰鍛筹紝鏃犵洰鏍囨妧鑳斤紵");
+            return;
+        }
+        for (int i = 0; i < targets.Count; i++)
+        {
+            switch (skillLevel)
+            {
+                case E_SkillLevel.鍩虹鐗堟湰: SkillEffect_Base(targets[i]); break;
+                case E_SkillLevel.鍔犲己鐗堟湰: SkillEffect_Enhence(targets[i], henceTime); break;
+            }
+        }
+    }
+
+
+    /// <summary>
+    /// 鎶€鑳藉熀纭€鏁堟灉
+    /// </summary>
+    /// <param name="target"></param>
+    public abstract void SkillEffect_Base(IBattlable target);
+
+    /// <summary>
+    /// 鎶€鑳藉寮?
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="henceTime"></param>
+    public virtual void SkillEffect_Enhence(IBattlable target, int henceTime) { }
+
+
+}
+

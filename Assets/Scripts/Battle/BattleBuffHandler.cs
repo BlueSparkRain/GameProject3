@@ -4,11 +4,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.Profiling.Memory.Experimental;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 /// <summary>
-/// ¹ÜÀíÕ½¶·ÖĞ½ÇÉ«µÄBUFFµÄ¡¾×¢²á],[ÒÆ³ı] Óë [ÊÂ¼ş´¥·¢×¢²á]£¬[Ö¡¸üĞÂ]
+/// è´Ÿè´£æˆ˜æ–—ä¸­è§’è‰²çš„BUFFçš„[æ³¨å†Œ],[ç§»é™¤] ä¸ [äº‹ä»¶é©±åŠ¨æ³¨å†Œ] [å¸§é©±åŠ¨]
 /// </summary>
 public class BattleBuffHandler : MonoBehaviour{
     Dictionary<BuffBase,BuffTimer>  BuffDic=new Dictionary<BuffBase, BuffTimer> ();
@@ -16,38 +17,59 @@ public class BattleBuffHandler : MonoBehaviour{
     public void InitBattleBuffHandle(IBattlable _self) {
         self= _self;
         EventCenter.AddEventListener<BattleBuffHandler>(E_EventType.Do_PhyAttack, Check_Phy_AdditiveBuff);
+        EventCenter.AddEventListener<BattleBuffHandler, SkillBase,E_SkillLevel,int>(E_EventType.Do_MagAttack, OnMagAttackRecast);
         EventCenter.AddEventListener<BattleBuffHandler, BuffBase>(E_EventType.Battle_RegisteBUFF, RegistBuff);
+        EventCenter.AddEventListener<BattleBuffHandler, E_WeaknessType, IBattlable>(E_EventType.Battle_ElementalAttack, OnElementalAttack);
     }
     void Check_Phy_AdditiveBuff(BattleBuffHandler buffHandler){
         if (BuffDic.Count <= 0){
             return;
         }
-        if (buffHandler == this) { 
+        if (buffHandler == this) {
             foreach (var item in BuffDic){
-                if (item.Key.Buff_Type == E_BuffType.³ãÑæÁ¬Ëø)
+                if (item.Key.Buff_Type == E_BuffType.ç‚½ç„°è¿é”)
                     item.Key.OnBuffTrigger();
             }
         }
     }
 
+    void OnMagAttackRecast(BattleBuffHandler buffHandler, SkillBase skill,E_SkillLevel skillLevel,int henctime){
+        if (buffHandler != this) return;
+        foreach (var item in BuffDic){
+            if (item.Key.Buff_Type == E_BuffType.å¤§é­”æ³•åŒ–_æ­£é¢ || item.Key.Buff_Type == E_BuffType.è¶…å¤§é­”æ³•åŒ–_æ­£é¢) {
+                var recast = item.Key as Buff_SkillRecast;
+                recast.SetRecastContext(skill, skillLevel, henctime);
+                recast.OnBuffTrigger();
+            }
+        }
+    }
+
+    void OnElementalAttack(BattleBuffHandler buffHandler, E_WeaknessType weaknessType, IBattlable target) {
+        if (buffHandler != this) return;
+        foreach (var kv in BuffDic) {
+            if (kv.Key is Buff_DotOnAttack dotOnAttack)
+                dotOnAttack.TryApplyDot(weaknessType, target);
+        }
+    }
+
     /// <summary>
-    /// ±¾µ¥Î»»ñµÃÒ»¸öĞÂµÄBUFF
+    /// ä¸ºå•ä½æ·»åŠ ä¸€ä¸ªæ–°çš„BUFF
     /// </summary>
     /// <param name="buffHandle"></param>
     /// <param name="buff"></param>
     public void RegistBuff(BattleBuffHandler buffHandle, BuffBase buff){
         if (buffHandle == this ){
-            //Èç¹ûÒÑ¾­ÓµÓĞÍ¬ÀàĞÍBUFF£¬Ö±½ÓË¢ĞÂ¼ÆÊ±(°´Buff_Type±È½Ï¶ø·Ç¶ÔÏóÒıÓÃ)
+            //å¦‚æœå·²ç»æ‹¥æœ‰åŒåçš„BUFFï¼Œç›´æ¥åˆ·æ–°è®¡æ—¶(ç”¨Buff_Typeæ¯”è¾ƒè€Œä¸æ˜¯å¯¹è±¡)
             BuffBase existKey = null;
             foreach (var k in BuffDic.Keys) {
                 if (k.Buff_Type == buff.Buff_Type) { existKey = k; break; }
             }
             if (existKey != null) {
                 BuffDic[existKey].ResetTimer();
-                Debug.Log(string.Format("BUFF:{0}ÖØ¸´»ñÈ¡£¬Ë¢ĞÂBUFF³ÖĞøÊ±¼ä", buff.Buff_Type));
+                Debug.Log(string.Format("BUFF:{0}é‡å¤è·å–ï¼Œåˆ·æ–°BUFFæŒç»­æ—¶é—´", buff.Buff_Type));
                 return;
             }
-            //ĞÂBUFF£¬×¢²á
+            //æ–°BUFFæ³¨å†Œ
             BuffDic.Add(buff,new BuffTimer(buff.Buff_Dura));
             Debug.Log(string.Format("{0} get New BUFF:{1}-{2}", self.Camp, buff.Buff_Attr, buff.Buff_Type));
 
@@ -57,52 +79,102 @@ public class BattleBuffHandler : MonoBehaviour{
     public void UnRegistBuff(E_BuffType buffType) {
         foreach (var buff in BuffDic){
             if (buff.Key.Buff_Type == buffType) {
-                Debug.Log($"{self.battleDamageHandler.name}ÒÆ³ıÁËBUFF£º{buffType}");
+                Debug.Log($"{self.battleDamageHandler.name}ç§»é™¤äº†BUFFï¼š{buffType}");
+                buff.Key.OnBuffRemove();
                 BuffDic.Remove(buff.Key);
                 return;
             }
         }
-        Debug.Log($"{self.battleDamageHandler.name}Î´³ÖÓĞBUFF£º{buffType}£¬ÒÆ³ıÊ§°Ü");
+        Debug.Log($"{self.battleDamageHandler.name}æœªæ‰¾åˆ°BUFFï¼š{buffType}ï¼Œç§»é™¤å¤±è´¥");
+    }
+
+    public void UnRegistBuffsByAttr(E_BuffPositive attr) {
+        var toRemove = new List<BuffBase>();
+        foreach (var kv in BuffDic) {
+            if (kv.Key.Buff_Attr == attr)
+                toRemove.Add(kv.Key);
+        }
+        foreach (var key in toRemove) {
+            Debug.Log($"{self.battleDamageHandler.name}ç§»é™¤äº†BUFFï¼š{key.Buff_Type}");
+            key.OnBuffRemove();
+            BuffDic.Remove(key);
+        }
+    }
+
+    public void ExtendBuffTimers(E_BuffPositive attr, float extraSeconds) {
+        foreach (var kv in BuffDic) {
+            if (kv.Key.Buff_Attr == attr)
+                kv.Value.ExtendTimer(extraSeconds);
+        }
+    }
+
+    public void ExtendBuffByType(E_BuffType buffType, float extraSeconds) {
+        foreach (var kv in BuffDic) {
+            if (kv.Key.Buff_Type == buffType) {
+                kv.Value.ExtendTimer(extraSeconds);
+                return;
+            }
+        }
+    }
+
+    public List<BuffBase> GetBuffsByAttr(E_BuffPositive attr) {
+        var result = new List<BuffBase>();
+        foreach (var kv in BuffDic) {
+            if (kv.Key.Buff_Attr == attr)
+                result.Add(kv.Key);
+        }
+        return result;
+    }
+
+    public BuffBase TryGetBuff(E_BuffType buffType) {
+        foreach (var buff in BuffDic) {
+            if (buff.Key.Buff_Type == buffType)
+                return buff.Key;
+        }
+        return null;
+    }
+
+    public E_SkillTargetType GetModifiedTargetType(E_SkillTargetType original, bool isMagic) {
+        if (!isMagic && TryGetBuff(E_BuffType.æ— åŒ_æ­£é¢) != null) {
+            Debug.Log($"{self.battleDamageHandler.name}æ— åŒå‘åŠ¨ï¼šç‰©ç†æŠ€èƒ½ç›®æ ‡å˜ä¸ºå…¨ä½“");
+            return E_SkillTargetType.å¯¹å…¨ä½“;
+        }
+        if (isMagic && TryGetBuff(E_BuffType.é­”åŠ›æ”¶æŸ_æ­£é¢) != null) {
+            Debug.Log($"{self.battleDamageHandler.name}é­”åŠ›æ”¶æŸå‘åŠ¨ï¼šé­”æ³•æŠ€èƒ½ç›®æ ‡å˜ä¸ºå•ä½“");
+            return E_SkillTargetType.å¯¹å•ä½“;
+        }
+        return original;
     }
     public void OnBuffUpdate() {
         if (BuffDic.Count <= 0)
             return;
-        //¼ì²â¶ÔÓ¦µÄbuffÊÇ·ñ½áÊø
+        //ç§»é™¤åº”è¿‡æœŸçš„buff
         var expired = new List<BuffBase>();
         foreach (var buffUni in BuffDic) {
             if (buffUni.Value.CheckBuffDone())
                 expired.Add(buffUni.Key);
         }
         foreach (var key in expired){
-            Debug.Log("ÒÆ³ıBUFF"+key.Buff_Type);
+            Debug.Log("ç§»é™¤BUFF"+key.Buff_Type);
             BuffDic.Remove(key);
         }
-        //buffÖ¡¸üĞÂ
+        //buffå¸§é©±åŠ¨
         foreach (var buffUni in BuffDic){
             buffUni.Key.OnBuffUpdate();
         }
     }
 
-    BuffBase TryGetBuff(E_BuffType buffType) {
-        foreach (var buff in BuffDic){
-            if (buff.Key.Buff_Type == buffType){
-                return buff.Key;
-            }
-        }
-        return null;
-    }
-
     public float GetDamageRate() {
-        var Buff = TryGetBuff(E_BuffType.Õ½Òâ_ÕıÃæ) as Buff_DamageBoomer;
+        var Buff = TryGetBuff(E_BuffType.æˆ˜æ„_æ­£é¢) as Buff_DamageBoomer;
         if (Buff == null) { return 0.0f; }
-        else {Debug.Log(self.battleDamageHandler.name+"´æÔÚÔì³ÉÉËº¦Ôö·ùÏà¹ØBUFF,±¶ÂÊ:"+Buff.BoomerRate);
+        else {Debug.Log(self.battleDamageHandler.name+"è·å¾—äº†ä¼¤å®³å€ç‡BUFF,å€ç‡:"+Buff.BoomerRate);
         return Buff.BoomerRate; }
-            
+
     }
 
     //GameRoot.GetManager<CoroutineManager>().StartCoroutine(WaitBuffUnRegiste(buff));
     /// <summary>
-    /// ¿ªÊ¼¼ÆÊ±BUFF£¬µ¹¼ÆÊ±½áÊø£¬ÒÆ³ıBUFF
+    /// åç¨‹BUFFè®¡æ—¶ï¼Œå®šæ—¶å¹¶è‡ªåŠ¨ç§»é™¤BUFF
     /// </summary>
     /// <param name="buff"></param>
     /// <returns></returns>
@@ -122,22 +194,24 @@ public class BuffTimer {
         this.interval = interval;
         ResetTimer();
     }
-    public void ResetTimer() { 
+    public void ResetTimer() {
         timer=interval;
         start=true;
     }
+    public void ExtendTimer(float extraSeconds) {
+        timer += extraSeconds;
+    }
 
     /// <summary>
-    /// ·µ»ØBUFFÊÇ·ñ½áÊø
+    /// æ£€æŸ¥BUFFæ˜¯å¦è¿‡æœŸ
     /// </summary>
     /// <returns></returns>
     public bool CheckBuffDone() {
-        if (!start) return false;   
-        if (timer >= 0) 
+        if (!start) return false;
+        if (timer >= 0)
             timer -= Time.deltaTime;
         else return true;
         return false;
     }
 
 }
-

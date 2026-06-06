@@ -35,9 +35,9 @@ public class PlayerMapIcon : MonoBehaviour
         characterType = _characterType;
         charcaterTrans = _charcaterTrans;
 
-        //玩家操控角色需要更新UI数据
-        var levelUpHandler=charcaterTrans.GetComponent<CharacterLevelUpHandler>();
-        levelUpHandler.EXPUIUpdateEvent += levelBox.UpdateMapPlayerIconUI;
+        // 玩家操控角色需要更新UI数据
+        var levelUpHandler = charcaterTrans.GetComponent<CharacterLevelUpHandler>();
+        // EXP UI更新已通过EventCenter(E_EventType.AdjustEXP)解耦，无需手动订阅
         //levelUpHandler.InitLevelHandler();
         
         characterSOData = ResourcesLoader.FindCharaterSO(_characterType); 
@@ -93,6 +93,12 @@ public class PlayerMapIcon : MonoBehaviour
         }
 
         if (isActive){
+
+            GameRoot.GetManager<MapMoverManager>().SetCurrentMover(mover,charcaterTrans.position);
+            if (mover.currentRoom == null) {
+                Debug.Log("WARNNING！玩家当前Room为NUll"+mover.currentRoom);
+                return;
+            } 
             hexPathFindingManager.SetPlayerStartRoom(
              mover.currentRoom);
 

@@ -32,12 +32,21 @@ public class UIPanelBase : MonoBehaviour
     protected Vector3 Anim_TargetTrans = new Vector3(0, 1000, 0);
 
     [SerializeField]
+    [Header("时间流速控制")]
+    protected bool enableTimeScaleControl = true;
+
+    [SerializeField]
     [Header("动画-入场状态标识")]
     protected bool Anim_DoFadeIn = true;
 
     [SerializeField]
     [Header("动画-需要透明渐变")]
     protected bool Anim_NeedAlphaFadeIn;
+
+    [SerializeField]
+    [Header("打开时冻结正交相机漫游")]
+    [Tooltip("默认true，设为false的面板打开时相机仍可自由漫游")]
+    protected bool freezeCameraOnOpen = true;
 
 
     public bool canOpen=true;
@@ -69,7 +78,7 @@ public class UIPanelBase : MonoBehaviour
     /// </summary>
     protected CanvasGroup canvasGroup;
 
-    WaitForSeconds animDelay;
+    WaitForSecondsRealtime animDelay;
 
     #region 生命周期方法
     /// <summary>
@@ -81,7 +90,7 @@ public class UIPanelBase : MonoBehaviour
     {
         PanelType = type;
         PanelID = uniqueID;
-        animDelay = new WaitForSeconds(Anim_Duration);
+        animDelay = new WaitForSecondsRealtime(Anim_Duration);
         panelRoot = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
 
@@ -102,9 +111,13 @@ public class UIPanelBase : MonoBehaviour
     public virtual void Show()
     {
         //if (s_OpenPanelCount == 0)
-        EventCenter.EventTrigger(E_EventType.FreezeCamPan);
+        if (freezeCameraOnOpen)
+            EventCenter.EventTrigger(E_EventType.FreezeCamPan);
         
         s_OpenPanelCount++;
+        if (enableTimeScaleControl && s_OpenPanelCount == 1)
+            GameRoot.GetManager<TimeManager>()?.SetTimeScale(0.2f, 0.3f);
+
         gameObject.SetActive(true);
         canvasGroup.alpha = 1;
         canvasGroup.interactable = true;
@@ -133,8 +146,11 @@ public class UIPanelBase : MonoBehaviour
         canvasGroup.blocksRaycasts = false;
 
         s_OpenPanelCount--;
-        //if (s_OpenPanelCount == 0)
-        EventCenter.EventTrigger(E_EventType.UnFreezeCamPan);
+        if (enableTimeScaleControl && s_OpenPanelCount == 0)
+            GameRoot.GetManager<TimeManager>()?.SetTimeScale(1f, 0.3f);
+
+        if (freezeCameraOnOpen)
+            EventCenter.EventTrigger(E_EventType.UnFreezeCamPan);
 
         if (!Anim_DoFadeIn)
             BeforeFadeOutAnimCallBack();

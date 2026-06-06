@@ -29,7 +29,7 @@ Material:
     - _BlindIntensity: 3
     - _BlindRotation: 222
     - _BlindThickness: 0.5
-    - _GradientIntensity: 0.71
+    - _GradientIntensity: 1
     - _GradientType: 2
     - _NormalThreshold: 0.586
     - _OutlinePower: 0
@@ -38,6 +38,8 @@ Material:
     - _BaseColor: {r: 0.90132046, g: 1, b: 0, a: 1}
     - _GradientCenter: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _GradientColor: {r: 0, g: 0.9213741, b: 1, a: 1}
-    - _MainColor: {r: 0.9646545, g: 1, b: 0.57547164, a: 1}
-    - _ShadowColor: {r: 0.5146619, g: 1, b: 0, a: 1}
+    - _GradientColorA: {r: 0, g: 0.4742918, b: 1, a: 1}
+    - _GradientColorB: {r: 0.6, g: 0.9019608, b: 0.89139265, a: 1}
+    - _MainColor: {r: 0.81446534, g: 0.9551213, b: 1, a: 1}
+    - _ShadowColor: {r: 0, g: 0.5401416, b: 1, a: 1}
   m_BuildTextureStacks: []

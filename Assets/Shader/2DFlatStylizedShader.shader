@@ -8,8 +8,8 @@ Shader "Custom/2DToonHexPrismShader_HLSL"
         
         // 百叶窗阴影配置
         _BlindCount ("Blind Line Count", Range(5, 150)) = 100
-        _BlindThickness ("Blind Line Thickness", Range(0.01, 0.5)) = 0.2
-        _BlindIntensity ("Blind Intensity", Range(0, 3)) = 0.15
+        _BlindThickness ("Blind Line Thickness", Range(0.01, 1)) = 0.2
+        _BlindIntensity ("Blind Intensity", Range(0, 5)) = 0.15
         _BlindRotation ("Blind Line Rotation (Deg)", Range(0, 360)) = 0
         
         // 风格化参数
@@ -18,7 +18,8 @@ Shader "Custom/2DToonHexPrismShader_HLSL"
         
         // 渐变配置
         _GradientType ("Gradient Type (0=Radial,1=Horizontal,2=Vertical)", Float) = 0
-        _GradientIntensity ("Gradient Intensity", Range(0, 1)) = 0.5
+        _GradientColorA ("Gradient Color A", Color) = (1, 0.95, 0.85, 1)
+        _GradientColorB ("Gradient Color B", Color) = (0.6, 0.7, 0.9, 1)
         _GradientCenter ("Gradient Center (0-1)", Vector) = (0.5,0.5,0,0)
     }
 
@@ -62,7 +63,8 @@ Shader "Custom/2DToonHexPrismShader_HLSL"
                 half _StepCount;
                 half _OutlinePower;
                 half _GradientType;
-                half _GradientIntensity;
+                float4 _GradientColorA;
+                float4 _GradientColorB;
                 float2 _GradientCenter;
             CBUFFER_END
 
@@ -123,19 +125,20 @@ Shader "Custom/2DToonHexPrismShader_HLSL"
                 half blindFactor = lerp(1.0, blindLine, 1.0 - shadeFactor);
                 shadeFactor *= blindFactor;
 
-                // 3. 渐变效果
+                // 3. 渐变色（双色渐变，径向/水平/竖直可选）
                 half gradientFactor = 0.0;
                 if (_GradientType < 0.5)
-                    gradientFactor = length(input.screenUV - _GradientCenter) * _GradientIntensity;
+                    gradientFactor = length(input.screenUV - _GradientCenter) * 1.414;
                 else if (_GradientType < 1.5)
-                    gradientFactor = input.screenUV.x * _GradientIntensity;
+                    gradientFactor = input.screenUV.x;
                 else
-                    gradientFactor = input.screenUV.y * _GradientIntensity;
+                    gradientFactor = input.screenUV.y;
                 gradientFactor = saturate(gradientFactor);
+                half4 gradientColor = lerp(_GradientColorA, _GradientColorB, gradientFactor);
 
                 // 颜色混合
                 half4 finalColor = lerp(_MainColor, _ShadowColor, 1.0 - shadeFactor);
-                finalColor = lerp(finalColor, finalColor * (1.0 - gradientFactor), gradientFactor);
+                finalColor.rgb *= gradientColor.rgb;
 
                 // 4. 轮廓线
                 float3 worldNormal = normalize(cross(ddx(input.positionWS), ddy(input.positionWS)));

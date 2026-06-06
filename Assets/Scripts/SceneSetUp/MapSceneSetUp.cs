@@ -11,7 +11,8 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load
     float x_Offset = 0.88f;//每行内的偏移
     float y_Offset = 0.8f;//相邻行的偏移
 
-    int MapRadius = 25;
+    int mapWidth = 55;
+    int mapHeight = 35;
     public Transform MapPivot;
     GameMapManager gameMapManager;
     public Button EndRoundButton;
@@ -39,7 +40,7 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load
 
     public void InitBySaveData(){
         gameMapManager = GameRoot.GetManager<GameMapManager>();
-        gameMapManager.GameMapManagerInit(y_Offset, x_Offset, MapRadius, MapPivot.position);
+        gameMapManager.GameMapManagerInit(y_Offset, x_Offset, mapWidth, mapHeight, MapPivot.position);
 
         StartCoroutine(LoadCharacter(1));
     }
@@ -68,7 +69,7 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load
         gameRoot.RegisterGlobal_MonoManager<GameRoundManager>();
 
         gameMapManager = GameRoot.GetManager<GameMapManager>();
-        gameMapManager.GameMapManagerInit(y_Offset, x_Offset, MapRadius, MapPivot.position);
+        gameMapManager.GameMapManagerInit(y_Offset, x_Offset, mapWidth, mapHeight, MapPivot.position);
 
         if (EndRoundButton)
         {
@@ -137,7 +138,7 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load
         //产生角色
         var player1 = MapCharacterCaller.CallNewCharacter("Moveable");
         //支持外部角色调整
-        player1.InitCharacterDataTag(E_CharacterType.P_1, true, true);
+        player1.InitCharacterDataTag(E_CharacterType.P_海螺骑士, true, true);
 
         //GameRoot.GetManager<OrthoCameraNavigator>().FocusOnTarget(player1.gameObject);
         (player1.GetComponent<CharacterMapMoveHandle>().iMapMover as Player_CharacterMapMover).CharacterZeroMove();

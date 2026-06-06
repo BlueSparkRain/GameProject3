@@ -328,8 +328,11 @@ MonoBehaviour:
   Anim_EaseType: 35
   Anim_BornPos: {x: -1500, y: 50, z: 0}
   Anim_TargetTrans: {x: 1500, y: 0, z: 0}
+  enableTimeScaleControl: 1
   Anim_DoFadeIn: 1
   Anim_NeedAlphaFadeIn: 0
+  freezeCameraOnOpen: 1
+  canOpen: 1
   messageText: {fileID: 4129382873062051491}
   closeButton: {fileID: 1529892608082786182}
   confrimButton: {fileID: 251306601268948099}
@@ -596,8 +599,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u6218\u6597\u63CF\u8FF0\uFF1A\u6B64\u5904\u7701\u7565\u4E00\u5927\u6BB5\u6587\u5B57"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: a9f988c87f1cbc240a5dcab81628a653, type: 2}
-  m_sharedMaterial: {fileID: 1585834782645253122, guid: a9f988c87f1cbc240a5dcab81628a653,
+  m_fontAsset: {fileID: 11400000, guid: 82aacba88f5755941ae31dbf887d97a9, type: 2}
+  m_sharedMaterial: {fileID: 1184076504768702115, guid: 82aacba88f5755941ae31dbf887d97a9,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}

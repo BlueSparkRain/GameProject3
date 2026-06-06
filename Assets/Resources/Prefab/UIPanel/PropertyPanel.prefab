@@ -789,6 +789,9 @@ GameObject:
   - component: {fileID: 3288689085917952003}
   - component: {fileID: 4346667906359517335}
   - component: {fileID: 4708097652609896833}
+  - component: {fileID: 4527654537089412606}
+  - component: {fileID: 243034048892722691}
+  - component: {fileID: 4992751773482409736}
   m_Layer: 5
   m_Name: PropertyPanel
   m_TagString: Untagged
@@ -867,6 +870,70 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49bb0e82c0c959b48ad2f39ed1cff74a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  panelRoot: {fileID: 0}
+  Anim_Duration: 0.8
+  Anim_EaseType: 27
+  Anim_BornPos: {x: 0, y: -1000, z: 0}
+  Anim_TargetTrans: {x: 0, y: 1000, z: 0}
+  enableTimeScaleControl: 1
+  Anim_DoFadeIn: 1
+  Anim_NeedAlphaFadeIn: 0
+  freezeCameraOnOpen: 1
+  canOpen: 1
+  hideButton: {fileID: 0}
+  character_Name: {fileID: 0}
+--- !u!223 &4527654537089412606
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4942603377587922748}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
+--- !u!225 &243034048892722691
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4942603377587922748}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &4992751773482409736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4942603377587922748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &4976245296927008203
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,75 +1,72 @@
 using UnityEngine;
 
 /// <summary>
-/// ¸ºÔğ¶Ô¾ÖÄÚ½ÇÉ«£¨Òò¡¾¼¼ÄÜ¡¿¶øµ¼ÖÂµÄ£©ÊôĞÔ/Ä£ĞÍ µ÷Õû    
+/// æˆ˜æ–—è§’è‰²ä¼¤å®³å¤„ç†å™¨ â€”â€” è´Ÿè´£ã€æŠ€èƒ½ã€‘å’Œã€Buff/Dotã€‘ç­‰ä¼¤å®³/æ¨¡å‹çš„ä¿®æ”¹
 /// </summary>
-public class BattleDamageHandler : MonoBehaviour
-{
+public class BattleDamageHandler : MonoBehaviour{
     BattleDamager_Magic magic_damageChecker;
     BattleDamager_Physic physic_damageChecker;
     Battle_Controller battleController;
     BattleBuffHandler buffHandler;
     public BattleDotHandler DotHandler => dotHandler;
     BattleDotHandler dotHandler;
+    BattleWeaknessHandler weaknessHandler;
     public BattleBuffHandler BuffHandler => buffHandler;
+    public BattleWeaknessHandler WeaknessHandler => weaknessHandler;
     public Battle_Controller BattleController=>battleController;
-    public void InitDataHandler(BattleMVCHandler mvcHandler, BattleBuffHandler buffHandler,BattleDotHandler dotHandler)
+    public void InitDataHandler(BattleMVCHandler mvcHandler, BattleBuffHandler buffHandler,BattleDotHandler dotHandler, BattleWeaknessHandler weaknessHandler)
     {
         battleController = mvcHandler.BattleController;
         this.buffHandler = buffHandler;
         this.dotHandler = dotHandler;
+        this.weaknessHandler = weaknessHandler;
         magic_damageChecker = new BattleDamager_Magic(battleController);
         physic_damageChecker = new BattleDamager_Physic(battleController);
     }
 
     /// <summary>
-    /// Êä³ö ±¾½ÇÉ«Ôì³ÉµÄÒ»´ÎË°Ç°ÉËº¦
+    /// æ”»å‡»ï¼šå¯¹è§’è‰²é€ æˆä¸€æ¬¡ç¨å‰ä¼¤å®³
     /// </summary>
     /// <param name="damageType"></param>
-    /// <param name="skillBaseDamage">¼¼ÄÜµÄ»ù´¡ÉËº¦</param>
-    public float DoDamage(E_Skill_DamageType damageType, float skillBaseDamage)
-    {
+    /// <param name="skillBaseDamage">æŠ€èƒ½çš„åŸºç¡€ä¼¤å®³</param>
+    public float DoDamage(E_Skill_DamageType damageType, float skillBaseDamage){
         float damageBoomerRate =1.0f+buffHandler.GetDamageRate();
-        switch (damageType)
-        {
-            case E_Skill_DamageType.ÎïÀí:
+        switch (damageType){
+            case E_Skill_DamageType.ç‰©ç†:
                 return physic_damageChecker.DoDamage(skillBaseDamage* damageBoomerRate);
-            case E_Skill_DamageType.Ä§·¨:
+            case E_Skill_DamageType.é­”æ³•:
                 return magic_damageChecker.DoDamage(skillBaseDamage*damageBoomerRate);
         }
         return 0;
     }
 
-    
-    /// <summary>
-    /// ¼ì²é±¾´ÎÉËº¦ÊÇ·ñÊ±Èõµã¹¥»÷£¨Èç¹ûÊÇ->Ï÷¼õ¶Üµãx1£©
-    /// </summary>
-    /// <param name="weaknessType"></param>
-    public void CheckWeakness(E_WeaknessType weaknessType) { 
-    
-    } 
 
     /// <summary>
-    /// Íâ²¿½Ó¿Ú£¬µ÷ÓÃ×Ö¶ÎbattleControllerµÄÊôĞÔµ÷Õû·½·¨
+    /// æ£€æŸ¥æœ¬æ¬¡æ”»å‡»æ˜¯å¦å‘½ä¸­ç›®æ ‡å¼±ç‚¹â†’è¿”å›å¼±ç‚¹å€ç‡(1.0æˆ–2.0)
     /// </summary>
-    /// <param name="modelType"></param>
-    /// <param name="value"></param>
+    public float CheckWeakness(E_WeaknessType weaknessType) {
+        if (weaknessHandler == null)
+            return 1f;
+        return weaknessHandler.ProcessWeaknessHit(weaknessType);
+    }
+
+    /// <summary>
+    /// å¤–éƒ¨æ¥å£ï¼šæ‰‹åŠ¨å¯¹battleControllerçš„å±æ€§è¿›è¡Œä¿®æ”¹
+    /// </summary>
     public void DoPropertyValue(E_CharacterPropertyType propertyType, float value)
     {
         magic_damageChecker.DoPropertyValue(propertyType, value);
     }
     /// <summary>
-    /// Íâ²¿½Ó¿Ú£¬µ÷ÓÃ×Ö¶ÎbattleControllerµÄÄ£ĞÍµ÷Õû·½·¨
+    /// å¤–éƒ¨æ¥å£ï¼šæ‰‹åŠ¨å¯¹battleControllerçš„æ¨¡å‹è¿›è¡Œä¿®æ”¹
     /// </summary>
-    /// <param name="modelType"></param>
-    /// <param name="value"></param>
     public void DoModelValue(E_BattleModelType modelType, float value)
     {
         magic_damageChecker.DoModelValue(modelType, value);
     }
 
     /// <summary>
-    /// ÊäÈë Íâ²¿µÄË°Ç°ÉËº¦ Êä³ö Êµ¼Ê½áËãÉËº¦ ²¢µ÷Õû ½ÇÉ«Ä£ĞÍ
+    /// ç»“ç®—ï¼šå¤–éƒ¨ç¨å‰ä¼¤å®³ ç» å®é™…å‡å…è®¡ç®— å ä¿®æ”¹è§’è‰²æ¨¡å‹
     /// </summary>
     /// <param name="damageType"></param>
     /// <param name="damageValue"></param>
@@ -77,19 +74,27 @@ public class BattleDamageHandler : MonoBehaviour
     {
         switch (damageType)
         {
-            case E_Skill_DamageType.ÎïÀí:
+            case E_Skill_DamageType.ç‰©ç†:
                 float da = physic_damageChecker.GetDamage(damageValue);
-                Debug.Log(name + "ÊÕµ½-----Ë°ºóÉËº¦:" + da);
 
-                //¼ì²é±¾½ÇÉ«Á¦½ß×´Ì¬£¨ÈçÊÇ->½áËãÉËº¦x2£©
+                if (battleController.IsBreak)
+                    da *= 2f;
 
-                //´¥·¢ÊÂ¼ş£¨½áËãÎïÀíÉËº¦Ê±£¬¼ì²â½ÇÉ«ÊÇ·ñ´æÔÚÄ³Ğ©Ğ­Í¬¹¥»÷BUFF£©
+                da = Mathf.Min(da, battleController.IsBreak ? 9999f : 999f);
+
+                Debug.Log(name + "Get-----ç¨åä¼¤å®³:" + da);
 
                 battleController.AdjustCharacterModelValue(E_BattleModelType.HP, da);
                 break;
-            case E_Skill_DamageType.Ä§·¨:
+            case E_Skill_DamageType.é­”æ³•:
                 float db = magic_damageChecker.GetDamage(damageValue);
-                Debug.Log(name + "ÊÕµ½-----Ë°ºóÉËº¦:" + db);
+
+                if (battleController.IsBreak)
+                    db *= 2f;
+
+                db = Mathf.Min(db, battleController.IsBreak ? 9999f : 999f);
+
+                Debug.Log(name + "Get-----ç¨åä¼¤å®³:" + db);
                 battleController.AdjustCharacterModelValue(E_BattleModelType.HP, db);
                 break;
             default:
@@ -100,21 +105,21 @@ public class BattleDamageHandler : MonoBehaviour
 
 
     /// <summary>
-    /// »ñÈ¡ÒÑËğÉúÃüÖµ
+    /// è·å–å·²æŸå¤±ç”Ÿå‘½å€¼
     /// </summary>
     public int GetLostHealth() {
         return (int)(battleController.GetCharacterModelValue(E_BattleModelType.MAX_HP)-battleController.GetCharacterModelValue(E_BattleModelType.HP));
     }
 
     /// <summary>
-    /// »ñÈ¡×î´óÉúÃüÖµ
+    /// è·å–æœ€å¤§ç”Ÿå‘½å€¼
     /// </summary>
     public int GetMaxHealth() {
         return (int)battleController.GetCharacterModelValue(E_BattleModelType.MAX_HP);
     }
 
     /// <summary>
-    /// »ñÈ¡µ±Ç°ÉúÃüÖµ
+    /// è·å–å½“å‰ç”Ÿå‘½å€¼
     /// </summary>
     public int GetCurrentHealth()
     {

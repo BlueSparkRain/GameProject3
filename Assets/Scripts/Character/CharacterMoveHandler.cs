@@ -63,7 +63,7 @@ public class CharacterMapMoveHandle : MonoBehaviour, ICanSave_And_Load
         //HexRoomTag randonoom = GameRoot.GetManager<GameMapManager>().GetTargetRoom(pos);
 
         //yield return new WaitForSeconds(1f);
-        transform.position = pos + Vector3.up * 1.2f;
+        transform.position = pos + Vector3.up * GameRoot.GetManager<GameMapManager>().characterYOffset;
         transform.localScale = Vector3.zero;
 
         yield return new WaitForSeconds(1.2f);
@@ -95,7 +95,6 @@ public class CharacterMapMoveHandle : MonoBehaviour, ICanSave_And_Load
     /// 无存档时，初始化默认数据
     /// </summary>
     public void InitBySelf(){
-        Debug.Log("未读取到存档");
         if (!JsonSaver.HasValidData<MapMoverPosition>(uniqueId)){
             HexRoomTag room = GameRoot.GetManager<GameMapManager>().GetRnadomRoom();
             if (room == null){
@@ -110,7 +109,7 @@ public class CharacterMapMoveHandle : MonoBehaviour, ICanSave_And_Load
                 moverPosData = new MapMoverPosition(uniqueId);
             moverPosData.SetPos(currentRow, currentCol);
             JsonSaver.Save(moverPosData, uniqueId);
-            Debug.Log("ID首次生成：" + uniqueId);
+            //Debug.Log("ID首次生成：" + uniqueId);
         }
     }
 }

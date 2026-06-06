@@ -14,14 +14,10 @@ public static class BattleTargetSelector
     /// <summary>
     /// 核心：根据施法者+技能类型，获取合法目标（自动处理死亡+阵营）
     /// </summary>
-    public static List<IBattlable> GetValidTargets(IBattlable caster, E_SkillTargetType type)
-    {
+    public static List<IBattlable> GetValidTargets(IBattlable caster, E_SkillTargetType type){
         var targets = new List<IBattlable>();
         bool isPlayerCaster = caster.Camp == E_Camp.玩家方;
-
-        switch (type)
-        {
-            // 玩家方技能：目标=敌方
+        switch (type){
             case E_SkillTargetType.对单体:
                 targets.Add(GetFirstAliveTarget(isPlayerCaster ? E_Camp.敌方 : E_Camp.玩家方));
                 break;
@@ -31,19 +27,7 @@ public static class BattleTargetSelector
             case E_SkillTargetType.对N目标:
                 targets.AddRange(GetNAliveTargets(isPlayerCaster ? E_Camp.敌方 : E_Camp.玩家方, 3));
                 break;
-
-                //// 敌方技能：目标=玩家方
-                //case E_SkillTargetType.对玩家单体:
-                //    targets.Add(GetFirstAliveTarget(isPlayerCaster ? E_Camp.玩家方 : E_Camp.敌方));
-                //    break;
-                //case E_SkillTargetType.对玩家全体:
-                //    targets.AddRange(GetAllAliveTargets(isPlayerCaster ? E_Camp.玩家方 : E_Camp.敌方));
-                //    break;
-                //case E_SkillTargetType.对玩家N目标:
-                //    targets.AddRange(GetNAliveTargets(isPlayerCaster ? E_Camp.玩家方 : E_Camp.敌方, 3));
-                //    break;
         }
-
         return targets;
     }
 
@@ -52,21 +36,19 @@ public static class BattleTargetSelector
         Debug.Log($"[BattleTargetSelector]---新增Battler：{battler.Camp},当前战斗人数{AllBattleUnits.Count} ");
     }
 
-    // 工具：获取第一个存活目标
-    private static IBattlable GetFirstAliveTarget(E_Camp camp)
-    {
-        Debug.Log(AllBattleUnits.First(u => u.Camp == camp && u.IsAlive) + "????");
+    // 获取第一个存活目标
+    private static IBattlable GetFirstAliveTarget(E_Camp camp){
         return AllBattleUnits.First(u => u.Camp == camp && u.IsAlive);
     }
-    // 工具：获取所有存活目标
-    private static List<IBattlable> GetAllAliveTargets(E_Camp camp) =>
+    // 获取所有存活目标
+    public static List<IBattlable> GetAllAliveTargets(E_Camp camp) =>
         AllBattleUnits.Where(u => u.Camp == camp && u.IsAlive).ToList();
 
-    // 工具：获取N个存活目标
+    // 获取N个存活目标
     private static List<IBattlable> GetNAliveTargets(E_Camp camp, int count) =>
         AllBattleUnits.Where(u => u.Camp == camp && u.IsAlive).Take(count).ToList();
 
-    // 工具：获取随机N个存活目标
+    // 获取随机N个存活目标
     public static List<IBattlable> GetRandomNAliveTargets(E_Camp camp, int count) =>
         AllBattleUnits.Where(u => u.Camp == camp && u.IsAlive)
                       .OrderBy(_ => Random.value) // 核心：随机排序

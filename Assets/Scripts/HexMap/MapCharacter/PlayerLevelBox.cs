@@ -7,26 +7,26 @@ using UnityEngine.UI;
 public class PlayerLevelBox : MonoBehaviour
 {
 
-    [Header("¾­ÑéCircleÌõ")]
+    [Header("ç»éªŒCircleæ¡")]
     public Image expCircleFillbar;
-    [Header("¾­ÑéCircleÌõ_Fast0.2")]
+    [Header("ç»éªŒCircleæ¡_Fast0.2")]
     public Image expCircleFillbar_Fast;
 
-    [Header("µÈ¼¶ÎÄ±¾")]
+    [Header("ç­‰çº§æ–‡æœ¬")]
     public TMP_Text levelText;
 
-    [Header("²»Ê¹ÓÃ¾­ÑéBox//ÏÂ·½µÄ×Ö¶Î¶¼²»Ê¹ÓÃ")]
+    [Header("ä¸ä½¿ç”¨ç»éªŒBox//ä¸‹æ–¹å­—æ®µéƒ½éœ€ä½¿ç”¨")]
     public bool UseLevelBox=true;
-    //Ã¿´Î»ñÈ¡¾­Ñé¶¼»á¸üĞÂUI
-    [Header("¾­ÑéÌõ")]
+    //æ¯æ¬¡è·å–ç»éªŒéƒ½ä¼šæ›´æ–°UI
+    [Header("ç»éªŒæ¡")]
     public Image expFillbar;
     public Image expFillbarWhite;
 
 
-    [Header("µ±Ç°¾­ÑéÖµÎÄ±¾")]
+    [Header("å½“å‰ç»éªŒå€¼æ–‡æœ¬")]
     public TMP_Text currentExpText;
 
-    [Header("¾İÉı¼¶ËùĞè×Ü¾­ÑéÖµÎÄ±¾")]
+    [Header("ä¸‹æ¬¡å‡çº§æ‰€éœ€ç»éªŒå€¼æ–‡æœ¬")]
     public TMP_Text nextExpGoalText;
 
     void Start(){
@@ -35,9 +35,21 @@ public class PlayerLevelBox : MonoBehaviour
             expFillbarWhite.fillAmount = 0;
         }
         expCircleFillbar.fillAmount = 0;
-        
+
         if (expCircleFillbar_Fast != null)
         expCircleFillbar_Fast.fillAmount = 0;
+
+        EventCenter.AddEventListener<EXPUpdateInfo>(E_EventType.AdjustEXP, OnEXPAdjusted);
+    }
+
+    void OnDestroy()
+    {
+        EventCenter.RemoveEventListener<EXPUpdateInfo>(E_EventType.AdjustEXP, OnEXPAdjusted);
+    }
+
+    void OnEXPAdjusted(EXPUpdateInfo info)
+    {
+        UpdateMapPlayerIconUI(info.currentLevel, info.currentEXP, info.levelGoalEXP, info.skip);
     }
 
     public void UpdateMapPlayerIconUI(int currenLevel,float currentEXP,float levelGoal,bool skip=false) {
@@ -52,7 +64,7 @@ public class PlayerLevelBox : MonoBehaviour
 
     IEnumerator UpdateAnim(float targetfillamount , bool skip) {
         if (skip){
-            //Ìø¼¶ĞèÒªÔö¼Ó¶¯»­
+            //å‡çº§éœ€è¦æ’­æ”¾åŠ¨ç”»
             if (UseLevelBox){
                 StartCoroutine(TweenHelper.MakeLerp(expFillbarWhite.fillAmount, 1, 0.05f, val => expFillbarWhite.fillAmount = val));
                 StartCoroutine(TweenHelper.MakeLerp(expFillbar.fillAmount, 1, 0.1f, val => expFillbar.fillAmount = val));

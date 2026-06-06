@@ -10,40 +10,36 @@ public class BattleSkillHandler : MonoBehaviour
     BattlerStateTag battlerStateTag;
     bool battleEnd=false;
 
-    public void InitBattleSkillHandler(IBattlable _self, BattleMVCHandler _battleMVCHandle, BattlerStateTag _battlerStateTag)
-    {
+    public void InitBattleSkillHandler(IBattlable _self, BattleMVCHandler _battleMVCHandle, BattlerStateTag _battlerStateTag){
         self = _self;
         battlerStateTag = _battlerStateTag;
-        battleSkiller = new BattleSkiller(normalSkillIconSpawner, atbSkillIconSpawner,_self);
+        battleSkiller = new BattleSkiller(normalSkillIconSpawner, atbSkillIconSpawner,_self, battlerStateTag);
         battleController = _battleMVCHandle.BattleController;
         EventCenter.AddEventListener<IBattlable, float>(E_EventType.SkillExcute, SkillCost);
         EventCenter.AddEventListener<BattlerStateTag>(E_EventType.Battle_CharacterDead, StopCylcle);
     }
 
+    public BattleSkiller GetSkiller() => battleSkiller;
+
     public void OnSkillerUpdate(){
         if (battleEnd)
             return;
-
-        //只有背包技能才会自动循环释放
         if (!battlerStateTag.State_Dead){
             battleSkiller.OnSkillUpdate(battleController.GetCharacterModelValue(E_BattleModelType.SP));
+            battleSkiller.OnATBUpdate(Time.deltaTime);
         }
     }
-
-    /// <summary>
-    /// 本角色死亡，技能停止循环
-    /// </summary>
-    /// <param name="battler"></param>
     void StopCylcle(BattlerStateTag battler){
         if (battler != battlerStateTag) return;
         SelfEnd();
     }
-
-    void SelfEnd() => battleEnd = true;
-
+    void SelfEnd(){
+        battleEnd = true;
+        battleSkiller.StopATB();
+    }
     void SkillCost(IBattlable skillOwner, float sp_cost){
         if (skillOwner != self) return;
-        Debug.Log($"{battleController.CharacterData.Character_Name}消耗了蓝量:{sp_cost}");
+        Debug.Log($"{battleController.CharacterData.Character_Name}閲婃斁浜嗚嚜鍔ㄦ妧鑳斤紝娑堣�梴sp_cost}");
         battleController.AdjustCharacterModelValue(E_BattleModelType.SP, -sp_cost);
     }
 }

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 public class Player : IBattlable
 {
     public E_Camp Camp => E_Camp.玩家方;
@@ -6,7 +8,9 @@ public class Player : IBattlable
     public Player() { }
 
     public BattleDamageHandler battleDamageHandler { get; set; }
-    public E_WeaknessType selfWeakness { get ; set; }
+
+    List<E_WeaknessType> _weaknesses = new List<E_WeaknessType>();
+    public List<E_WeaknessType> weaknesses => _weaknesses;
 
     public Player(BattleDamageHandler _damageHandle)
     {
@@ -14,9 +18,21 @@ public class Player : IBattlable
     }
 
     public bool GetWeakAttack(E_WeaknessType attackWeakType)
-    { 
-        return selfWeakness == attackWeakType;
+    {
+        for (int i = 0; i < _weaknesses.Count; i++)
+            if (_weaknesses[i] == attackWeakType)
+                return true;
+        return false;
+    }
+
+    public void AddWeakness(E_WeaknessType w)
+    {
+        if (!_weaknesses.Contains(w))
+            _weaknesses.Add(w);
+    }
+
+    public void RemoveWeakness(E_WeaknessType w)
+    {
+        _weaknesses.Remove(w);
     }
 }
-
-

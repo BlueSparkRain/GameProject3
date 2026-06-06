@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Core;
 using DG.Tweening;
 using UnityEngine;
@@ -7,74 +10,105 @@ public class BattleHexRoom : IHexRoom
 {
     E_CharacterType enemyCharacterType;
     string enemyCharacterSoDataPath = "SOData/CharacterSOData/";
-    E_BattleType  battleType;
-    //æ ¹æ®éšæœºçš„ç»“æœå»åŠ è½½å¯¹åº”çš„æ€ªç‰©
-    //éœ€å­˜æ¡£ï¼šè®°å½•æˆ˜æ–—æˆ¿é—´å†å²çš„å…·ä½“æ€ªç‰©ç±»å‹
+    E_BattleType battleType;
     CharacterDataSO enemyCharacterDataSO;
-    public E_CharacterType EnemyType=>enemyCharacterType;
+    public E_CharacterType EnemyType => enemyCharacterType;
 
-    float scaleRate=1;
-    HexRoomTag  roomTag;
-    /// <summary>
-    /// éšæœºäº§ç”Ÿä½ç­‰çº§æ€ªç‰©
-    /// </summary>
-    /// <param name="_enemyCharacterType"></param>
-    public BattleHexRoom(HexRoomTag _roomTag ,E_BattleType _battleType){
-        battleType= _battleType;
-        roomTag= _roomTag;
+    float scaleRate = 1;
+    HexRoomTag roomTag;
+
+    #region µĞÈËÀàĞÍ³Ø£¨°´Ç°×º¶¯Ì¬¹¹½¨£¬ĞÂÔöÃ¶¾ÙÖµ×Ô¶¯ÄÉÈë£©
+    static Dictionary<string, E_CharacterType[]> _enemyPools;
+    static Dictionary<string, E_CharacterType[]> EnemyPools
+    {
+        get
+        {
+            if (_enemyPools == null)
+                BuildEnemyPools();
+            return _enemyPools;
+        }
     }
-    public void DoHexRoomInit(){
-        //å¦‚æœå­˜æ¡£ä¸­æœ‰è®°å½•ï¼ŒåŠ è½½å¯¹åº”çš„ç±»å‹
-        //å¦‚æœæ²¡æœ‰ï¼Œè¡¨ç¤ºç¬¬ä¸€æ¬¡è·å–ï¼Œ
-        //å¯¹åº”ç­‰çº§çš„æ€ªç‰©æ± å­ä¸­æŠ½å–ä¸€ç§éšæœºçš„æ€ªç‰©
 
-        E_CharacterType _characterType=E_CharacterType.LE_1;
-        switch (battleType){
-            case E_BattleType.æ‚é±¼æ•Œäºº:
+    static void BuildEnemyPools()
+    {
+        _enemyPools = new Dictionary<string, E_CharacterType[]>();
+        var allTypes = (E_CharacterType[])Enum.GetValues(typeof(E_CharacterType));
+        _enemyPools["LE_"]   = allTypes.Where(t => t.ToString().StartsWith("LE_")).ToArray();
+        _enemyPools["ME_"]   = allTypes.Where(t => t.ToString().StartsWith("ME_")).ToArray();
+        _enemyPools["BOSS_"] = allTypes.Where(t => t.ToString().StartsWith("BOSS_")).ToArray();
+    }
+
+    /// <summary>
+    /// ´ÓÖ¸¶¨Ç°×ºµÄµĞÈË³ØÖĞËæ»ú³éÈ¡Ò»ÖÖµĞÈËÀàĞÍ
+    /// </summary>
+    static E_CharacterType GetRandomEnemyType(string prefix)
+    {
+        if (!EnemyPools.TryGetValue(prefix, out var pool) || pool.Length == 0)
+        {
+            Debug.LogError($"[BattleHexRoom] µĞÈË³ØÎª¿Õ£¬Ç°×º: {prefix}");
+            return E_CharacterType.LE_½£±ø; // ¶µµ×
+        }
+        int index =UnityEngine. Random.Range(0, pool.Length);
+        Debug.Log($"[BattleHexRoom] ´Ó{prefix}³ØËæ»ú³éÈ¡: {pool[index]} (index:{index}/{pool.Length})");
+        return pool[index];
+    }
+    #endregion
+
+    public BattleHexRoom(HexRoomTag _roomTag, E_BattleType _battleType)
+    {
+        battleType = _battleType;
+        roomTag = _roomTag;
+    }
+
+    public void DoHexRoomInit()
+    {
+        // ¸ù¾İ·¿¼äÕ½¶·µÈ¼¶£¬´Ó¶ÔÓ¦Ç°×ºµÄµĞÈË³ØÖĞËæ»ú³éÈ¡Ò»ÖÖµĞÈË
+        string poolPrefix;
+        switch (battleType)
+        {
+            case E_BattleType.ÔÓÓãµĞÈË:
                 scaleRate = 0.8f;
-                //åæœŸä»ç±»å‹æ± ä¸­éšæœºå–å‡ºä¸€ä¸ª
-                _characterType = E_CharacterType.LE_1;
+                poolPrefix = "LE_";
                 break;
-            case E_BattleType.ç²¾è‹±æ•Œäºº:
+            case E_BattleType.¾«Ó¢µĞÈË:
                 scaleRate = 1f;
-                _characterType = E_CharacterType.ME_1;
+                poolPrefix = "ME_";
                 break;
-            case E_BattleType.é¦–é¢†æ•Œäºº:
+            case E_BattleType.Ê×ÁìµĞÈË:
                 scaleRate = 1.5f;
-                _characterType = E_CharacterType.Boss_1;
+                poolPrefix = "BOSS_";
                 break;
             default:
+                Debug.LogError($"[BattleHexRoom] Î´´¦ÀíµÄÕ½¶·ÀàĞÍ: {battleType}");
+                scaleRate = 1f;
+                poolPrefix = "LE_";
                 break;
         }
 
-        enemyCharacterType = _characterType;
+        enemyCharacterType = GetRandomEnemyType(poolPrefix);
         enemyCharacterDataSO = Resources.Load<CharacterDataSO>(enemyCharacterSoDataPath + enemyCharacterType);
 
-        //ä¹‹åæ ¹æ®å…·ä½“çš„ç±»å‹åŠ è½½å¯¹åº”çš„æ¨¡å‹
-        //å’Œ
-        //å­˜æ¡£/åˆå§‹åŒ–çš„æ€ªç‰©æ•°æ®
-    }
-    int num = 0;
-    public void DoHexRoomLogic(UnityAction roomJob){
-        GameBattleManager gameBattleManager=GameRoot.GetManager<GameBattleManager>();
-        EventCenter.EventTrigger(E_EventType.Mover_MoveStop);
-        //è¯»å–æ•Œäººä¿¡æ¯ï¼Œå¹¶è¿›å…¥æˆ˜æ–—åœºæ™¯
-        //å°†ç©å®¶ä¿¡æ¯å…ˆè¿›è¡Œæ³¨å†Œ
-        EventCenter.EventTrigger(E_EventType.PlayerBeforeIntoBattle);
-        Debug.Log(roomTag+"--è¿›å…¥æˆ˜æ–—æˆ¿é—´"+num++);
-        gameBattleManager.CheckBattleEnemy(roomTag);
-        GameRoot.GetManager<UIManager>().OpenPanel<BattlePanel>(E_UIPanelType.BattlePanel);  
+        if (enemyCharacterDataSO == null)
+            Debug.LogError($"[BattleHexRoom] ÎŞ·¨¼ÓÔØµĞÈËSO: {enemyCharacterSoDataPath}{enemyCharacterType}");
     }
 
-    public void DoHexRoomModel(Vector3 modelPos){
-        //æ ¹æ®æˆ˜æ–—ç±»å‹ï¼Œä»å¯¹åº”çš„æ± å­é‡Œå–å‡ºéšæœºçš„æ€ªç‰©æ•°æ®
-        //æ ¹æ®å…·ä½“æ€ªç‰©æ•°æ®äº§ç”Ÿå¯¹åº”çš„æ¨¡å‹
-        var charac=MapCharacterCaller.CallNewCharacter("DisMoveable");
+    int num = 0;
+    public void DoHexRoomLogic(UnityAction roomJob)
+    {
+        GameBattleManager gameBattleManager = GameRoot.GetManager<GameBattleManager>();
+        EventCenter.EventTrigger(E_EventType.Mover_MoveStop);
+        EventCenter.EventTrigger(E_EventType.PlayerBeforeIntoBattle);
+        Debug.Log(roomTag + "--½øÈëÕ½¶··¿¼ä" + num++);
+        gameBattleManager.CheckBattleEnemy(roomTag);
+        GameRoot.GetManager<UIManager>().OpenPanel<BattlePanel>(E_UIPanelType.BattlePanel);
+    }
+
+    public void DoHexRoomModel(Vector3 modelPos)
+    {
+        var charac = MapCharacterCaller.CallNewCharacter("DisMoveable");
         charac.InitCharacterDataTag(enemyCharacterType, false, false);
         charac.transform.localScale = Vector3.zero;
-        charac.transform.localPosition= modelPos;
-
+        charac.transform.localPosition = modelPos;
         charac.transform.DOScale(scaleRate, 0.5f);
-        //charac.transform.localScale*=scaleRate;
     }
 }

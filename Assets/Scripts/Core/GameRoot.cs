@@ -102,6 +102,17 @@ namespace Core
             RegisterGlobal_MonoManager<AudioManager>();
             //光标管理器
             RegisterGlobal_MonoManager<CursorManager>();
+            //时间流速管理器
+            RegisterGlobal_MonoManager<TimeManager>();
+            //金币管理器
+            RegisterGlobal_MonoManager<GoldManager>();
+            //行动点管理器
+            RegisterGlobal_MonoManager<ActionPointsManager>();
+            //装备背包管理器
+            RegisterGlobal_MonoManager<EquipBacketManager>();
+
+            // 游戏失败监听
+            EventCenter.AddEventListener(E_EventType.GameOver, OnGameOver);
 
 
 
@@ -112,6 +123,10 @@ namespace Core
             //遍历帧更新
             foreach (var manager in globalManagers) manager.MgrUpdate(deltaTime);
             foreach (var manager in sceneManagers) manager.MgrUpdate(deltaTime);
+
+            // ESC 全局呼出/关闭设置面板
+            if (Input.GetKeyDown(KeyCode.Escape))
+                SettingsPanel.Toggle();
         }
 
         /// <summary>
@@ -123,6 +138,18 @@ namespace Core
             DisposeSceneManagers();
             instance = null;
             Debug.Log("[GameRoot]---应用退出，所有管理器已清理！");
+        }
+
+        void OnGameOver()
+        {
+            Debug.Log("[GameRoot]---游戏结束，活力归零");
+            EventCenter.RemoveEventListener(E_EventType.GameOver, OnGameOver);
+            var uiMgr = GetManager<UIManager>();
+            uiMgr.OpenPanel<MessagePanel>(E_UIPanelType.MessagePanel,
+                p => p.SetMessage("活力耗尽，冒险到此结束...", () =>
+                {
+                    GetManager<SceneSwitchManager>().SwitchSceneAsync("MenuScene");
+                }));
         }
         #endregion
 

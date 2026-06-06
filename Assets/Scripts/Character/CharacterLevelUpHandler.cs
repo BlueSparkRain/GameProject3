@@ -1,65 +1,74 @@
-using System;
 using UnityEngine;
 
+/// <summary>
+/// EXP UIæ›´æ–°æ•°æ®
+/// </summary>
+public struct EXPUpdateInfo
+{
+    public int currentLevel;
+    public float currentEXP;
+    public float levelGoalEXP;
+    public bool skip;
+}
 
 /// <summary>
-/// ¹ÜÀí±¾½ÇÉ«µ±Ç°µÈ¼¶µÄ¸üĞÂºÍ¶ÔÓ¦µÄUI¸üĞÂ
+/// è´Ÿè´£è§’è‰²å½“å‰ç­‰çº§çš„æ›´æ–°å’Œå¯¹åº”çš„UIæ›´æ–°
 /// </summary>
 public class CharacterLevelUpHandler : MonoBehaviour
 {
-    /// <summary>
-    /// ½ÇÉ«µ±Ç°µÈ¼¶
-    /// </summary>
-    //private int currentLevel;
-    //public int CurrentLevel => currentLevel;
-
-    [Header("µ½´ïÏÂÒ»¼¶ËùĞè×Ü¾­Ñé")]
+    [Header("ç­‰çº§æå‡åˆ°ä¸‹ä¸€çº§æ‰€éœ€ç»éªŒ")]
     public float levelGoalEXP;
 
-    [Header("µ±Ç°¾­ÑéÖµ")]
+    [Header("å½“å‰ç»éªŒå€¼")]
     public float currentEXP;
 
-    public event Action<int, float, float,bool> EXPUIUpdateEvent;
-
     CharacterData charData;
-
     IUpGradable iUpgrade;
-    public void InitLevelHandler(CharacterData characterData,IUpGradable upGradable)
+
+    public void InitLevelHandler(CharacterData characterData, IUpGradable upGradable)
     {
-        iUpgrade= upGradable;
-        charData=characterData;
-        //ÖØÖÃUIÊı¾İ
-        EXPUIUpdateEvent?.Invoke(1, 0, LevelCalculator.GetLevelUP_EXPGoal(1),false);
-        //currentLevel = charData.CurrentLevel;
+        iUpgrade = upGradable;
+        charData = characterData;
+        currentEXP = charData.CurrentEXP;
+        levelGoalEXP = LevelCalculator.GetLevelUP_EXPGoal(charData.CurrentLevel);
+        TriggerEXPUIEvent(false);
     }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.L))
-        {
             AdjustEXP(250);
-        }
     }
+
     public void AdjustEXP(float trans)
     {
-        Debug.Log("EXP+250");
         bool skip = false;
         if (currentEXP + trans >= levelGoalEXP)
         {
-            charData.AdjustProperty(E_CharacterPropertyType.CurrentLevel,1);
-            JsonSaver.Save<Save_CharacterData>(new Save_CharacterData(charData),charData.characterType.ToString());
+            charData.AdjustProperty(E_CharacterPropertyType.CurrentLevel, 1);
             skip = true;
-            Debug.Log("");
             iUpgrade.UpGrade();
-            //EventCenter.EventTrigger(E_EventType.Character_Upgrade);
-
-            //½ÇÉ«Éı¼¶£¡-Trigger
             levelGoalEXP = LevelCalculator.GetLevelUP_EXPGoal(charData.CurrentLevel);
-            currentEXP = (currentEXP + trans - levelGoalEXP+100);//È¡³ö-Òç³öµÄ¾­ÑéÖµ
+            currentEXP = (currentEXP + trans - levelGoalEXP + 100);
         }
         else
             currentEXP += trans;
         levelGoalEXP = LevelCalculator.GetLevelUP_EXPGoal(charData.CurrentLevel);
-        EXPUIUpdateEvent?.Invoke(charData.CurrentLevel, currentEXP, levelGoalEXP,skip);
+
+        charData.SetCurrentEXP(currentEXP);
+        JsonSaver.Save(new Save_CharacterData(charData), charData.characterType.ToString());
+        TriggerEXPUIEvent(skip);
+    }
+
+    void TriggerEXPUIEvent(bool skip)
+    {
+        var info = new EXPUpdateInfo
+        {
+            currentLevel = charData.CurrentLevel,
+            currentEXP = currentEXP,
+            levelGoalEXP = levelGoalEXP,
+            skip = skip
+        };
+        EventCenter.EventTrigger(E_EventType.AdjustEXP, info);
     }
 }
-

@@ -470,7 +470,8 @@ MonoBehaviour:
   y_Offset: 0.75
   roomPrefab: {fileID: 3702633034361400875, guid: 486f7aeb145dc164ab92a609dab1c5da,
     type: 3}
-  MapRadius: 30
+  mapWidth: 40
+  mapHeight: 30
   MapPivot: {fileID: 1110076308}
   MapSOData: {fileID: 11400000, guid: d601cd21fc06f2f4584c30c06d4f9bec, type: 2}
 --- !u!1 &757892342

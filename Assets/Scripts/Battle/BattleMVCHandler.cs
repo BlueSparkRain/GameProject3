@@ -12,19 +12,16 @@ public class BattleMVCHandler : MonoBehaviour
 
     BattlerStateTag battlerStateTag;
 
-    public void InitMVCHandler(CharacterData characterData, BattlerStateTag _battlerStateTag)
+    public void InitMVCHandler(bool isplayer,CharacterData characterData, BattlerStateTag _battlerStateTag, int initialShieldPoints = 5)
     {
-        bool isplayer = (characterData.characterType == E_CharacterType.P_1 ||
-                        characterData.characterType == E_CharacterType.P_2 ||
-                        characterData.characterType == E_CharacterType.P_3);
-
         battlerStateTag = _battlerStateTag;
         viewer = GetComponent<Battle_Viewer>();
-        battleController = new Battle_Controller(characterData, viewer,battlerStateTag);
+        battleController = new Battle_Controller(characterData, viewer, battlerStateTag, initialShieldPoints);
 
         var battlemanager = GameRoot.GetManager<BattleTargetsSelectManager>();
         Debug.Log(battlemanager + "///");
-        battlemanager.RegisterSkiller(isplayer, battlerStateTag);
+        var levelUpHandler = GetComponent<CharacterLevelUpHandler>();
+        battlemanager.RegisterSkiller(isplayer, battlerStateTag, levelUpHandler);
     }
 
     public void OnMVCHandlerUpdate() {

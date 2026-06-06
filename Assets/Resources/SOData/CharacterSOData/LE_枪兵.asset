@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ba5b5473234d6b41bbf878ab1751d4e, type: 3}
+  m_Name: "LE_\u67AA\u5175"
+  m_EditorClassIdentifier: 
+  characterType: 2
+  characterSprite: {fileID: 21300000, guid: ec25ca2d0ab90fd4e89d15368f8a0915, type: 3}
+  characterName: "LE_\u67AA\u5175"
+  Phy_Flat_Penetration: 0
+  Mag_Flat_Penetration: 0
+  Phy_Resistance: 50
+  Mag_Resistance: 50
+  Phy_Attack: 25
+  Magic_Attack: 25
+  Maximum_Mana: 500
+  Mana_Regeneration: 0
+  Maximum_Health: 600
+  Health_Regeneration: 0
+  Life_Steal: 0
+  Tenacity: 0
+  Endurance: 0
+  Dodge_Rate: 0
+  Heal_Amplification: 0
+  Shield_Amplification: 0
+  Maximum_ATB: 8
+  autoSkillSlotCount: 6
+  atbSkillSlotCount: 6

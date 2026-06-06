@@ -1,52 +1,32 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using Core;
 
 public class SkillBucket_20_to_39 { }
 
-/***
-£¨20£©»ñµÃ¡¾ÎüÑª+1¡¿£¨ÉúÃüÍµÈ¡+15%£©£¬³ÖĞø20S
-£¨21£©»ñµÃ¡¾ÖÎÁÆ+1¡¿£¨ÖÎÁÆ¼Ó³É+30%£©£¬³ÖĞø20S
-£¨22£©Çå³ı×ÔÉíËùÓĞÊôĞÔÏÂ½µĞ§¹û
-£¨23£©ÑÓ³¤×ÔÉíÕıÃæ×´Ì¬³ÖĞøÊ±³¤10S
-£¨24£©¸´ÖÆ1ÃûµĞÈËµÄÕıÃæĞ§¹û£¬²¢½«×ÔÉíµÄ¸ºÃæĞ§¹û¸´ÖÆ¸øÕâÃûµĞÈË
-£¨25£©Çå³ı×ÔÉíËùÓĞÕıÃæĞ§¹û£¬È»ºó¶Ô1µĞÈËÔì³É½£ÈõµãÉËº¦£¬Ã¿Çå³ı1ÖÖ£¬ÉËº¦±¶ÂÊ+0.1
-£¨26£©Çå³ı1ÃûµĞÈËËùÓĞ¸ºÃæĞ§¹û£¬È»ºó²¢¶ÔÆäÔì³ÉÇ¹ÈõµãÉËº¦£¬Ã¿Çå³ı1ÖÖ£¬ÉËº¦±¶ÂÊ+0.1
-£¨27£©»ñµÃËæ»ú 1 ÖÖ³ÖĞø5SµÄÊôĞÔÀàĞÍÔöÒæ£¬ÖØ·ÅX£¨=Ğ¯´øµÄ¹¥»÷¼¼ÄÜÈõµãÖÖÀàÊıÁ¿£©
-£¨28£©»ñµÃ¡¾ÍË»¯¡¿×´Ì¬£¨Ôì³ÉÉËº¦¼õÉÙ30%£©³ÖĞø20S£¬»Ø¸´25%×î´óÉúÃüÖµ
-£¨29£©¶ÔËæ»úµĞÈËÔì³É3´ÎËæ»úÀàĞÍ£¨±ù¡¢»ğ¡¢À×£©µÄÉÙÁ¿ÉËº¦£¬ÖØ·Å0
-£¨30£©¶ÔÈ«ÌåµĞÈËÔì³É½£¡¢Ç¹¡¢¹­µÄÖĞÁ¿ÉËº¦¸÷2´Î
-£¨31£©Ê¹¶Ô·½Ëæ»ú»ñµÃ1Î´ÓµÓĞµÄÎïÀíÈõµã£¨ÖĞºÄ£©
-£¨32£©¶Ô1ÃûµĞÈËÔì³É2´Î´óÁ¿Ç¹ÈõµãÉËº¦£¬¸ÃµĞÈËÃ¿¾ßÓĞ1¸öÈõµã£¬¸Ã¼¼ÄÜÉËº¦Ôö¼Ó20%
-£¨33£©¶ÔÈ«ÌåµĞÈËÔì³É´óÁ¿¹­ÈõµãÉËº¦£¬ÖØ·Å2£¬Èç¹ûÕâ´Î¹¥»÷»÷É±ÁËµĞÈË»òÕßÊ¹µĞÈË½øÈëÁ¦½ß×´Ì¬£¬ÖØ·Å´ÎÊı+1£¨¿Éµş¼Ó£©
-£¨34£©Ôì³É´óÁ¿½£ÈõµãÉËº¦£¬¶ÔÁ¦½ßµĞÈËÔì³É2±¶ÉËº¦
-£¨35£©ÑÓ³¤1ÃûµĞÈË»÷ÆÆ×´Ì¬5S£¬²¢ÇÒÊ¹ÆäÊ¹Æä»ñµÃ¡¾Ò×Ëğ¡¿×´Ì¬£¨Á¦½ßÊ±ÊÜµ½ÉËº¦Ôö¼Ó35%£©³ÖĞø5S
-£¨36£©¶ÔµĞ·½È«ÌåÔì³É´óÁ¿½£/Ç¹/¹­ÈõµãÉËº¦1´Î£¬Õâ¸ö¼¼ÄÜÖ»ÄÜÊÍ·Å1´Î£¨·½Ïò¼üÇĞ»»ÈõµãÀàĞÍ£©
-£¨37£©»ñµÃ¡¾Ñ¸À×Á¬Ëø¡¿×´Ì¬£¨ÎïÀí¹¥»÷¼¼ÄÜ¸½´øÀ×Èõµã¹¥»÷ÉËº¦£©³ÖĞø20S
-£¨38£©»ñµÃ¡¾±©Ñ©Á¬Ëø¡¿×´Ì¬£¨ÎïÀí¹¥»÷¼¼ÄÜ¸½´ø±ùÈõµã¹¥»÷ÉËº¦£©³ÖĞø20S
-£¨39£©»ñµÃ¡¾³¬´óÄ§·¨»¯¡¿×´Ì¬£¨Ä§·¨ÀàĞÍ¹¥»÷¼¼ÄÜ½«»á¶îÍâÊÍ·Å2´Î£©£¬³ÖĞø30S
-***/
-
 
 /// <summary>
-///£¨20£©»ñµÃ¡¾ÎüÑª+1¡¿£¨ÉúÃüÍµÈ¡+15%£©£¬³ÖĞø20S
+/// ç¬¬20ä¸ªï¼šæ±²å–ã€å¸è¡€+1ã€‘ç”Ÿå‘½å·å–+15%ï¼ŒæŒç»­20S
 /// </summary>
 [SkillID(20)]
 public class Skill_20 : SkillBase
 {
     public Skill_20(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--¼¼ÄÜ20--$$$$$");
+        Debug.Log("$$$$$--æŠ€èƒ½20--$$$$$");
     }
     int level = 1;
-    //20sBUFF³ÖĞøÊ±¼ä
+    //20sBUFFæŒç»­æ—¶é—´
     float buff_duration = 20;
-    //ÌáÉı±ÈÀı
+    //åŸºç¡€å€ç‡
     float baseRiseRate = 0.15f;
     /// <summary>
-    /// ÔöÒæBUFF
+    /// å½“å‰BUFF
     /// </summary>
     BuffBase buff;
     /// <summary>
-    /// µ÷ÕûÊıÖµ£¨+£©
+    /// å½“å‰è°ƒæ•´å€¼ï¼ˆ+å€¼ï¼‰
     /// </summary>
     float adjustValue;
     public override void SkillEffect_Base(IBattlable target)
@@ -54,7 +34,7 @@ public class Skill_20 : SkillBase
         CreateBuff(level);
     }
     /// <summary>
-    /// ¡¾ÉúÃüÍµÈ¡+1¡¿±äÎª¡¾ÉúÃüÍµÈ¡+2¡¿£¨ÉúÃüÍµÈ¡+30%£©/¡¾ÉúÃüÍµÈ¡+3¡¿£¨ÉúÃüÍµÈ¡+45%£©/¡¾ÉúÃüÍµÈ¡+4¡¿£¨ÉúÃüÍµÈ¡+60%£©
+    /// ç”Ÿå‘½å·å–+1â†’ç”Ÿå‘½å·å–+2ï¼ˆç”Ÿå‘½å·å–+30%ï¼‰/ç”Ÿå‘½å·å–+3ï¼ˆç”Ÿå‘½å·å–+45%ï¼‰/ç”Ÿå‘½å·å–+4ï¼ˆç”Ÿå‘½å·å–+60%ï¼‰
     /// </summary>
     /// <param name="target"></param>
     /// <param name="henceTime"></param>
@@ -66,41 +46,41 @@ public class Skill_20 : SkillBase
     {
         BattleBuffHandler buffHandle = self.battleDamageHandler.BuffHandler;
         Battle_Controller battleControl = self.battleDamageHandler.BattleController;
-        Debug.Log($"[Skill 20]{self.Camp}·¢¶¯¼¼ÄÜ20-[ÉúÃüÍµÈ¡+N£¨{level}£©-BUFF]");
+        Debug.Log($"[Skill 20]{self.Camp}å‘åŠ¨æŠ€èƒ½20-[ç”Ÿå‘½å·å–+Nï¼ˆ{level}ï¼‰-BUFF]");
         if (buff != null)
         {
-            Debug.Log("[Skill 20]:Ìæ»»µôÉÏÒ»¸öµÄÔöÒæĞ§¹û£¬Ë¢ĞÂ¼ÆÊ±");
+            Debug.Log("[Skill 20]:æ›¿æ¢ä¸Šä¸€ä¸ªå±æ€§è°ƒæ•´æ•ˆæœï¼Œåˆ·æ–°è®¡æ—¶");
             battleControl.AdjustCharacterPropertyValue(E_CharacterPropertyType.Life_Steal, -adjustValue);
         }
         adjustValue = baseRiseRate * level;
-        buff = new Buff_AdjustProperty(E_BuffType.ÉúÃüÍµÈ¡¼ÓN, E_BuffPositive.ÕıÃæ, buff_duration, battleControl, E_CharacterPropertyType.Life_Steal, adjustValue);
-        //ÎªÄ¿±ê×¢²áBUFF        
+        buff = new Buff_AdjustProperty(E_BuffType.ç”Ÿå‘½å·å–åŠ N, E_BuffPositive.æ­£é¢, buff_duration, battleControl, E_CharacterPropertyType.Life_Steal, adjustValue);
+        //ä¸ºç›®æ ‡æ³¨å†ŒBUFF
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, buffHandle, buff);
     }
 }
 
 /// <summary>
-///£¨21£©»ñµÃ¡¾ÖÎÁÆ+1¡¿£¨ÖÎÁÆ¼Ó³É+30%£©£¬³ÖĞø20S
+/// ç¬¬21ä¸ªï¼šå†ç”Ÿã€æ²»ç–—+1ã€‘æ²»ç–—åŠ æˆ+30%ï¼ŒæŒç»­20S
 /// </summary>
 [SkillID(21)]
 public class Skill_21 : SkillBase
 {
     public Skill_21(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--¼¼ÄÜ21--$$$$$");
+        Debug.Log("$$$$$--æŠ€èƒ½21--$$$$$");
     }
 
     int level = 1;
-    //20sBUFF³ÖĞøÊ±¼ä
+    //20sBUFFæŒç»­æ—¶é—´
     float buff_duration = 20;
-    //ÌáÉı±ÈÀı
+    //åŸºç¡€å€ç‡
     float baseRiseRate = 0.15f;
     /// <summary>
-    /// ÔöÒæBUFF
+    /// å½“å‰BUFF
     /// </summary>
     BuffBase buff;
     /// <summary>
-    /// µ÷ÕûÊıÖµ£¨+£©
+    /// å½“å‰è°ƒæ•´å€¼ï¼ˆ+å€¼ï¼‰
     /// </summary>
     float adjustValue;
     public override void SkillEffect_Base(IBattlable target)
@@ -108,7 +88,7 @@ public class Skill_21 : SkillBase
         CreateBuff(level);
     }
     /// <summary>
-    /// ¡¾ÖÎÁÆ¼Ó³É+1¡¿±äÎª¡¾ÖÎÁÆ¼Ó³É+2¡¿£¨ÖÎÁÆ¼Ó³É+30%£©/¡¾ÖÎÁÆ¼Ó³É+3¡¿£¨ÖÎÁÆ¼Ó³É+45%£©/¡¾ÖÎÁÆ¼Ó³É+4¡¿£¨ÖÎÁÆ¼Ó³É+60%£©
+    /// æ²»ç–—åŠ æˆ+1â†’æ²»ç–—åŠ æˆ+2ï¼ˆæ²»ç–—åŠ æˆ+30%ï¼‰/æ²»ç–—åŠ æˆ+3ï¼ˆæ²»ç–—åŠ æˆ+45%ï¼‰/æ²»ç–—åŠ æˆ+4ï¼ˆæ²»ç–—åŠ æˆ+60%ï¼‰
     /// </summary>
     /// <param name="target"></param>
     /// <param name="henceTime"></param>
@@ -118,327 +98,527 @@ public class Skill_21 : SkillBase
     void CreateBuff(int level){
         BattleBuffHandler buffHandle = self.battleDamageHandler.BuffHandler;
         Battle_Controller battleControl = self.battleDamageHandler.BattleController;
-        Debug.Log($"[Skill 21]{self.Camp}·¢¶¯¼¼ÄÜ21-[ÖÎÁÆĞ§¹û+N£¨{level}£©-BUFF]");
+        Debug.Log($"[Skill 21]{self.Camp}å‘åŠ¨æŠ€èƒ½21-[æ²»ç–—å¼ºåŒ–+Nï¼ˆ{level}ï¼‰-BUFF]");
         if (buff != null){
-            Debug.Log("[Skill 21]:Ìæ»»µôÉÏÒ»¸öµÄÔöÒæĞ§¹û£¬Ë¢ĞÂ¼ÆÊ±");
+            Debug.Log("[Skill 21]:æ›¿æ¢ä¸Šä¸€ä¸ªå±æ€§è°ƒæ•´æ•ˆæœï¼Œåˆ·æ–°è®¡æ—¶");
             battleControl.AdjustCharacterPropertyValue(E_CharacterPropertyType.Heal_Amplification, -adjustValue);
         }
         adjustValue = baseRiseRate * level;
-        buff = new Buff_AdjustProperty(E_BuffType.ÉúÃüÍµÈ¡¼ÓN, E_BuffPositive.ÕıÃæ, buff_duration, battleControl, E_CharacterPropertyType.Heal_Amplification, adjustValue);
-        //ÎªÄ¿±ê×¢²áBUFF        
+        buff = new Buff_AdjustProperty(E_BuffType.æ²»ç–—å¼ºåŒ–åŠ N, E_BuffPositive.æ­£é¢, buff_duration, battleControl, E_CharacterPropertyType.Heal_Amplification, adjustValue);
+        //ä¸ºç›®æ ‡æ³¨å†ŒBUFF
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, buffHandle, buff);
     }
 }
 /// <summary>
-/// £¨22£©Çå³ı×ÔÉíËùÓĞÊôĞÔÏÂ½µĞ§¹û
+/// ç¬¬22ä¸ªï¼šå‡€åŒ–ä¹‹ä»ªæ¶ˆé™¤æºå¸¦çš„å…¨éƒ¨å‡ç›Šæ•ˆæœ
 /// </summary>
 [SkillID(22)]
 public class Skill_22 : SkillBase
 {
     public Skill_22(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--¼¼ÄÜ22--$$$$$");
+        Debug.Log("$$$$$--æŠ€èƒ½22--$$$$$");
     }
-    /// <summary>
-    ///ÕÒµ½BuffHandle£¬²éÕÒÆäÖĞµÄBUFFÃû³Æ£¬ÒÀ´ÎÒÆ³ı
-    /// </summary>
-    void DeletePropertyNagtiveBuff()
-    {
-        var buffHanlder = self.battleDamageHandler.BuffHandler;
-        buffHanlder.UnRegistBuff(E_BuffType.Îï¹¥¼õN);
-        buffHanlder.UnRegistBuff(E_BuffType.Ä§¹¥¼õN);
-        buffHanlder.UnRegistBuff(E_BuffType.Îï·À¼õN);
-        buffHanlder.UnRegistBuff(E_BuffType.Ä§·À¼õN);
-    }
+
     public override void SkillEffect_Base(IBattlable target)
     {
-        DeletePropertyNagtiveBuff();
+        BuffHandler.UnRegistBuffsByAttr(E_BuffPositive.è´Ÿé¢);
     }
 }
 /// <summary>
-/// £¨23£©ÑÓ³¤×ÔÉíÕıÃæ×´Ì¬³ÖĞøÊ±³¤10S
+/// ç¬¬23ä¸ªï¼šå¸Œæœ›ä¹‹æ­Œ å»¶é•¿å…¨éƒ¨æ­£é¢çŠ¶æ€æŒç»­æ—¶é—´10S
 /// </summary>
 [SkillID(23)]
 public class Skill_23 : SkillBase{
     public Skill_23(E_SkillTargetType _skillTargetType) : base(_skillTargetType){
-        Debug.Log("$$$$$--¼¼ÄÜ23--$$$$$");
+        Debug.Log("$$$$$--æŠ€èƒ½23--$$$$$");
     }
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        Debug.Log($"{self.Camp}å»¶é•¿å…¨éƒ¨æ­£é¢BUFFæŒç»­æ—¶é—´10S");
+        BuffHandler.ExtendBuffTimers(E_BuffPositive.æ­£é¢, 10f);
     }
 }
 /// <summary>
-/// £¨24£©¸´ÖÆ1ÃûµĞÈËµÄÕıÃæĞ§¹û£¬²¢½«×ÔÉíµÄ¸ºÃæĞ§¹û¸´ÖÆ¸øÕâÃûµĞÈË
+/// ï¼Ÿï¼Ÿï¼Ÿ ç¬¬24ä¸ªï¼šé•œåƒåå°„ å¤åˆ¶1ä¸ªæ•Œäººçš„æ­£é¢æ•ˆæœï¼Œæ¸…é™¤è‡ªèº«çš„å…¨éƒ¨è´Ÿé¢æ•ˆæœï¼ˆæ›¿æ¢æ­£é¢ï¼Ÿï¼‰
+/// </summary>
 [SkillID(24)]
 public class Skill_24 : SkillBase
 {
     public Skill_24(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--¼¼ÄÜ24--$$$$$");
+        Debug.Log("$$$$$--æŠ€èƒ½24--$$$$$");
     }
-
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        // æ¸…é™¤è‡ªèº«å…¨éƒ¨è´Ÿé¢æ•ˆæœ
+        BuffHandler.UnRegistBuffsByAttr(E_BuffPositive.è´Ÿé¢);
+        // å¤åˆ¶ç›®æ ‡1ä¸ªéšæœºæ­£é¢æ•ˆæœ
+        var targetHandler = target.battleDamageHandler.BuffHandler;
+        var positiveBuffs = targetHandler.GetBuffsByAttr(E_BuffPositive.æ­£é¢);
+        if (positiveBuffs.Count > 0) {
+            var copied = positiveBuffs[Random.Range(0, positiveBuffs.Count)];
+            Debug.Log($"[Skill 24]{self.Camp}å¤åˆ¶æ•Œäººæ­£é¢BUFFï¼š{copied.Buff_Type}");
+            EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, copied);
+        }
     }
 }
 /// <summary>
-/// £¨25£©Çå³ı×ÔÉíËùÓĞÕıÃæĞ§¹û£¬È»ºó¶Ô1µĞÈËÔì³É½£ÈõµãÉËº¦£¬Ã¿Çå³ı1ÖÖ£¬ÉËº¦±¶ÂÊ+0.1
+/// ï¼Ÿï¼Ÿï¼Ÿç¬¬25ä¸ª æ— å¿ƒé•¿åˆ€ï¼šæ¸…é™¤è‡ªèº«æ‰€æœ‰æ­£é¢æ•ˆæœï¼Œç„¶åå¯¹1æ•Œäººé€ æˆå‰‘å¼±ç‚¹ä¼¤å®³ï¼Œæ¯æ¸…é™¤1ç§ï¼Œä¼¤å®³å€ç‡+0.1
 /// </summary>
 [SkillID(25)]
 public class Skill_25 : SkillBase
 {
     public Skill_25(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--¼¼ÄÜ25--$$$$$");
+        Debug.Log("$$$$$--æŠ€èƒ½25--$$$$$");
     }
 
+    float baseRate = 0.3f;
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        int removedCount = BuffHandler.GetBuffsByAttr(E_BuffPositive.æ­£é¢).Count;
+        BuffHandler.UnRegistBuffsByAttr(E_BuffPositive.æ­£é¢);
+        float rate = baseRate + removedCount * 0.1f;
+        Debug.Log($"[Skill 25]{self.Camp}æ¸…é™¤{removedCount}ç§æ­£é¢æ•ˆæœï¼Œå‰‘å¼±ç‚¹ä¼¤å®³ï¼Œå€ç‡ï¼š{rate}");
+        var atk = new Attack_Skill();
+        atk.SetAttackState(E_WeaknessType.å‰‘, -1, rate);
+        atk.Excute(self, target);
     }
 }
 /// <summary>
-/// £¨26£©Çå³ı1ÃûµĞÈËËùÓĞ¸ºÃæĞ§¹û£¬È»ºó²¢¶ÔÆäÔì³ÉÇ¹ÈõµãÉËº¦£¬Ã¿Çå³ı1ÖÖ£¬ÉËº¦±¶ÂÊ+0.1
+/// ï¼Ÿï¼Ÿï¼Ÿç¬¬26ä¸ª æˆ’å¿ƒé•¿æªï¼šæ¸…é™¤1åæ•Œäººæ‰€æœ‰è´Ÿé¢æ•ˆæœï¼Œç„¶åå¹¶å¯¹å…¶é€ æˆæªå¼±ç‚¹ä¼¤å®³ï¼Œæ¯æ¸…é™¤1ç§ï¼Œä¼¤å®³å€ç‡+0.1
 /// </summary>
 [SkillID(26)]
 public class Skill_26 : SkillBase
 {
     public Skill_26(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--¼¼ÄÜ26--$$$$$");
+        Debug.Log("$$$$$--æŠ€èƒ½26--$$$$$");
     }
+
+    float baseRate = 0.3f;
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        var targetHandler = target.battleDamageHandler.BuffHandler;
+        int removedCount = targetHandler.GetBuffsByAttr(E_BuffPositive.è´Ÿé¢).Count;
+        targetHandler.UnRegistBuffsByAttr(E_BuffPositive.è´Ÿé¢);
+        float rate = baseRate + removedCount * 0.1f;
+        Debug.Log($"[Skill 26]{self.Camp}æ¸…é™¤ç›®æ ‡{removedCount}ç§è´Ÿé¢æ•ˆæœï¼Œæªå¼±ç‚¹ä¼¤å®³ï¼Œå€ç‡ï¼š{rate}");
+        var atk = new Attack_Skill();
+        atk.SetAttackState(E_WeaknessType.æª, -1, rate);
+        atk.Excute(self, target);
     }
 }
 /// <summary>
-/// £¨27£©»ñµÃËæ»ú 1 ÖÖ³ÖĞø5SµÄÊôĞÔÀàĞÍÔöÒæ£¬ÖØ·ÅX£¨=Ğ¯´øµÄ¹¥»÷¼¼ÄÜÈõµãÖÖÀàÊıÁ¿£©
+/// ï¼Ÿï¼Ÿï¼Ÿï¼ˆ27ï¼‰æŠ˜å°„ï¼šè·å¾—éšæœº 1 ç§æŒç»­5Sçš„å±æ€§ä¸Šå‡ç±»å‹å¢ç›Šï¼Œé‡æ”¾Xï¼ˆ=æºå¸¦çš„æ”»å‡»æŠ€èƒ½å¼±ç‚¹ç§ç±»æ•°é‡ï¼‰
 /// </summary>
 [SkillID(27)]
 public class Skill_27 : SkillBase
 {
+    float buffDuration = 5f;
+    float baseRiseRate = 0.2f;
+    int recastCount = 3; // é»˜è®¤æ”»å‡»å¼±ç‚¹ç§ç±»ï¼šå‰‘/æª/å¼“
+
+    PropertyAdjust_Skill propty_Skill;
+    PropertyAdjust_Skill propty_Skill_revert;
+    ISkill revertDecorator;
+
     public Skill_27(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--¼¼ÄÜ27--$$$$$");
+        Debug.Log("$$$$$--æŠ€èƒ½27--$$$$$");
+        propty_Skill = new PropertyAdjust_Skill();
+        propty_Skill_revert = new PropertyAdjust_Skill();
+        revertDecorator = new DelayTrigger_SkillDecorator(propty_Skill_revert, buffDuration);
+    }
+
+    E_CharacterPropertyType RandomProperty()
+    {
+        int index = Random.Range(0, 4);
+        switch (index)
+        {
+            case 0: return E_CharacterPropertyType.Phy_Attack;
+            case 1: return E_CharacterPropertyType.Phy_Resistance;
+            case 2: return E_CharacterPropertyType.Mag_Attack;
+            default: return E_CharacterPropertyType.Mag_Resistance;
+        }
     }
 
     public override void SkillEffect_Base(IBattlable target)
     {
+        E_CharacterPropertyType propType = RandomProperty();
+        Debug.Log($"[Skill 27]{self.Camp}å‘åŠ¨æŠ€èƒ½27-[æŠ˜å°„]ï¼Œéšæœºå±æ€§{propType}ï¼Œé‡æ”¾{recastCount}æ¬¡");
 
+        propty_Skill.SetPropertyState(propType, 1, baseRiseRate);
+        propty_Skill_revert.SetPropertyState(propType, 1, 1.0f / baseRiseRate);
+
+        var multi = new MultiTime_SkillDecorator(propty_Skill, recastCount, 0.2f);
+        multi.Excute(self, target);
+        revertDecorator.Excute(self, target);
     }
 }
 /// <summary>
-/// £¨28£©»ñµÃ¡¾ÍË»¯¡¿×´Ì¬£¨Ôì³ÉÉËº¦¼õÉÙ30%£©³ÖĞø20S£¬»Ø¸´25%×î´óÉúÃüÖµ
+/// ï¼Ÿï¼Ÿï¼Ÿï¼ˆ28ï¼‰æ–­å°¾æ±‚ç”Ÿï¼šè·å¾—ã€é€€åŒ–ã€‘çŠ¶æ€ï¼ˆé€ æˆä¼¤å®³å‡å°‘25%ï¼‰æŒç»­20Sï¼Œå›å¤25%æœ€å¤§ç”Ÿå‘½å€¼
 /// </summary>
 [SkillID(28)]
 public class Skill_28 : SkillBase
 {
     public Skill_28(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--¼¼ÄÜ28--$$$$$");
+        Debug.Log("$$$$$--æŠ€èƒ½28--$$$$$");
     }
 
+    float buffDuration = 20f;
+    float degradeRate = -0.25f;
+    float healRate = 0.25f;
 
     public override void SkillEffect_Base(IBattlable target)
     {
+        Debug.Log($"[Skill 28]{self.Camp}å‘åŠ¨æŠ€èƒ½28-[é€€åŒ–]ï¼Œä¼¤å®³-25%ï¼Œå›å¤25%æœ€å¤§ç”Ÿå‘½å€¼");
+        var buff = new Buff_DamageBoomer(E_BuffType.é€€åŒ–_è´Ÿé¢, E_BuffPositive.è´Ÿé¢, buffDuration, degradeRate);
+        EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
 
+        var heal = new ModelAdjust_Skill();
+        heal.SetModelState(E_BattleModelType.HP, self.battleDamageHandler.GetMaxHealth(), healRate);
+        heal.Excute(self, self);
     }
 }
 /// <summary>
-/// £¨29£©¶ÔËæ»úµĞÈËÔì³É3´ÎËæ»úÀàĞÍ£¨±ù¡¢»ğ¡¢À×£©µÄÉÙÁ¿ÉËº¦£¬ÖØ·Å0
+/// ï¼Ÿï¼Ÿï¼Ÿç¬¬29ä¸ªå±æ€§æ··ä¹±ï¼šå¯¹éšæœºæ•Œäººé€ æˆ3æ¬¡éšæœºç±»å‹ï¼ˆå†°ã€ç«ã€é›·ï¼‰çš„å°‘é‡ä¼¤å®³ï¼Œé‡æ”¾0
 /// </summary>
 [SkillID(29)]
 public class Skill_29 : SkillBase
 {
+    float baseAttackValue = -1;
+    float baseAttackRate = 0.2f;
+    int hitCount = 3;
+    static readonly E_WeaknessType[] randomElements = { E_WeaknessType.å†°, E_WeaknessType.ç«, E_WeaknessType.é›· };
+
     public Skill_29(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--¼¼ÄÜ29--$$$$$");
+        Debug.Log("$$$$$--æŠ€èƒ½29--$$$$$");
     }
+
     public override void SkillEffect_Base(IBattlable target)
     {
+        E_Camp enemyCamp = (self.Camp == E_Camp.ç©å®¶æ–¹ ? E_Camp.æ•Œæ–¹ : E_Camp.ç©å®¶æ–¹);
+        var enemy = BattleTargetSelector.GetRandomNAliveTargets(enemyCamp, 1);
+        if (enemy.Count == 0) return;
 
+        var randomTarget = enemy[0];
+        Debug.Log($"[Skill 29]{self.Camp}å‘åŠ¨æŠ€èƒ½29-[å±æ€§æ··ä¹±]å¯¹{randomTarget.battleDamageHandler.name}");
+
+        for (int i = 0; i < hitCount; i++)
+        {
+            var element = randomElements[Random.Range(0, randomElements.Length)];
+            var atk = new Attack_Skill();
+            atk.SetAttackState(element, baseAttackValue, baseAttackRate);
+            atk.Excute(self, randomTarget);
+            Debug.Log($"[Skill 29]ç¬¬{i + 1}å‡»ï¼š{element}å¼±ç‚¹ä¼¤å®³");
+        }
     }
 }
 
 
 
 /// <summary>
-/// (30£©¶ÔÈ«ÌåµĞÈËÔì³É½£¡¢Ç¹¡¢¹­µÄÖĞÁ¿ÉËº¦¸÷2´Î
+/// ï¼Ÿï¼Ÿï¼Ÿï¼ˆ30ï¼‰ä¸‰å™¨ç¼­ä¹±å¯¹å…¨ä½“æ•Œäººé€ æˆå‰‘ã€æªã€å¼“çš„ä¸­é‡ä¼¤å®³å„2æ¬¡
 /// </summary>
 [SkillID(30)]
 public class Skill_30 : SkillBase
 {
+    float baseAttackValue = -1;
+    float baseAttackRate = 0.35f;
+    int repeatPerWeapon = 2;
+    static readonly E_WeaknessType[] weapons = { E_WeaknessType.å‰‘, E_WeaknessType.æª, E_WeaknessType.å¼“ };
+    WaitForSeconds hitDelay = new WaitForSeconds(0.15f);
+
     public Skill_30(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--¼¼ÄÜ30--$$$$$");
+        Debug.Log("$$$$$--æŠ€èƒ½30--$$$$$");
     }
-
 
     public override void SkillEffect_Base(IBattlable target)
     {
+        Debug.Log($"[Skill 30]{self.Camp}å‘åŠ¨æŠ€èƒ½30-[ä¸‰å™¨ç¼­ä¹±]å‰‘/æª/å¼“å„{repeatPerWeapon}æ¬¡");
+        GameRoot.GetManager<CoroutineManager>().StartCoroutine(DoMultiWeapon(target));
+    }
 
+    IEnumerator DoMultiWeapon(IBattlable target)
+    {
+        foreach (var weapon in weapons)
+        {
+            for (int i = 0; i < repeatPerWeapon; i++)
+            {
+                var atk = new Attack_Skill();
+                atk.SetAttackState(weapon, baseAttackValue, baseAttackRate);
+                atk.Excute(self, target);
+                yield return hitDelay;
+            }
+        }
     }
 }
 
 /// <summary>
-///£¨31£©Ê¹¶Ô·½Ëæ»ú»ñµÃ1Î´ÓµÓĞµÄÎïÀíÈõµã£¨ÖĞºÄ£©
+/// ï¼Ÿï¼Ÿï¼Ÿï¼ˆ31ï¼‰è¯†ç ´ï¼šä½¿å¯¹æ–¹éšæœºè·å¾—1æœªæ‹¥æœ‰çš„ç‰©ç†å¼±ç‚¹ï¼ˆä¸­è€—ï¼‰
 /// </summary>
 [SkillID(31)]
 public class Skill_31 : SkillBase
 {
+    static readonly E_WeaknessType[] physPool = {
+        E_WeaknessType.å‰‘, E_WeaknessType.åˆ€, E_WeaknessType.æ–§, E_WeaknessType.æ–,
+        E_WeaknessType.å¼“, E_WeaknessType.æª, E_WeaknessType.é€šè§£
+    };
+
     public Skill_31(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--¼¼ÄÜ31--$$$$$");
+        Debug.Log("$$$$$--æŠ€èƒ½31--$$$$$");
     }
-
-
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        var candidates = new List<E_WeaknessType>();
+        foreach (var w in physPool) {
+            if (!target.weaknesses.Contains(w))
+                candidates.Add(w);
+        }
+        if (candidates.Count > 0) {
+            var newWeak = candidates[Random.Range(0, candidates.Count)];
+            target.AddWeakness(newWeak);
+            Debug.Log($"[Skill 31]{self.Camp}ä½¿ç›®æ ‡è·å¾—æ–°ç‰©ç†å¼±ç‚¹ï¼š{newWeak}");
+        }
     }
 }
 /// <summary>
-///£¨32£©¶Ô1ÃûµĞÈËÔì³É2´Î´óÁ¿Ç¹ÈõµãÉËº¦£¬¸ÃµĞÈËÃ¿¾ßÓĞ1¸öÈõµã£¬¸Ã¼¼ÄÜÉËº¦Ôö¼Ó20%
+/// ï¼Ÿï¼Ÿï¼Ÿï¼ˆ32ï¼‰ç‹®ç‹ç‹©çŒï¼šå¯¹1åæ•Œäººé€ æˆ2æ¬¡å¤§é‡æªå¼±ç‚¹ä¼¤å®³ï¼Œè¯¥æ•Œäººæ¯å…·æœ‰1ä¸ªå¼±ç‚¹ï¼Œè¯¥æŠ€èƒ½ä¼¤å®³å¢åŠ 20%
 /// </summary>
 [SkillID(32)]
 public class Skill_32 : SkillBase
 {
+    float baseAttackValue = -1;
+    float baseAttackRate = 0.5f;
+    float boostPerWeakness = 0.2f;
+    int hitCount = 2;
+
     public Skill_32(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--¼¼ÄÜ32--$$$$$");
+        Debug.Log("$$$$$--æŠ€èƒ½32--$$$$$");
     }
-
-
 
     public override void SkillEffect_Base(IBattlable target)
     {
+        // è®¡ç®—ç›®æ ‡å¼±ç‚¹æ•°é‡ï¼ˆå¤šå¼±ç‚¹ç³»ç»Ÿï¼‰
+        int weaknessCount = target.weaknesses.Count;
+        float rate = baseAttackRate + weaknessCount * boostPerWeakness;
+        Debug.Log($"[Skill 32]{self.Camp}å‘åŠ¨æŠ€èƒ½32-[ç‹®ç‹ç‹©çŒ]ï¼Œç›®æ ‡å¼±ç‚¹æ•°{weaknessCount}ï¼Œæªä¼¤å®³å€ç‡{rate}");
 
+        var atk = new Attack_Skill();
+        atk.SetAttackState(E_WeaknessType.æª, baseAttackValue, rate);
+        var multi = new MultiTime_SkillDecorator(atk, hitCount, 0.3f);
+        multi.Excute(self, target);
     }
 }
 /// <summary>
-/// £¨33£©¶ÔÈ«ÌåµĞÈËÔì³É´óÁ¿¹­ÈõµãÉËº¦£¬ÖØ·Å2£¬Èç¹ûÕâ´Î¹¥»÷»÷É±ÁËµĞÈË»òÕßÊ¹µĞÈË½øÈëÁ¦½ß×´Ì¬£¬ÖØ·Å´ÎÊı+1£¨¿Éµş¼Ó£©
+/// ï¼Ÿï¼Ÿï¼Ÿï¼ˆ33ï¼‰å€¾ç›†å¤§é›¨ï¼šå¯¹å…¨ä½“æ•Œäººé€ æˆå¤§é‡å¼“å¼±ç‚¹ä¼¤å®³ï¼Œé‡æ”¾2ï¼Œå¦‚æœè¿™æ¬¡æ”»å‡»å‡»æ€äº†æ•Œäººæˆ–è€…ä½¿æ•Œäººè¿›å…¥åŠ›ç«­çŠ¶æ€ï¼Œé‡æ”¾æ¬¡æ•°+1ï¼ˆå¯å åŠ ï¼‰
 /// </summary>
 [SkillID(33)]
 public class Skill_33 : SkillBase
 {
+    float baseAttackValue = -1;
+    float baseAttackRate = 0.5f;
+    int baseRecast = 2;
+    WaitForSeconds recastDelay = new WaitForSeconds(0.25f);
+
     public Skill_33(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--¼¼ÄÜ33--$$$$$");
+        Debug.Log("$$$$$--æŠ€èƒ½33--$$$$$");
     }
-
 
     public override void SkillEffect_Base(IBattlable target)
     {
+        Debug.Log($"[Skill 33]{self.Camp}å‘åŠ¨æŠ€èƒ½33-[å€¾ç›†å¤§é›¨]ï¼ŒåŸºç¡€é‡æ”¾{baseRecast}");
+        GameRoot.GetManager<CoroutineManager>().StartCoroutine(DoRecastLoop(target));
+    }
 
+    IEnumerator DoRecastLoop(IBattlable target)
+    {
+        int remaining = baseRecast;
+        while (remaining > 0)
+        {
+            bool wasAlive = target.IsAlive;
+            float prevShield = target.battleDamageHandler.BattleController.GetCharacterModelValue(E_BattleModelType.ShieldPoints);
+
+            var atk = new Attack_Skill();
+            atk.SetAttackState(E_WeaknessType.å¼“, baseAttackValue, baseAttackRate);
+            atk.Excute(self, target);
+
+            remaining--;
+            // æ£€æŸ¥æ˜¯å¦å‡»æ€æˆ–åŠ›ç«­ï¼ˆæŠ¤ç›¾å½’é›¶ï¼‰
+            if (!target.IsAlive && wasAlive) { remaining++; Debug.Log($"[Skill 33]å‡»æ€ç›®æ ‡ï¼Œé‡æ”¾+1ï¼Œå‰©ä½™{remaining}"); }
+            else {
+                float curShield = target.battleDamageHandler.BattleController.GetCharacterModelValue(E_BattleModelType.ShieldPoints);
+                if (prevShield > 0 && curShield <= 0) { remaining++; Debug.Log($"[Skill 33]ç›®æ ‡åŠ›ç«­ï¼Œé‡æ”¾+1ï¼Œå‰©ä½™{remaining}"); }
+            }
+
+            if (remaining > 0) yield return recastDelay;
+        }
     }
 }
 /// <summary>
-/// (34£©Ôì³É´óÁ¿½£ÈõµãÉËº¦£¬¶ÔÁ¦½ßµĞÈËÔì³É2±¶ÉËº¦
+/// ï¼Ÿï¼Ÿï¼Ÿï¼ˆ34ï¼‰æ— å°½ç»ˆç»“ï¼šé€ æˆå¤§é‡å‰‘å¼±ç‚¹ä¼¤å®³ï¼Œå¯¹åŠ›ç«­æ•Œäººé€ æˆ2å€ä¼¤å®³
 /// </summary>
 [SkillID(34)]
 public class Skill_34 : SkillBase
 {
+    float baseAttackValue = -1;
+    float baseAttackRate = 0.6f;
+    float breakMulti = 2f;
+
     public Skill_34(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--¼¼ÄÜ34--$$$$$");
+        Debug.Log("$$$$$--æŠ€èƒ½34--$$$$$");
     }
-
-
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        float shield = target.battleDamageHandler.BattleController.GetCharacterModelValue(E_BattleModelType.ShieldPoints);
+        bool isBroken = shield <= 0;
+        float rate = baseAttackRate * (isBroken ? breakMulti : 1f);
+        Debug.Log($"[Skill 34]{self.Camp}å‘åŠ¨æŠ€èƒ½34-[æ— å°½ç»ˆç»“]ï¼Œç›®æ ‡åŠ›ç«­:{isBroken}ï¼Œå€ç‡{rate}");
+        var atk = new Attack_Skill();
+        atk.SetAttackState(E_WeaknessType.å‰‘, baseAttackValue, rate);
+        atk.Excute(self, target);
     }
 }
 /// <summary>
-/// £¨35£©ÑÓ³¤1ÃûµĞÈË»÷ÆÆ×´Ì¬5S£¬²¢ÇÒÊ¹ÆäÊ¹Æä»ñµÃ¡¾Ò×Ëğ¡¿×´Ì¬£¨Á¦½ßÊ±ÊÜµ½ÉËº¦Ôö¼Ó35%£©³ÖĞø5S
+/// ï¼Ÿï¼Ÿï¼Ÿï¼ˆ35ï¼‰ä¹˜èƒœè¿½å‡»ï¼šå»¶é•¿1åæ•Œäººå‡»ç ´çŠ¶æ€5Sï¼Œå¹¶ä¸”ä½¿å…¶è·å¾—ã€æ˜“æŸã€‘çŠ¶æ€ï¼ˆåŠ›ç«­æ—¶å—åˆ°ä¼¤å®³å¢åŠ 35%ï¼‰æŒç»­5S
 /// </summary>
 [SkillID(35)]
 public class Skill_35 : SkillBase
 {
+    float vulDuration = 5f;
+    float vulRate = 0.35f;
+
     public Skill_35(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--¼¼ÄÜ35--$$$$$");
+        Debug.Log("$$$$$--æŠ€èƒ½35--$$$$$");
     }
-
 
     public override void SkillEffect_Base(IBattlable target)
     {
+        var targetController = target.battleDamageHandler.BattleController;
+        var targetHandler = target.battleDamageHandler.BuffHandler;
 
+        // å»¶é•¿å‡»ç ´çŠ¶æ€ï¼šå‰Šå‡æŠ¤ç›¾æ¥å»¶é•¿åŠ›ç«­ï¼ˆè‹¥å·²æ— ç›¾åˆ™ä¿æŒï¼‰
+        float curShield = targetController.GetCharacterModelValue(E_BattleModelType.ShieldPoints);
+        if (curShield > 0)
+            target.battleDamageHandler.DoModelValue(E_BattleModelType.ShieldPoints, -curShield);
+
+        Debug.Log($"[Skill 35]{self.Camp}å»¶é•¿ç›®æ ‡å‡»ç ´çŠ¶æ€5Sï¼Œæ–½åŠ æ˜“æŸ");
+
+        // æ–½åŠ æ˜“æŸï¼šåŒæŠ—é™ä½35%ï¼ŒæŒç»­5S
+        float phyRes = targetController.GetCharacterPropertyValue(E_CharacterPropertyType.Phy_Resistance);
+        float magRes = targetController.GetCharacterPropertyValue(E_CharacterPropertyType.Mag_Resistance);
+        var vulBuff = new Buff_Vulnerable(E_BuffType.è„†å¼±_è´Ÿé¢, E_BuffPositive.è´Ÿé¢, vulDuration,
+            targetController, phyRes * vulRate, magRes * vulRate);
+        EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, targetHandler, vulBuff);
     }
 }
 /// <summary>
-/// £¨36£©¶ÔµĞ·½È«ÌåÔì³É´óÁ¿½£/Ç¹/¹­ÈõµãÉËº¦1´Î£¬Õâ¸ö¼¼ÄÜÖ»ÄÜÊÍ·Å1´Î£¨·½Ïò¼üÇĞ»»ÈõµãÀàĞÍ£©
+/// ï¼Ÿï¼Ÿï¼Ÿï¼ˆ36ï¼‰å…ˆå‘åˆ¶äººï¼šå¯¹æ•Œæ–¹å…¨ä½“é€ æˆå¤§é‡å‰‘/æª/å¼“å¼±ç‚¹ä¼¤å®³1æ¬¡ï¼Œè¿™ä¸ªæŠ€èƒ½åªèƒ½é‡Šæ”¾1æ¬¡ï¼ˆæ–¹å‘é”®åˆ‡æ¢å¼±ç‚¹ç±»å‹ï¼‰
 /// </summary>
 [SkillID(36)]
 public class Skill_36 : SkillBase
 {
+    float baseAttackValue = -1;
+    float baseAttackRate = 0.5f;
+    E_WeaknessType weakness = E_WeaknessType.å‰‘;
+
     public Skill_36(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--¼¼ÄÜ36--$$$$$");
+        Debug.Log("$$$$$--æŠ€èƒ½36--$$$$$");
     }
 
+    public void SwitchWeakness(E_WeaknessType type)
+    {
+        if (type == E_WeaknessType.å‰‘ || type == E_WeaknessType.æª || type == E_WeaknessType.å¼“)
+            weakness = type;
+    }
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        Debug.Log($"[Skill 36]{self.Camp}å‘åŠ¨æŠ€èƒ½36-[å…¨ä½“{weakness}ä¼¤å®³]");
+        var atk = new Attack_Skill();
+        atk.SetAttackState(weakness, baseAttackValue, baseAttackRate);
+        atk.Excute(self, target);
     }
 }
 /// <summary>
-/// £¨37£©»ñµÃ¡¾Ñ¸À×Á¬Ëø¡¿×´Ì¬£¨ÎïÀí¹¥»÷¼¼ÄÜ¸½´øÀ×Èõµã¹¥»÷ÉËº¦£©³ÖĞø20S
+/// ï¼Ÿï¼Ÿï¼Ÿï¼ˆ37ï¼‰è¿…é›·è¿é”ï¼šè·å¾—ã€è¿…é›·è¿é”ã€‘çŠ¶æ€ï¼ˆç‰©ç†æ”»å‡»æŠ€èƒ½é™„å¸¦0.1å€ç‡é›·å¼±ç‚¹æ”»å‡»ä¼¤å®³ï¼‰æŒç»­15S
 /// </summary>
 [SkillID(37)]
 public class Skill_37 : SkillBase
 {
+    float buffDuration = 15f;
+    float damageRate = 0.1f;
+
     public Skill_37(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--¼¼ÄÜ37--$$$$$");
+        Debug.Log("$$$$$--æŠ€èƒ½37--$$$$$");
     }
-
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        Debug.Log($"[Skill 37]{self.Camp}å‘åŠ¨æŠ€èƒ½37-[è¿…é›·è¿é”-BUFF]");
+        var buff = new Buff_AdditiveAttack(E_BuffType.è¿…é›·ä¹‹å½±_æ­£é¢, E_BuffPositive.æ­£é¢, buffDuration,
+            this, E_WeaknessType.é›·, damageRate);
+        EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }
 /// <summary>
-/// £¨38£©»ñµÃ¡¾±©Ñ©Á¬Ëø¡¿×´Ì¬£¨ÎïÀí¹¥»÷¼¼ÄÜ¸½´ø±ùÈõµã¹¥»÷ÉËº¦£©³ÖĞø20S
+///ï¼Ÿï¼Ÿï¼Ÿ 38ï¼ˆæš´é›ªè¿é”ï¼‰ï¼šè·å¾—ã€æš´é›ªè¿é”ã€‘çŠ¶æ€ï¼ˆç‰©ç†æ”»å‡»æŠ€èƒ½é™„å¸¦0.1å€ç‡å†°å¼±ç‚¹æ”»å‡»ä¼¤å®³ï¼‰æŒç»­15S
 /// </summary>
 [SkillID(38)]
 public class Skill_38 : SkillBase
 {
+    float buffDuration = 15f;
+    float damageRate = 0.1f;
+
     public Skill_38(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--¼¼ÄÜ38--$$$$$");
+        Debug.Log("$$$$$--æŠ€èƒ½38--$$$$$");
     }
-
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        Debug.Log($"[Skill 38]{self.Camp}å‘åŠ¨æŠ€èƒ½38-[æš´é›ªè¿é”-BUFF]");
+        var buff = new Buff_AdditiveAttack(E_BuffType.å†°é›ªé£æš´_æ­£é¢, E_BuffPositive.æ­£é¢, buffDuration,
+            this, E_WeaknessType.å†°, damageRate);
+        EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }
 /// <summary>
-/// £¨39£©»ñµÃ¡¾³¬´óÄ§·¨»¯¡¿×´Ì¬£¨Ä§·¨ÀàĞÍ¹¥»÷¼¼ÄÜ½«»á¶îÍâÊÍ·Å2´Î£©£¬³ÖĞø30S
+/// ï¼Ÿï¼Ÿï¼Ÿï¼ˆ39ï¼‰è¶…å¤§é­”æ³•åŒ–ï¼šè·å¾—ã€è¶…å¤§é­”æ³•åŒ–ã€‘çŠ¶æ€ï¼ˆé­”æ³•ç±»å‹æ”»å‡»æŠ€èƒ½å°†ä¼šé¢å¤–é‡Šæ”¾2æ¬¡ï¼‰ï¼ŒæŒç»­20S
 /// </summary>
 [SkillID(39)]
 public class Skill_39 : SkillBase
 {
+    float buffDuration = 20f;
+    int recastCount = 2;
+
     public Skill_39(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--¼¼ÄÜ39--$$$$$");
+        Debug.Log("$$$$$--æŠ€èƒ½39--$$$$$");
     }
 
     public override void SkillEffect_Base(IBattlable target)
     {
-
+        Debug.Log($"[Skill 39]{self.Camp}å‘åŠ¨æŠ€èƒ½39-[è¶…å¤§é­”æ³•åŒ–-BUFF]ï¼Œé¢å¤–é‡Šæ”¾{recastCount}æ¬¡");
+        var buff = new Buff_SkillRecast(E_BuffType.è¶…å¤§é­”æ³•åŒ–_æ­£é¢, E_BuffPositive.æ­£é¢, buffDuration, recastCount);
+        EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }

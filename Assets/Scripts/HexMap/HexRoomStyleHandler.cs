@@ -4,16 +4,14 @@ using UnityEngine;
 /// <summary>
 /// 管理房间的外观装载 及 浮云召唤 及 房间模型
 /// </summary>
-public class HexRoomStyleHandler : MonoBehaviour
-{
+public class HexRoomStyleHandler : MonoBehaviour{
     [Header("房间类型")]
     E_HexRoomType roomType = E_HexRoomType.None_无交互地形;
 
     HexJumpAnimHandler hexJumpAnimation;
     HexRoomTag roomTag;
     public E_HexRoomType RoomType => roomType;
-    public void InitRoomStyle(HexRoomTag _roomTag)
-    {
+    public void InitRoomStyle(HexRoomTag _roomTag){
         hexJumpAnimation = GetComponent<HexJumpAnimHandler>();
         roomTag = _roomTag;
         //只有海洋不会产生云朵
@@ -24,24 +22,18 @@ public class HexRoomStyleHandler : MonoBehaviour
         {
             LoadRoomCloude();
         }
-        
     }
 
-    void LoadRoomCloude()
-    {
-
+    void LoadRoomCloude(){
         var cloude = GameRoot.GetManager<ObjectPoolManager>().GetInstance(E_PoolType.RoomCloude_房间遮云);
         cloude.transform.position = transform.position + Vector3.up * 23f;
         hexJumpAnimation.CloudeAppear(cloude.transform);
     }
-
-    public void SetRoomType(E_HexRoomType _roomType,HexRoomTag _roomTag)
-    {
+    public void SetRoomType(E_HexRoomType _roomType,HexRoomTag _roomTag){
         roomType = _roomType;
         roomTag= _roomTag;
         IHexRoom iHexRoom = null;
-        switch (roomType)
-        {
+        switch (roomType){
             case E_HexRoomType.None_无交互地形: iHexRoom = new NoneHexRoom(); break;
             case E_HexRoomType.Battle_LowLevel_战斗_杂鱼: iHexRoom = new BattleHexRoom(_roomTag, E_BattleType.杂鱼敌人); break;
             case E_HexRoomType.Battle_MidLevel_战斗_精英: iHexRoom = new BattleHexRoom(_roomTag, E_BattleType.精英敌人); break;
@@ -54,6 +46,5 @@ public class HexRoomStyleHandler : MonoBehaviour
         }
         GetComponent<HexRoomTag>().GetIHexRoom(iHexRoom);
         iHexRoom.DoHexRoomModel(transform.position + Vector3.up);
-
     }
 }

@@ -3,24 +3,23 @@ using UnityEngine;
 public class Dot_Freeze : DotBase{
 
     float timer;
-    //Ã¿0.5s¼ì²âÒ»´Î
+    //æ¯0.5sæ£€æµ‹ä¸€æ¬¡
     float interval = 0.5f;
     public Dot_Freeze(E_Dot _dotType, IBattlable _self,int _dotCount) : base(_dotType, _self,_dotCount){
         timer = interval;
     }
 
     /// <summary>
-    /// <summary>
-    /// Ö±½ÓÕ¶É±ÑªÁ¿µÍÓÚ ²ãÊı*Ä¿±ê×î´óÉúÃüÖµ%2 µÄµ¥Î»
+    /// ç›´æ¥æ–©æ€è¡€é‡ä½äº å±‚æ•°*ç›®æ ‡æœ€å¤§ç”Ÿå‘½å€¼%2 çš„å•ä½
     /// </summary>
     public override void OnDotTrigger()
     {
         base.OnDotTrigger();
-        Debug.Log($"{self.Camp}µÄ{dot_type} Dot´¥·¢,½áËãÕ¶É±Ïß[×î´óÉúÃüÖµ%2*Dot²ãÊı]£º{(int)(self.battleDamageHandler.GetMaxHealth() * 0.02f * dot_count)}");
-        self.battleDamageHandler.GetDamage(E_Skill_DamageType.Ä§·¨, self.battleDamageHandler.GetMaxHealth());
+        Debug.Log($"{self.Camp}çš„{dot_type} Dotè§¦å‘,ç»“ç®—æ–©æ€çº¿[æœ€å¤§ç”Ÿå‘½å€¼%2*Dotå±‚æ•°]ï¼š{(int)(self.battleDamageHandler.GetMaxHealth() * 0.02f * dot_count)}");
+        self.battleDamageHandler.GetDamage(E_Skill_DamageType.é­”æ³•, self.battleDamageHandler.GetMaxHealth());
     }
     /// <summary>
-    /// ¼ì²â½ÇÉ«ÊÇ·ñ´ïµ½Õ¶É±Ïß
+    /// æ£€æµ‹è§’è‰²æ˜¯å¦è¾¾åˆ°æ–©æ€çº¿
     /// </summary>
     /// <returns></returns>
     bool CheckKill(){return (int)(self.battleDamageHandler.GetCurrentHealth()) <= (int)(self.battleDamageHandler.GetMaxHealth() * 0.02f * dot_count);}
@@ -29,7 +28,7 @@ public class Dot_Freeze : DotBase{
         if (timer > 0) {
             timer -= Time.deltaTime;
         }
-        else { 
+        else {
             timer=interval;
             if(CheckKill()) {
                 OnDotTrigger();

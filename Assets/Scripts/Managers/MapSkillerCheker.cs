@@ -69,20 +69,21 @@ public class MapSkillerCheker : MonoSceneManager
             }
         }
     }
-
-
     void CallSkillPanel() {
         if (currentSkiller == null)
             currentSkiller = playerSkiller;
 
-        var panel = uiManager.GetPanel<SkillPanel>(E_UIPanelType.SkillPanel);
-        if (panel != null && panel.gameObject.activeSelf)
-        {
-            panel.Hide();
+        var panel = uiManager.GetPanel<SkillAssignPanel>(E_UIPanelType.SkillAssignPanel);
+        if (panel != null && panel.gameObject.activeSelf){
+            // 动画进行中不响应关闭操作
+            if (panel.canOpen)
+                panel.Hide();
             return;
         }
-
-        uiManager.OpenPanel<SkillPanel>(E_UIPanelType.SkillPanel,
+        // 强制重置开关状态，防止动画协程丢失导致canOpen卡在false
+        if (panel != null)
+            panel.canOpen = true;
+        uiManager.OpenPanel<SkillAssignPanel>(E_UIPanelType.SkillAssignPanel,
                      (p) => p.LoadSkillIconBySettle(
                          currentSkiller.canActSettle,
                          currentSkiller.restSkillSlotNum,
@@ -102,7 +103,14 @@ public class MapSkillerCheker : MonoSceneManager
     }
     public void Update(){
         if (Input.GetKeyDown(KeyCode.Space)){
-            playerSkiller.GetNewSkill(Random.Range(0,5));
+                playerSkiller.GetNewSkill(Random.Range(0,5));
+        }
+        if (Input.GetKeyDown(KeyCode.U)){
+            var data = playerSkiller?.GetComponent<CharacterDataTag>()?.CharacterData;
+            if (data != null){
+                data.UnlockAtbSlot(1);
+                Debug.Log($"[测试] ATB槽数已解锁至 {data.AtbSkillSlotCount}/{CharacterData.maxAtbSkillSlotCount}");
+            }
         }
     }
 

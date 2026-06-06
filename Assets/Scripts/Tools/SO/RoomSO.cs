@@ -1,15 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 
-[CreateAssetMenu(menuName ="SOData/RoomSO",fileName ="RoomSOData")]
-public class RoomSO :ScriptableObject
+[CreateAssetMenu(menuName = "SOData/RoomSO", fileName = "RoomSOData")]
+public class RoomSO : ScriptableObject
 {
     /// <summary>
     /// 房间类型
     /// </summary>
-    public E_HexRoomType roomType=E_HexRoomType.None_无交互地形;
+    public E_HexRoomType roomType = E_HexRoomType.None_无交互地形;
 
     /// <summary>
     /// 房间图标
@@ -18,7 +15,8 @@ public class RoomSO :ScriptableObject
 
 }
 
-public enum E_HexRoomType {
+public enum E_HexRoomType
+{
     None_无交互地形,
     Battle_LowLevel_战斗_杂鱼,
     Battle_MidLevel_战斗_精英,
@@ -30,13 +28,15 @@ public enum E_HexRoomType {
 }
 
 
-public enum E_BattleType { 
+public enum E_BattleType
+{
     杂鱼敌人,
     精英敌人,
     首领敌人,
 }
 
-public enum E_NPCType { 
+public enum E_NPCType
+{
     任务,
     事件,
     交易,

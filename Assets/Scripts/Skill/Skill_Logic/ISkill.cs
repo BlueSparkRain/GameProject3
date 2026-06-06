@@ -4,39 +4,35 @@ using Core;
 public interface ISkill
 {
     /// <summary>
-    /// Ò»´Î¼¼ÄÜ»ù´¡Ğ§¹û
+    /// ä¸€æ¬¡æŠ€èƒ½çš„åŸºç¡€æ•ˆæœ
     /// </summary>
-    /// <param name="self">ÊÍ·ÅÕß</param>
-    /// <param name="target">³ĞÊÜÕß</param>
+    /// <param name="self">é‡Šæ”¾è€…</param>
+    /// <param name="target">ç›®æ ‡</param>
     public void Excute(IBattlable self, IBattlable target);
 }
 
 /// <summary>
-/// Ò»´Î¹¥»÷Ğ§¹û×é¼ş£¨¶ÔtargetµÄModelÊôĞÔµ÷Õû£©
+/// ä¸€æ¬¡æ”»å‡»æ•ˆæœï¼šç›´æ¥å¯¹targeté€ æˆä¼¤å®³
 /// </summary>
 public class Attack_Skill : ISkill
 {
     /// <summary>
-    /// Ôì³ÉµÄÉËº¦ÊôĞÔÀàĞÍ
+    /// é€ æˆçš„ä¼¤å®³çš„å¼±ç‚¹ç±»å‹
     /// </summary>
     E_WeaknessType weaknessType;
     /// <summary>
-    /// ¼¼ÄÜµÄ»ù´¡ÉËº¦Öµ
+    /// æŠ€èƒ½çš„åŸºç¡€ä¼¤å®³å€¼
     /// </summary>
     float baseAttackValue = 0;
     /// <summary>
-    /// ¼¼ÄÜµÄ»ù´¡ÉËº¦±¶ÂÊ
+    /// æŠ€èƒ½çš„åŸºç¡€ä¼¤å®³å€ç‡
     /// </summary>
     float baseAttackRate = 1f;
 
-    /// <summary>
-    /// Èõµã¹¥»÷µÄ¶îÍâ±¶ÂÊ
-    /// </summary>
-    float weakMulti = 2;
     public Attack_Skill(){}
 
     /// <summary>
-    /// ¹¥»÷Ö´ĞĞÇ°Ê¹ÓÃÀ´ÉèÖÃ±¾´Î¹¥»÷µÄ×´Ì¬
+    /// åœ¨æŠ€èƒ½æ‰§è¡Œå‰ä½¿ç”¨ï¼Œè®¾ç½®æœ¬æ¬¡æ”»å‡»çš„çŠ¶æ€
     /// </summary>
     /// <param name="_WeaknessType"></param>
     /// <param name="_baseAttackValue"></param>
@@ -52,41 +48,40 @@ public class Attack_Skill : ISkill
     public void Excute(IBattlable self, IBattlable target)
     {
         E_Skill_DamageType damageType = DamageTypeChecker.GetDamageType(weaknessType);
-        
-        if (damageType == E_Skill_DamageType.ÎïÀí)
+
+        if (damageType == E_Skill_DamageType.ç‰©ç†)
             EventCenter.EventTrigger(E_EventType.Do_PhyAttack, self.battleDamageHandler.BuffHandler);
+
+        EventCenter.EventTrigger(E_EventType.Battle_ElementalAttack, self.battleDamageHandler.BuffHandler, weaknessType, target);
+        Skill_41.RecordWeakness(weaknessType);
 
         float value = self.battleDamageHandler.DoDamage(damageType, baseAttackRate * baseAttackValue);
 
-        //¼ì²é¹¥»÷Èõµã×´Ì¬£¨ÈçÊÇ->½áËãÉËº¦x2 + Ï÷¶Ü1µã£©
-        if (target.GetWeakAttack(weaknessType))
-        {
-            value *= weakMulti;
-            target.battleDamageHandler.DoModelValue(E_BattleModelType.ShieldPoints,-1);
+        //é€šè¿‡WeaknessHandlerå¤„ç†å¼±ç‚¹åˆ¤å®šå’Œä¼¤å®³å€ç‡+ç ´ç›¾é€»è¾‘
+        float weakMulti = target.battleDamageHandler.WeaknessHandler.ProcessWeaknessHit(weaknessType);
+        value *= weakMulti;
 
-            Debug.Log($"{self.Camp}¶Ô{target.battleDamageHandler.name}·¢¶¯Ò»´Î[(Èõµã)]¹¥»÷:{baseAttackRate}*{baseAttackValue}*{weakMulti}*Íæ¼Ò¹¥»÷Á¦=[Ë°Ç°ÉËº¦]{value}");
-        }
+        if (weakMulti > 1f)
+            Debug.Log($"{self.Camp}å¯¹{target.battleDamageHandler.name}é€ æˆä¸€æ¬¡[(å¼±ç‚¹)]æ”»å‡»:{baseAttackRate}*{baseAttackValue}*{weakMulti}*å½“å‰å€ç‡=[{weaknessType}-ç¨å‰ä¼¤å®³]{value}");
         else
-        {
-            Debug.Log($"{self.Camp}¶Ô{target.battleDamageHandler.name}·¢¶¯Ò»´Î¹¥»÷:{baseAttackRate}*{baseAttackValue}*Íæ¼Ò¹¥»÷Á¦=[Ë°Ç°ÉËº¦]{value}");
-        }
+            Debug.Log($"{self.Camp}å¯¹{target.battleDamageHandler.name}é€ æˆä¸€æ¬¡æ”»å‡»:{baseAttackRate}*{baseAttackValue}*å½“å‰å€ç‡=[{weaknessType}-ç¨å‰ä¼¤å®³]{value}");
         target.battleDamageHandler.GetDamage(damageType, value);
     }
 }
 
 
 /// <summary>
-/// Ò»´ÎModelĞ§¹û×é¼ş£¨Ö±½Ó¶ÔtargetµÄModelÊôĞÔµ÷Õû£©
+/// ä¸€æ¬¡Modelæ•ˆæœï¼šç›´æ¥å¯¹targetçš„Modelå±æ€§è¿›è¡Œè°ƒæ•´
 /// </summary>
 public class ModelAdjust_Skill : ISkill
 {
     /// <summary>
-    /// µ÷ÕûµÄ»ù´¡ÊıÖµ
+    /// è°ƒæ•´çš„åŸºç¡€å€¼
     /// </summary>
     float baseAdjValue;
 
     /// <summary>
-    /// Òªµ÷ÕûµÄÄ£ĞÍÊı¾İÀàĞÍ
+    /// è¦è°ƒæ•´çš„æ¨¡å‹å±æ€§ç±»å‹
     /// </summary>
     E_BattleModelType modelType;
 
@@ -101,21 +96,21 @@ public class ModelAdjust_Skill : ISkill
     public void Excute(IBattlable self, IBattlable target){
         float value = baseAdjValue * skillRate;
         self.battleDamageHandler.DoModelValue(modelType, value);
-        Debug.Log($"{self.Camp}¶Ô{target.battleDamageHandler.name}·¢¶¯Ò»´ÎModelµ÷Õû[{modelType}]£º{value}");
+        Debug.Log($"{self.Camp}å¯¹{target.battleDamageHandler.name}é€ æˆä¸€æ¬¡Modelè°ƒæ•´[{modelType}]ï¼š{value}");
     }
 }
 
 /// <summary>
-/// Ò»´ÎPropertyĞ§¹û×é¼ş£¨Ö±½Ó¶ÔtargetµÄPropertyÊôĞÔµ÷Õû£©
+/// ä¸€æ¬¡Propertyæ•ˆæœï¼šç›´æ¥å¯¹targetçš„Propertyå±æ€§è¿›è¡Œè°ƒæ•´
 /// </summary>
 public class PropertyAdjust_Skill : ISkill{
     /// <summary>
-    /// µ÷ÕûµÄ»ù´¡ÊıÖµ
+    /// è°ƒæ•´çš„åŸºç¡€å€¼
     /// </summary>
     float baseAdjValue;
 
     /// <summary>
-    /// Òªµ÷ÕûµÄÄ£ĞÍÊı¾İÀàĞÍ
+    /// è¦è°ƒæ•´çš„å±æ€§ç±»å‹
     /// </summary>
     E_CharacterPropertyType propertyType;
 
@@ -132,7 +127,6 @@ public class PropertyAdjust_Skill : ISkill{
     {
         int value =(int)(baseAdjValue * skillRate);
         self.battleDamageHandler.DoPropertyValue(propertyType, value);
-        Debug.Log($"{self.Camp}¶Ô{target.battleDamageHandler.name}·¢¶¯Ò»´ÎPropertyµ÷Õû[{propertyType}]£º{value}");
+        Debug.Log($"{self.Camp}å¯¹{target.battleDamageHandler.name}é€ æˆä¸€æ¬¡Propertyè°ƒæ•´[{propertyType}]ï¼š{value}");
     }
 }
-

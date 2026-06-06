@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: S_41
   m_EditorClassIdentifier: 
   skill_ID: 41
-  skill_Sprite: {fileID: 21300000, guid: eed44235dcbd621438f7c0c4f05e2356, type: 3}
+  skill_name: 41
+  skill_Sprite: {fileID: 21300000, guid: bdbcfdb840b489f4f94a2bfc706e3541, type: 3}
   skill_Name: "\u8FC7\u66DD"
-  skill_Description: "\u83B7\u5F97\u3010\u5438\u8840+1\u3011\uFF08\u751F\u547D\u5077\u53D6+15%\uFF09\uFF0C\u6301\u7EED20S"
+  skill_Description: "\u5BF9\u5168\u4F53\u654C\u4EBA\u9020\u6210\u9B54\u6CD5\u4F24\u5BB3\uFF0C\u6BCF\u9020\u6210\u8FC71\u6B21\u4E0D\u540C\u5F31\u70B9\u79CD\u7C7B\u7684\u653B\u51FB\u4F24\u5BB3\uFF0C\u4F24\u5BB3\u589E\u5E4510%"
   skill_CoolDown_origin: 10
   skill_sp_cost: 50
+  skill_atb_cost: 0
   skill_ang_grow: 10
   skill_targetType: 0

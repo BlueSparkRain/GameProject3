@@ -3,17 +3,17 @@ using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// �ͷŶ�ι����ļ���װ����
+/// 释放多次攻击的技能装饰器
 /// </summary>
 public class MultiTime_SkillDecorator : SkillDecorator
 {
     /// <summary>
-    /// ����������ͷŶ���
+    /// 额外效果的释放次数
     /// </summary>
     int excuteTime = 1;
 
     /// <summary>
-    /// ÿ����Ч�ļ��
+    /// 每次效果的间隔
     /// </summary>
     float interval = 0;
 
@@ -39,7 +39,7 @@ public class MultiTime_SkillDecorator : SkillDecorator
     }
     public override void Excute(IBattlable self, IBattlable target)
     {
-        UnityEngine.Debug.Log("[MultiTime_SkillDecorator]>>��μ���Ч��");
+        UnityEngine.Debug.Log("[MultiTime_SkillDecorator]>>多次技能效果");
         GameRoot.GetManager<CoroutineManager>().StartCoroutine(DoMultiEffect(self, target), self as UnityEngine.Object);
     }
 }

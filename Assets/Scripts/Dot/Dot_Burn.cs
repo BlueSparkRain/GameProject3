@@ -2,15 +2,15 @@ using UnityEngine;
 
 public class Dot_Burn : DotBase
 {
-    E_WeaknessType weaknessType=E_WeaknessType.»ğ;
+    E_WeaknessType weaknessType = E_WeaknessType.ç«;
 
     float timer;
     /// <summary>
-    /// Ã¿5s½áËãÒ»´Î
+    /// æ¯5sç»“ç®—ä¸€æ¬¡
     /// </summary>
     float intreval = 5;
     public Dot_Burn(E_Dot _dotType, IBattlable _self, int _dotCount) : base(_dotType, _self, _dotCount){
-        timer = intreval; 
+        timer = intreval;
     }
 
     public override void OnDotTrigger(){
@@ -19,39 +19,33 @@ public class Dot_Burn : DotBase
     }
 
     /// <summary>
-    /// Ôì³ÉÉËº¦:²ãÊı*Ä¿±êÉúÃüÖµ1%
+    /// é€ æˆç‡ƒçƒ§çš„é­”æ³•ä¼¤å®³:å±‚æ•°*ç›®æ ‡å½“å‰ç”Ÿå‘½å€¼*1%
     /// </summary>
     void DotBurn(){
-        Debug.Log($"{self.Camp}½áËã{dot_type},µ±Ç°²ãÊı:{dot_count}");
-        E_Skill_DamageType damageType = DamageTypeChecker.GetDamageType(weaknessType);
+        Debug.Log($"{self.Camp}ç»“ç®—{dot_type},å½“å‰å±‚æ•°:{dot_count}");
 
-        if (damageType == E_Skill_DamageType.ÎïÀí)
-            EventCenter.EventTrigger(E_EventType.Do_PhyAttack, self.battleDamageHandler.BuffHandler);
-
-        float lostHp = self.battleDamageHandler.GetLostHealth();
-        float baseDamage = lostHp * dot_count;
-        //¼ì²é¹¥»÷Èõµã×´Ì¬£¨ÈçÊÇ->½áËãÉËº¦x2 + Ï÷¶Ü1µã£©
-        if (self.GetWeakAttack(weaknessType))
-        {
+        float curHp = self.battleDamageHandler.GetCurrentHealth();
+        float baseDamage = curHp * dot_count * 0.01f;
+        //æ£€æŸ¥æ”»å‡»å¼±ç‚¹çŠ¶æ€ï¼ˆå¦‚æ˜¯->ç»“ç®—ä¼¤å®³x2 + å‰Šç›¾1ç‚¹ï¼‰
+        if (self.GetWeakAttack(weaknessType)){
             baseDamage *= weakMulti;
-            UnityEngine.Debug.Log($"{self.Camp}µÄ{dot_type} Dot´¥·¢,½áËãÁËÒ»´Î[(Èõµã)]ÉËº¦:[ÒÑËğÉúÃüÖµ]{lostHp}*[Dot²ãÊı]{dot_count}*[Èõµã±¶ÂÊ]{weakMulti}={baseDamage}");
+            UnityEngine.Debug.Log($"{self.Camp}çš„{dot_type} Dotè§¦å‘,ç»“ç®—äº†ä¸€æ¬¡[(å¼±ç‚¹)]ä¼¤å®³:[å½“å‰ç”Ÿå‘½å€¼]{curHp}*[Dotå±‚æ•°]{dot_count}*[å¼±ç‚¹å€ç‡]{weakMulti}={baseDamage}");
             self.battleDamageHandler.DoModelValue(E_BattleModelType.ShieldPoints, -1);
         }
-        else
-        {
-            UnityEngine.Debug.Log($"{self.Camp}µÄ{dot_type} Dot´¥·¢,½áËãÁËÒ»´ÎÉËº¦:[ÒÑËğÉúÃüÖµ]{lostHp}*[Dot²ãÊı]{dot_count}={baseDamage}");
+        else{
+            UnityEngine.Debug.Log($"{self.Camp}çš„{dot_type} Dotè§¦å‘,ç»“ç®—äº†ä¸€æ¬¡ä¼¤å®³:[å½“å‰ç”Ÿå‘½å€¼]{curHp}*[Dotå±‚æ•°]{dot_count}={baseDamage}");
         }
-        self.battleDamageHandler.GetDamage(damageType, baseDamage);
+        self.battleDamageHandler.GetDamage(E_Skill_DamageType.é­”æ³•, baseDamage);
     }
 
     public override void OnDotUpdate(){
         base.OnDotUpdate();
-        if (timer >= 0) { 
+        if (timer >= 0) {
             timer-=Time.deltaTime;
         }
         else{
             timer = intreval;
-            Debug.Log("5sµ½ÁË£¬´¥·¢Ò»´Î"+dot_type);
+            Debug.Log("5såˆ°äº†ï¼Œè§¦å‘ä¸€æ¬¡"+dot_type);
             OnDotTrigger();
         }
     }

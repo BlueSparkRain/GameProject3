@@ -28,9 +28,9 @@ public class Battle_Viewer : MonoBehaviour
         HP_fillImage.fillAmount = model.HP / model.MaxHP;
         SP_fillImage.fillAmount = model.SP / model.MaxSP;
         AG_fillImage.fillAmount = model.AG / model.MaxAG;
-        SP_text.text = $"{model.SP}/{model.MaxSP}";
-        HP_text.text = $"{model.HP}/{model.MaxHP}";
-        AG_text.text = $"{model.AG}/{model.MaxAG}";
+        SP_text.text = $"{Mathf.FloorToInt(model.SP)}/{Mathf.FloorToInt(model.MaxSP)}";
+        HP_text.text = $"{Mathf.FloorToInt(model.HP)}/{Mathf.FloorToInt(model.MaxHP)}";
+        AG_text.text = $"{Mathf.FloorToInt(model.AG)}/{Mathf.FloorToInt(model.MaxAG)}";
         ATB_point_Text.text = $"{model.ATBPoints}/{model.MaxATBPoints}";
     }
 }

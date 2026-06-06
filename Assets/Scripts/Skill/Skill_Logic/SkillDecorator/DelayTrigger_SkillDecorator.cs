@@ -25,7 +25,7 @@ public class DelayTrigger_SkillDecorator : SkillDecorator
 
     public override void Excute(IBattlable self, IBattlable target)
     {
-        UnityEngine.Debug.Log("[DelayTrigger_SkillDecorator]>>�ӳ���Ч����Ч��");
+        UnityEngine.Debug.Log("[DelayTrigger_SkillDecorator]>>延迟触发技能效果");
         GameRoot.GetManager<CoroutineManager>().StartCoroutine(DelayTrigger(self, target), self as UnityEngine.Object);
     }
 }

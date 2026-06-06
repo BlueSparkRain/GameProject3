@@ -494,6 +494,7 @@ public enum E_EventType
     Player_RoundEnd,
     LoadMapStart,
     LoadMapEnd,
+    MapRowCreated,
     SkillExcute,
 
 
@@ -527,6 +528,8 @@ public enum E_EventType
     AdjustVitalityPoints,
 
     UpdateUIVitalityPoints,
+    UpdateUIGold,
+    UpdateUIActionPoints,
 
     UpdateRoundState,
 
@@ -546,6 +549,11 @@ public enum E_EventType
     ChaosLevelUP,
 
     /// <summary>
+    /// 活力归零，游戏失败
+    /// </summary>
+    GameOver,
+
+    /// <summary>
     /// 调整经验值
     /// </summary>
     AdjustEXP,
@@ -563,10 +571,20 @@ public enum E_EventType
     /// 进行了一次物理攻击
     /// </summary>
     Do_PhyAttack,
+    Do_MagAttack,
+    /// <summary>
+    /// 进行了一次带弱点类型的攻击，用于附魔Buff
+    /// </summary>
+    Battle_ElementalAttack,
 
     /// <summary>
     /// 主动造成一次伤害（包括物理和魔法）
     /// 检查是否触发造成伤害增幅BUFF
     /// </summary>
     Do_Damage,
+
+    /// <summary>
+    /// 收到伤害结算，触发受击效果等
+    /// </summary>
+    Get_Damage,
 }

@@ -1,56 +1,54 @@
 using System;
+using Core;
 using UnityEngine;
 
-public class VitalityPointsManager :MonoGlobalManager, ICanSave_And_Load
+public class VitalityPointsManager : MonoGlobalManager, ICanSave_And_Load
 {
-    //¼ÇÂ¼±¾¾ÖÓÎÏ·Íæ¼ÒµÄ»îÁ¦µãÊı
     public int valityPoint = 0;
-
     public int max_VitalityPoints;
 
     protected override void MgrOnInit()
     {
         base.MgrOnInit();
-        //¶ÁÈ¡´æµµÖĞÊÇ·ñÓĞÓĞĞ§Êı¾İ
         JsonSaver.InitData<Save_VitalityPoins>(this);
-
     }
+
     public override void MgrUpdate(float deltaTime)
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
             AdjustVolityPoints(-1);
-        }
     }
 
-    /// <summary>
-    /// µ÷Õû×î´ó»îÁ¦µãÊı£¬Ã¿´ÎÉı¼¶ºóµ÷Õû
-    /// </summary>
     public void AdjustMaxVitalityPoints(int currentLevel)
     {
         max_VitalityPoints = currentLevel / 10 + 10;
-        //Éı¼¶»Ö¸´»îÁ¦Öµ
         AdjustVolityPoints(currentLevel / 10 + 1);
     }
 
-    /// <summary>
-    /// µ÷Õû»îÁ¦µãÊı
-    /// </summary>
-    /// <param name="transValue">±ä»¯Öµ</param>
-    public void AdjustVolityPoints(int transValue){
-        if (valityPoint + transValue > max_VitalityPoints)
+    public void AdjustVolityPoints(int transValue)
+    {
+        int newValue = valityPoint + transValue;
+        if (newValue > max_VitalityPoints)
             valityPoint = max_VitalityPoints;
-        else if (valityPoint+transValue<=0)
+        else if (newValue <= 0)
             valityPoint = 0;
         else
-            valityPoint += transValue;
-        //µ÷ÕûºóĞèÒª±£´æÊı¾İ
-        Debug.Log($"[VitalityPointsManager]»îÁ¦µãÊı±ä»¯{transValue}");
-        JsonSaver.Save<Save_VitalityPoins>(new Save_VitalityPoins(valityPoint, max_VitalityPoints));
+            valityPoint = newValue;
+
+        Debug.Log($"[VitalityPointsManager]æ´»åŠ›å˜åŒ–{transValue}, å½“å‰:{valityPoint}/{max_VitalityPoints}");
+
+        JsonSaver.Save(new Save_VitalityPoins(valityPoint, max_VitalityPoints));
         EventCenter.EventTrigger(E_EventType.UpdateUIVitalityPoints);
+
+        if (valityPoint <= 0)
+        {
+            Debug.Log("[VitalityPointsManager]æ´»åŠ›å½’é›¶ï¼Œæ¸¸æˆç»“æŸ");
+            EventCenter.EventTrigger(E_EventType.GameOver);
+        }
     }
 
-    public void InitBySaveData(){
+    public void InitBySaveData()
+    {
         var saveData = JsonSaver.Load<Save_VitalityPoins>();
         valityPoint = saveData.currentVitalityPoints;
         max_VitalityPoints = saveData.max_VitalityPoints;
@@ -59,27 +57,15 @@ public class VitalityPointsManager :MonoGlobalManager, ICanSave_And_Load
 
     public void InitBySelf()
     {
-        //³õÊ¼µÈ¼¶1
         AdjustMaxVitalityPoints(1);
-
-        //valityPoint = 10;
-        //×î´ó»îÁ¦µãÊı
         AdjustVolityPoints(10);
     }
 }
 
-
 [Serializable]
 public class Save_VitalityPoins : IValidatable
 {
-    /// <summary>
-    /// µ±Ç°Ê£Óà»îÁ¦Öµ
-    /// </summary>
     public int currentVitalityPoints;
-
-    /// <summary>
-    /// µ±Ç°×î´ó»îÁ¦Öµ
-    /// </summary>
     public int max_VitalityPoints;
     public Save_VitalityPoins() { }
     public Save_VitalityPoins(int remain_Points, int max_points)
@@ -87,8 +73,5 @@ public class Save_VitalityPoins : IValidatable
         currentVitalityPoints = remain_Points;
         max_VitalityPoints = max_points;
     }
-    public bool IsValid()
-    {
-        return true;
-    }
+    public bool IsValid() => true;
 }

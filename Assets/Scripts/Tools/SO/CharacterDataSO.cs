@@ -1,25 +1,33 @@
 using UnityEngine;
 
 public enum E_CharacterType{
-    P_1,
-    P_2,
-    P_3,
-    P_4,
+    P_海螺骑士,
 
-    LE_1,
-    LE_2,
-    LE_3,
+    LE_剑兵,
+    LE_枪兵,
+    LE_弓兵,
+    LE_火球术士,
+    LE_冰霜术士,
+    LE_雷电术士,
+    LE_盾卫,
+    LE_禅院守护,
+    LE_禅院惩戒,
+    LE_狂战兵,
+    LE_冰火术徒,
+    LE_感电枪兵,
+    LE_灼伤剑士,
+    LE_冻结弓手,
 
-    ME_1,
-    ME_2,
-    ME_3,
-
-    Boss_1,
-    Boss_2,
-    Boss_3,
+    ME_盾枪统领,
+    ME_火法使,
+    ME_冰法使,
+    ME_雷法使,
+    ME_三器斗士,
+    ME_剑圣,
+    ME_元素连锁师,
+    ME_领域操纵者,
+    BOSS_武圣,
 }
-
-
 
 [CreateAssetMenu(menuName = "SOData/CharacterData", fileName = "CharacterData")]
 public class CharacterDataSO : ScriptableObject
@@ -99,8 +107,17 @@ public class CharacterDataSO : ScriptableObject
     public float Shield_Amplification;
 
 
+    [Header("ATB上限")]
     [Tooltip("初始ATB点数上限")]
     public int Maximum_ATB;
+
+    [Header("角色初始自动化槽数量")]
+    [Tooltip("战斗中自动循环释放的技能槽位数量")]
+    public int autoSkillSlotCount = 9;
+
+    [Header("角色初始主动ATB槽数量")]
+    [Tooltip("战斗中主动ATB技能槽位数量，可通过游戏机制解锁增加，上限9")]
+    public int atbSkillSlotCount = 5;
     #endregion
 
     public float GetProperty(E_CharacterPropertyType type)

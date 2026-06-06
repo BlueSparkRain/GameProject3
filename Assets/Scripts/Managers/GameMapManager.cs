@@ -11,14 +11,24 @@ using UnityEngine;
 /// </summary>
 public class GameMapManager : MonoGlobalManager
 {
-    [Header("正六边形地图设置")]
-    public int MapRadius = 20;
+    [Header("地图设置")]
+    public int MapCols = 55;
+    public int MapRows = 35;
+    public E_MapShape mapShape = E_MapShape.Rectangle;
 
     float x_Offset;//每行内的偏移
     float y_Offset;//相邻行的偏移
 
     private int mapRow;
-    private int mapCol; 
+    private int mapCol;
+
+    [Header("角色高度")]
+    [Tooltip("角色站在地图上的Y轴偏移")]
+    public float characterYOffset = 3f;
+
+    [Header("HexRoom材质覆写")]
+    [Tooltip("开启后跳过地块材质设置，保留预制件原始材质")]
+    public bool useCustomHexRoomMaterial = false;
 
     #region 地块材质配置
     private Material obstacle_oceanMat;       
@@ -80,7 +90,7 @@ public class GameMapManager : MonoGlobalManager
         _preRegWalkablePositions.Clear();
         for (int row = 0; row < mapRow; row++)
         {
-            GetHexRowColRange(row, out int startCol, out int endCol);
+            GetRowColRange(row, out int startCol, out int endCol);
             for (int col = startCol; col <= endCol; col++)
             {
                 if (IsTerrainWalkabke(mapSaveData.cellData[row, col]))
@@ -195,17 +205,17 @@ public class GameMapManager : MonoGlobalManager
     /// <param name="_y_offset"></param>
     /// <param name="_MapRadius"></param>
     /// <param name="_MapPivotPos"></param>
-    public void GameMapManagerInit(float _x_offset, float _y_offset, int _MapRadius, Vector3 _MapPivotPos){
+    public void GameMapManagerInit(float _x_offset, float _y_offset, int _mapCols, int _mapRows, Vector3 _MapPivotPos){
         x_Offset = _x_offset;
         y_Offset = _y_offset;
-        MapRadius = _MapRadius;
-        mapRow = MapRadius * 2 + 1;
-        mapCol = mapRow; // 最大列数=总行数
+        mapRow = _mapRows;
+        mapCol = _mapCols;
         MapPivotPos = _MapPivotPos;
         mapSaveData = ResourcesLoader.FindMapSaveData(mapdataBack);
-        mapSaveData.mapRadius = MapRadius;
+        mapSaveData.mapCols = _mapCols;
+        mapSaveData.mapRows = _mapRows;
+        mapSaveData.mapShape = mapShape;
         mapSaveData.InitializeIfEmpty();
-        // 初始化地块缓存数组（新增）
         allCells = new HexRoomTag[mapRow, mapCol];
         EventCenter.AddEventListener<Vector2Int, E_HexTerrainType>(E_EventType.Editor_Terrain, UpdateHexTag);
     }
@@ -254,7 +264,7 @@ public class GameMapManager : MonoGlobalManager
       
         roomDealy = new WaitForSeconds(bornRoomInterval);
 
-        GetHexRowColRange(row, out int startCol, out int endCol);
+        GetRowColRange(row, out int startCol, out int endCol);
 
         if (fromleft)
         {
@@ -274,11 +284,18 @@ public class GameMapManager : MonoGlobalManager
         }
     }
 
-    private void GetHexRowColRange(int row, out int startCol, out int endCol)
+    private void GetRowColRange(int row, out int startCol, out int endCol)
     {
-        int center = MapRadius;
+        if (mapShape == E_MapShape.Rectangle)
+        {
+            startCol = 0;
+            endCol = mapCol - 1;
+            return;
+        }
+
+        int center = mapRow / 2;
         int offset = Mathf.Abs(row - center);
-        int width = MapRadius * 2 + 1 - offset;
+        int width = mapRow - offset;
         startCol = offset / 2;
         endCol = startCol + width - 1;
     }
@@ -331,6 +348,7 @@ public class GameMapManager : MonoGlobalManager
     /// </summary>
     void SetCellMaterial(HexRoomTag room, E_HexTerrainType type)
     {
+        if (useCustomHexRoomMaterial) return;
         MeshRenderer renderer = room.GetComponent<MeshRenderer>();
         renderer.enabled = true;
 
@@ -372,7 +390,24 @@ public class GameMapManager : MonoGlobalManager
             RegisterHexRoom(newHexRoomTag, walkable);
         }
 
+        CreateHexFace(row, col);
+
         return newHexRoomTag;
+    }
+
+    void CreateHexFace(int row, int col)
+    {
+        var faceObj = GameRoot.GetManager<ObjectPoolManager>().GetInstance(E_PoolType.HexFace_六边形面);
+        if (faceObj == null) return;
+
+        var faceTag = faceObj.GetComponent<HexFaceTag>();
+        if (faceTag == null) return;
+
+        faceTag.Init(row, col);
+        Vector3 worldPos = CalculateRoomWorldPos(row, col);
+        faceObj.transform.position = worldPos + Vector3.up * 0.05f;
+        //faceObj.transform.rotation = Quaternion.Euler(90, 0, 0);
+        faceObj.transform.rotation = Quaternion.identity;
     }
     #endregion
 
@@ -425,6 +460,7 @@ public class GameMapManager : MonoGlobalManager
     // 你原有方法（无修改）
     void ReplaceOuterMat(HexRoomTag room)
     {
+        if (useCustomHexRoomMaterial) return;
         MeshRenderer renderer = room.GetComponent<MeshRenderer>();
         renderer.material = walkable_landMat;
         renderer.enabled = true;

@@ -16,19 +16,24 @@ public static class MapCharacterCaller
         return target.GetComponent<CharacterDataTag>();
     }
 
+/***
+    /// <summary>
+    /// 将一个角色随机设置到一个位置
+    /// </summary>
+    /// <param name="characterTrans"></param>
     public static void SetMapPos(Transform characterTrans)
     {
         mapManager = GameRoot.GetManager<GameMapManager>();
         //地图还没有加载，还没来得及注册
-        HexRoomTag randonoom = mapManager.GetRnadomRoom();
+        HexRoomTag randonoom = mapManager.GetRnadomWalkableRoom();
 
-        characterTrans.position = randonoom.transform.position + Vector3.up * 1.2f;
+        characterTrans.position = randonoom.transform.position + Vector3.up * mapManager.characterYOffset;
         characterTrans.localScale = Vector3.zero;
 
         characterTrans.DOScale(1.5f, 0.3f).SetEase(Ease.InQuart).From(0);
         characterTrans.DOScale(1, 0.2f).SetEase(Ease.OutQuart);
     }
-
+***/
     public static void GetRandomPos()
     {
         mapManager = GameRoot.GetManager<GameMapManager>();

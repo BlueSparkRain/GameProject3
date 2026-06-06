@@ -19,8 +19,17 @@ public enum E_UIPanelType
     BattlePanel,
     NPCPanel,
     UnknownPanel,
-    SkillPanel,
+    /// <summary>
+    /// 技能配置买哪般
+    /// </summary>
+    SkillAssignPanel,
     MapTerrainEditorPanel,
+    SettingsPanel,
+    /// <summary>
+    /// 技能奖励选择面板
+    /// </summary>
+    SkillSelectPanel,
+    EquipmentPanel,
 }
 
 /// <summary>
@@ -93,8 +102,10 @@ public class UIManager : MonoGlobalManager
         _panelModeConfig[E_UIPanelType.BattlePanel] = PanelInstanceMode.Single;
         _panelModeConfig[E_UIPanelType.NPCPanel]= PanelInstanceMode.Single;
         _panelModeConfig[E_UIPanelType.UnknownPanel]= PanelInstanceMode.Single;
-        _panelModeConfig[E_UIPanelType.SkillPanel]= PanelInstanceMode.Single;
+        _panelModeConfig[E_UIPanelType.SkillAssignPanel]= PanelInstanceMode.Single;
         _panelModeConfig[E_UIPanelType.MapTerrainEditorPanel]= PanelInstanceMode.Single;
+        _panelModeConfig[E_UIPanelType.SettingsPanel]= PanelInstanceMode.Single;
+        _panelModeConfig[E_UIPanelType.EquipmentPanel]= PanelInstanceMode.Single;
 
         foreach (var type in Enum.GetValues(typeof(E_UIPanelType)))
             _multiPanelIDCounter[(E_UIPanelType)type] = 0;

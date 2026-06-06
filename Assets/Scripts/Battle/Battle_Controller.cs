@@ -16,20 +16,23 @@ public class Battle_Controller
 
     BattlerStateTag battlerStateTag;
 
-
     WaitForSeconds breakRefreshDelay;
     /// <summary>
     /// 力竭恢复时间
     /// </summary>
-    float breakRefreshDuration = 5;
+    float breakRefreshDuration = 8;
 
     float modelUpdateTimer;
     float modelUpdateInterval = 1;
-    public Battle_Controller(CharacterData _charData, Battle_Viewer _viewer, BattlerStateTag _battlerStateTag){
+    public Battle_Controller(CharacterData _charData, Battle_Viewer _viewer, BattlerStateTag _battlerStateTag, int initialShieldPoints = 5){
         characterData = _charData;
         viewer = _viewer;
         battlerStateTag= _battlerStateTag;
-        model = new Battle_Model(characterData.Maximum_Health, characterData.Maximum_Mana, (int)characterData.Maximum_ATB);
+        model = new Battle_Model(
+            characterData.Maximum_Health + characterData.EquipHandler.GetGreenBonus(E_CharacterPropertyType.Maximum_Health),
+            characterData.Maximum_Mana + characterData.EquipHandler.GetGreenBonus(E_CharacterPropertyType.Maximum_Mana),
+            (int)(characterData.Maximum_ATB + characterData.EquipHandler.GetGreenBonus(E_CharacterPropertyType.Maximum_ATB)),
+            maxShiled: initialShieldPoints + characterData.GetShieldBonus());
         viewer.UpdataUI(model);
         modelDic.Add(E_BattleModelType.HP, val => model.HP += val);
         modelDic.Add(E_BattleModelType.MAX_HP, val => model.MaxHP += val);
@@ -79,11 +82,24 @@ public class Battle_Controller
         Debug.Log("角色力竭中");
         yield return breakRefreshDelay;
         battlerStateTag.SetBreakState(false);
+        model.ShieldPoints = model.MaxShieldPoints;
         EventCenter.EventTrigger(E_EventType.Battle_CharacterBreakRefresh);
         Debug.Log("角色力竭结束");
     }
 
-    public float GetCharacterPropertyValue(E_CharacterPropertyType propertyType)=>characterData.GetProperty(propertyType);
+    /// <summary>
+    /// 角色是否处于力竭状态
+    /// </summary>
+    public bool IsBreak => battlerStateTag != null && battlerStateTag.State_Break;
+
+    public float GetCharacterPropertyValue(E_CharacterPropertyType propertyType)
+        => characterData.GetEffectiveProperty(propertyType);
+
+    /// <summary>
+    /// 获取角色原始属性值（不含装备加成）
+    /// </summary>
+    public float GetCharacterBasePropertyValue(E_CharacterPropertyType propertyType)
+        => characterData.GetProperty(propertyType);
  
     /// <summary>
     /// 修改角色的属性
@@ -98,6 +114,15 @@ public class Battle_Controller
     public void AdjustCharacterModelValue(E_BattleModelType modelType, float targetValue){
         modelDic[modelType].Invoke(targetValue);
     }
+
+    public float GetHPPercentage()
+    {
+        float hp = model.HP;
+        float maxHp = model.MaxHP;
+        return maxHp > 0 ? hp / maxHp : 0f;
+    }
+
+    public Battle_Model Model => model;
 
     public float GetCharacterModelValue(E_BattleModelType modelType){
         return modelType switch{

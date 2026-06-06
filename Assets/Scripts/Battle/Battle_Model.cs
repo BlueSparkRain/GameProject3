@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 public class Battle_Model
 {
-    // 核心属性
+    // 核心属�?
     private float _maxHP;
     private float _hp;
     private float _maxSP;
@@ -21,7 +21,8 @@ public class Battle_Model
     private int _shieldPoints;
 
     public event Action OnDataChanged;
-    public event Action OnHPZero; 
+    public event Action OnHPZero;
+    public event Action<float, float> OnHPChanged;
     public event Action OnShieldBreak;
     private float SafeValue(float value, float min, float max)
     {
@@ -33,13 +34,14 @@ public class Battle_Model
     {
         return Mathf.Clamp(value, min, max);
     }
-    // 生命值
+    // 生命�?
     public float HP
     {
         get => _hp;
         set{
             _hp = SafeValue(value, 0, _maxHP);
             OnDataChanged?.Invoke();
+            OnHPChanged?.Invoke(_hp, _maxHP);
             if(_hp<=0)
                 OnHPZero?.Invoke();}
     }
@@ -51,7 +53,7 @@ public class Battle_Model
             OnDataChanged?.Invoke();}
     }
 
-    // 法力值/能量
+    // 法力�?能量
     public float SP
     {
         get => _sp;
@@ -66,11 +68,17 @@ public class Battle_Model
             OnDataChanged?.Invoke();}
     }
 
-    // 怒气值
+    // 怒气�?
     public float AG{
         get => _ag;
         set{
-            _ag = SafeValue(value, 0, _maxAG);
+            float newAG = value;
+            while (newAG >= _maxAG)
+            {
+                newAG -= _maxAG;
+                _AtbPoints = SafeValue(_AtbPoints + 1, 0, _maxAtbPoints);
+            }
+            _ag = SafeValue(newAG, 0, _maxAG);
             OnDataChanged?.Invoke();}
     }
     public float MaxAG
@@ -81,7 +89,7 @@ public class Battle_Model
             OnDataChanged?.Invoke();}
     }
 
-    // ATB行动条
+    // ATB行动�?
     public int ATBPoints{
         get => _AtbPoints;
         set{
@@ -119,7 +127,7 @@ public class Battle_Model
     }
 
 
-    // 构造函数
+    // 构造函�?
     public Battle_Model(float maxHp, float maxSp, int maxAtb, float maxAg=100,int maxShiled=5){
         MaxHP = maxHp;
         HP = maxHp;

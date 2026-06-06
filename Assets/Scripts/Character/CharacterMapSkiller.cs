@@ -9,11 +9,11 @@ using UnityEngine;
 public class CharacterMapSkiller : MonoBehaviour
 {
     //当打开技能配置面板的时候，读取的就是这里的配置
-
+    CharacterDataTag characterDataTag;
     //槽位数
     public int restSkillSlotNum = 20;
-    public int normalSkillSlotNum = 5;
-    public int atbSkillSlotNum = 5;
+    public int normalSkillSlotNum => characterDataTag?.CharacterData?.AutoSkillSlotCount ?? 9;
+    public int atbSkillSlotNum => characterDataTag?.CharacterData?.AtbSkillSlotCount ?? 5;
     //角色尚未分配的所有技能数据
     private List<SkillData> restWholeSkillDatas = new List<SkillData>();
 
@@ -36,7 +36,9 @@ public class CharacterMapSkiller : MonoBehaviour
 
     private void Start()
     {
-        EventCenter.EventTrigger(E_EventType.Character_Skiller_Regist, this, GetComponent<CharacterDataTag>().isPlayer);
+        characterDataTag = GetComponent<CharacterDataTag>();
+        EventCenter.EventTrigger(E_EventType.Character_Skiller_Regist, this, characterDataTag.isPlayer);
+        LoadSkillAssignments();
     }
 
     /// <summary>
@@ -52,6 +54,7 @@ public class CharacterMapSkiller : MonoBehaviour
         current_restSkillNum = RestWholeSkillDatas.Count;
         current_normalSkillNum = normalSkillDatas.Count;
         current_atbSkillNum = atbSkillDatas.Count;
+        SaveSkillAssignments();
     }
 
 
@@ -84,5 +87,80 @@ public class CharacterMapSkiller : MonoBehaviour
         current_restSkillNum = restWholeSkillDatas.Count;
         current_normalSkillNum = normalSkillDatas.Count;
         current_atbSkillNum = atbSkillDatas.Count;
+        SaveSkillAssignments();
     }
+
+    /// <summary>
+    /// 持久化当前技能分配（仅存ID）
+    /// </summary>
+    void SaveSkillAssignments()
+    {
+        if (characterDataTag == null) return;
+        var saveData = new Save_CharacterSkillData(normalSkillDatas, atbSkillDatas, restWholeSkillDatas);
+        JsonSaver.Save(saveData, characterDataTag.CharacterData.characterType.ToString());
+    }
+
+    /// <summary>
+    /// 从存档重建技能分配
+    /// </summary>
+    void LoadSkillAssignments()
+    {
+        if (characterDataTag == null) return;
+        var saveData = JsonSaver.Load<Save_CharacterSkillData>(characterDataTag.CharacterData.characterType.ToString());
+        if (saveData != null && saveData.IsValid())
+        {
+            normalSkillDatas = RebuildSkillListFromIDs(saveData.normalSkillIDs);
+            atbSkillDatas = RebuildSkillListFromIDs(saveData.atbSkillIDs);
+            if (saveData.restWholeSkillIDs != null && saveData.restWholeSkillIDs.Count > 0 && restWholeSkillDatas.Count == 0)
+                restWholeSkillDatas = RebuildSkillListFromIDs(saveData.restWholeSkillIDs);
+            Debug.Log($"[CharacterMapSkiller] 已加载技能分配存档: Normal={normalSkillDatas.Count}, ATB={atbSkillDatas.Count}");
+        }
+    }
+
+    /// <summary>
+    /// 从技能ID列表重建SkillData列表
+    /// </summary>
+    List<SkillData> RebuildSkillListFromIDs(List<int> ids)
+    {
+        var list = new List<SkillData>();
+        if (ids == null) return list;
+        foreach (int id in ids)
+        {
+            var so = ResourcesLoader.FindSkillSOByID(id);
+            if (so != null)
+                list.Add(new SkillData(so));
+            else
+                Debug.LogWarning($"[CharacterMapSkiller] 无法根据ID={id}重建技能数据");
+        }
+        return list;
+    }
+}
+
+/// <summary>
+/// 角色技能分配存档DTO —— 只存技能ID
+/// </summary>
+[System.Serializable]
+public class Save_CharacterSkillData : IValidatable
+{
+    public Save_CharacterSkillData() { }
+
+    public Save_CharacterSkillData(List<SkillData> normalDatas, List<SkillData> atbDatas, List<SkillData> restDatas)
+    {
+        normalSkillIDs = new List<int>();
+        atbSkillIDs = new List<int>();
+        restWholeSkillIDs = new List<int>();
+
+        if (normalDatas != null)
+            foreach (var d in normalDatas) normalSkillIDs.Add(d.skill_ID);
+        if (atbDatas != null)
+            foreach (var d in atbDatas) atbSkillIDs.Add(d.skill_ID);
+        if (restDatas != null)
+            foreach (var d in restDatas) restWholeSkillIDs.Add(d.skill_ID);
+    }
+
+    public List<int> normalSkillIDs = new List<int>();
+    public List<int> atbSkillIDs = new List<int>();
+    public List<int> restWholeSkillIDs = new List<int>();
+
+    public bool IsValid() => true;
 }

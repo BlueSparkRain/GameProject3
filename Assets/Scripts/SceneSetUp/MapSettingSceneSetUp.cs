@@ -9,12 +9,11 @@ public class MapSettingSceneSetUp : MonoBehaviour
     public float y_Offset = 0.75f;//相邻行的偏移
     public GameObject roomPrefab;
 
-    public int MapRadius = 20;
-
+    public int mapWidth = 40;
+    public int mapHeight = 30;
     //地图的左下角
     [Header("地图左下角锚点")]
     public Transform MapPivot;
-
     GameMapManager gameMapManager;
 
     [Header("地图地形数据")]
@@ -22,8 +21,7 @@ public class MapSettingSceneSetUp : MonoBehaviour
 
     public bool needDelay = false;
 
-    private void Awake()
-    {
+    private void Awake(){
         ObjectPoolManager obj = GameRoot.GetManager<ObjectPoolManager>();
         gameRoot = GameRoot.Instance;
         BattleSkillFactory.RegisterAllSkills();
@@ -33,10 +31,11 @@ public class MapSettingSceneSetUp : MonoBehaviour
         gameRoot.RegisterScene_MonoManager<OrthoCameraNavigator>();
         //角色射线检测管理器
         gameRoot.RegisterScene_MonoManager<CharacterRayCasterManager>();
-        Debug.Log(gameMapManager+"dd");
-        
         gameMapManager = GameRoot.GetManager<GameMapManager>();
-        gameMapManager.GameMapManagerInit(y_Offset, x_Offset, MapRadius, MapPivot.position);
+        MapSOData.mapCols = mapWidth;
+        MapSOData.mapRows = mapHeight;
+        MapSOData.mapShape = E_MapShape.Rectangle;
+        gameMapManager.GameMapManagerInit(y_Offset, x_Offset, mapWidth, mapHeight, MapPivot.position);
         EventCenter.AddEventListener<Vector2Int, E_HexTerrainType>(E_EventType.Editor_Terrain, EditorOneRoomTexrrainTag);
         GameRoot.GetManager<HexMapInteractManager>().USEEditMode();
 

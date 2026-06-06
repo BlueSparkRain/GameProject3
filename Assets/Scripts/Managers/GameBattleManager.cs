@@ -5,97 +5,89 @@ using Core.Interfaces;
 using UnityEngine;
 
 /// <summary>
-/// ¸ºÔğµØÍ¼³¡¾°ÖĞÕ½¶·´¥·¢µÄÊı¾İ°áÔË¹¤×÷
+/// åœ°å›¾åœºæ™¯ä¸‹çš„æˆ˜æ–—è§¦å‘ç®¡ç†å™¨/æ•°æ®æ¬è¿å·¥
 /// </summary>
-public class GameBattleManager : IGlobalManager
-{
+public class GameBattleManager : IGlobalManager{
     float spawnInterval = 0.2f;
     WaitForSeconds delay;
 
     List<CharacterData> playersData = new List<CharacterData>();
     List<CharacterData> enemysData = new List<CharacterData>();
     GameMapManager gameMapManager;
-    int battleRadius = 4;
+    int battleRadius = 2;
     int max_enemyNum = 3;
 
-
-    public void MgrInit(GameRoot gameRoot)
-    {
+    public void MgrInit(GameRoot gameRoot){
         delay = new WaitForSeconds(spawnInterval);
         EventCenter.AddEventListener(E_EventType.PlayerOutBattle, UnregisterCharacterToBattle);
     }
-    public void MgrDispose()
-    {
+    public void MgrDispose(){
         EventCenter.RemoveEventListener(E_EventType.PlayerOutBattle, UnregisterCharacterToBattle);
     }
     public void MgrUpdate(float deltatime) { }
 
     /// <summary>
-    /// [MapScene]×¢²áÒ»¸öÍæ¼Ò½ÇÉ«Êı¾İ
-    /// Í¨¹ı
+    /// [MapScene]æ³¨å†Œä¸€ä¸ªç©å®¶è§’è‰²æ•°æ®
     /// </summary>
-    /// <param name="data"></param>
     public void RegisterPlayerToBattle(CharacterData data){
-        //Debug.Log("Íæ¼ÒÊı¾İ¼ÓÔØÁËÒ»·İ£¡");
         playersData.Add(data);
     }
+
     /// <summary>
-    ///µ±Íæ¼Ò½øÈëÒ»¸öÕ½¶··¿¼äÊ±´¥·¢,½«Ò»¶¨°ë¾¶·¶Î§ÄÚµÄÆäËûÆÕÍ¨µĞÈËÀ­ÈëÕ½¶·
+    /// å½“ç©å®¶è¿›å…¥ä¸€ä¸ªæˆ˜æ–—æˆ¿é—´æ—¶è§¦å‘,æ‰«æä¸€å®šåŠå¾„èŒƒå›´å†…çš„æ•Œäººå¹¶è‡ªåŠ¨åŠ å…¥æˆ˜æ–—
     /// </summary>
-    /// <param name="roomTag"></param>
     public void CheckBattleEnemy(HexRoomTag roomTag){
         if(!gameMapManager) gameMapManager=GameRoot.GetManager<GameMapManager>();
         List<Vector2Int> radiusRowCols = HexCoordinateUtility.GetRowColsInRadius(roomTag.row,roomTag.col, battleRadius);
-        Debug.Log("[GameBattleManager]-----¿ªÊ¼¼ìË÷µ½±¾³¡Õ½¶·µĞÈËÊıÁ¿£¬Ñù±¾ÊıÁ¿:" + radiusRowCols.Count);
+        Debug.Log("[GameBattleManager]-----å¼€å§‹æ‰«ææˆ˜æ–—ä¸­è¿‘é‚»èŒƒå›´å†…çš„æ•Œäºº:" + radiusRowCols.Count);
         for (int i = 0; i < radiusRowCols.Count ; i++)
         {
-            //¼ì²âÆäÖĞµÄÕ½¶··¿¼ä
             HexRoomTag cur_room = gameMapManager.GetTargetRoom(radiusRowCols[i]);
             if (cur_room && enemysData.Count< max_enemyNum) {
 
                 var roomType = cur_room.GetComponent<HexRoomStyleHandler>().RoomType;
-                if (roomType==E_HexRoomType.Battle_LowLevel_Õ½¶·_ÔÓÓã||
-                    roomType == E_HexRoomType.Battle_MidLevel_Õ½¶·_¾«Ó¢) {
-                    //Ò»¶¨ÒªÕÒµ½
+                if (roomType==E_HexRoomType.Battle_LowLevel_æˆ˜æ–—_æ‚é±¼||
+                    roomType == E_HexRoomType.Battle_MidLevel_æˆ˜æ–—_ç²¾è‹±) {
                     CharacterData enemyData = new CharacterData((cur_room.IHexRoom as BattleHexRoom).EnemyType);
-                    Debug.Log("·¢ÏÖÒ»Ö»¹ÖÎï£º---"+ (cur_room.IHexRoom as BattleHexRoom).EnemyType);
-                    //¼ì²éÄ¿Ç°µÄ»ìãçµÈ¼¶£¬½øĞĞÔ­Ê¼ÊıÖµµ÷Õû
-                    //...
+                    Debug.Log("æ£€æµ‹åˆ°ä¸€åªæ€ªç‰©ï¼š---"+ (cur_room.IHexRoom as BattleHexRoom).EnemyType);
+                    //æ ¹æ®å½“å‰çš„æ··æ²Œç­‰çº§ï¼Œç¼©æ”¾åŸå§‹æ•°å€¼
+                    var chaosMgr = GameRoot.GetManager<ChaosLevelManager>();
+                    if (chaosMgr != null)
+                        ApplyChaosScaling(enemyData, chaosMgr.EnemyStrengthMultiplier);
                     RegisterEnemyToBattle(enemyData);
                 }
             }
         }
-        Debug.Log("[GameBattleManager]---¼ìË÷µ½±¾³¡Õ½¶·" + enemysData.Count+"¸öµĞÈË");
+        Debug.Log("[GameBattleManager]---æˆ˜æ–—æ³¨å†Œç»“æŸ:" + enemysData.Count+"åæ•Œäºº");
     }
 
     /// <summary>
-    /// [MapScene]×¢²áÒ»¸öµĞÈË½ÇÉ«Êı¾İ
+    /// [MapScene]æ³¨å†Œä¸€ä¸ªæ•Œäººè§’è‰²æ•°æ®
     /// </summary>
-    /// <param name="data"></param>
     void RegisterEnemyToBattle(CharacterData data){
         enemysData.Add(data);
     }
 
     /// <summary>
-    /// [MapScene]µ±Íæ¼Ò×ßÉÏAIµĞÈËËùÔÚµÄµØ¿é£¬½øĞĞÓ¢ĞÛ¶Ô¾ö
+    /// [MapScene]è®©æ•Œäººçš„AIæ‰«ææ‰€åœ¨çš„åŒºå—ï¼Œè§¦å‘è‹±é›„å¯¹å†³
     /// </summary>
-    public void RegisterAIEnemyToBattle() { 
-    
+    public void RegisterAIEnemyToBattle() {
+
     }
 
     /// <summary>
-    /// [MapScene]Õ½¶·½áÊø£¬·ÅÆúÀúÊ·Êı¾İ£¬²¢¸üĞÂµØÍ¼ÖĞÕâ¸öÕ½¶··¿¼äµÄµ±Ç°µØ¿éÀàĞÍ
+    /// [MapScene]æˆ˜æ–—ç»“æŸåæ¸…ç©ºå†å²æ•°æ®ï¼Œè®©æ–°åœ°å›¾éšæˆ˜æ–—ç”Ÿæˆæ–°çš„å½“å‰åœ°å—å†…å®¹
     /// </summary>
     void UnregisterCharacterToBattle(){
-        Debug.Log("Íæ¼ÒÍÑÕ½£¬ÒÑÇå¿Õ¶ÔÕ½×¢²áĞÅÏ¢");
-        Debug.Log($"Çå³ıÇ°{playersData.Count}---{enemysData.Count}");
+        Debug.Log("æ¸…é™¤æˆ˜æ–—åœºæ™¯å†…æˆ˜æ–—æ³¨å†Œä¿¡æ¯");
+        Debug.Log($"æ¸…ç©ºå‰{playersData.Count}---{enemysData.Count}");
         playersData.Clear();
         enemysData.Clear();
-        Debug.Log($"Çå³ıºó{playersData.Count}---{enemysData.Count}");
+        Debug.Log($"æ¸…ç©ºå{playersData.Count}---{enemysData.Count}");
     }
 
     /// <summary>
-    /// ¸ù¾İÖ®Ç°×¢²áµ½µÄÕ½¶·ĞÅÏ¢£¬ÔÚÕ½¶·³¡¾°ÖĞ²úÉúÕ½¶·¶ÔÏó
+    /// æ ¹æ®ä¹‹å‰æ³¨å†Œçš„æˆ˜æ–—ä¿¡æ¯ï¼Œåœ¨æˆ˜æ–—åœºæ™¯ä¸­ç”Ÿæˆæˆ˜æ–—è§’è‰²
     /// </summary>
     public void SpawnBattleCharacter() {
         CoroutineManager corManager= GameRoot.GetManager<CoroutineManager>();
@@ -104,21 +96,19 @@ public class GameBattleManager : IGlobalManager
     }
 
     /// <summary>
-    /// [BattleScene]ÔÚÕ½¶·³¡¾°ÖĞ¸ù¾İÊı¾İ£¬²úÉú¶ÔÓ¦µÄ³õÊ¼Õ½¶·¶ÔÏó
+    /// [BattleScene]æ ¹æ®æˆ˜æ–—æ•°æ®åˆ—è¡¨ï¼Œç”Ÿæˆç›¸åº”çš„åˆå§‹æˆ˜æ–—è§’è‰²
     /// </summary>
-    IEnumerator SpawnBattleCardByData(List<CharacterData> datas,bool isPlayer)
-    {
-        //Ñ°ÕÒ³¡¾°ÖĞµÄ¸ºÔğ²úÉúÕ½¶·¶ÔÏóµÄ¹ÜÀíÆ÷
+    IEnumerator SpawnBattleCardByData(List<CharacterData> datas,bool isPlayer){
         BattleLoadManager battleLoadManager=GameRoot.GetManager<BattleLoadManager>();
         if (isPlayer){
-            Debug.Log("¼ÓÔØBattle£ºPlayerCamp" + datas.Count);
+            Debug.Log("ç”ŸæˆBattleçš„PlayerCamp" + datas.Count);
             for (int i = 0; i < datas.Count; i++){
                 battleLoadManager.LoadAPlayer(datas[i]);
                 yield return delay;
             }
         }
         else {
-            Debug.Log("¼ÓÔØBattle£ºEnemyCamp"+datas.Count);
+            Debug.Log("ç”ŸæˆBattleçš„EnemyCamp"+datas.Count);
             for (int i = 0; i < datas.Count; i++)
             {
                 battleLoadManager.LoadAEnemy(datas[i]);
@@ -126,5 +116,13 @@ public class GameBattleManager : IGlobalManager
             }
         }
     }
-  
+
+    void ApplyChaosScaling(CharacterData data, float multiplier){
+        if (multiplier <= 1f) return;
+        data.AdjustProperty(E_CharacterPropertyType.Phy_Attack, multiplier, use_multi: true);
+        data.AdjustProperty(E_CharacterPropertyType.Mag_Attack, multiplier, use_multi: true);
+        data.AdjustProperty(E_CharacterPropertyType.Maximum_Health, multiplier, use_multi: true);
+        data.AdjustProperty(E_CharacterPropertyType.Phy_Resistance, multiplier, use_multi: true);
+        data.AdjustProperty(E_CharacterPropertyType.Mag_Resistance, multiplier, use_multi: true);
+    }
 }

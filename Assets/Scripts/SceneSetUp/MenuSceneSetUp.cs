@@ -4,9 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MenuSceneSetUp : MonoBehaviour
-{
-
+public class MenuSceneSetUp : MonoBehaviour{
     public Button gameButton;
     public Button continueButton;
     public Button settingButton;
@@ -16,7 +14,7 @@ public class MenuSceneSetUp : MonoBehaviour
     {
         gameButton.onClick.AddListener(OnClickGameButton);
         continueButton.onClick.AddListener(OnClickContinueButton);
-        settingButton.onClick.AddListener(OnClickNoButton);
+        settingButton.onClick.AddListener(SettingsPanel.Toggle);
         creditsButton.onClick.AddListener(OnClickNoButton);
         ObjectPoolManager obj = GameRoot.GetManager<ObjectPoolManager>();
 
@@ -24,8 +22,10 @@ public class MenuSceneSetUp : MonoBehaviour
     }
 
     IEnumerator LoadAllPool() {
-        WaitForSeconds delay = new WaitForSeconds(0.5f);
+        WaitForSeconds delay = new WaitForSeconds(0.4f);
         EventCenter.EventTrigger(E_EventType.LoadObjPool, E_PoolType.MapRoom_地图房间);
+        yield return delay;
+        EventCenter.EventTrigger(E_EventType.LoadObjPool, E_PoolType.HexFace_六边形面);
         yield return delay;
         EventCenter.EventTrigger(E_EventType.LoadObjPool, E_PoolType.RoomCloude_房间遮云);
         yield return delay;
