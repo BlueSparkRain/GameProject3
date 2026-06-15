@@ -53,6 +53,9 @@ public class UIPanelBase : MonoBehaviour
 
     static int s_OpenPanelCount = 0;
 
+    /// <summary>面板正在执行入场/出场动画，此时忽略开关操作</summary>
+    public bool IsAnimating { get; private set; }
+
 
     /// <summary>
     /// 面板唯一标识（类型+序号，如TestPanel_1）
@@ -110,10 +113,12 @@ public class UIPanelBase : MonoBehaviour
     /// <param name="sortingOrder">面板层级</param>
     public virtual void Show()
     {
+        if (IsAnimating) return;
+
         //if (s_OpenPanelCount == 0)
         if (freezeCameraOnOpen)
             EventCenter.EventTrigger(E_EventType.FreezeCamPan);
-        
+
         s_OpenPanelCount++;
         if (enableTimeScaleControl && s_OpenPanelCount == 1)
             GameRoot.GetManager<TimeManager>()?.SetTimeScale(0.2f, 0.3f);
@@ -122,16 +127,17 @@ public class UIPanelBase : MonoBehaviour
         canvasGroup.alpha = 1;
         canvasGroup.interactable = true;
         canvasGroup.blocksRaycasts = true;
-        
+
         if (!Anim_DoFadeIn)
             BeforeFadeOutAnimCallBack();
         else
             BeforeFadeInAnimCallBack();
 
         UnitBeforeAnimCallBack();
-        
-        // 执行入场动画
-        PlayEnterAnim(()=>{ 
+
+        IsAnimating = true;
+        PlayEnterAnim(()=>{
+        IsAnimating = false;
         EnterAnimCallBack();
         });
         UnitEndAnimCallBack();
@@ -142,6 +148,8 @@ public class UIPanelBase : MonoBehaviour
     /// </summary>
     public virtual void Hide()
     {
+        if (IsAnimating) return;
+
         canvasGroup.interactable = false;
         canvasGroup.blocksRaycasts = false;
 
@@ -159,8 +167,10 @@ public class UIPanelBase : MonoBehaviour
 
         UnitBeforeAnimCallBack();
 
+        IsAnimating = true;
         PlayExitAnim(() =>
         {
+            IsAnimating = false;
             gameObject.SetActive(false);
             ExitAnimCallBack();
         });

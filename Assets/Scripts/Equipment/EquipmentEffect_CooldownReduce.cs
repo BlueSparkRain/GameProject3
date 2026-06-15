@@ -5,12 +5,9 @@ using System.Collections.Generic;
 /// 被动型：实现 IPassiveEffect，由 EquipmentController 自动聚合
 /// 查询：controller.GetPassiveEffectValue(E_EquipmentPassiveEffect.CooldownRate)
 /// </summary>
-public class EquipmentEffect_CooldownReduce : IPassiveEffect
-{
+public class EquipmentEffect_CooldownReduce : IPassiveEffect{
     public float cooldownRate;
-
-    public EquipmentEffect_CooldownReduce(float cooldownRate)
-    {
+    public EquipmentEffect_CooldownReduce(float cooldownRate){
         this.cooldownRate = cooldownRate;
     }
 

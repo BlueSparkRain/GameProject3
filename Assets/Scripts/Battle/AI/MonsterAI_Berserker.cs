@@ -25,7 +25,7 @@ public class MonsterAI_Berserker : IMonsterAIComponent
         this.controller = controller;
         this.skiller = skiller;
         hasTriggered = false;
-        Debug.Log($"[BerserkerAI] {controller.CharacterData.Character_Name} 狂战士AI就绪，阈值:{hpThreshold * 100}%");
+        DebugManager.Log(EDebugCategory.BattleAI,$"[BerserkerAI] {controller.CharacterData.Character_Name} 狂战士AI就绪，阈值:{hpThreshold * 100}%");
     }
 
     public void OnBattleUpdate(Battle_Controller controller, BattleSkiller skiller)
@@ -50,7 +50,7 @@ public class MonsterAI_Berserker : IMonsterAIComponent
     void TriggerRage()
     {
         hasTriggered = true;
-        Debug.Log($"[BerserkerAI] {controller.CharacterData.Character_Name} 血量过低，进入狂暴状态!");
+        DebugManager.Log(EDebugCategory.BattleAI,$"[BerserkerAI] {controller.CharacterData.Character_Name} 血量过低，进入狂暴状态!");
 
         // 释放狂暴技能 —— 通过SO体系解析枚举→技能ID→技能实例
         var rageSO = ResourcesLoader.FindSkillSOBySkillName(rageSkill);
@@ -66,6 +66,6 @@ public class MonsterAI_Berserker : IMonsterAIComponent
         controller.AdjustCharacterPropertyValue(E_CharacterPropertyType.Mag_Attack,
             controller.GetCharacterPropertyValue(E_CharacterPropertyType.Mag_Attack) * attackBoostRate);
 
-        Debug.Log($"[BerserkerAI] {controller.CharacterData.Character_Name} 攻击力提升{attackBoostRate * 100}%");
+        DebugManager.Log(EDebugCategory.BattleAI,$"[BerserkerAI] {controller.CharacterData.Character_Name} 攻击力提升{attackBoostRate * 100}%");
     }
 }

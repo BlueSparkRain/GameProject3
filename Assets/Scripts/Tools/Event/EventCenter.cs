@@ -462,6 +462,10 @@ public enum E_EventType
 
     Map_GetPropertyGift,
     Map_GetASkill,
+    /// <summary>
+    /// 房间类型已确认 (E_HexRoomType roomType, Transform roomTransform)
+    /// </summary>
+    MapRoomCreated,
     Battle_LoadASkill,
     BattleEnd,
     
@@ -481,6 +485,11 @@ public enum E_EventType
     /// 力竭角色恢复
     /// </summary>
     Battle_CharacterBreakRefresh,
+
+    /// <summary>
+    /// 角色战斗模型值变更 (IBattlable battler, Vector3 worldPos, E_BattleModelType modelType, float delta)
+    /// </summary>
+    Battle_ModelValueChanged,
 
     LoadObjPool,
     E_DataSave,
@@ -559,6 +568,11 @@ public enum E_EventType
     AdjustEXP,
 
     /// <summary>
+    /// 角色升级 (int oldLevel, int newLevel)
+    /// </summary>
+    CharacterLevelUp,
+
+    /// <summary>
     /// 角色获得一个BUFF（计时消失）
     /// </summary>
     Battle_RegisteBUFF,
@@ -587,4 +601,14 @@ public enum E_EventType
     /// 收到伤害结算，触发受击效果等
     /// </summary>
     Get_Damage,
+
+    /// <summary>
+    /// ATB主动技能准备阶段 (bool entering: true=选中开始, false=取消/释放结束)
+    /// </summary>
+    PrepareATBSkillExcute,
+
+    /// <summary>
+    /// ATB技能图标被选中时触发，传入SkillIcon的屏幕坐标(Vector2)，用于贝塞尔箭头定位
+    /// </summary>
+    SkillIconATBSelected,
 }

@@ -37,19 +37,22 @@ public class Skill_40 : SkillBase
     float baseRate = 0.3f;
     float ratePer100SP = 0.02f;
 
-    public Skill_40(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public Skill_40(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType) { }
     public override bool IsMagicType => true;
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { Execute(target, 1); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { Execute(target, 1 + henceTime); } // 1→2→3→4
+    void Execute(IBattlable target, int hits)
     {
         float currentSP = Controller.GetCharacterModelValue(E_BattleModelType.SP);
         Controller.AdjustCharacterModelValue(E_BattleModelType.SP, -currentSP);
         float bonusRate = (currentSP / 100f) * ratePer100SP;
         float rate = baseRate + bonusRate;
-        Debug.Log($"[Skill 40]{self.Camp}消耗全部SP({currentSP})，光伤害倍率{rate}");
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 40]{self.Camp}消耗全部SP({currentSP})，光伤害倍率{rate}，段数{hits}");
         var atk = new Attack_Skill();
-        atk.SetAttackState(E_WeaknessType.光, -1, rate);
-        atk.Excute(self, target);
+        atk.SetAttackState(E_WeaknessType.光_, -1, rate);
+        var multi = new MultiTime_SkillDecorator(atk, hits, 0.2f);
+        multi.Excute(self, target);
     }
 }
 
@@ -64,15 +67,15 @@ public class Skill_41 : SkillBase
     float baseRate = 0.3f;
     float ratePerWeakness = 0.1f;
 
-    public Skill_41(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public Skill_41(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType) { }
     public override bool IsMagicType => true;
 
     public static void RecordWeakness(E_WeaknessType w)
     {
-        if (w != E_WeaknessType.无 && recordedWeaknesses.Add(w))
+        if (w != E_WeaknessType.无_ && recordedWeaknesses.Add(w))
         {
             totalUniqueCount++;
-            Debug.Log($"[Skill_41]记录新弱点类型:{w},当前累计{totalUniqueCount}种");
+            DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill_41]记录新弱点类型:{w},当前累计{totalUniqueCount}种");
         }
     }
 
@@ -84,13 +87,15 @@ public class Skill_41 : SkillBase
         totalUniqueCount = 0;
     }
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { Execute(target, ratePerWeakness); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { Execute(target, ratePerWeakness + henceTime * 0.1f); } // 10→20→30→40%
+    void Execute(IBattlable target, float perWeakness)
     {
         int uniqueCount = GetUniqueWeaknessCount();
-        float rate = baseRate + uniqueCount * ratePerWeakness;
-        Debug.Log($"[Skill 41]{self.Camp}已使用{uniqueCount}种弱点，光伤害倍率{rate}");
+        float rate = baseRate + uniqueCount * perWeakness;
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 41]{self.Camp}已使用{uniqueCount}种弱点，光伤害倍率{rate}");
         var atk = new Attack_Skill();
-        atk.SetAttackState(E_WeaknessType.光, -1, rate);
+        atk.SetAttackState(E_WeaknessType.光_, -1, rate);
         atk.Excute(self, target);
     }
 }
@@ -103,13 +108,15 @@ public class Skill_42 : SkillBase
 {
     float buffDuration = 20f;
 
-    public Skill_42(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public Skill_42(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType) { }
     public override bool IsMagicType => true;
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { ApplyBuff(buffDuration); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { ApplyBuff(buffDuration + henceTime * 10f); } // 20→30→40→50
+    void ApplyBuff(float dur)
     {
-        Debug.Log($"[Skill 42]{self.Camp}获得魔力收束BUFF，持续{buffDuration}S");
-        var buff = new BuffBase(E_BuffType.魔力收束_正面, E_BuffPositive.正面, buffDuration);
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 42]{self.Camp}获得魔力收束BUFF，持续{dur}S");
+        var buff = new BuffBase(E_BuffType.魔力收束_正面, E_BuffPositive.正面, dur);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }
@@ -124,7 +131,7 @@ public class Skill_43 : SkillBase
     float ratePerLayer = 0.05f;
     E_Dot selectedDot = E_Dot.燃烧;
 
-    public Skill_43(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public Skill_43(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType) { }
     public override bool IsMagicType => true;
 
     public void SwitchDotType(E_Dot dot) { selectedDot = dot; }
@@ -140,13 +147,15 @@ public class Skill_43 : SkillBase
         return E_WeaknessType.火;
     }
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { Execute(target, ratePerLayer); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { Execute(target, ratePerLayer + henceTime * 0.05f); } // 5→10→15→20%
+    void Execute(IBattlable target, float perLayer)
     {
         var dotHandler = target.battleDamageHandler.DotHandler;
         int layers = dotHandler.ClearDotAndGetLayers(selectedDot);
-        float rate = baseRate + layers * ratePerLayer;
+        float rate = baseRate + layers * perLayer;
         E_WeaknessType weakness = GetWeaknessForDot(selectedDot);
-        Debug.Log($"[Skill 43]{self.Camp}清除目标{selectedDot}Dot{layers}层，{weakness}伤害倍率{rate}");
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 43]{self.Camp}清除目标{selectedDot}Dot{layers}层，{weakness}伤害倍率{rate}");
         var atk = new Attack_Skill();
         atk.SetAttackState(weakness, -1, rate);
         atk.Excute(self, target);
@@ -162,19 +171,21 @@ public class Skill_44 : SkillBase
     float baseRate = 0.3f;
     float ratePer100HP = 0.05f;
 
-    public Skill_44(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public Skill_44(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType) { }
     public override bool IsMagicType => true;
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { Execute(target, ratePer100HP); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { Execute(target, ratePer100HP + henceTime * 0.05f); } // 5→10→15→20%
+    void Execute(IBattlable target, float per100HP)
     {
         float currentHP = Controller.GetCharacterModelValue(E_BattleModelType.HP);
         float hpConsumed = currentHP - 1;
         Controller.AdjustCharacterModelValue(E_BattleModelType.HP, -hpConsumed);
-        float bonusRate = (hpConsumed / 100f) * ratePer100HP;
+        float bonusRate = (hpConsumed / 100f) * per100HP;
         float rate = baseRate + bonusRate;
-        Debug.Log($"[Skill 44]{self.Camp}消耗HP({hpConsumed})至1点，光伤害倍率{rate}");
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 44]{self.Camp}消耗HP({hpConsumed})至1点，光伤害倍率{rate}");
         var atk = new Attack_Skill();
-        atk.SetAttackState(E_WeaknessType.光, -1, rate);
+        atk.SetAttackState(E_WeaknessType.光_, -1, rate);
         atk.Excute(self, target);
     }
 }
@@ -189,15 +200,17 @@ public class Skill_45 : SkillBase
     float damageRate = 0.4f;
     float triggerInterval = 5f;
 
-    public Skill_45(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public Skill_45(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType) { }
     public override bool IsMagicType => true;
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { CreateBuff(damageRate); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { CreateBuff(damageRate + henceTime * 0.2f); } // 0.4→0.6→0.8→1.0
+    void CreateBuff(float rate)
     {
         E_Camp enemyCamp = self.Camp == E_Camp.玩家方 ? E_Camp.敌方 : E_Camp.玩家方;
-        Debug.Log($"[Skill 45]{self.Camp}获得火焰风暴BUFF，持续{buffDuration}S");
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 45]{self.Camp}获得火焰风暴BUFF，持续{buffDuration}S，倍率{rate}");
         var buff = new Buff_AutoDamage(E_BuffType.烈焰风暴_正面, E_BuffPositive.正面, buffDuration,
-            self, enemyCamp, E_WeaknessType.火, damageRate, triggerInterval);
+            self, enemyCamp, E_WeaknessType.火, rate, triggerInterval);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }
@@ -212,15 +225,17 @@ public class Skill_46 : SkillBase
     float damageRate = 0.4f;
     float triggerInterval = 5f;
 
-    public Skill_46(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public Skill_46(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType) { }
     public override bool IsMagicType => true;
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { CreateBuff(damageRate); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { CreateBuff(damageRate + henceTime * 0.2f); } // 0.4→0.6→0.8→1.0
+    void CreateBuff(float rate)
     {
         E_Camp enemyCamp = self.Camp == E_Camp.玩家方 ? E_Camp.敌方 : E_Camp.玩家方;
-        Debug.Log($"[Skill 46]{self.Camp}获得冰雪风暴BUFF，持续{buffDuration}S");
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 46]{self.Camp}获得冰雪风暴BUFF，持续{buffDuration}S，倍率{rate}");
         var buff = new Buff_AutoDamage(E_BuffType.冰雪风暴_正面, E_BuffPositive.正面, buffDuration,
-            self, enemyCamp, E_WeaknessType.冰, damageRate, triggerInterval);
+            self, enemyCamp, E_WeaknessType.冰, rate, triggerInterval);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }
@@ -233,13 +248,15 @@ public class Skill_47 : SkillBase
 {
     float buffDuration = 20f;
 
-    public Skill_47(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public Skill_47(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType) { }
     public override bool IsMagicType => false;
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { ApplyBuff(buffDuration); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { ApplyBuff(buffDuration + henceTime * 10f); } // 20→30→40→50
+    void ApplyBuff(float dur)
     {
-        Debug.Log($"[Skill 47]{self.Camp}获得无双BUFF，持续{buffDuration}S");
-        var buff = new BuffBase(E_BuffType.无双_正面, E_BuffPositive.正面, buffDuration);
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 47]{self.Camp}获得无双BUFF，持续{dur}S");
+        var buff = new BuffBase(E_BuffType.无双_正面, E_BuffPositive.正面, dur);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }
@@ -252,15 +269,18 @@ public class Skill_48 : SkillBase
 {
     float baseAttackRate = 0.8f;
 
-    public Skill_48(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public Skill_48(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType) { }
     public override bool IsMagicType => false;
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { Execute(target, 1); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { Execute(target, 1 + henceTime); } // 1→2→3→4
+    void Execute(IBattlable target, int hits)
     {
-        Debug.Log($"[Skill 48]{self.Camp}发动武神霸斩，剑伤害倍率{baseAttackRate}");
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 48]{self.Camp}发动武神霸斩，剑伤害倍率{baseAttackRate}，段数{hits}");
         var atk = new Attack_Skill();
         atk.SetAttackState(E_WeaknessType.剑, -1, baseAttackRate);
-        atk.Excute(self, target);
+        var multi = new MultiTime_SkillDecorator(atk, hits, 0.3f);
+        multi.Excute(self, target);
     }
 }
 
@@ -274,14 +294,16 @@ public class Skill_49 : SkillBase
     float critChance = 0.25f;
     float critMulti = 2f;
 
-    public Skill_49(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public Skill_49(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType) { }
     public override bool IsMagicType => false;
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { Execute(target, critChance); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { Execute(target, critChance + henceTime * 0.25f); } // 25→50→75→100%
+    void Execute(IBattlable target, float chance)
     {
-        bool isCrit = Random.value < critChance;
+        bool isCrit = Random.value < chance;
         float rate = baseAttackRate * (isCrit ? critMulti : 1f);
-        Debug.Log($"[Skill 49]{self.Camp}发动会心之枪，暴击:{isCrit}，枪伤害倍率{rate}");
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 49]{self.Camp}发动会心之枪，暴击:{isCrit}(概率{chance})，枪伤害倍率{rate}");
         var atk = new Attack_Skill();
         atk.SetAttackState(E_WeaknessType.枪, -1, rate);
         atk.Excute(self, target);
@@ -296,16 +318,18 @@ public class Skill_50 : SkillBase
 {
     float hpRate = 0.5f;
 
-    public Skill_50(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public Skill_50(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType) { }
     public override bool IsMagicType => false;
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { Execute(target, hpRate); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { Execute(target, hpRate + henceTime * 0.25f); } // 50→75→100→125%
+    void Execute(IBattlable target, float pct)
     {
         float maxHP = self.battleDamageHandler.GetMaxHealth();
-        float damageVal = maxHP * hpRate;
-        Debug.Log($"[Skill 50]{self.Camp}发动陨石，最大HP{maxHP}，基础伤害值{damageVal}");
+        float damageVal = maxHP * pct;
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 50]{self.Camp}发动陨石，最大HP{maxHP}，伤害值{damageVal}({pct*100}%)");
         var atk = new Attack_Skill();
-        atk.SetAttackState(E_WeaknessType.无, damageVal, 1f);
+        atk.SetAttackState(E_WeaknessType.无_, damageVal, 1f);
         atk.Excute(self, target);
     }
 }
@@ -319,17 +343,20 @@ public class Skill_51 : SkillBase
     float cumulativeRate = 0.3f;
     float rateIncrement = 0.2f;
 
-    public Skill_51(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public Skill_51(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType) { }
     public override bool IsMagicType => false;
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { Execute(target, 1); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { Execute(target, 1 + henceTime); } // 1→2→3→4
+    void Execute(IBattlable target, int hits)
     {
-        Debug.Log($"[Skill 51]{self.Camp}发动绵里藏针，当前倍率{cumulativeRate}");
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 51]{self.Camp}发动绵里藏针，当前倍率{cumulativeRate}，段数{hits}");
         var atk = new Attack_Skill();
         atk.SetAttackState(E_WeaknessType.枪, -1, cumulativeRate);
-        atk.Excute(self, target);
+        var multi = new MultiTime_SkillDecorator(atk, hits, 0.2f);
+        multi.Excute(self, target);
         cumulativeRate += rateIncrement;
-        Debug.Log($"[Skill 51]倍率提升至{cumulativeRate}");
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 51]倍率提升至{cumulativeRate}");
     }
 }
 
@@ -342,15 +369,17 @@ public class Skill_52 : SkillBase
     float baseAttackRate = 0.4f;
     float atbZeroMulti = 3f;
 
-    public Skill_52(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public Skill_52(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType) { }
     public override bool IsMagicType => false;
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { Execute(target, baseAttackRate); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { Execute(target, baseAttackRate + henceTime * 0.2f); } // 0.4→0.6→0.8
+    void Execute(IBattlable target, float atkRate)
     {
         float targetATB = target.battleDamageHandler.BattleController.GetCharacterModelValue(E_BattleModelType.ATBPoints);
         bool atbZero = targetATB <= 0;
-        float rate = baseAttackRate * (atbZero ? atbZeroMulti : 1f);
-        Debug.Log($"[Skill 52]{self.Camp}发动落井下石，目标ATB:{targetATB}，ATB为0:{atbZero}，倍率{rate}");
+        float rate = atkRate * (atbZero ? atbZeroMulti : 1f);
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 52]{self.Camp}发动落井下石，目标ATB:{targetATB}，ATB为0:{atbZero}，倍率{rate}");
         var atk = new Attack_Skill();
         atk.SetAttackState(E_WeaknessType.弓, -1, rate);
         atk.Excute(self, target);
@@ -367,22 +396,20 @@ public class Skill_53 : SkillBase
     float baseAttackRate = 0.6f;
     float stunDuration = 10f;
 
-    public Skill_53(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public Skill_53(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType) { }
     public override bool IsMagicType => false;
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { Execute(target, stunDuration); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { Execute(target, stunDuration + henceTime * 5f); } // 10→15→20→25
+    void Execute(IBattlable target, float dur)
     {
-        if (usedThisBattle)
-        {
-            Debug.Log("[Skill 53]本场战斗已使用过猛击，跳过");
-            return;
-        }
+        if (usedThisBattle) { DebugManager.Log(EDebugCategory.SkillExecution,"[Skill 53]本场战斗已使用过猛击，跳过"); return; }
         usedThisBattle = true;
-        Debug.Log($"[Skill 53]{self.Camp}发动猛击，附加晕眩{stunDuration}S");
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 53]{self.Camp}发动猛击，附加晕眩{dur}S");
         var atk = new Attack_Skill();
-        atk.SetAttackState(E_WeaknessType.无, -1, baseAttackRate);
+        atk.SetAttackState(E_WeaknessType.无_, -1, baseAttackRate);
         atk.Excute(self, target);
-        var stunBuff = new BuffBase(E_BuffType.晕眩_负面, E_BuffPositive.负面, stunDuration);
+        var stunBuff = new BuffBase(E_BuffType.晕眩_负面, E_BuffPositive.负面, dur);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, target.battleDamageHandler.BuffHandler, stunBuff);
     }
 }
@@ -396,20 +423,23 @@ public class Skill_54 : SkillBase
     float baseAttackRate = 0.6f;
     int atbGain = 3;
 
-    public Skill_54(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public Skill_54(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType) { }
     public override bool IsMagicType => false;
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { Execute(target, 1); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { Execute(target, 1 + henceTime); } // 1→2→3→4
+    void Execute(IBattlable target, int hits)
     {
         bool wasAlive = target.IsAlive;
-        Debug.Log($"[Skill 54]{self.Camp}发动吞噬");
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 54]{self.Camp}发动吞噬，段数{hits}");
         var atk = new Attack_Skill();
-        atk.SetAttackState(E_WeaknessType.无, -1, baseAttackRate);
-        atk.Excute(self, target);
+        atk.SetAttackState(E_WeaknessType.无_, -1, baseAttackRate);
+        var multi = new MultiTime_SkillDecorator(atk, hits, 0.2f);
+        multi.Excute(self, target);
         if (wasAlive && !target.IsAlive)
         {
             Controller.AdjustCharacterModelValue(E_BattleModelType.ATBPoints, atbGain);
-            Debug.Log($"[Skill 54]击杀目标，获得{atbGain}ATB");
+            DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 54]击杀目标，获得{atbGain}ATB");
         }
     }
 }
@@ -422,13 +452,15 @@ public class Skill_55 : SkillBase
 {
     float buffDuration = 10f;
 
-    public Skill_55(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public Skill_55(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType) { }
     public override bool IsMagicType => true;
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { CreateBuff(buffDuration); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { CreateBuff(buffDuration + henceTime * 5f); } // 10→15→20→25
+    void CreateBuff(float dur)
     {
-        Debug.Log($"[Skill 55]{self.Camp}获得灼伤之剑BUFF，持续{buffDuration}S");
-        var buff = new Buff_DotOnAttack(E_BuffType.灼伤之剑_正面, E_BuffPositive.正面, buffDuration,
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 55]{self.Camp}获得灼伤之剑BUFF，持续{dur}S");
+        var buff = new Buff_DotOnAttack(E_BuffType.灼伤之剑_正面, E_BuffPositive.正面, dur,
             E_WeaknessType.剑, E_Dot.燃烧, self);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
@@ -442,13 +474,15 @@ public class Skill_56 : SkillBase
 {
     float buffDuration = 10f;
 
-    public Skill_56(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public Skill_56(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType) { }
     public override bool IsMagicType => true;
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { CreateBuff(buffDuration); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { CreateBuff(buffDuration + henceTime * 5f); } // 10→15→20→25
+    void CreateBuff(float dur)
     {
-        Debug.Log($"[Skill 56]{self.Camp}获得冻结之弓BUFF，持续{buffDuration}S");
-        var buff = new Buff_DotOnAttack(E_BuffType.冻结之弓_正面, E_BuffPositive.正面, buffDuration,
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 56]{self.Camp}获得冻结之弓BUFF，持续{dur}S");
+        var buff = new Buff_DotOnAttack(E_BuffType.冻结之弓_正面, E_BuffPositive.正面, dur,
             E_WeaknessType.弓, E_Dot.冻结, self);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
@@ -462,13 +496,15 @@ public class Skill_57 : SkillBase
 {
     float buffDuration = 10f;
 
-    public Skill_57(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public Skill_57(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType) { }
     public override bool IsMagicType => true;
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { CreateBuff(buffDuration); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { CreateBuff(buffDuration + henceTime * 5f); } // 10→15→20→25
+    void CreateBuff(float dur)
     {
-        Debug.Log($"[Skill 57]{self.Camp}获得感电之枪BUFF，持续{buffDuration}S");
-        var buff = new Buff_DotOnAttack(E_BuffType.感电之枪_正面, E_BuffPositive.正面, buffDuration,
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 57]{self.Camp}获得感电之枪BUFF，持续{dur}S");
+        var buff = new Buff_DotOnAttack(E_BuffType.感电之枪_正面, E_BuffPositive.正面, dur,
             E_WeaknessType.枪, E_Dot.感电, self);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
@@ -484,14 +520,16 @@ public class Skill_58 : SkillBase
     float tickInterval = 1f;
     int dotLayers = 1;
 
-    public Skill_58(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public Skill_58(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType) { }
     public override bool IsMagicType => true;
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { CreateBuff(dotLayers); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { CreateBuff(dotLayers + henceTime); } // 1→2→3→4
+    void CreateBuff(int layers)
     {
-        Debug.Log($"[Skill 58]{self.Camp}获得火焰场地BUFF，持续{buffDuration}S");
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 58]{self.Camp}获得火焰场地BUFF，持续{buffDuration}S，层数{layers}");
         var buff = new Buff_FieldDot(E_BuffType.火焰场地_正面, E_BuffPositive.正面, buffDuration,
-            E_Dot.燃烧, self, tickInterval, dotLayers);
+            E_Dot.燃烧, self, tickInterval, layers);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }
@@ -506,13 +544,16 @@ public class Skill_59 : SkillBase
     float tickInterval = 1f;
     int dotLayers = 1;
 
-    public Skill_59(E_SkillTargetType _skillTargetType) : base(_skillTargetType) { }
+    public Skill_59(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType) { }
     public override bool IsMagicType => true;
 
-    public override void SkillEffect_Base(IBattlable target){
-        Debug.Log($"[Skill 59]{self.Camp}获得雷电场地BUFF，持续{buffDuration}S");
+    public override void SkillEffect_Base(IBattlable target) { CreateBuff(dotLayers); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { CreateBuff(dotLayers + henceTime); } // 1→2→3→4
+    void CreateBuff(int layers)
+    {
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 59]{self.Camp}获得雷电场地BUFF，持续{buffDuration}S，层数{layers}");
         var buff = new Buff_FieldDot(E_BuffType.雷电场地, E_BuffPositive.正面, buffDuration,
-            E_Dot.感电, self, tickInterval, dotLayers);
+            E_Dot.感电, self, tickInterval, layers);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71279a2f56cba9843a8cef469166e8ae, type: 3}
   m_Name: "Weakness_ME_\u4E09\u5668\u6597\u58EB"
   m_EditorClassIdentifier: 
-  characterType: 0
-  weaknesses: 000000000100000002000000
+  characterType: 22
+  weaknesses: 0d0000000300000004000000
   initialShieldPoints: 5

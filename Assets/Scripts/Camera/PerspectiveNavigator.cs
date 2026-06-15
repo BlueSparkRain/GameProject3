@@ -95,11 +95,11 @@ public class PerspectiveNavigator : MonoSceneManager
     void Freeze()
     {
         use_CamPan = false;
-        Debug.Log("-------冻结吧");
+        DebugManager.Log(EDebugCategory.General, "-------冻结吧");
     }
     void UnFreeze() {
         use_CamPan = true;
-        Debug.Log("-------解冻啦");
+        DebugManager.Log(EDebugCategory.General, "-------解冻啦");
     }
 
     protected override void MgrOnDispose()

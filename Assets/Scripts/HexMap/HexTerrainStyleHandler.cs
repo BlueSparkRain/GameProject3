@@ -60,37 +60,36 @@ public class HexTerrainStyleHandler : MonoBehaviour
     E_HexRoomType GetRoomType(){
         switch (hexTerrainType){
             case E_HexTerrainType.Obstacle_Ocean: {
-            return E_HexRoomType.None_无交互地形; }
+            return E_HexRoomType.None; }
             case E_HexTerrainType.Walkable_EmptyLand:{
                     //加载模型数据
-                    return E_HexRoomType.None_无交互地形; }
+                    return E_HexRoomType.None; }
             case E_HexTerrainType.Obstacle_Tree:{
                     modelSOData = ResourcesLoader.FindRoomModelSO(E_RoomModelType.树木);
-                    return E_HexRoomType.None_无交互地形; }
+                    return E_HexRoomType.None; }
             case E_HexTerrainType.Obstacle_Stone:{ 
                     modelSOData = ResourcesLoader.FindRoomModelSO(E_RoomModelType.石头);
-                    return E_HexRoomType.None_无交互地形; }
+                    return E_HexRoomType.None; }
             case E_HexTerrainType.Obstacle_Mountain: {
                     modelSOData = ResourcesLoader.FindRoomModelSO(E_RoomModelType.石头);
-                    return E_HexRoomType.None_无交互地形; }
+                    return E_HexRoomType.None; }
             case E_HexTerrainType.Walkable_LowLevel_BattleRoom:{
-                    return E_HexRoomType.Battle_LowLevel_战斗_杂鱼; }
+                    return E_HexRoomType.Battle_LowLevel; }
             case E_HexTerrainType.Walkable_MidLevel_BattleRoom: {
-                    
-                    return E_HexRoomType.Battle_MidLevel_战斗_精英; }
+                    return E_HexRoomType.Battle_MidLevel; }
             case E_HexTerrainType.Walkable_HighLevel_BattleRoom: {
                     
-                    return E_HexRoomType.Battle_HighLevel_战斗_首领; }
+                    return E_HexRoomType.Battle_HighLevel; }
             case E_HexTerrainType.Walkable_UnknownEventRoom: {
                     
-                    return E_HexRoomType.UnknownEvent_随机事件; }
+                    return E_HexRoomType.UnknownEvent; }
             case E_HexTerrainType.Walkable_RewardRoom: {
                     
-                    return E_HexRoomType.Reward_神像奖励; }
+                    return E_HexRoomType.Reward; }
             case E_HexTerrainType.Walkable_CityShopRoom:{ 
                     modelSOData = ResourcesLoader.FindRoomModelSO(E_RoomModelType.城镇);
-                    return E_HexRoomType.CityShop_城商镇; }
-            default: return E_HexRoomType.None_无交互地形;
+                    return E_HexRoomType.CityShop; }
+            default: return E_HexRoomType.None;
         }
     }
 }

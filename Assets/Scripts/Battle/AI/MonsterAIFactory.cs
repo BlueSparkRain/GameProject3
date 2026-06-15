@@ -47,7 +47,7 @@ public static class MonsterAIFactory
             }
 
             _creators[attr.CharacterType] = () => (IMonsterAIComponent)ctor.Invoke(null);
-            Debug.Log($"[MonsterAIFactory] 注册怪物AI: {attr.CharacterType} → {type.Name}");
+            DebugManager.Log(EDebugCategory.BattleAI,$"[MonsterAIFactory] 注册怪物AI: {attr.CharacterType} → {type.Name}");
         }
     }
 

@@ -3,7 +3,7 @@ using UnityEngine;
 
 /// <summary>
 /// 当前装备处理器——管理角色当前各部位装备，提供绿值加成和弱点列表
-/// 纯C#类，挂在CharacterData上
+/// 纯C#类，挂在CharacterData上。自动从Save_EquippedItems存档加载/保存
 /// </summary>
 public class EquipHandler
 {
@@ -12,24 +12,42 @@ public class EquipHandler
 
     public System.Action<E_EquipmentSlot, EquipData> onEquipChanged;
 
+    public EquipHandler()
+    {
+        LoadEquipped();
+        onEquipChanged += (_, _) => SaveEquipped();
+    }
+
     /// <summary>装备一件装备(同部位替换，饰品自动选空位)</summary>
     public void Equip(EquipData data)
     {
         if (data == null || !data.IsValid()) return;
 
-        // 饰品自动选空位
-        E_EquipmentSlot targetSlot = data.slot;
-        if (targetSlot == E_EquipmentSlot.Accessory1 || targetSlot == E_EquipmentSlot.Accessory2)
-        {
-            if (currentEquips.ContainsKey(E_EquipmentSlot.Accessory1))
-                targetSlot = currentEquips.ContainsKey(E_EquipmentSlot.Accessory2)
-                    ? E_EquipmentSlot.Accessory1  // 两个都满了，替换Accessory1
-                    : E_EquipmentSlot.Accessory2; // Accessory1满了，用Accessory2
-            else
-                targetSlot = E_EquipmentSlot.Accessory1; // Accessory1空闲
-        }
+        E_EquipmentSlot targetSlot = ResolveAccessorySlot(data.slot);
+        ApplyEquip(data, targetSlot);
+    }
 
-        // 同部位旧装备先卸下
+    /// <summary>装备到指定槽位(面板手动选择时使用，跳过饰品自动分配)</summary>
+    public void EquipToSlot(EquipData data, E_EquipmentSlot targetSlot)
+    {
+        if (data == null || !data.IsValid()) return;
+        ApplyEquip(data, targetSlot);
+    }
+
+    E_EquipmentSlot ResolveAccessorySlot(E_EquipmentSlot slot)
+    {
+        if (slot != E_EquipmentSlot.Accessory1 && slot != E_EquipmentSlot.Accessory2)
+            return slot;
+
+        if (currentEquips.ContainsKey(E_EquipmentSlot.Accessory1))
+            return currentEquips.ContainsKey(E_EquipmentSlot.Accessory2)
+                ? E_EquipmentSlot.Accessory1
+                : E_EquipmentSlot.Accessory2;
+        return E_EquipmentSlot.Accessory1;
+    }
+
+    void ApplyEquip(EquipData data, E_EquipmentSlot targetSlot)
+    {
         if (currentEquips.TryGetValue(targetSlot, out var old))
             Unequip(targetSlot);
 
@@ -68,7 +86,7 @@ public class EquipHandler
         return total;
     }
 
-    /// <summary>获取护盾点数绿值(不映射到CharacterProperty,战斗时直接加给Max_ShieldPoints)</summary>
+    /// <summary>获取护盾点数绿值</summary>
     public int GetShieldBonus()
     {
         int total = 0;
@@ -96,6 +114,45 @@ public class EquipHandler
         return list;
     }
 
+    #region 存档 (Save_EquippedItems)
+    void LoadEquipped()
+    {
+        var save = JsonSaver.Load<Save_EquippedItems>();
+        if (save?.entries == null) return;
+        foreach (var entry in save.entries)
+        {
+            if (entry?.data != null && entry.data.IsValid())
+                currentEquips[entry.slot] = entry.data;
+        }
+        DebugManager.Log(EDebugCategory.Equipment,$"[EquipHandler] 从存档加载了{currentEquips.Count}件已装备");
+    }
+
+    void SaveEquipped()
+    {
+        var entries = new List<EquippedEntry>();
+        foreach (var kv in currentEquips)
+            entries.Add(new EquippedEntry { slot = kv.Key, data = kv.Value });
+        JsonSaver.Save(new Save_EquippedItems(entries));
+    }
+
+    /// <summary>导出已装备列表(用于调试/编辑器)</summary>
+    public List<EquippedEntry> GetEquippedList()
+    {
+        var list = new List<EquippedEntry>();
+        foreach (var kv in currentEquips)
+            list.Add(new EquippedEntry { slot = kv.Key, data = kv.Value });
+        return list;
+    }
+    #endregion
+
+    /// <summary>已装备条目——槽位+装备数据对</summary>
+    [System.Serializable]
+    public class EquippedEntry
+    {
+        public E_EquipmentSlot slot;
+        public EquipData data;
+    }
+
     /// <summary>词条类型→角色属性类型的映射</summary>
     public static E_CharacterPropertyType MapToProperty(E_EquipAffixType affixType)
     {
@@ -110,4 +167,23 @@ public class EquipHandler
             default: return E_CharacterPropertyType.Maximum_Health;
         }
     }
+}
+
+/// <summary>
+/// [Save]已装备数据存档——独立存档文件，与EquipBacketManager类似
+/// </summary>
+[System.Serializable]
+public class Save_EquippedItems : IValidatable
+{
+    public List<EquipHandler.EquippedEntry> entries;
+
+    public Save_EquippedItems() { }
+
+    public Save_EquippedItems(List<EquipHandler.EquippedEntry> list)
+    {
+        entries = list;
+    }
+
+    public bool IsValid() => entries != null && entries.TrueForAll(e =>
+        e?.data != null && e.data.IsValid());
 }

@@ -4,32 +4,27 @@ using System;
 /// 装备数据类——可序列化，用于JSON存档和运行时传递
 /// </summary>
 [Serializable]
-public class EquipData : IValidatable
-{
+public class EquipData : IValidatable{
     /// <summary>装备名称</summary>
     public string equipName;
-
     /// <summary>装备唯一ID</summary>
     public string equipId;
-
     /// <summary>装备部位</summary>
     public E_EquipmentSlot slot;
-
-    /// <summary>3条随机词条</summary>
+    /// <summary>随机词条(1~3条, 50%/30%/20%)</summary>
     public EquipAffix[] affixes;
-
     /// <summary>1个随机弱点类型</summary>
     public E_WeaknessType weakness;
-
     /// <summary>生成时的混沌等级</summary>
     public int chaosLevel;
-
     /// <summary>售价(金币)</summary>
     public int price;
+    /// <summary>图标路径(Resources相对路径, 如 Sprite/EquipmentIcons/Icon_Sword)</summary>
+    public string iconResourcePath;
 
     public EquipData() { }
 
-    public EquipData(string equipId, E_EquipmentSlot slot, EquipAffix[] affixes, E_WeaknessType weakness, int chaosLevel, int price, string equipName = "")
+    public EquipData(string equipId, E_EquipmentSlot slot, EquipAffix[] affixes, E_WeaknessType weakness, int chaosLevel, int price, string equipName = "", string iconResourcePath = "")
     {
         this.equipId = equipId;
         this.slot = slot;
@@ -38,13 +33,15 @@ public class EquipData : IValidatable
         this.chaosLevel = chaosLevel;
         this.price = price;
         this.equipName = equipName;
+        this.iconResourcePath = iconResourcePath;
     }
 
     public bool IsValid()
     {
         return !string.IsNullOrEmpty(equipId)
             && affixes != null
-            && affixes.Length == 3;
+            && affixes.Length >= 1
+            && affixes.Length <= 3;
     }
 
     /// <summary>获取装备部位的中文名</summary>
@@ -65,10 +62,8 @@ public class EquipData : IValidatable
     }
 
     /// <summary>获取词条类型的中文名</summary>
-    public static string GetAffixTypeName(E_EquipAffixType type)
-    {
-        switch (type)
-        {
+    public static string GetAffixTypeName(E_EquipAffixType type){
+        switch (type){
             case E_EquipAffixType.HP: return "生命值";
             case E_EquipAffixType.Mana: return "法力值";
             case E_EquipAffixType.PhysATK: return "物攻";

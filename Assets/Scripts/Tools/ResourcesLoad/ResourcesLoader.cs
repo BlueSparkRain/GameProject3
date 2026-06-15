@@ -7,7 +7,6 @@ using UnityEngine;
 /// </summary>
 public static class ResourcesLoader
 {
-
     [Header("SkillSO加载路径")]
     static string skillDataPath = "SOData/SkillSOData/";
 
@@ -17,12 +16,15 @@ public static class ResourcesLoader
     static string mapIcon_RectPrefabPath = "Prefab/MapUI/PlayerMapIcon";
     static string mapIcon_CirclePrefabPath = "Prefab/MapUI/PlayerMapIcon_Circle";
 
-    static string hexRoomPath = "Prefab/HexRoom/MapRoom";
+    static string hexRoomPath = "Prefab/HexRoom/HexRoom";
     static string roomCloudePath = "Prefab/HexRoom/RoomCloude";
     static string hexFacePath = "Prefab/HexRoom/HexFace";
+    static string hexRoomIconPath = "Prefab/HexRoom/HexRoomIcon";
 
     static string skillSlotPath = "Prefab/SkillUI/SkillSlot";
     static string skillIconPath = "Prefab/SkillUI/SkillIcon";
+    static string floatingTextPath = "Prefab/FloatingText";
+    static string atbDotPath = "Prefab/ATB_Point";
 
     static string mapCharacterPath = "Prefab/Character/Character_";
     static string battlerCharacterPath = "Prefab/BattleArea/CharacterBattleArea";
@@ -37,42 +39,39 @@ public static class ResourcesLoader
 
     static string roomModelSOPath = "SOData/RoomModelSOData/";
 
+    static string weaknessIconPath = "Prefab/BattleArea/CharacterBattle/WeaknessIcon";
+    static string weaknessIconConfigPath = "SOData/WeaknessIconConfig/WeaknessIconConfig";
+
     static string weaknessConfigPath = "SOData/CharacterWeaknessConfig/Weakness_";
     static string atbIntentionConfigPath = "SOData/ATBIntentionConfig/ATBIntention_";
     static string autoSkillConfigPath = "SOData/AutoSkillConfig/AutoSkill_";
 
     public static GameObject FindHexRoomObj() {
-        return Resources.Load<GameObject>(hexRoomPath);
-    }
+        return Resources.Load<GameObject>(hexRoomPath);}
     public static GameObject FindRoomCloudeObj() {
-        return Resources.Load<GameObject>(roomCloudePath);
-    }
+        return Resources.Load<GameObject>(roomCloudePath);}
     public static GameObject FindHexFaceObj() {
-        return Resources.Load<GameObject>(hexFacePath);
-    }
-     public static GameObject FindSkillIconObj() {
-        return Resources.Load<GameObject>(skillIconPath);
-    }
-
+        return Resources.Load<GameObject>(hexFacePath);}
+    public static GameObject FindHexRoomIconObj() {
+        return Resources.Load<GameObject>(hexRoomIconPath);}
+    public static GameObject FindSkillIconObj() {
+        return Resources.Load<GameObject>(skillIconPath);}
+    public static GameObject FindFloatingTextObj() {
+        return Resources.Load<GameObject>(floatingTextPath);}
+    public static GameObject FindATBDotObj() {
+        return Resources.Load<GameObject>(atbDotPath);}
     public static GameObject FindCharacterObj(string backStr) {
-        return Resources.Load<GameObject>(mapCharacterPath+backStr);
-    }
-
+        return Resources.Load<GameObject>(mapCharacterPath+backStr);}
     public static GameObject FindMapIcon_RectObj() {
-        return Resources.Load<GameObject>(mapIcon_RectPrefabPath);
-    }
-    public static GameObject FindMapIcon_CircleObj()
-    {
-        return Resources.Load<GameObject>(mapIcon_CirclePrefabPath);
-    }
+        return Resources.Load<GameObject>(mapIcon_RectPrefabPath);}
+    public static GameObject FindMapIcon_CircleObj(){
+        return Resources.Load<GameObject>(mapIcon_CirclePrefabPath);}
     public static RoomModelSOData FindRoomModelSO(E_RoomModelType  roomModelType) {
         return Resources.Load<RoomModelSOData>(roomModelSOPath+roomModelType);
     }
-
     public static TerrainSOData FindTerrainData(E_HexTerrainType terrainType) {
         return Resources.Load<TerrainSOData>(terrainSODataPath+terrainType);
     }
-
     public static CharacterDataSO FindCharaterSO(E_CharacterType characterType) {
         return Resources.Load<CharacterDataSO>(characterSOPath + characterType);
     }
@@ -105,6 +104,12 @@ public static class ResourcesLoader
     }
     public static GameObject FindBattleCharacterObj() {
         return Resources.Load<GameObject>(battlerCharacterPath);
+    }
+    public static GameObject FindWeaknessIconObj() {
+        return Resources.Load<GameObject>(weaknessIconPath);
+    }
+    public static WeaknessIconConfigSO FindWeaknessIconConfig() {
+        return Resources.Load<WeaknessIconConfigSO>(weaknessIconConfigPath);
     }
     public static CharacterWeaknessConfigSO FindWeaknessConfig(E_CharacterType characterType){
         return Resources.Load<CharacterWeaknessConfigSO>(weaknessConfigPath + characterType);

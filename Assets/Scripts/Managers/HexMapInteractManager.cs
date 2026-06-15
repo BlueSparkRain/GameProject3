@@ -67,7 +67,7 @@ public class HexMapInteractManager : MonoGlobalManager
             if (clickedRoomData != null){
                 if (UseMouseClickFacus){
                     if ((mousePosition.x < 185 || mousePosition.x > 500) && mousePosition.y > 400){
-                        GameRoot.GetManager<OrthoCameraNavigator>().FocusOnTarget(clickedRoomData.gameObject, 2);
+                        GameRoot.GetManager<OrthoCameraNavigator>().FocusOnTarget(clickedRoomData.gameObject);
                     }
                 }
                 //触发半径内的所有房间跳动
@@ -218,7 +218,7 @@ public class HexMapInteractManager : MonoGlobalManager
             SetHoverMaterial(newHoverRoom);
             var nextAnim = newHoverRoom.GetComponent<HexJumpAnimHandler>();
             if (nextAnim == null)
-                Debug.LogWarning($"[HexMapInteractManager] {newHoverRoom.name} 缺少 HexJumpAnimHandler 组件，请挂载到预制件上", newHoverRoom);
+                DebugManager.LogWarning(EDebugCategory.MapRoom, $"[HexMapInteractManager] {newHoverRoom.name} 缺少 HexJumpAnimHandler 组件，请挂载到预制件上");
             else
                 nextAnim.HoverUp();
         }

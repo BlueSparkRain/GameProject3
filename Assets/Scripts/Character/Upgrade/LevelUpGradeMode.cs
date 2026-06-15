@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 public class LevelUpGradeMode : IUpGradable
 {
@@ -11,7 +11,7 @@ public class LevelUpGradeMode : IUpGradable
 
     public LevelUpGradeMode(E_CharacterType characterType, CharacterData data)
     {
-        UnityEngine.Debug.Log("我是每级升级型角色");
+        DebugManager.Log(EDebugCategory.Character, "我是每级升级型角色");
         growthData = ResourcesLoader.FindCharaterGrowthSO(characterType);
         characterData = data;
     }

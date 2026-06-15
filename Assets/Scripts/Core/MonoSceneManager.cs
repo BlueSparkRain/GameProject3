@@ -29,7 +29,8 @@ using Core;
     
             if (existing != null && (object)existing != this){
                 Destroy(gameObject);
-                Debug.LogWarning($"Duplicate scene mono manager: {GetType().Name}, destroying this instance.");
+                DebugManager.LogWarning(EDebugCategory.General, $"Duplicate scene mono manager: {GetType().Name}, destroying this instance.");
+                return;
             }
             MgrOnInit();
         }

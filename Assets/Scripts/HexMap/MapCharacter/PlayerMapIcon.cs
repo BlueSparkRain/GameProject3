@@ -56,7 +56,7 @@ public class PlayerMapIcon : MonoBehaviour
 
     void MoverStartMove() { 
         isActive = false;
-        Debug.Log(characterSelectButton);
+        DebugManager.Log(EDebugCategory.MapRoom, $"[PlayerMapIcon] MoverStartMove — {characterSelectButton.gameObject.name}");
         if(characterSelectButton.gameObject)
         characterSelectButton.GetComponent<Image>().color = Color.white;
     }
@@ -77,47 +77,24 @@ public class PlayerMapIcon : MonoBehaviour
     }
     bool isActive = false;
     void OnClickIconButton(){
-        HexPathFindingManager hexPathFindingManager = GameRoot.GetManager<HexPathFindingManager>();
-
-        if (GameRoot.GetManager<MapMoverManager>().GetTargetPlayerMover(this)==null)
-        return;
-
-        var mover = GameRoot.GetManager<MapMoverManager>().GetTargetPlayerMover(this);
-        GameRoot.GetManager<OrthoCameraNavigator>().FocusOnTarget(charcaterTrans.gameObject);
-
-        if (canMove)
-            isActive = !isActive;
-        else{
+        if (!canMove){
             FlashWarnning();
             return;
         }
 
-        if (isActive){
+        var mover = GameRoot.GetManager<MapMoverManager>().GetTargetPlayerMover(this);
+        if (mover == null) return;
 
-            GameRoot.GetManager<MapMoverManager>().SetCurrentMover(mover,charcaterTrans.position);
-            if (mover.currentRoom == null) {
-                Debug.Log("WARNNING！玩家当前Room为NUll"+mover.currentRoom);
-                return;
-            } 
-            hexPathFindingManager.SetPlayerStartRoom(
-             mover.currentRoom);
+        bool enteringPathFind = !GameRoot.GetManager<HexPathFindingManager>()?.canPathFind ?? false;
+        if (enteringPathFind)
+            GameRoot.GetManager<OrthoCameraNavigator>().FocusOnTarget(charcaterTrans.gameObject);
+        GameRoot.GetManager<MapMoverManager>().TogglePathFinding();
+    }
 
-            //如果该角色本回合有行动点尚未用尽，可以进行移动
-            SetCameraToCharacter();
-
-            if (canMove){
-                GameRoot.GetManager<AudioManager>().PlaySFX("Music/SFX/StartAction",default,0.3f,1.5f);
-                characterSelectButton.GetComponent<Image>().color = Color.cyan;// blue;
-                //激活寻路管理器寻路状态
-                hexPathFindingManager.SetPathFindState(true, remainActionPoints);
-            }
-            else{
-                hexPathFindingManager.SetPathFindState(false, remainActionPoints);
-            }
-        }
-        else{
-            hexPathFindingManager.SetPathFindState(false);
-            characterSelectButton.GetComponent<Image>().color = Color.white;
-        }
+    public void SetHighlighted(bool active)
+    {
+        isActive = active;
+        if (characterSelectButton != null)
+            characterSelectButton.GetComponent<Image>().color = active ? Color.cyan : Color.white;
     }
 }

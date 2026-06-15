@@ -1,89 +1,255 @@
 using System.Collections.Generic;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SkillSelectPanel : UIPanelBase
 {
-    [Header("Ñ¡ÔñÆ÷ÈİÆ÷")]
+    [Header("é€‰æ‹©å®¹å™¨")]
     public Transform skillContent;
+
+    [Header("æŠ€èƒ½é€‰æ‹©é¡¹é¢„åˆ¶ä»¶")]
+    public GameObject skillItemPrefab;
+
+    [Header("ç¡®è®¤æŒ‰é’®")]
+    public Button confirmButton;
+
+    [Header("è·³è¿‡æŒ‰é’®")]
+    public Button skipButton;
+
+    [Header("å‰©ä½™é€‰æ‹©æ¬¡æ•°æ–‡æœ¬")]
+    public TMP_Text remainingCountText;
+
+    [Header("å…³é—­æŒ‰é’®")]
+    public Button closeButton;
+
+    [Header("é»‘è‰²å¹•å¸ƒ(é€‰æ‹©æ»¡æ—¶é®æŒ¡)")]
+    public Image blackCurtain;
+
+    [Header("æœ€å¤§é€‰æ‹©æ•°é‡")]
+    public int maxSelectCount = 1;
+
+    [Header("æŠ€èƒ½IDèŒƒå›´")]
+    public int skillIDMin = 0;
+    public int skillIDMax = 10;
 
     public List<SkillSelector_UIItem> skillSelectorUIs = new List<SkillSelector_UIItem>();
     public List<int> skillIDList = new List<int>();
-    [Header("Ï¸½Ú°åRectTransform")]
-    public RectTransform detialBoardRect;
 
-    [Header("DetailBoard-¼¼ÄÜÍ¼±ê")]
-    public Image detail_SkillImge;
-    [Header("DetailBoard-¼¼ÄÜÃû³Æ")]
-    public TMP_Text detail_SkillNameText;
-    [Header("DetailBoard-¼¼ÄÜÃèÊö")]
-    public TMP_Text detail_SkillDescriptionText;
+    List<GameObject> _spawnedItems = new List<GameObject>();
+    SkillSelector_UIItem _highlightedItem;
+    int _confirmedCount;
+    int _skipCount;
+    Action _onPanelClose;
 
-    /// <summary>
-    /// Èç¹ûÊó±êÒÆÈë
-    /// </summary>
-    public void ShowDetailBoard(RectTransform selector, Vector3 offset, SkillPropertySO skillSO)
+    int EffectiveSelectedCount => _confirmedCount + _skipCount;
+
+    protected override void OnInit()
     {
-        detialBoardRect.position = selector.position + offset;
-        detail_SkillImge.sprite = skillSO.skill_Sprite;
-        detail_SkillNameText.text = skillSO.skill_Name;
-        detail_SkillDescriptionText.text = skillSO.skill_Description;
+        base.OnInit();
+        confirmButton?.onClick.AddListener(OnConfirmClicked);
+        skipButton?.onClick.AddListener(OnSkipClicked);
+        closeButton?.onClick.AddListener(Hide);
+        if (confirmButton != null)
+            confirmButton.interactable = false;
+        if (closeButton != null)
+            closeButton.gameObject.SetActive(false);
+        if (blackCurtain != null)
+            blackCurtain.gameObject.SetActive(false);
     }
 
-    public void HideDetailBoard(){
-        detialBoardRect.position = Vector3.zero;
+    public override void Show()
+    {
+        base.Show();
+        ClearSpawnedItems();
+        _highlightedItem = null;
+        _confirmedCount = 0;
+        _skipCount = 0;
+        if (confirmButton != null)
+            confirmButton.interactable = false;
+        if (closeButton != null)
+            closeButton.gameObject.SetActive(false);
+        if (skipButton != null)
+            skipButton.gameObject.SetActive(true);
+        if (blackCurtain != null)
+            blackCurtain.gameObject.SetActive(false);
+
+        int spawnCount = 3;
+        List<int> skillIDs = GetBatchSkillIDS(spawnCount, skillIDMin, skillIDMax);
+
+        for (int i = 0; i < skillIDs.Count; i++)
+        {
+            SkillPropertySO so = ResourcesLoader.FindSkillSOByID(skillIDs[i]);
+            if (so == null) continue;
+
+            var obj = Instantiate(skillItemPrefab, skillContent);
+            obj.SetActive(true);
+            var item = obj.GetComponent<SkillSelector_UIItem>();
+            if (item != null)
+            {
+                item.InitSelf(so);
+                item.SetClickCallback(OnSkillItemClicked);
+                item.SetHighlighted(false);
+                skillSelectorUIs.Add(item);
+            }
+            _spawnedItems.Add(obj);
+        }
+        RefreshSelectionUI();
     }
-    void AssignSkillData(SkillSelector_UIItem skillSelectorUI, SkillPropertySO skillPropertySO){
+
+    /// <summary>è®¾ç½®é¢æ¿å…³é—­æ—¶çš„å›è°ƒï¼ˆå¦‚ç­‰çº§å¥–åŠ±æµç¨‹ï¼šå…³é—­åç»§ç»­å¤„ç†é˜Ÿåˆ—ï¼‰</summary>
+    public void SetCloseCallback(Action callback)
+    {
+        _onPanelClose = callback;
+    }
+
+    public override void Hide()
+    {
+        base.Hide();
+        ClearSpawnedItems();
+        _highlightedItem = null;
+        _confirmedCount = 0;
+        _skipCount = 0;
+        if (confirmButton != null)
+            confirmButton.interactable = false;
+        if (closeButton != null)
+            closeButton.gameObject.SetActive(false);
+        if (blackCurtain != null)
+            blackCurtain.gameObject.SetActive(false);
+        _onPanelClose?.Invoke();
+        _onPanelClose = null;
+    }
+
+    void ClearSpawnedItems()
+    {
+        foreach (var obj in _spawnedItems)
+            Destroy(obj);
+        _spawnedItems.Clear();
+        skillSelectorUIs.Clear();
+        skillIDList.Clear();
+    }
+
+    void OnSkillItemClicked(SkillSelector_UIItem clickedItem)
+    {
+        if (clickedItem == null) return;
+        if (EffectiveSelectedCount >= maxSelectCount) return;
+
+        // ç‚¹å‡»å–æ¶ˆé«˜äº®ï¼šå–æ¶ˆé€‰æ‹©
+        if (_highlightedItem == clickedItem)
+        {
+            _highlightedItem.SetHighlighted(false);
+            _highlightedItem = null;
+        }
+        else
+        {
+            // å–æ¶ˆæ—§é«˜äº®ï¼Œè®¾ç½®æ–°é«˜äº®
+            if (_highlightedItem != null)
+                _highlightedItem.SetHighlighted(false);
+            _highlightedItem = clickedItem;
+            _highlightedItem.SetHighlighted(true);
+        }
+
+        RefreshSelectionUI();
+    }
+
+    void OnSkipClicked()
+    {
+        _skipCount++;
+        RefreshSelectionUI();
+    }
+
+    void RefreshSelectionUI()
+    {
+        bool isFull = EffectiveSelectedCount >= maxSelectCount;
+
+        // ç¡®è®¤æŒ‰é’®é«˜äº®å’Œäº¤äº’çŠ¶æ€
+        if (confirmButton != null)
+            confirmButton.interactable = _highlightedItem != null && !isFull;
+
+        if (blackCurtain != null)
+            blackCurtain.gameObject.SetActive(isFull);
+
+        if (skipButton != null)
+            skipButton.gameObject.SetActive(!isFull);
+
+        if (closeButton != null)
+            closeButton.gameObject.SetActive(isFull);
+
+        if (remainingCountText != null)
+        {
+            int remaining = maxSelectCount - EffectiveSelectedCount;
+            remainingCountText.text = $"å‰©ä½™{remaining}æ¬¡æœºä¼šå¯ä¾›é€‰æ‹©";
+        }
+    }
+
+    void OnConfirmClicked()
+    {
+        if (_highlightedItem == null) return;
+
+        var playerSkiller = CharacterHandler.PlayerInstance?.GetComponent<CharacterMapSkiller>();
+        if (playerSkiller != null)
+        {
+            playerSkiller.GetNewSkill(_highlightedItem.SkillID);
+            playerSkiller.UpdateSkilerSettle(
+                playerSkiller.RestWholeSkillDatas,
+                playerSkiller.NormalSkillDatas,
+                playerSkiller.ATBSkillDatas);
+        }
+
+        _confirmedCount++;
+        _highlightedItem.SetHighlighted(false);
+        _highlightedItem = null;
+        RefreshSelectionUI();
+    }
+
+    void AssignSkillData(SkillSelector_UIItem skillSelectorUI, SkillPropertySO skillPropertySO)
+    {
         skillSelectorUI.InitSelf(skillPropertySO);
     }
 
-    /// <summary>
-    /// »ñÈ¡Ò»¸ö²»Í¬ÓÚskillIDListµÄÒ»¸öĞÂµÄSkillID£¬·ÅÖÃµ½Ä¿±êIndex
-    /// </summary>
-    SkillPropertySO GetNewSkill(){
-        int newSkillID = GetAvailableId(0,10);
-        Debug.Log($"µ±Ç°ListÄÚ{skillIDList[0]},{skillIDList[1]},{skillIDList[2]},ĞÂskillID£º{newSkillID}");
+    SkillPropertySO GetNewSkill()
+    {
+        int newSkillID = GetAvailableId(skillIDMin, skillIDMax);
+        DebugManager.Log(EDebugCategory.UIPanel, $"å½“å‰Listå†…{skillIDList[0]},{skillIDList[1]},{skillIDList[2]},ç»™skillIDä¸º{newSkillID}");
         return ResourcesLoader.FindSkillSOByID(newSkillID);
     }
 
-    int GetAvailableId(int min, int max){
-        // ½«ÏÖÓĞÁĞ±í×ªÎª HashSet ÒÔÌá¸ß²éÕÒĞ§ÂÊ
+    int GetAvailableId(int min, int max)
+    {
         var existing = new HashSet<int>(skillIDList);
-        // ±éÀúÇø¼ä£¬ÕÒµ½µÚ Ò»¸ö²»ÔÚ¼¯ºÏÖĞµÄÊı
-        for (int id = min; id <= max; id++){
+        for (int id = min; id <= max; id++)
+        {
             if (!existing.Contains(id))
                 return id;
         }
         return -1;
     }
 
-    public void AssignNewSkillData(SkillSelector_UIItem skillSelectorUI){
+    public void AssignNewSkillData(SkillSelector_UIItem skillSelectorUI)
+    {
         SkillPropertySO newSkillSo = GetNewSkill();
-        AssignSkillData(skillSelectorUI,newSkillSo);
+        AssignSkillData(skillSelectorUI, newSkillSo);
     }
 
-    protected override void OnInit(){
-        base.OnInit();
-        //ÊÕ¼¯ËùÓĞSelector
-        for (int i = 0; i < skillContent.childCount; i++)
-            skillSelectorUIs.Add(skillContent.GetChild(i).GetComponent<SkillSelector_UIItem>());
-    }
-    /// <summary>
-    /// Ëæ»ú3ÖÖ²»Í¬¼¼ÄÜ£¬·ÖÅä¸øskillSelectorUIs
-    /// </summary>
-    List<int> GetBatchSkillIDS(int skillCount)
+    List<int> GetBatchSkillIDS(int skillCount, int minID, int maxID)
     {
-        //Ëæ»úÈı¸öÊı
-        skillIDList = RandomUtility.GetUniqueRandomList(skillCount, 0, 10);
+        skillIDList = RandomUtility.GetUniqueRandomList(skillCount, minID, maxID);
         return skillIDList;
     }
+
     /// <summary>
-    /// ´ò¿ªSkillÑ¡ÔñÃæ°å¾Í×Ô¶¯·ÖÅäÈıÖÖ¼¼ÄÜ
+    /// ç»“ç®—å½“å‰é¢æ¿ä¸­çš„æŠ€èƒ½é€‰æ‹© â€”â€” ç”¨æ–°éšæœºæŠ€èƒ½æ›¿æ¢ç°æœ‰æŠ€èƒ½é¡¹ã€‚
+    /// ä»…å½“ skillSelectorUIs å·²ç”± Show() å¡«å……åæ‰æœ‰æ•ˆã€‚
     /// </summary>
     public void SetttleSelect()
     {
-        List<int> skillIDs = GetBatchSkillIDS(skillSelectorUIs.Count);
+        if (skillSelectorUIs.Count == 0)
+        {
+            DebugManager.LogWarning(EDebugCategory.UIPanel, "[SkillSelectPanel] SetttleSelect: skillSelectorUIs ä¸ºç©ºï¼Œè·³è¿‡ã€‚è¯·ç¡®ä¿ Show() å·²å…ˆè°ƒç”¨ã€‚");
+            return;
+        }
+        List<int> skillIDs = GetBatchSkillIDS(skillSelectorUIs.Count, skillIDMin, skillIDMax);
         for (int i = 0; i < skillSelectorUIs.Count; i++)
         {
             SkillPropertySO skillData = ResourcesLoader.FindSkillSOByID(skillIDs[i]);

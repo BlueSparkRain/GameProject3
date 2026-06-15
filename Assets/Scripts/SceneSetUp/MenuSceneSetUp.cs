@@ -5,50 +5,29 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class MenuSceneSetUp : MonoBehaviour{
-    public Button gameButton;
-    public Button continueButton;
-    public Button settingButton;
-    public Button creditsButton;
+
 
     private void Start()
     {
-        gameButton.onClick.AddListener(OnClickGameButton);
-        continueButton.onClick.AddListener(OnClickContinueButton);
-        settingButton.onClick.AddListener(SettingsPanel.Toggle);
-        creditsButton.onClick.AddListener(OnClickNoButton);
         ObjectPoolManager obj = GameRoot.GetManager<ObjectPoolManager>();
 
+        GameRoot.GetManager<UIManager>().OpenPanel<MenuPanel>(E_UIPanelType.MenuPanel,null);
         StartCoroutine(LoadAllPool());
     }
 
     IEnumerator LoadAllPool() {
         WaitForSeconds delay = new WaitForSeconds(0.4f);
         EventCenter.EventTrigger(E_EventType.LoadObjPool, E_PoolType.MapRoom_地图房间);
+        EventCenter.EventTrigger(E_EventType.LoadObjPool, E_PoolType.HexRoomIcon_房间图标);
         yield return delay;
-        EventCenter.EventTrigger(E_EventType.LoadObjPool, E_PoolType.HexFace_六边形面);
-        yield return delay;
+        EventCenter.EventTrigger(E_EventType.LoadObjPool, E_PoolType.HexFace_投影面片);
+        //yield return delay;
         EventCenter.EventTrigger(E_EventType.LoadObjPool, E_PoolType.RoomCloude_房间遮云);
-        yield return delay;
+
+        //yield return delay;
         EventCenter.EventTrigger(E_EventType.LoadObjPool, E_PoolType.SkillSlot_技能槽位);
         EventCenter.EventTrigger(E_EventType.LoadObjPool, E_PoolType.SkillIcon_技能图标);
-    }
-
-    void OnClickGameButton() {
-        //清空历史存档
-        
-        GameRoot.GetManager<SceneSwitchManager>().SwitchSceneAsync("MapScene");
-        JsonSaver.StartNewGame();
-    }
-
-    void OnClickContinueButton() { 
-        //读取历史存档数据加载游戏
-        GameRoot.GetManager<SceneSwitchManager>().SwitchSceneAsync("MapScene");
-    
-    }
-
-    void OnClickNoButton() {
-        GameRoot.GetManager<UIManager>().OpenPanel<MessagePanel>(E_UIPanelType.MessagePanel,(p)=>p.SetMessage("相关内容尚未完成"));
-        //StartCoroutine(Wait());
+        EventCenter.EventTrigger(E_EventType.LoadObjPool, E_PoolType.ATBDot_ATB点数);
     }
 
     IEnumerator Wait() {

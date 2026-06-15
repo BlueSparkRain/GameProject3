@@ -32,14 +32,14 @@ public class NPCPanel : UIPanelBase
 
     void OnClickRejectButton()
     {
-        Debug.Log("你拒绝了他的'好意'");
+        DebugManager.Log(EDebugCategory.UIPanel,"你拒绝了他的'好意'");
 
 
         Hide();
     }
     void OnClickGetButton() {
         NPC_Acion?.Invoke();
-        Debug.Log("你接受了他的'好意'");
+        DebugManager.Log(EDebugCategory.UIPanel,"你接受了他的'好意'");
         GameRoot.GetManager<MapSkillerCheker>().PlayerSkiller.GetNewSkill(0);
         //BattleSkillFactory.Create(0);
 

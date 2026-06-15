@@ -26,7 +26,7 @@ public class ATBIntentionConfigSO : ScriptableObject
     [Header("主动技能列表（该角色拥有的全部技能，用于普通自动循环 + ATB意图）")]
     public List<E_SkillName> activeSkills = new List<E_SkillName>();
 
-    [Header("ATB意图索引（1-based，引用activeSkills中的技能位置，按顺序循环）")]
+    [Header("ATB意图索引（1-based，引用activeSkills中的技能位置，顺序循环）")]
     public List<int> atbIntentionIndices = new List<int>();
 
     [Header("每次释放ATB技能消耗点数")]
@@ -38,19 +38,16 @@ public class ATBIntentionConfigSO : ScriptableObject
     public SkillPropertySO GetSkillSOByIntentionIndex(int oneBasedIndex)
     {
         int arrayIndex = oneBasedIndex - 1;
-        if (arrayIndex < 0 || arrayIndex >= activeSkills.Count)
-        {
+        if (arrayIndex < 0 || arrayIndex >= activeSkills.Count){
             Debug.LogError($"[ATBIntentionConfig] 意图索引 {oneBasedIndex} 超出主动技能列表范围(1~{activeSkills.Count})");
             return null;
         }
         return ResourcesLoader.FindSkillSOBySkillName(activeSkills[arrayIndex]);
     }
-
     /// <summary>
     /// 根据意图索引获取对应的 SkillData。索引无效返回 null。
     /// </summary>
-    public SkillData GetSkillDataByIntentionIndex(int oneBasedIndex)
-    {
+    public SkillData GetSkillDataByIntentionIndex(int oneBasedIndex){
         var so = GetSkillSOByIntentionIndex(oneBasedIndex);
         return so != null ? new SkillData(so) : null;
     }
@@ -58,11 +55,9 @@ public class ATBIntentionConfigSO : ScriptableObject
     /// <summary>
     /// 获取 activeSkills 中所有技能的 SkillPropertySO 数组。
     /// </summary>
-    public SkillPropertySO[] GetActiveSkillSOs()
-    {
+    public SkillPropertySO[] GetActiveSkillSOs(){
         var list = new List<SkillPropertySO>();
-        foreach (var skillName in activeSkills)
-        {
+        foreach (var skillName in activeSkills){
             var so = ResourcesLoader.FindSkillSOBySkillName(skillName);
             if (so != null) list.Add(so);
         }

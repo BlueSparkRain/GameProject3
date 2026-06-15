@@ -30,7 +30,7 @@ public class MultiTime_SkillDecorator : SkillDecorator
             // 每次执行前验活：底层Unity对象可能已在场景卸载时被销毁
             if ((self as Object) == null || (target as Object) == null)
             {
-                Debug.LogWarning("[MultiTime] 目标已销毁，中断多段效果");
+                DebugManager.LogWarning(EDebugCategory.SkillExecution,"[MultiTime] 目标已销毁，中断多段效果");
                 yield break;
             }
             base.Excute(self, target);
@@ -39,7 +39,7 @@ public class MultiTime_SkillDecorator : SkillDecorator
     }
     public override void Excute(IBattlable self, IBattlable target)
     {
-        UnityEngine.Debug.Log("[MultiTime_SkillDecorator]>>多次技能效果");
+        DebugManager.Log(EDebugCategory.SkillExecution,"[MultiTime_SkillDecorator]>>多次技能效果");
         GameRoot.GetManager<CoroutineManager>().StartCoroutine(DoMultiEffect(self, target), self as UnityEngine.Object);
     }
 }

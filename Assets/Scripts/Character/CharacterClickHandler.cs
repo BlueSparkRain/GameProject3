@@ -26,16 +26,16 @@ public class CharacterClickHandler : MonoBehaviour, IClickableCharacter
         int layerID = LayerMask.NameToLayer("OutLine");
         ModelLayer.layer =layerID;
         // 需求：打印角色名字
-        Debug.Log($"【点击角色】：{gameObject.name}", this);
+        DebugManager.Log(EDebugCategory.Character, $"【点击角色】：{gameObject.name}");
     }
 
     // 编辑器校验：自动检查碰撞体（避免漏加导致检测失效）
     private void OnValidate()
     {
         if (is3DCharacter && GetComponent<Collider>() == null)
-            Debug.LogWarning($"角色 {name} 是3D类型，请添加 Collider（胶囊/盒子/球体）", this);
+            DebugManager.LogWarning(EDebugCategory.Character, $"角色 {name} 是3D类型，请添加 Collider（胶囊/盒子/球体）");
 
         if (!is3DCharacter && GetComponent<Collider2D>() == null)
-            Debug.LogWarning($"角色 {name} 是2D类型，请添加 Collider2D", this);
+            DebugManager.LogWarning(EDebugCategory.Character, $"角色 {name} 是2D类型，请添加 Collider2D");
     }
 }

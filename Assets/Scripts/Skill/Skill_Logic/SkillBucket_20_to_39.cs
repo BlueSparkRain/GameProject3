@@ -12,9 +12,9 @@ public class SkillBucket_20_to_39 { }
 [SkillID(20)]
 public class Skill_20 : SkillBase
 {
-    public Skill_20(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
+    public Skill_20(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--技能20--$$$$$");
+        DebugManager.Log(EDebugCategory.SkillExecution,"$$$$$--技能20--$$$$$");
     }
     int level = 1;
     //20sBUFF持续时间
@@ -46,10 +46,10 @@ public class Skill_20 : SkillBase
     {
         BattleBuffHandler buffHandle = self.battleDamageHandler.BuffHandler;
         Battle_Controller battleControl = self.battleDamageHandler.BattleController;
-        Debug.Log($"[Skill 20]{self.Camp}发动技能20-[生命偷取+N（{level}）-BUFF]");
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 20]{self.Camp}发动技能20-[生命偷取+N（{level}）-BUFF]");
         if (buff != null)
         {
-            Debug.Log("[Skill 20]:替换上一个属性调整效果，刷新计时");
+            DebugManager.Log(EDebugCategory.SkillExecution,"[Skill 20]:替换上一个属性调整效果，刷新计时");
             battleControl.AdjustCharacterPropertyValue(E_CharacterPropertyType.Life_Steal, -adjustValue);
         }
         adjustValue = baseRiseRate * level;
@@ -65,16 +65,14 @@ public class Skill_20 : SkillBase
 [SkillID(21)]
 public class Skill_21 : SkillBase
 {
-    public Skill_21(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
+    public Skill_21(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--技能21--$$$$$");
+        DebugManager.Log(EDebugCategory.SkillExecution,"$$$$$--技能21--$$$$$");
     }
 
     int level = 1;
-    //20sBUFF持续时间
-    float buff_duration = 20;
-    //基础倍率
-    float baseRiseRate = 0.15f;
+    float buff_duration = 15;
+    float baseRiseRate = 0.3f; // 治疗加成+1=30%
     /// <summary>
     /// 当前BUFF
     /// </summary>
@@ -98,9 +96,9 @@ public class Skill_21 : SkillBase
     void CreateBuff(int level){
         BattleBuffHandler buffHandle = self.battleDamageHandler.BuffHandler;
         Battle_Controller battleControl = self.battleDamageHandler.BattleController;
-        Debug.Log($"[Skill 21]{self.Camp}发动技能21-[治疗强化+N（{level}）-BUFF]");
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 21]{self.Camp}发动技能21-[治疗强化+N（{level}）-BUFF]");
         if (buff != null){
-            Debug.Log("[Skill 21]:替换上一个属性调整效果，刷新计时");
+            DebugManager.Log(EDebugCategory.SkillExecution,"[Skill 21]:替换上一个属性调整效果，刷新计时");
             battleControl.AdjustCharacterPropertyValue(E_CharacterPropertyType.Heal_Amplification, -adjustValue);
         }
         adjustValue = baseRiseRate * level;
@@ -115,9 +113,9 @@ public class Skill_21 : SkillBase
 [SkillID(22)]
 public class Skill_22 : SkillBase
 {
-    public Skill_22(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
+    public Skill_22(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--技能22--$$$$$");
+        DebugManager.Log(EDebugCategory.SkillExecution,"$$$$$--技能22--$$$$$");
     }
 
     public override void SkillEffect_Base(IBattlable target)
@@ -130,14 +128,16 @@ public class Skill_22 : SkillBase
 /// </summary>
 [SkillID(23)]
 public class Skill_23 : SkillBase{
-    public Skill_23(E_SkillTargetType _skillTargetType) : base(_skillTargetType){
-        Debug.Log("$$$$$--技能23--$$$$$");
+    public Skill_23(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType){
+        DebugManager.Log(EDebugCategory.SkillExecution,"$$$$$--技能23--$$$$$");
     }
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { ExtendBuffs(10f); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { ExtendBuffs(10f + henceTime * 5f); } // 10→15→20
+    void ExtendBuffs(float seconds)
     {
-        Debug.Log($"{self.Camp}延长全部正面BUFF持续时间10S");
-        BuffHandler.ExtendBuffTimers(E_BuffPositive.正面, 10f);
+        DebugManager.Log(EDebugCategory.SkillExecution,$"{self.Camp}延长全部正面BUFF持续时间{seconds}S");
+        BuffHandler.ExtendBuffTimers(E_BuffPositive.正面, seconds);
     }
 }
 /// <summary>
@@ -146,23 +146,29 @@ public class Skill_23 : SkillBase{
 [SkillID(24)]
 public class Skill_24 : SkillBase
 {
-    public Skill_24(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
+    public Skill_24(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--技能24--$$$$$");
+        DebugManager.Log(EDebugCategory.SkillExecution,"$$$$$--技能24--$$$$$");
     }
 
     public override void SkillEffect_Base(IBattlable target)
     {
-        // 清除自身全部负面效果
-        BuffHandler.UnRegistBuffsByAttr(E_BuffPositive.负面);
-        // 复制目标1个随机正面效果
+        // 复制目标1个随机正面效果到自己
         var targetHandler = target.battleDamageHandler.BuffHandler;
         var positiveBuffs = targetHandler.GetBuffsByAttr(E_BuffPositive.正面);
         if (positiveBuffs.Count > 0) {
             var copied = positiveBuffs[Random.Range(0, positiveBuffs.Count)];
-            Debug.Log($"[Skill 24]{self.Camp}复制敌人正面BUFF：{copied.Buff_Type}");
+            DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 24]{self.Camp}复制敌人正面BUFF：{copied.Buff_Type}");
             EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, copied);
         }
+        // 将自身负面效果复制给敌人 + 清除自身负面
+        var selfNegBuffs = BuffHandler.GetBuffsByAttr(E_BuffPositive.负面);
+        if (selfNegBuffs.Count > 0) {
+            var copiedNeg = selfNegBuffs[Random.Range(0, selfNegBuffs.Count)];
+            DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 24]{self.Camp}转移负面BUFF给敌人：{copiedNeg.Buff_Type}");
+            EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, targetHandler, copiedNeg);
+        }
+        BuffHandler.UnRegistBuffsByAttr(E_BuffPositive.负面);
     }
 }
 /// <summary>
@@ -171,19 +177,22 @@ public class Skill_24 : SkillBase
 [SkillID(25)]
 public class Skill_25 : SkillBase
 {
-    public Skill_25(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
+    public Skill_25(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--技能25--$$$$$");
+        DebugManager.Log(EDebugCategory.SkillExecution,"$$$$$--技能25--$$$$$");
     }
 
     float baseRate = 0.3f;
+    float baseBoostPerClear = 0.1f;
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { Execute(target, baseBoostPerClear); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { Execute(target, baseBoostPerClear + henceTime * 0.1f); } // 0.2/0.4/0.6
+    void Execute(IBattlable target, float boostPerClear)
     {
         int removedCount = BuffHandler.GetBuffsByAttr(E_BuffPositive.正面).Count;
         BuffHandler.UnRegistBuffsByAttr(E_BuffPositive.正面);
-        float rate = baseRate + removedCount * 0.1f;
-        Debug.Log($"[Skill 25]{self.Camp}清除{removedCount}种正面效果，剑弱点伤害，倍率：{rate}");
+        float rate = baseRate + removedCount * boostPerClear;
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 25]{self.Camp}清除{removedCount}种正面效果，剑弱点伤害，倍率：{rate}");
         var atk = new Attack_Skill();
         atk.SetAttackState(E_WeaknessType.剑, -1, rate);
         atk.Excute(self, target);
@@ -195,20 +204,23 @@ public class Skill_25 : SkillBase
 [SkillID(26)]
 public class Skill_26 : SkillBase
 {
-    public Skill_26(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
+    public Skill_26(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--技能26--$$$$$");
+        DebugManager.Log(EDebugCategory.SkillExecution,"$$$$$--技能26--$$$$$");
     }
 
     float baseRate = 0.3f;
+    float baseBoostPerClear = 0.1f;
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { Execute(target, baseBoostPerClear); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { Execute(target, baseBoostPerClear + henceTime * 0.1f); } // 0.2/0.4/0.6
+    void Execute(IBattlable target, float boostPerClear)
     {
         var targetHandler = target.battleDamageHandler.BuffHandler;
         int removedCount = targetHandler.GetBuffsByAttr(E_BuffPositive.负面).Count;
         targetHandler.UnRegistBuffsByAttr(E_BuffPositive.负面);
-        float rate = baseRate + removedCount * 0.1f;
-        Debug.Log($"[Skill 26]{self.Camp}清除目标{removedCount}种负面效果，枪弱点伤害，倍率：{rate}");
+        float rate = baseRate + removedCount * boostPerClear;
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 26]{self.Camp}清除目标{removedCount}种负面效果，枪弱点伤害，倍率：{rate}");
         var atk = new Attack_Skill();
         atk.SetAttackState(E_WeaknessType.枪, -1, rate);
         atk.Excute(self, target);
@@ -228,9 +240,9 @@ public class Skill_27 : SkillBase
     PropertyAdjust_Skill propty_Skill_revert;
     ISkill revertDecorator;
 
-    public Skill_27(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
+    public Skill_27(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--技能27--$$$$$");
+        DebugManager.Log(EDebugCategory.SkillExecution,"$$$$$--技能27--$$$$$");
         propty_Skill = new PropertyAdjust_Skill();
         propty_Skill_revert = new PropertyAdjust_Skill();
         revertDecorator = new DelayTrigger_SkillDecorator(propty_Skill_revert, buffDuration);
@@ -248,17 +260,22 @@ public class Skill_27 : SkillBase
         }
     }
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { Apply(target, buffDuration); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { Apply(target, buffDuration + henceTime * 5f); } // 5→10→15→20
+    void Apply(IBattlable target, float dur)
     {
         E_CharacterPropertyType propType = RandomProperty();
-        Debug.Log($"[Skill 27]{self.Camp}发动技能27-[折射]，随机属性{propType}，重放{recastCount}次");
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 27]{self.Camp}发动技能27-[折射]，随机属性{propType}，重放{recastCount}次，持续{dur}S");
 
-        propty_Skill.SetPropertyState(propType, 1, baseRiseRate);
-        propty_Skill_revert.SetPropertyState(propType, 1, 1.0f / baseRiseRate);
+        var skill = new PropertyAdjust_Skill();
+        var revert = new PropertyAdjust_Skill();
+        skill.SetPropertyState(propType, 1, baseRiseRate);
+        revert.SetPropertyState(propType, 1, 1.0f / baseRiseRate);
+        var revertDeco = new DelayTrigger_SkillDecorator(revert, dur);
 
-        var multi = new MultiTime_SkillDecorator(propty_Skill, recastCount, 0.2f);
+        var multi = new MultiTime_SkillDecorator(skill, recastCount, 0.2f);
         multi.Excute(self, target);
-        revertDecorator.Excute(self, target);
+        revertDeco.Excute(self, target);
     }
 }
 /// <summary>
@@ -267,24 +284,25 @@ public class Skill_27 : SkillBase
 [SkillID(28)]
 public class Skill_28 : SkillBase
 {
-    public Skill_28(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
+    public Skill_28(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--技能28--$$$$$");
+        DebugManager.Log(EDebugCategory.SkillExecution,"$$$$$--技能28--$$$$$");
     }
 
     float buffDuration = 20f;
     float degradeRate = -0.25f;
     float healRate = 0.25f;
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { Apply(target, healRate); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { Apply(target, healRate + henceTime * 0.25f); } // 25→50→75→100%
+    void Apply(IBattlable target, float rate)
     {
-        Debug.Log($"[Skill 28]{self.Camp}发动技能28-[退化]，伤害-25%，回复25%最大生命值");
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 28]{self.Camp}发动技能28-[退化]，伤害-25%，回复{rate*100}%最大生命值");
         var buff = new Buff_DamageBoomer(E_BuffType.退化_负面, E_BuffPositive.负面, buffDuration, degradeRate);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
-
         var heal = new ModelAdjust_Skill();
-        heal.SetModelState(E_BattleModelType.HP, self.battleDamageHandler.GetMaxHealth(), healRate);
-        heal.Excute(self, self);
+        heal.SetModelState(E_BattleModelType.HP, self.battleDamageHandler.GetMaxHealth(), rate);
+        heal.Excute(self, target);
     }
 }
 /// <summary>
@@ -298,27 +316,27 @@ public class Skill_29 : SkillBase
     int hitCount = 3;
     static readonly E_WeaknessType[] randomElements = { E_WeaknessType.冰, E_WeaknessType.火, E_WeaknessType.雷 };
 
-    public Skill_29(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
+    public Skill_29(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--技能29--$$$$$");
+        DebugManager.Log(EDebugCategory.SkillExecution,"$$$$$--技能29--$$$$$");
     }
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { Execute(target, 0); } // 基础: 重放0
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { Execute(target, henceTime); } // 重放1/2/3
+    void Execute(IBattlable target, int extraRecast)
     {
         E_Camp enemyCamp = (self.Camp == E_Camp.玩家方 ? E_Camp.敌方 : E_Camp.玩家方);
         var enemy = BattleTargetSelector.GetRandomNAliveTargets(enemyCamp, 1);
         if (enemy.Count == 0) return;
-
         var randomTarget = enemy[0];
-        Debug.Log($"[Skill 29]{self.Camp}发动技能29-[属性混乱]对{randomTarget.battleDamageHandler.name}");
-
-        for (int i = 0; i < hitCount; i++)
+        int totalHits = hitCount + extraRecast * hitCount;
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 29]{self.Camp}发动技能29-[属性混乱]对{randomTarget.battleDamageHandler.name}，共{totalHits}击");
+        for (int i = 0; i < totalHits; i++)
         {
             var element = randomElements[Random.Range(0, randomElements.Length)];
             var atk = new Attack_Skill();
             atk.SetAttackState(element, baseAttackValue, baseAttackRate);
             atk.Excute(self, randomTarget);
-            Debug.Log($"[Skill 29]第{i + 1}击：{element}弱点伤害");
         }
     }
 }
@@ -337,29 +355,28 @@ public class Skill_30 : SkillBase
     static readonly E_WeaknessType[] weapons = { E_WeaknessType.剑, E_WeaknessType.枪, E_WeaknessType.弓 };
     WaitForSeconds hitDelay = new WaitForSeconds(0.15f);
 
-    public Skill_30(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
+    public Skill_30(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--技能30--$$$$$");
+        DebugManager.Log(EDebugCategory.SkillExecution,"$$$$$--技能30--$$$$$");
     }
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { Execute(target, repeatPerWeapon); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { Execute(target, repeatPerWeapon + henceTime * 2); } // 2→4→6→8
+    void Execute(IBattlable target, int perWeapon)
     {
-        Debug.Log($"[Skill 30]{self.Camp}发动技能30-[三器缭乱]剑/枪/弓各{repeatPerWeapon}次");
-        GameRoot.GetManager<CoroutineManager>().StartCoroutine(DoMultiWeapon(target));
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 30]{self.Camp}发动技能30-[三器缭乱]剑/枪/弓各{perWeapon}次");
+        GameRoot.GetManager<CoroutineManager>().StartCoroutine(DoMultiWeapon(target, perWeapon));
     }
-
-    IEnumerator DoMultiWeapon(IBattlable target)
+    IEnumerator DoMultiWeapon(IBattlable target, int perWeapon)
     {
         foreach (var weapon in weapons)
-        {
-            for (int i = 0; i < repeatPerWeapon; i++)
+            for (int i = 0; i < perWeapon; i++)
             {
                 var atk = new Attack_Skill();
                 atk.SetAttackState(weapon, baseAttackValue, baseAttackRate);
                 atk.Excute(self, target);
                 yield return hitDelay;
             }
-        }
     }
 }
 
@@ -370,13 +387,13 @@ public class Skill_30 : SkillBase
 public class Skill_31 : SkillBase
 {
     static readonly E_WeaknessType[] physPool = {
-        E_WeaknessType.剑, E_WeaknessType.刀, E_WeaknessType.斧, E_WeaknessType.杖,
-        E_WeaknessType.弓, E_WeaknessType.枪, E_WeaknessType.通解
+        E_WeaknessType.剑, E_WeaknessType.刀_, E_WeaknessType.斧_, E_WeaknessType.杖_,
+        E_WeaknessType.弓, E_WeaknessType.枪, E_WeaknessType.通解_
     };
 
-    public Skill_31(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
+    public Skill_31(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--技能31--$$$$$");
+        DebugManager.Log(EDebugCategory.SkillExecution,"$$$$$--技能31--$$$$$");
     }
 
     public override void SkillEffect_Base(IBattlable target)
@@ -389,7 +406,7 @@ public class Skill_31 : SkillBase
         if (candidates.Count > 0) {
             var newWeak = candidates[Random.Range(0, candidates.Count)];
             target.AddWeakness(newWeak);
-            Debug.Log($"[Skill 31]{self.Camp}使目标获得新物理弱点：{newWeak}");
+            DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 31]{self.Camp}使目标获得新物理弱点：{newWeak}");
         }
     }
 }
@@ -404,21 +421,21 @@ public class Skill_32 : SkillBase
     float boostPerWeakness = 0.2f;
     int hitCount = 2;
 
-    public Skill_32(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
+    public Skill_32(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--技能32--$$$$$");
+        DebugManager.Log(EDebugCategory.SkillExecution,"$$$$$--技能32--$$$$$");
     }
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { Execute(target, hitCount); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { Execute(target, hitCount + henceTime); } // 2→3→4→5
+    void Execute(IBattlable target, int hits)
     {
-        // 计算目标弱点数量（多弱点系统）
         int weaknessCount = target.weaknesses.Count;
         float rate = baseAttackRate + weaknessCount * boostPerWeakness;
-        Debug.Log($"[Skill 32]{self.Camp}发动技能32-[狮王狩猎]，目标弱点数{weaknessCount}，枪伤害倍率{rate}");
-
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 32]{self.Camp}发动技能32-[狮王狩猎]，目标弱点数{weaknessCount}，枪伤害倍率{rate}，段数{hits}");
         var atk = new Attack_Skill();
         atk.SetAttackState(E_WeaknessType.枪, baseAttackValue, rate);
-        var multi = new MultiTime_SkillDecorator(atk, hitCount, 0.3f);
+        var multi = new MultiTime_SkillDecorator(atk, hits, 0.3f);
         multi.Excute(self, target);
     }
 }
@@ -433,37 +450,34 @@ public class Skill_33 : SkillBase
     int baseRecast = 2;
     WaitForSeconds recastDelay = new WaitForSeconds(0.25f);
 
-    public Skill_33(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
+    public Skill_33(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--技能33--$$$$$");
+        DebugManager.Log(EDebugCategory.SkillExecution,"$$$$$--技能33--$$$$$");
     }
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { Execute(target, 1); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { Execute(target, 1 + henceTime); } // 奖励+2/3/4
+    void Execute(IBattlable target, int bonusPerTrigger)
     {
-        Debug.Log($"[Skill 33]{self.Camp}发动技能33-[倾盆大雨]，基础重放{baseRecast}");
-        GameRoot.GetManager<CoroutineManager>().StartCoroutine(DoRecastLoop(target));
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 33]{self.Camp}发动技能33-[倾盆大雨]，基础重放{baseRecast}，每次奖励+{bonusPerTrigger}");
+        GameRoot.GetManager<CoroutineManager>().StartCoroutine(DoRecastLoop(target, bonusPerTrigger));
     }
-
-    IEnumerator DoRecastLoop(IBattlable target)
+    IEnumerator DoRecastLoop(IBattlable target, int bonus)
     {
         int remaining = baseRecast;
         while (remaining > 0)
         {
             bool wasAlive = target.IsAlive;
             float prevShield = target.battleDamageHandler.BattleController.GetCharacterModelValue(E_BattleModelType.ShieldPoints);
-
             var atk = new Attack_Skill();
             atk.SetAttackState(E_WeaknessType.弓, baseAttackValue, baseAttackRate);
             atk.Excute(self, target);
-
             remaining--;
-            // 检查是否击杀或力竭（护盾归零）
-            if (!target.IsAlive && wasAlive) { remaining++; Debug.Log($"[Skill 33]击杀目标，重放+1，剩余{remaining}"); }
+            if (!target.IsAlive && wasAlive) { remaining += bonus; DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 33]击杀目标，重放+{bonus}，剩余{remaining}"); }
             else {
                 float curShield = target.battleDamageHandler.BattleController.GetCharacterModelValue(E_BattleModelType.ShieldPoints);
-                if (prevShield > 0 && curShield <= 0) { remaining++; Debug.Log($"[Skill 33]目标力竭，重放+1，剩余{remaining}"); }
+                if (prevShield > 0 && curShield <= 0) { remaining += bonus; DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 33]目标力竭，重放+{bonus}，剩余{remaining}"); }
             }
-
             if (remaining > 0) yield return recastDelay;
         }
     }
@@ -478,19 +492,25 @@ public class Skill_34 : SkillBase
     float baseAttackRate = 0.6f;
     float breakMulti = 2f;
 
-    public Skill_34(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
+    public Skill_34(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--技能34--$$$$$");
+        DebugManager.Log(EDebugCategory.SkillExecution,"$$$$$--技能34--$$$$$");
     }
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { Execute(target, baseAttackRate); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime)
+    {
+        float rate = henceTime switch { 1 => 1.2f, 2 => 1.6f, 3 => 2.0f, _ => baseAttackRate };
+        Execute(target, rate);
+    }
+    void Execute(IBattlable target, float rate)
     {
         float shield = target.battleDamageHandler.BattleController.GetCharacterModelValue(E_BattleModelType.ShieldPoints);
         bool isBroken = shield <= 0;
-        float rate = baseAttackRate * (isBroken ? breakMulti : 1f);
-        Debug.Log($"[Skill 34]{self.Camp}发动技能34-[无尽终结]，目标力竭:{isBroken}，倍率{rate}");
+        float finalRate = rate * (isBroken ? breakMulti : 1f);
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 34]{self.Camp}发动技能34-[无尽终结]，目标力竭:{isBroken}，倍率{finalRate}");
         var atk = new Attack_Skill();
-        atk.SetAttackState(E_WeaknessType.剑, baseAttackValue, rate);
+        atk.SetAttackState(E_WeaknessType.剑, baseAttackValue, finalRate);
         atk.Excute(self, target);
     }
 }
@@ -501,29 +521,27 @@ public class Skill_34 : SkillBase
 public class Skill_35 : SkillBase
 {
     float vulDuration = 5f;
+    float extendBreakDuration = 5f;
     float vulRate = 0.35f;
 
-    public Skill_35(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
+    public Skill_35(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--技能35--$$$$$");
+        DebugManager.Log(EDebugCategory.SkillExecution,"$$$$$--技能35--$$$$$");
     }
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { Apply(target, extendBreakDuration, vulDuration); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { Apply(target, extendBreakDuration + henceTime * 5f, vulDuration + henceTime * 5f); } // 5→10→15→20
+    void Apply(IBattlable target, float extendDur, float vulDur)
     {
         var targetController = target.battleDamageHandler.BattleController;
         var targetHandler = target.battleDamageHandler.BuffHandler;
-
-        // 延长击破状态：削减护盾来延长力竭（若已无盾则保持）
         float curShield = targetController.GetCharacterModelValue(E_BattleModelType.ShieldPoints);
         if (curShield > 0)
             target.battleDamageHandler.DoModelValue(E_BattleModelType.ShieldPoints, -curShield);
-
-        Debug.Log($"[Skill 35]{self.Camp}延长目标击破状态5S，施加易损");
-
-        // 施加易损：双抗降低35%，持续5S
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 35]{self.Camp}延长目标击破状态{extendDur}S，施加易损{vulDur}S");
         float phyRes = targetController.GetCharacterPropertyValue(E_CharacterPropertyType.Phy_Resistance);
         float magRes = targetController.GetCharacterPropertyValue(E_CharacterPropertyType.Mag_Resistance);
-        var vulBuff = new Buff_Vulnerable(E_BuffType.脆弱_负面, E_BuffPositive.负面, vulDuration,
+        var vulBuff = new Buff_Vulnerable(E_BuffType.脆弱_负面, E_BuffPositive.负面, vulDur,
             targetController, phyRes * vulRate, magRes * vulRate);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, targetHandler, vulBuff);
     }
@@ -538,9 +556,9 @@ public class Skill_36 : SkillBase
     float baseAttackRate = 0.5f;
     E_WeaknessType weakness = E_WeaknessType.剑;
 
-    public Skill_36(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
+    public Skill_36(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--技能36--$$$$$");
+        DebugManager.Log(EDebugCategory.SkillExecution,"$$$$$--技能36--$$$$$");
     }
 
     public void SwitchWeakness(E_WeaknessType type)
@@ -549,12 +567,15 @@ public class Skill_36 : SkillBase
             weakness = type;
     }
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { Execute(target, 1); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { Execute(target, 1 + henceTime); } // 1→2→3→4
+    void Execute(IBattlable target, int hits)
     {
-        Debug.Log($"[Skill 36]{self.Camp}发动技能36-[全体{weakness}伤害]");
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 36]{self.Camp}发动技能36-[全体{weakness}伤害]，段数{hits}");
         var atk = new Attack_Skill();
         atk.SetAttackState(weakness, baseAttackValue, baseAttackRate);
-        atk.Excute(self, target);
+        var multi = new MultiTime_SkillDecorator(atk, hits, 0.3f);
+        multi.Excute(self, target);
     }
 }
 /// <summary>
@@ -566,15 +587,17 @@ public class Skill_37 : SkillBase
     float buffDuration = 15f;
     float damageRate = 0.1f;
 
-    public Skill_37(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
+    public Skill_37(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--技能37--$$$$$");
+        DebugManager.Log(EDebugCategory.SkillExecution,"$$$$$--技能37--$$$$$");
     }
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { CreateBuff(buffDuration); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { CreateBuff(buffDuration + henceTime * 10f); } // 15→25→35→45
+    void CreateBuff(float dur)
     {
-        Debug.Log($"[Skill 37]{self.Camp}发动技能37-[迅雷连锁-BUFF]");
-        var buff = new Buff_AdditiveAttack(E_BuffType.迅雷之影_正面, E_BuffPositive.正面, buffDuration,
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 37]{self.Camp}发动技能37-[迅雷连锁-BUFF]，持续{dur}S");
+        var buff = new Buff_AdditiveAttack(E_BuffType.迅雷之影_正面, E_BuffPositive.正面, dur,
             this, E_WeaknessType.雷, damageRate);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
@@ -588,15 +611,17 @@ public class Skill_38 : SkillBase
     float buffDuration = 15f;
     float damageRate = 0.1f;
 
-    public Skill_38(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
+    public Skill_38(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--技能38--$$$$$");
+        DebugManager.Log(EDebugCategory.SkillExecution,"$$$$$--技能38--$$$$$");
     }
 
-    public override void SkillEffect_Base(IBattlable target)
+    public override void SkillEffect_Base(IBattlable target) { CreateBuff(buffDuration); }
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime) { CreateBuff(buffDuration + henceTime * 10f); } // 15→25→35→45
+    void CreateBuff(float dur)
     {
-        Debug.Log($"[Skill 38]{self.Camp}发动技能38-[暴雪连锁-BUFF]");
-        var buff = new Buff_AdditiveAttack(E_BuffType.冰雪风暴_正面, E_BuffPositive.正面, buffDuration,
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 38]{self.Camp}发动技能38-[暴雪连锁-BUFF]，持续{dur}S");
+        var buff = new Buff_AdditiveAttack(E_BuffType.冰雪风暴_正面, E_BuffPositive.正面, dur,
             this, E_WeaknessType.冰, damageRate);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
@@ -610,14 +635,14 @@ public class Skill_39 : SkillBase
     float buffDuration = 20f;
     int recastCount = 2;
 
-    public Skill_39(E_SkillTargetType _skillTargetType) : base(_skillTargetType)
+    public Skill_39(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType)
     {
-        Debug.Log("$$$$$--技能39--$$$$$");
+        DebugManager.Log(EDebugCategory.SkillExecution,"$$$$$--技能39--$$$$$");
     }
 
     public override void SkillEffect_Base(IBattlable target)
     {
-        Debug.Log($"[Skill 39]{self.Camp}发动技能39-[超大魔法化-BUFF]，额外释放{recastCount}次");
+        DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 39]{self.Camp}发动技能39-[超大魔法化-BUFF]，额外释放{recastCount}次");
         var buff = new Buff_SkillRecast(E_BuffType.超大魔法化_正面, E_BuffPositive.正面, buffDuration, recastCount);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }

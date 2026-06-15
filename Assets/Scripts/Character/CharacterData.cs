@@ -6,14 +6,11 @@ using UnityEngine;
 /// <summary>
 /// 记录一名角色当前的属性数据（战斗中读取的是当前的属性数据（而非SOData））
 /// </summary>
-public class CharacterData : ICanSave_And_Load
-{
+public class CharacterData : ICanSave_And_Load{
     [Header("角色")]
     public E_CharacterType characterType;
 
     string characterSO_ParentPath = "SOData/CharacterSOData/";
-
-
 
     /// <summary>
     /// 角色初始数据
@@ -96,6 +93,15 @@ public class CharacterData : ICanSave_And_Load
     private int maximum_ATB;
 
     /// <summary>
+    /// 18.暴击率
+    /// </summary>
+    private float critRate;
+    /// <summary>
+    /// 19.暴击伤害
+    /// </summary>
+    private float critDamage;
+
+    /// <summary>
     /// 18.自动化技能槽数量
     /// </summary>
     private int autoSkillSlotCount;
@@ -103,6 +109,11 @@ public class CharacterData : ICanSave_And_Load
     /// 19.ATB技能槽数量（当前已解锁数量）
     /// </summary>
     private int atbSkillSlotCount;
+
+    /// <summary>地图配置的自动化技能ID列表（可移动角色从CharacterMapSkiller采集）</summary>
+    public List<int> mapNormalSkillIDs;
+    /// <summary>地图配置的主动技能ID列表（可移动角色从CharacterMapSkiller采集）</summary>
+    public List<int> mapATBSkillIDs;
 
     public string Character_Name => Resources.Load<CharacterDataSO>(characterSO_ParentPath + characterType).characterName;
     public float Phy_Flat_Penetration => phy_Flat_Penetration;
@@ -122,12 +133,26 @@ public class CharacterData : ICanSave_And_Load
     public float Heal_Amplification => heal_Amplification;
     public float Shield_Amplification => shield_Amplification;
     public int Maximum_ATB => maximum_ATB;
+    public float CritRate => critRate;
+    public float CritDamage => critDamage;
     #endregion
 
     #region 技能槽位
     public const int maxAtbSkillSlotCount = 9;
     public int AutoSkillSlotCount => autoSkillSlotCount;
     public int AtbSkillSlotCount => atbSkillSlotCount;
+
+    const int maxAutoSkillSlotCount = 9;
+    /// <summary>
+    /// 解锁自动化技能槽
+    /// </summary>
+    public void UnlockAutoSlot(int count = 1)
+    {
+        autoSkillSlotCount = Mathf.Min(autoSkillSlotCount + count, maxAutoSkillSlotCount);
+        JsonSaver.Save(new Save_CharacterData(this), characterType.ToString());
+        DebugManager.Log(EDebugCategory.Character, $"[{characterType}] 自动化槽位解锁至 {autoSkillSlotCount}/{maxAutoSkillSlotCount}");
+    }
+
     /// <summary>
     /// 解锁ATB技能槽（通过游戏机制逐步解锁）
     /// </summary>
@@ -135,7 +160,7 @@ public class CharacterData : ICanSave_And_Load
     {
         atbSkillSlotCount = Mathf.Min(atbSkillSlotCount + count, maxAtbSkillSlotCount);
         JsonSaver.Save(new Save_CharacterData(this), characterType.ToString());
-        Debug.Log($"[{characterType}] ATB槽位解锁至 {atbSkillSlotCount}/{maxAtbSkillSlotCount}");
+        DebugManager.Log(EDebugCategory.Character, $"[{characterType}] ATB槽位解锁至 {atbSkillSlotCount}/{maxAtbSkillSlotCount}");
     }
     #endregion
 
@@ -191,7 +216,7 @@ public class CharacterData : ICanSave_And_Load
 
     public void InitBySaveData()
     {
-        Debug.Log("这份角色数据此前记录过，直接加载存档数据"+characterType);
+        //Debug.Log("这份角色数据此前记录过，直接加载存档数据"+characterType);
         var characterSaveData = JsonSaver.Load<Save_CharacterData>(characterType.ToString());
         phy_Flat_Penetration = characterSaveData.Phy_Flat_Penetration;
         mag_Flat_Penetration = characterSaveData.Mag_Flat_Penetration;
@@ -210,15 +235,19 @@ public class CharacterData : ICanSave_And_Load
         heal_Amplification = characterSaveData.Heal_Amplification;
         shield_Amplification = characterSaveData.Shield_Amplification;
         maximum_ATB = characterSaveData.Maximum_ATB;
+        critRate = characterSaveData.CritRate;
+        critDamage = characterSaveData.CritDamage;
         currentLevel = characterSaveData.CurrentLevel;
         currentEXP = characterSaveData.CurrentEXP;
         autoSkillSlotCount = characterSaveData.AutoSkillSlotCount;
         atbSkillSlotCount = characterSaveData.AtbSkillSlotCount;
+        mapNormalSkillIDs = new List<int>();
+        mapATBSkillIDs = new List<int>();
     }
 
     public void InitBySelf()
     {
-        Debug.Log("新的角色数据，进行首次存档数据");
+        DebugManager.Log(EDebugCategory.Character, "新的角色数据，进行首次存档数据");
         characterData = Resources.Load<CharacterDataSO>(characterSO_ParentPath + characterType);
         phy_Flat_Penetration = characterData.Phy_Flat_Penetration;
         mag_Flat_Penetration = characterData.Mag_Flat_Penetration;
@@ -237,9 +266,13 @@ public class CharacterData : ICanSave_And_Load
         heal_Amplification = characterData.Heal_Amplification;
         shield_Amplification = characterData.Shield_Amplification;
         maximum_ATB = characterData.Maximum_ATB;
+        critRate = characterData.CritRate;
+        critDamage = characterData.CritDamage;
         autoSkillSlotCount = characterData.autoSkillSlotCount;
         atbSkillSlotCount = characterData.atbSkillSlotCount;
         currentLevel = 1;
+        mapNormalSkillIDs = new List<int>();
+        mapATBSkillIDs = new List<int>();
         JsonSaver.Save(new Save_CharacterData(this), characterType.ToString());
     }
   
@@ -265,6 +298,8 @@ public class CharacterData : ICanSave_And_Load
             case E_CharacterPropertyType.Shield_Amplification: return shield_Amplification;
             case E_CharacterPropertyType.Maximum_ATB: return maximum_ATB;
             case E_CharacterPropertyType.CurrentLevel: return currentLevel;
+            case E_CharacterPropertyType.CritRate: return critRate;
+            case E_CharacterPropertyType.CritDamage: return critDamage;
             default: Debug.LogError("属性不存在"); return 0;
         }
     }
@@ -292,9 +327,11 @@ public class CharacterData : ICanSave_And_Load
             case E_CharacterPropertyType.Shield_Amplification: if (!use_multi) shield_Amplification += value; else shield_Amplification *= value; break;
             case E_CharacterPropertyType.Maximum_ATB: if (!use_multi) maximum_ATB += (int)value;break;
             case E_CharacterPropertyType.CurrentLevel: if (!use_multi) currentLevel += (int)value;break;
+            case E_CharacterPropertyType.CritRate: if (!use_multi) critRate += value; else critRate *= value; break;
+            case E_CharacterPropertyType.CritDamage: if (!use_multi) critDamage += value; else critDamage *= value; break;
             default: Debug.LogError("属性不存在"); return;
         }
-        Debug.Log($"属性修改成功: {type} = {GetProperty(type)}");
+        DebugManager.Log(EDebugCategory.Character, $"属性修改成功: {type} = {GetProperty(type)}");
     }
 
     public bool IsValid()
@@ -327,10 +364,13 @@ public class Save_CharacterData : IValidatable
         Heal_Amplification = characterSaveData.Heal_Amplification;
         Shield_Amplification = characterSaveData.Shield_Amplification;
         Maximum_ATB = characterSaveData.Maximum_ATB;
+        CritRate = characterSaveData.CritRate;
+        CritDamage = characterSaveData.CritDamage;
         AutoSkillSlotCount = characterSaveData.AutoSkillSlotCount;
         AtbSkillSlotCount = characterSaveData.AtbSkillSlotCount;
         CurrentLevel = characterSaveData.CurrentLevel;
         CurrentEXP = characterSaveData.CurrentEXP;
+        // 技能ID不再持久化到CharacterData，由CharacterMapSkiller（玩家）或配置SO（敌人）在战斗前注入
     }
     /// <summary>
     /// [Save]物理固穿
@@ -416,6 +456,9 @@ public class Save_CharacterData : IValidatable
     /// 当前最大ATB值
     /// </summary>
     public int Maximum_ATB;
+
+    public float CritRate;
+    public float CritDamage;
 
     /// <summary>
     /// [Save]角色当前等级

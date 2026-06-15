@@ -61,10 +61,19 @@ public class Attack_Skill : ISkill
         float weakMulti = target.battleDamageHandler.WeaknessHandler.ProcessWeaknessHit(weaknessType);
         value *= weakMulti;
 
+        // 暴击判定
+        float critRate = self.battleDamageHandler.BattleController.GetCharacterPropertyValue(E_CharacterPropertyType.CritRate);
+        bool isCrit = critRate > 0f && Random.value < critRate;
+        if (isCrit)
+        {
+            float critDamage = self.battleDamageHandler.BattleController.GetCharacterPropertyValue(E_CharacterPropertyType.CritDamage);
+            value *= critDamage;
+        }
+
         if (weakMulti > 1f)
-            Debug.Log($"{self.Camp}对{target.battleDamageHandler.name}造成一次[(弱点)]攻击:{baseAttackRate}*{baseAttackValue}*{weakMulti}*当前倍率=[{weaknessType}-税前伤害]{value}");
+            DebugManager.Log(EDebugCategory.SkillExecution,$"{self.Camp}对{target.battleDamageHandler.name}造成一次[(弱点)]攻击:{baseAttackRate}*{baseAttackValue}*{weakMulti}*当前倍率=[{weaknessType}-税前伤害]{value}{(isCrit ? "(暴击)" : "")}");
         else
-            Debug.Log($"{self.Camp}对{target.battleDamageHandler.name}造成一次攻击:{baseAttackRate}*{baseAttackValue}*当前倍率=[{weaknessType}-税前伤害]{value}");
+            DebugManager.Log(EDebugCategory.SkillExecution,$"{self.Camp}对{target.battleDamageHandler.name}造成一次攻击:{baseAttackRate}*{baseAttackValue}*当前倍率=[{weaknessType}-税前伤害]{value}{(isCrit ? "(暴击)" : "")}");
         target.battleDamageHandler.GetDamage(damageType, value);
     }
 }
@@ -95,8 +104,8 @@ public class ModelAdjust_Skill : ISkill
 
     public void Excute(IBattlable self, IBattlable target){
         float value = baseAdjValue * skillRate;
-        self.battleDamageHandler.DoModelValue(modelType, value);
-        Debug.Log($"{self.Camp}对{target.battleDamageHandler.name}造成一次Model调整[{modelType}]：{value}");
+        target.battleDamageHandler.DoModelValue(modelType, value);
+        DebugManager.Log(EDebugCategory.SkillExecution,$"{self.Camp}对{target.battleDamageHandler.name}造成一次Model调整[{modelType}]：{value}");
     }
 }
 
@@ -126,7 +135,7 @@ public class PropertyAdjust_Skill : ISkill{
     public void Excute(IBattlable self, IBattlable target)
     {
         int value =(int)(baseAdjValue * skillRate);
-        self.battleDamageHandler.DoPropertyValue(propertyType, value);
-        Debug.Log($"{self.Camp}对{target.battleDamageHandler.name}造成一次Property调整[{propertyType}]：{value}");
+        target.battleDamageHandler.DoPropertyValue(propertyType, value);
+        DebugManager.Log(EDebugCategory.SkillExecution,$"{self.Camp}对{target.battleDamageHandler.name}造成一次Property调整[{propertyType}]：{value}");
     }
 }

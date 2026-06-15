@@ -1,7 +1,7 @@
 using DG.Tweening;
 using System.Collections;
 using UnityEngine;
-
+using Core;
 /// <summary>
 /// 俯视角正交相机漫游器 - XZ平面移动（Y轴固定高度）
 /// 支持：拖拽、WASD、鼠标边缘、滚轮缩放、目标聚焦
@@ -34,12 +34,16 @@ public class OrthoCameraNavigator : MonoSceneManager
     [Header("滚轮缩放配置")]
     [Tooltip("缩放灵敏度")]
     public float scrollSensitivity = 1.5f;
-    public float minOrthographicSize = 3f;
-    public float maxOrthographicSize = 6f;
+    public float minOrthographicSize = 4f;
+    public float maxOrthographicSize = 7f;
 
     [Header("平滑过渡")]
     public float posSmoothTime = 0.4f;
     public float scaleSmoothTime = 0.4f;
+
+    [Header("手动操控抑制自动聚焦")]
+    [Tooltip("手动操控（WASD/拖拽/边缘）后多少秒内抑制自动聚焦")]
+    public float manualInputCooldown = 1.5f;
 
     [Header("地图边界（XZ平面）")]
     public bool enableMapBounds = true;
@@ -62,9 +66,12 @@ public class OrthoCameraNavigator : MonoSceneManager
     private float _targetOrthographicSize;
     private Vector2 _edgeMoveDirection;
     private bool _isFocusing;
+    private float _lastManualInputTime = -10f;  // 上次手动操控时间戳
 
-    //启用相机漫游
-    bool start = false;
+    //启用相机漫游（2s冻结 + 聚焦玩家 = 开启）
+    bool _freezeTimerDone;
+    bool _hasFocused;
+    bool _roamEnabled;
     #endregion
 
     #region 初始化
@@ -98,15 +105,13 @@ public class OrthoCameraNavigator : MonoSceneManager
     }
 
     bool use_CamPan=true;
-void Freeze()
-{
+void Freeze(){
     use_CamPan = false;
-    Debug.Log("[OrthoCameraNavigator]--冻结吧");
 }
 void UnFreeze()
 {
     use_CamPan = true;
-    Debug.Log("[OrthoCameraNavigator]---解冻啦");
+    DebugManager.Log(EDebugCategory.General, "[OrthoCameraNavigator]---解冻啦");
 }
 protected override void MgrOnInit()
     {
@@ -138,18 +143,43 @@ protected override void MgrOnInit()
 
     IEnumerator WaitStart()
     {
-        yield return new WaitForSeconds(3);
-        start = true;
-        Debug.Log("[OrthoCameraNavigator]---相机开始漫游");
+        yield return new WaitForSeconds(2);
+        _freezeTimerDone = true;
+        TryEnableRoaming();
+    }
+
+    void TryEnableRoaming()
+    {
+        if (_freezeTimerDone && _hasFocused && !_roamEnabled)
+        {
+            _roamEnabled = true;
+            DebugManager.Log(EDebugCategory.General, "[OrthoCameraNavigator]---相机开始漫游");
+        }
     }
     #endregion
     #region 核心更新
     public override void MgrUpdate(float deltaTime)
     {
         if (!use_CamPan) return;
-        if (!start) return;
-        if (_isFocusing) return;
         if (!_isDragEnabled || _cachedCamTransform == null) return;
+
+        // 空格键始终可用：进入寻路时聚焦玩家，退出寻路时不聚焦
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            var player = CharacterHandler.PlayerInstance;
+            if (player != null)
+            {
+                bool enteringPathFind = !GameRoot.GetManager<HexPathFindingManager>()?.canPathFind ?? false;
+                if (enteringPathFind)
+                    FocusOnTarget(player.gameObject);
+                GameRoot.GetManager<MapMoverManager>().TogglePathFinding();
+                return;
+            }
+        }
+
+        // 漫游门控：2s冻结 + 聚焦玩家后才开启
+        if (!_roamEnabled) return;
+        if (_isFocusing) return;
 
         //滚轮放大
         HandleScrollWheel();
@@ -190,6 +220,7 @@ protected override void MgrOnInit()
 
         if (_edgeMoveDirection.magnitude < 0.1f) return;
         _edgeMoveDirection.Normalize();
+        _lastManualInputTime = Time.unscaledTime;
 
         float worldUnits = (2 * targetOrthographicCamera.orthographicSize) / Screen.height;
         float speed = edgeMoveSpeed * worldUnits * Time.unscaledDeltaTime;
@@ -219,6 +250,8 @@ protected override void MgrOnInit()
         float v = Input.GetAxis("Vertical") * wasdSensitivity;
 
         if (Mathf.Approximately(h, 0) && Mathf.Approximately(v, 0)) return;
+
+        _lastManualInputTime = Time.unscaledTime;
 
         float worldUnits = (2 * targetOrthographicCamera.orthographicSize) / Screen.height;
         float speed = wasdMoveSpeed * worldUnits * Time.unscaledDeltaTime;
@@ -251,6 +284,7 @@ protected override void MgrOnInit()
             delta.y * worldUnits
         );
 
+        _lastManualInputTime = Time.unscaledTime;
         _targetCamPos = _cachedCamTransform.position + moveDelta * dragSpeed * Time.unscaledDeltaTime;
         _targetCamPos.y = _cachedCamTransform.position.y;
 
@@ -292,32 +326,41 @@ protected override void MgrOnInit()
     #endregion
 
     #region 聚焦功能（终极修复！XZ对齐，Y固定）
+
+    /// <summary>相机是否正处于手动漫游状态（或刚结束不久，抑制自动聚焦）</summary>
+    public bool IsManualInputActive =>
+        Time.unscaledTime - _lastManualInputTime < manualInputCooldown;
+
     /// <summary>
-    /// 平滑聚焦：相机XZ=目标XZ，Y保持俯视高度，目标居中屏幕
+    /// 平滑聚焦：相机XZ=目标XZ，Y保持俯视高度，目标居中屏幕。
+    /// 若相机正被手动操控（或刚结束），自动跳过以保持用户视野。
     /// </summary>
-    public void FocusOnTarget(GameObject target,float focusSmoothTime = 1.5f)
+    public void FocusOnTarget(GameObject target, float focusSmoothTime = 0.75f, bool force = false)
     {
-        //if (target == null || _cachedCamTransform == null || _isFocusing) return;
-        if (target == null || _cachedCamTransform == null ) return;
+        if (target == null || _cachedCamTransform == null) return;
+        if (!force && IsManualInputActive) return; // 手动漫游中 → 不抢视野
         _isFocusing = true;
 
         _cachedCamTransform.DOKill();
         _isDragging = false;
 
-        // 相机 Y 固定，只移动 XZ 对齐目标
         Vector3 targetPos = target.transform.position;
         Vector3 finalPos = new Vector3(
             targetPos.x + 1,
-            _cachedCamTransform.position.y, // 固定高空Y
+            _cachedCamTransform.position.y,
             targetPos.z - 1
         );
 
         _targetCamPos = finalPos;
         _cachedCamTransform.DOMove(finalPos, focusSmoothTime)
-            .SetEase(Ease.OutCubic)
+            .SetEase(Ease.OutQuad)
             .SetUpdate(true)
-                   //.OnComplete(() => { });
-            .OnComplete(() => _isFocusing = false);
+            .OnComplete(() =>
+            {
+                _isFocusing = false;
+                _hasFocused = true;
+                TryEnableRoaming();
+            });
     }
     IEnumerator Flash()
     {
@@ -327,11 +370,12 @@ protected override void MgrOnInit()
     }
 
     /// <summary>
-    /// 立即聚焦
+    /// 立即聚焦。若相机正被手动操控，自动跳过。
     /// </summary>
-    public void FocusOnTargetImmediate(GameObject target)
+    public void FocusOnTargetImmediate(GameObject target, bool force = false)
     {
         if (target == null || _cachedCamTransform == null) return;
+        if (!force && IsManualInputActive) return;
 
         _isFocusing = true;
         _cachedCamTransform.DOKill();
@@ -345,8 +389,25 @@ protected override void MgrOnInit()
         _cachedCamTransform.position = finalPos;
         _targetCamPos = finalPos;
         _isFocusing = false;
+        _hasFocused = true;
+        TryEnableRoaming();
     }
     #endregion
+
+    /// <summary>应用存档的相机状态（位置+orthoSize），同步内部目标值</summary>
+    public void ApplySavedState(Vector3 pos, float size)
+    {
+        if (_cachedCamTransform != null)
+        {
+            _cachedCamTransform.position = pos;
+            _targetCamPos = pos;
+        }
+        if (targetOrthographicCamera != null)
+        {
+            targetOrthographicCamera.orthographicSize = size;
+            _targetOrthographicSize = size;
+        }
+    }
 
     #region 工具函数
     public void SetEdgeMoveSpeed(float speed) => edgeMoveSpeed = Mathf.Max(0.1f, speed);
@@ -374,6 +435,9 @@ protected override void MgrOnInit()
     #region 销毁
     void OnDestroy()
     {
+        if (targetOrthographicCamera != null)
+            JsonSaver.Save(new CameraSaveData(_cachedCamTransform.position, targetOrthographicCamera.orthographicSize));
+
         _isDragging = false;
         _isDragEnabled = false;
         _isFocusing = false;

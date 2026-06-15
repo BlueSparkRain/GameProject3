@@ -43,7 +43,7 @@ public class MapSettingSceneSetUp : MonoBehaviour
     void EditorOneRoomTexrrainTag(Vector2Int pos,E_HexTerrainType terrainType) {
         MapSOData.cellData[pos.x, pos.y] = terrainType;
         MapSOData.SaveData();
-        Debug.Log("HexMapSO已更新：" + pos + " → " + MapSOData.cellData[pos.x, pos.y]);
+        DebugManager.Log(EDebugCategory.General, "HexMapSO已更新：" + pos + " → " + MapSOData.cellData[pos.x, pos.y]);
     }
 
     private void Start()

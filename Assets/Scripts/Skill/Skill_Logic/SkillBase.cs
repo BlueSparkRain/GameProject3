@@ -1,15 +1,15 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 
 public enum E_SkillLevel
 {
     /// <summary>
-    /// ±³°ü¼¼×Ô¶¯Ñ­»·-»ù´¡°æ±¾
+    /// èƒŒåŒ…æŠ€è‡ªåŠ¨å¾ªç¯-åŸºç¡€ç‰ˆæœ¬
     /// </summary>
-    »ù´¡°æ±¾,
+    åŸºç¡€ç‰ˆæœ¬,
     /// <summary>
-    /// Ê¹ÓÃ>=1µÄ ATBµãÊı
+    /// ä½¿ç”¨>=1çš„ ATBç‚¹æ•°
     /// </summary>
-    ¼ÓÇ¿°æ±¾
+    åŠ å¼ºç‰ˆæœ¬
 }
 
 public interface IHaveWeakable
@@ -22,7 +22,7 @@ public abstract class SkillBase
     public IBattlable self { get; set; }
     public List<IBattlable> targets { get; set; }
 
-    public E_SkillTargetType skillTargetType { get; set; }
+    public E_SkillTargetType_Auto skillTargetType { get; set; }
 
     public int AtbCost { get; set; }
     public float AngGrow { get; set; }
@@ -30,7 +30,7 @@ public abstract class SkillBase
     protected BattleBuffHandler BuffHandler => self.battleDamageHandler.BuffHandler;
     public virtual bool IsMagicType => false;
 
-    public SkillBase(E_SkillTargetType _skillTargetType)
+    public SkillBase(E_SkillTargetType_Auto _skillTargetType)
     {
         skillTargetType = _skillTargetType;
     }
@@ -46,48 +46,47 @@ public abstract class SkillBase
         self = _caster;
     }
     /// <summary>
-    /// ¶ÔËùÓĞÄ¿±êÒ»´ÎÊÍ·Åµ¥Ìå¼¼ÄÜ
+    /// å¯¹æ‰€æœ‰ç›®æ ‡ä¸€æ¬¡é‡Šæ”¾å•ä½“æŠ€èƒ½
     /// </summary>
     /// <param name="casters"></param>
     public void SkillExcute(E_SkillLevel skillLevel, int henceTime = 0)
     {
-        if (skillLevel == E_SkillLevel.¼ÓÇ¿°æ±¾ && AtbCost > 0)
+        if (skillLevel == E_SkillLevel.åŠ å¼ºç‰ˆæœ¬ && AtbCost > 0)
         {
             float currentATB = Controller?.GetCharacterModelValue(E_BattleModelType.ATBPoints) ?? 0;
             if (currentATB < AtbCost)
             {
-                UnityEngine.Debug.LogWarning($"[SkillBase] ATB²»×ã£¬ÎŞ·¨ÊÍ·Å¼ÓÇ¿¼¼ÄÜ(ĞèÒª{AtbCost}, µ±Ç°{currentATB})");
+                UnityEngine.Debug.LogWarning($"[SkillBase] ATBä¸è¶³ï¼Œæ— æ³•é‡Šæ”¾åŠ å¼ºæŠ€èƒ½(éœ€è¦{AtbCost}, å½“å‰{currentATB})");
                 return;
             }
             Controller.AdjustCharacterModelValue(E_BattleModelType.ATBPoints, -AtbCost);
-            UnityEngine.Debug.Log($"[SkillBase] ¼ÓÇ¿¼¼ÄÜÏûºÄATB:{AtbCost}, Ê£Óà:{currentATB - AtbCost}");
+            UnityEngine.Debug.Log($"[SkillBase] åŠ å¼ºæŠ€èƒ½æ¶ˆè€—ATB:{AtbCost}, å‰©ä½™:{currentATB - AtbCost}");
         }
 
         GetTargets();
         if (targets.Count <= 0)
         {
-            UnityEngine.Debug.Log("ºÎÒâÎ¶£¬ÎŞÄ¿±ê¼¼ÄÜ£¿");
             return;
         }
         for (int i = 0; i < targets.Count; i++)
         {
             switch (skillLevel)
             {
-                case E_SkillLevel.»ù´¡°æ±¾: SkillEffect_Base(targets[i]); break;
-                case E_SkillLevel.¼ÓÇ¿°æ±¾: SkillEffect_Enhence(targets[i], henceTime); break;
+                case E_SkillLevel.åŸºç¡€ç‰ˆæœ¬: SkillEffect_Base(targets[i]); break;
+                case E_SkillLevel.åŠ å¼ºç‰ˆæœ¬: SkillEffect_Enhence(targets[i], henceTime); break;
             }
         }
     }
 
 
     /// <summary>
-    /// ¼¼ÄÜ»ù´¡Ğ§¹û
+    /// æŠ€èƒ½åŸºç¡€æ•ˆæœ
     /// </summary>
     /// <param name="target"></param>
     public abstract void SkillEffect_Base(IBattlable target);
 
     /// <summary>
-    /// ¼¼ÄÜÔöÇ¿
+    /// æŠ€èƒ½å¢å¼º
     /// </summary>
     /// <param name="target"></param>
     /// <param name="henceTime"></param>

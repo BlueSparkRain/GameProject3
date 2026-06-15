@@ -1050,34 +1050,34 @@ MonoBehaviour:
     type: 0
   - row: 6
     col: 14
-    type: 0
+    type: 4
   - row: 6
     col: 15
-    type: 0
+    type: 4
   - row: 6
     col: 16
-    type: 0
+    type: 4
   - row: 6
     col: 17
-    type: 0
+    type: 4
   - row: 6
     col: 18
-    type: 0
+    type: 4
   - row: 6
     col: 19
-    type: 0
+    type: 4
   - row: 6
     col: 20
-    type: 0
+    type: 4
   - row: 6
     col: 21
-    type: 0
+    type: 4
   - row: 6
     col: 22
-    type: 0
+    type: 4
   - row: 6
     col: 23
-    type: 0
+    type: 4
   - row: 6
     col: 24
     type: 0
@@ -1098,16 +1098,16 @@ MonoBehaviour:
     type: 0
   - row: 6
     col: 30
-    type: 0
+    type: 4
   - row: 6
     col: 31
-    type: 0
+    type: 4
   - row: 6
     col: 32
-    type: 0
+    type: 4
   - row: 6
     col: 33
-    type: 0
+    type: 4
   - row: 6
     col: 34
     type: 0
@@ -1209,28 +1209,28 @@ MonoBehaviour:
     type: 0
   - row: 7
     col: 12
-    type: 0
+    type: 4
   - row: 7
     col: 13
-    type: 0
+    type: 4
   - row: 7
     col: 14
-    type: 0
+    type: 4
   - row: 7
     col: 15
-    type: 0
+    type: 4
   - row: 7
     col: 16
-    type: 0
+    type: 4
   - row: 7
     col: 17
-    type: 0
+    type: 4
   - row: 7
     col: 18
-    type: 0
+    type: 4
   - row: 7
     col: 19
-    type: 0
+    type: 4
   - row: 7
     col: 20
     type: 1
@@ -1239,10 +1239,10 @@ MonoBehaviour:
     type: 1
   - row: 7
     col: 22
-    type: 1
+    type: 2
   - row: 7
     col: 23
-    type: 0
+    type: 4
   - row: 7
     col: 24
     type: 0
@@ -1257,22 +1257,22 @@ MonoBehaviour:
     type: 0
   - row: 7
     col: 28
-    type: 0
+    type: 4
   - row: 7
     col: 29
     type: 4
   - row: 7
     col: 30
-    type: 0
+    type: 4
   - row: 7
     col: 31
-    type: 0
+    type: 4
   - row: 7
     col: 32
-    type: 0
+    type: 4
   - row: 7
     col: 33
-    type: 0
+    type: 4
   - row: 7
     col: 34
     type: 0
@@ -1374,16 +1374,16 @@ MonoBehaviour:
     type: 0
   - row: 8
     col: 12
-    type: 0
+    type: 4
   - row: 8
     col: 13
-    type: 0
+    type: 4
   - row: 8
     col: 14
-    type: 0
+    type: 1
   - row: 8
     col: 15
-    type: 0
+    type: 2
   - row: 8
     col: 16
     type: 1
@@ -1395,22 +1395,22 @@ MonoBehaviour:
     type: 1
   - row: 8
     col: 19
-    type: 1
+    type: 5
   - row: 8
     col: 20
-    type: 0
+    type: 1
   - row: 8
     col: 21
     type: 1
   - row: 8
     col: 22
-    type: 0
+    type: 2
   - row: 8
     col: 23
-    type: 0
+    type: 4
   - row: 8
     col: 24
-    type: 0
+    type: 4
   - row: 8
     col: 25
     type: 0
@@ -1428,49 +1428,49 @@ MonoBehaviour:
     type: 4
   - row: 8
     col: 30
-    type: 0
+    type: 4
   - row: 8
     col: 31
-    type: 0
+    type: 4
   - row: 8
     col: 32
-    type: 0
+    type: 4
   - row: 8
     col: 33
     type: 0
   - row: 8
     col: 34
-    type: 0
+    type: 4
   - row: 8
     col: 35
-    type: 0
+    type: 4
   - row: 8
     col: 36
-    type: 0
+    type: 4
   - row: 8
     col: 37
     type: 0
   - row: 8
     col: 38
-    type: 0
+    type: 4
   - row: 8
     col: 39
-    type: 0
+    type: 4
   - row: 8
     col: 40
-    type: 0
+    type: 4
   - row: 8
     col: 41
-    type: 0
+    type: 4
   - row: 8
     col: 42
-    type: 0
+    type: 4
   - row: 8
     col: 43
-    type: 0
+    type: 4
   - row: 8
     col: 44
-    type: 0
+    type: 4
   - row: 8
     col: 45
     type: 0
@@ -1536,10 +1536,10 @@ MonoBehaviour:
     type: 0
   - row: 9
     col: 11
-    type: 0
+    type: 4
   - row: 9
     col: 12
-    type: 0
+    type: 1
   - row: 9
     col: 13
     type: 1
@@ -1572,10 +1572,10 @@ MonoBehaviour:
     type: 1
   - row: 9
     col: 23
-    type: 0
+    type: 1
   - row: 9
     col: 24
-    type: 0
+    type: 4
   - row: 9
     col: 25
     type: 0
@@ -1596,10 +1596,10 @@ MonoBehaviour:
     type: 1
   - row: 9
     col: 31
-    type: 0
+    type: 1
   - row: 9
     col: 32
-    type: 0
+    type: 1
   - row: 9
     col: 33
     type: 0
@@ -1608,34 +1608,34 @@ MonoBehaviour:
     type: 0
   - row: 9
     col: 35
-    type: 0
+    type: 4
   - row: 9
     col: 36
-    type: 0
+    type: 4
   - row: 9
     col: 37
-    type: 0
+    type: 4
   - row: 9
     col: 38
-    type: 0
+    type: 2
   - row: 9
     col: 39
-    type: 0
+    type: 2
   - row: 9
     col: 40
-    type: 0
+    type: 2
   - row: 9
     col: 41
-    type: 0
+    type: 1
   - row: 9
     col: 42
-    type: 0
+    type: 1
   - row: 9
     col: 43
-    type: 0
+    type: 1
   - row: 9
     col: 44
-    type: 0
+    type: 4
   - row: 9
     col: 45
     type: 0
@@ -1701,7 +1701,7 @@ MonoBehaviour:
     type: 0
   - row: 10
     col: 11
-    type: 0
+    type: 4
   - row: 10
     col: 12
     type: 1
@@ -1740,16 +1740,16 @@ MonoBehaviour:
     type: 1
   - row: 10
     col: 24
-    type: 0
+    type: 1
   - row: 10
     col: 25
-    type: 0
+    type: 4
   - row: 10
     col: 26
-    type: 0
+    type: 4
   - row: 10
     col: 27
-    type: 0
+    type: 4
   - row: 10
     col: 28
     type: 4
@@ -1761,49 +1761,49 @@ MonoBehaviour:
     type: 1
   - row: 10
     col: 31
-    type: 0
+    type: 1
   - row: 10
     col: 32
-    type: 0
+    type: 1
   - row: 10
     col: 33
-    type: 0
+    type: 1
   - row: 10
     col: 34
     type: 0
   - row: 10
     col: 35
-    type: 0
+    type: 1
   - row: 10
     col: 36
-    type: 0
+    type: 1
   - row: 10
     col: 37
-    type: 0
+    type: 1
   - row: 10
     col: 38
-    type: 0
+    type: 2
   - row: 10
     col: 39
-    type: 0
+    type: 2
   - row: 10
     col: 40
-    type: 0
+    type: 2
   - row: 10
     col: 41
-    type: 0
+    type: 1
   - row: 10
     col: 42
-    type: 0
+    type: 1
   - row: 10
     col: 43
-    type: 0
+    type: 1
   - row: 10
     col: 44
-    type: 0
+    type: 1
   - row: 10
     col: 45
-    type: 0
+    type: 4
   - row: 10
     col: 46
     type: 0
@@ -1857,22 +1857,22 @@ MonoBehaviour:
     type: 0
   - row: 11
     col: 8
-    type: 0
+    type: 4
   - row: 11
     col: 9
-    type: 0
+    type: 4
   - row: 11
     col: 10
-    type: 0
+    type: 4
   - row: 11
     col: 11
-    type: 0
+    type: 4
   - row: 11
     col: 12
-    type: 1
+    type: 4
   - row: 11
     col: 13
-    type: 1
+    type: 4
   - row: 11
     col: 14
     type: 1
@@ -1905,10 +1905,10 @@ MonoBehaviour:
     type: 1
   - row: 11
     col: 24
-    type: 0
+    type: 1
   - row: 11
     col: 25
-    type: 0
+    type: 4
   - row: 11
     col: 26
     type: 4
@@ -1920,7 +1920,7 @@ MonoBehaviour:
     type: 4
   - row: 11
     col: 29
-    type: 4
+    type: 1
   - row: 11
     col: 30
     type: 1
@@ -1929,7 +1929,7 @@ MonoBehaviour:
     type: 1
   - row: 11
     col: 32
-    type: 0
+    type: 1
   - row: 11
     col: 33
     type: 0
@@ -1938,34 +1938,34 @@ MonoBehaviour:
     type: 0
   - row: 11
     col: 35
-    type: 0
+    type: 4
   - row: 11
     col: 36
-    type: 0
+    type: 4
   - row: 11
     col: 37
-    type: 0
+    type: 4
   - row: 11
     col: 38
-    type: 0
+    type: 2
   - row: 11
     col: 39
-    type: 0
+    type: 2
   - row: 11
     col: 40
-    type: 0
+    type: 1
   - row: 11
     col: 41
-    type: 0
+    type: 1
   - row: 11
     col: 42
-    type: 0
+    type: 1
   - row: 11
     col: 43
-    type: 0
+    type: 1
   - row: 11
     col: 44
-    type: 0
+    type: 2
   - row: 11
     col: 45
     type: 0
@@ -2022,25 +2022,25 @@ MonoBehaviour:
     type: 0
   - row: 12
     col: 8
-    type: 0
+    type: 4
   - row: 12
     col: 9
-    type: 0
+    type: 4
   - row: 12
     col: 10
-    type: 0
+    type: 4
   - row: 12
     col: 11
-    type: 0
+    type: 4
   - row: 12
     col: 12
-    type: 0
+    type: 4
   - row: 12
     col: 13
-    type: 0
+    type: 4
   - row: 12
     col: 14
-    type: 0
+    type: 4
   - row: 12
     col: 15
     type: 1
@@ -2082,7 +2082,7 @@ MonoBehaviour:
     type: 1
   - row: 12
     col: 28
-    type: 1
+    type: 5
   - row: 12
     col: 29
     type: 1
@@ -2094,43 +2094,43 @@ MonoBehaviour:
     type: 4
   - row: 12
     col: 32
-    type: 0
+    type: 4
   - row: 12
     col: 33
-    type: 0
+    type: 1
   - row: 12
     col: 34
-    type: 0
+    type: 1
   - row: 12
     col: 35
-    type: 0
+    type: 4
   - row: 12
     col: 36
-    type: 0
+    type: 1
   - row: 12
     col: 37
-    type: 0
+    type: 1
   - row: 12
     col: 38
-    type: 0
+    type: 1
   - row: 12
     col: 39
-    type: 0
+    type: 1
   - row: 12
     col: 40
-    type: 0
+    type: 1
   - row: 12
     col: 41
-    type: 0
+    type: 4
   - row: 12
     col: 42
-    type: 0
+    type: 2
   - row: 12
     col: 43
-    type: 0
+    type: 2
   - row: 12
     col: 44
-    type: 0
+    type: 4
   - row: 12
     col: 45
     type: 0
@@ -2187,7 +2187,7 @@ MonoBehaviour:
     type: 0
   - row: 13
     col: 8
-    type: 0
+    type: 4
   - row: 13
     col: 9
     type: 0
@@ -2199,7 +2199,7 @@ MonoBehaviour:
     type: 0
   - row: 13
     col: 12
-    type: 1
+    type: 2
   - row: 13
     col: 13
     type: 0
@@ -2214,19 +2214,19 @@ MonoBehaviour:
     type: 1
   - row: 13
     col: 17
-    type: 1
+    type: 2
   - row: 13
     col: 18
     type: 1
   - row: 13
     col: 19
-    type: 4
+    type: 1
   - row: 13
     col: 20
-    type: 1
+    type: 4
   - row: 13
     col: 21
-    type: 1
+    type: 2
   - row: 13
     col: 22
     type: 1
@@ -2262,43 +2262,43 @@ MonoBehaviour:
     type: 4
   - row: 13
     col: 33
-    type: 0
+    type: 4
   - row: 13
     col: 34
-    type: 0
+    type: 4
   - row: 13
     col: 35
-    type: 0
+    type: 1
   - row: 13
     col: 36
-    type: 0
+    type: 1
   - row: 13
     col: 37
-    type: 0
+    type: 1
   - row: 13
     col: 38
-    type: 0
+    type: 1
   - row: 13
     col: 39
-    type: 0
+    type: 1
   - row: 13
     col: 40
-    type: 0
+    type: 4
   - row: 13
     col: 41
-    type: 0
+    type: 4
   - row: 13
     col: 42
-    type: 0
+    type: 4
   - row: 13
     col: 43
-    type: 0
+    type: 4
   - row: 13
     col: 44
-    type: 0
+    type: 4
   - row: 13
     col: 45
-    type: 0
+    type: 4
   - row: 13
     col: 46
     type: 0
@@ -2352,7 +2352,7 @@ MonoBehaviour:
     type: 0
   - row: 14
     col: 8
-    type: 0
+    type: 4
   - row: 14
     col: 9
     type: 1
@@ -2427,46 +2427,46 @@ MonoBehaviour:
     type: 1
   - row: 14
     col: 33
-    type: 0
+    type: 4
   - row: 14
     col: 34
-    type: 0
+    type: 4
   - row: 14
     col: 35
-    type: 0
+    type: 4
   - row: 14
     col: 36
-    type: 0
+    type: 4
   - row: 14
     col: 37
-    type: 0
+    type: 4
   - row: 14
     col: 38
-    type: 0
+    type: 1
   - row: 14
     col: 39
-    type: 0
+    type: 1
   - row: 14
     col: 40
-    type: 0
+    type: 1
   - row: 14
     col: 41
-    type: 0
+    type: 1
   - row: 14
     col: 42
-    type: 0
+    type: 1
   - row: 14
     col: 43
-    type: 0
+    type: 1
   - row: 14
     col: 44
-    type: 0
+    type: 1
   - row: 14
     col: 45
-    type: 0
+    type: 1
   - row: 14
     col: 46
-    type: 0
+    type: 4
   - row: 14
     col: 47
     type: 0
@@ -2514,7 +2514,7 @@ MonoBehaviour:
     type: 0
   - row: 15
     col: 7
-    type: 0
+    type: 4
   - row: 15
     col: 8
     type: 1
@@ -2544,7 +2544,7 @@ MonoBehaviour:
     type: 1
   - row: 15
     col: 17
-    type: 4
+    type: 1
   - row: 15
     col: 18
     type: 4
@@ -2595,43 +2595,43 @@ MonoBehaviour:
     type: 4
   - row: 15
     col: 34
-    type: 0
+    type: 4
   - row: 15
     col: 35
-    type: 0
+    type: 4
   - row: 15
     col: 36
-    type: 0
+    type: 4
   - row: 15
     col: 37
-    type: 0
+    type: 4
   - row: 15
     col: 38
-    type: 0
+    type: 1
   - row: 15
     col: 39
-    type: 0
+    type: 1
   - row: 15
     col: 40
-    type: 0
+    type: 1
   - row: 15
     col: 41
-    type: 0
+    type: 1
   - row: 15
     col: 42
-    type: 0
+    type: 1
   - row: 15
     col: 43
-    type: 0
+    type: 9
   - row: 15
     col: 44
-    type: 0
+    type: 1
   - row: 15
     col: 45
-    type: 0
+    type: 1
   - row: 15
     col: 46
-    type: 0
+    type: 4
   - row: 15
     col: 47
     type: 0
@@ -2679,13 +2679,13 @@ MonoBehaviour:
     type: 0
   - row: 16
     col: 7
-    type: 0
+    type: 4
   - row: 16
     col: 8
-    type: 0
+    type: 4
   - row: 16
     col: 9
-    type: 1
+    type: 5
   - row: 16
     col: 10
     type: 1
@@ -2721,7 +2721,7 @@ MonoBehaviour:
     type: 4
   - row: 16
     col: 21
-    type: 4
+    type: 2
   - row: 16
     col: 22
     type: 1
@@ -2757,49 +2757,49 @@ MonoBehaviour:
     type: 4
   - row: 16
     col: 33
-    type: 4
+    type: 1
   - row: 16
     col: 34
-    type: 0
+    type: 1
   - row: 16
     col: 35
-    type: 0
+    type: 1
   - row: 16
     col: 36
-    type: 0
+    type: 1
   - row: 16
     col: 37
-    type: 0
+    type: 1
   - row: 16
     col: 38
-    type: 0
+    type: 1
   - row: 16
     col: 39
-    type: 0
+    type: 1
   - row: 16
     col: 40
-    type: 0
+    type: 1
   - row: 16
     col: 41
-    type: 0
+    type: 5
   - row: 16
     col: 42
-    type: 0
+    type: 1
   - row: 16
     col: 43
-    type: 0
+    type: 1
   - row: 16
     col: 44
-    type: 0
+    type: 1
   - row: 16
     col: 45
-    type: 0
+    type: 1
   - row: 16
     col: 46
-    type: 0
+    type: 1
   - row: 16
     col: 47
-    type: 1
+    type: 4
   - row: 16
     col: 48
     type: 0
@@ -2844,7 +2844,7 @@ MonoBehaviour:
     type: 0
   - row: 17
     col: 7
-    type: 0
+    type: 4
   - row: 17
     col: 8
     type: 1
@@ -2901,7 +2901,7 @@ MonoBehaviour:
     type: 4
   - row: 17
     col: 26
-    type: 1
+    type: 4
   - row: 17
     col: 27
     type: 1
@@ -2928,40 +2928,40 @@ MonoBehaviour:
     type: 1
   - row: 17
     col: 35
-    type: 0
+    type: 1
   - row: 17
     col: 36
-    type: 0
+    type: 1
   - row: 17
     col: 37
-    type: 0
+    type: 10
   - row: 17
     col: 38
-    type: 0
+    type: 1
   - row: 17
     col: 39
-    type: 0
+    type: 1
   - row: 17
     col: 40
-    type: 0
+    type: 1
   - row: 17
     col: 41
-    type: 0
+    type: 1
   - row: 17
     col: 42
-    type: 0
+    type: 4
   - row: 17
     col: 43
-    type: 0
+    type: 4
   - row: 17
     col: 44
-    type: 0
+    type: 4
   - row: 17
     col: 45
-    type: 0
+    type: 4
   - row: 17
     col: 46
-    type: 0
+    type: 4
   - row: 17
     col: 47
     type: 0
@@ -3012,7 +3012,7 @@ MonoBehaviour:
     type: 0
   - row: 18
     col: 8
-    type: 0
+    type: 4
   - row: 18
     col: 9
     type: 1
@@ -3039,7 +3039,7 @@ MonoBehaviour:
     type: 1
   - row: 18
     col: 17
-    type: 4
+    type: 2
   - row: 18
     col: 18
     type: 1
@@ -3060,13 +3060,13 @@ MonoBehaviour:
     type: 1
   - row: 18
     col: 24
-    type: 1
+    type: 2
   - row: 18
     col: 25
     type: 4
   - row: 18
     col: 26
-    type: 1
+    type: 4
   - row: 18
     col: 27
     type: 4
@@ -3087,49 +3087,49 @@ MonoBehaviour:
     type: 4
   - row: 18
     col: 33
-    type: 4
+    type: 1
   - row: 18
     col: 34
-    type: 0
+    type: 1
   - row: 18
     col: 35
-    type: 0
+    type: 1
   - row: 18
     col: 36
-    type: 0
+    type: 1
   - row: 18
     col: 37
-    type: 0
+    type: 1
   - row: 18
     col: 38
-    type: 0
+    type: 1
   - row: 18
     col: 39
-    type: 0
+    type: 1
   - row: 18
     col: 40
-    type: 0
+    type: 1
   - row: 18
     col: 41
-    type: 0
+    type: 4
   - row: 18
     col: 42
-    type: 0
+    type: 4
   - row: 18
     col: 43
-    type: 0
+    type: 4
   - row: 18
     col: 44
-    type: 0
+    type: 4
   - row: 18
     col: 45
-    type: 0
+    type: 4
   - row: 18
     col: 46
-    type: 0
+    type: 4
   - row: 18
     col: 47
-    type: 0
+    type: 4
   - row: 18
     col: 48
     type: 0
@@ -3174,10 +3174,10 @@ MonoBehaviour:
     type: 0
   - row: 19
     col: 7
-    type: 0
+    type: 4
   - row: 19
     col: 8
-    type: 0
+    type: 1
   - row: 19
     col: 9
     type: 1
@@ -3204,10 +3204,10 @@ MonoBehaviour:
     type: 1
   - row: 19
     col: 17
-    type: 4
+    type: 2
   - row: 19
     col: 18
-    type: 4
+    type: 1
   - row: 19
     col: 19
     type: 1
@@ -3231,10 +3231,10 @@ MonoBehaviour:
     type: 1
   - row: 19
     col: 26
-    type: 4
+    type: 1
   - row: 19
     col: 27
-    type: 4
+    type: 1
   - row: 19
     col: 28
     type: 1
@@ -3246,55 +3246,55 @@ MonoBehaviour:
     type: 1
   - row: 19
     col: 31
-    type: 0
+    type: 1
   - row: 19
     col: 32
-    type: 4
+    type: 1
   - row: 19
     col: 33
     type: 4
   - row: 19
     col: 34
-    type: 0
+    type: 4
   - row: 19
     col: 35
-    type: 0
+    type: 1
   - row: 19
     col: 36
-    type: 0
+    type: 1
   - row: 19
     col: 37
-    type: 0
+    type: 1
   - row: 19
     col: 38
-    type: 0
+    type: 4
   - row: 19
     col: 39
-    type: 0
+    type: 4
   - row: 19
     col: 40
-    type: 0
+    type: 4
   - row: 19
     col: 41
-    type: 0
+    type: 4
   - row: 19
     col: 42
-    type: 0
+    type: 4
   - row: 19
     col: 43
-    type: 0
+    type: 4
   - row: 19
     col: 44
-    type: 0
+    type: 1
   - row: 19
     col: 45
-    type: 0
+    type: 1
   - row: 19
     col: 46
-    type: 0
+    type: 1
   - row: 19
     col: 47
-    type: 0
+    type: 4
   - row: 19
     col: 48
     type: 0
@@ -3339,13 +3339,13 @@ MonoBehaviour:
     type: 0
   - row: 20
     col: 7
-    type: 0
+    type: 4
   - row: 20
     col: 8
-    type: 0
+    type: 4
   - row: 20
     col: 9
-    type: 0
+    type: 1
   - row: 20
     col: 10
     type: 1
@@ -3357,34 +3357,34 @@ MonoBehaviour:
     type: 1
   - row: 20
     col: 13
-    type: 1
+    type: 2
   - row: 20
     col: 14
-    type: 1
+    type: 2
   - row: 20
     col: 15
-    type: 1
+    type: 2
   - row: 20
     col: 16
-    type: 1
+    type: 2
   - row: 20
     col: 17
-    type: 1
+    type: 2
   - row: 20
     col: 18
-    type: 1
+    type: 2
   - row: 20
     col: 19
-    type: 4
+    type: 2
   - row: 20
     col: 20
     type: 4
   - row: 20
     col: 21
-    type: 1
+    type: 2
   - row: 20
     col: 22
-    type: 1
+    type: 2
   - row: 20
     col: 23
     type: 1
@@ -3417,52 +3417,52 @@ MonoBehaviour:
     type: 1
   - row: 20
     col: 33
-    type: 0
+    type: 1
   - row: 20
     col: 34
-    type: 0
+    type: 4
   - row: 20
     col: 35
-    type: 0
+    type: 4
   - row: 20
     col: 36
-    type: 0
+    type: 4
   - row: 20
     col: 37
-    type: 0
+    type: 1
   - row: 20
     col: 38
-    type: 0
+    type: 4
   - row: 20
     col: 39
-    type: 0
+    type: 4
   - row: 20
     col: 40
-    type: 0
+    type: 4
   - row: 20
     col: 41
-    type: 0
+    type: 4
   - row: 20
     col: 42
-    type: 0
+    type: 1
   - row: 20
     col: 43
-    type: 0
+    type: 1
   - row: 20
     col: 44
-    type: 0
+    type: 1
   - row: 20
     col: 45
-    type: 0
+    type: 1
   - row: 20
     col: 46
-    type: 0
+    type: 1
   - row: 20
     col: 47
-    type: 0
+    type: 1
   - row: 20
     col: 48
-    type: 0
+    type: 4
   - row: 20
     col: 49
     type: 0
@@ -3501,10 +3501,10 @@ MonoBehaviour:
     type: 0
   - row: 21
     col: 6
-    type: 0
+    type: 4
   - row: 21
     col: 7
-    type: 0
+    type: 1
   - row: 21
     col: 8
     type: 1
@@ -3516,25 +3516,25 @@ MonoBehaviour:
     type: 1
   - row: 21
     col: 11
-    type: 0
+    type: 4
   - row: 21
     col: 12
-    type: 0
+    type: 4
   - row: 21
     col: 13
-    type: 0
+    type: 4
   - row: 21
     col: 14
-    type: 0
+    type: 4
   - row: 21
     col: 15
-    type: 0
+    type: 4
   - row: 21
     col: 16
-    type: 1
+    type: 2
   - row: 21
     col: 17
-    type: 1
+    type: 2
   - row: 21
     col: 18
     type: 4
@@ -3558,10 +3558,10 @@ MonoBehaviour:
     type: 1
   - row: 21
     col: 25
-    type: 4
+    type: 1
   - row: 21
     col: 26
-    type: 1
+    type: 4
   - row: 21
     col: 27
     type: 4
@@ -3570,61 +3570,61 @@ MonoBehaviour:
     type: 1
   - row: 21
     col: 29
-    type: 1
+    type: 4
   - row: 21
     col: 30
-    type: 1
+    type: 4
   - row: 21
     col: 31
-    type: 1
+    type: 4
   - row: 21
     col: 32
     type: 1
   - row: 21
     col: 33
-    type: 0
+    type: 4
   - row: 21
     col: 34
-    type: 0
+    type: 4
   - row: 21
     col: 35
-    type: 0
+    type: 4
   - row: 21
     col: 36
-    type: 0
+    type: 4
   - row: 21
     col: 37
-    type: 0
+    type: 1
   - row: 21
     col: 38
-    type: 0
+    type: 1
   - row: 21
     col: 39
-    type: 0
+    type: 1
   - row: 21
     col: 40
-    type: 0
+    type: 1
   - row: 21
     col: 41
-    type: 0
+    type: 1
   - row: 21
     col: 42
-    type: 0
+    type: 1
   - row: 21
     col: 43
-    type: 0
+    type: 1
   - row: 21
     col: 44
-    type: 0
+    type: 1
   - row: 21
     col: 45
-    type: 0
+    type: 1
   - row: 21
     col: 46
-    type: 0
+    type: 4
   - row: 21
     col: 47
-    type: 0
+    type: 4
   - row: 21
     col: 48
     type: 0
@@ -3666,7 +3666,7 @@ MonoBehaviour:
     type: 0
   - row: 22
     col: 6
-    type: 0
+    type: 4
   - row: 22
     col: 7
     type: 1
@@ -3675,13 +3675,13 @@ MonoBehaviour:
     type: 1
   - row: 22
     col: 9
-    type: 0
+    type: 4
   - row: 22
     col: 10
-    type: 0
+    type: 4
   - row: 22
     col: 11
-    type: 0
+    type: 4
   - row: 22
     col: 12
     type: 0
@@ -3696,7 +3696,7 @@ MonoBehaviour:
     type: 0
   - row: 22
     col: 16
-    type: 0
+    type: 4
   - row: 22
     col: 17
     type: 4
@@ -3714,7 +3714,7 @@ MonoBehaviour:
     type: 4
   - row: 22
     col: 22
-    type: 1
+    type: 4
   - row: 22
     col: 23
     type: 4
@@ -3747,49 +3747,49 @@ MonoBehaviour:
     type: 4
   - row: 22
     col: 33
-    type: 0
+    type: 4
   - row: 22
     col: 34
-    type: 0
+    type: 4
   - row: 22
     col: 35
-    type: 0
+    type: 4
   - row: 22
     col: 36
-    type: 0
+    type: 4
   - row: 22
     col: 37
-    type: 0
+    type: 4
   - row: 22
     col: 38
-    type: 0
+    type: 4
   - row: 22
     col: 39
-    type: 0
+    type: 1
   - row: 22
     col: 40
-    type: 0
+    type: 1
   - row: 22
     col: 41
-    type: 0
+    type: 1
   - row: 22
     col: 42
-    type: 0
+    type: 1
   - row: 22
     col: 43
-    type: 0
+    type: 1
   - row: 22
     col: 44
-    type: 0
+    type: 1
   - row: 22
     col: 45
-    type: 0
+    type: 1
   - row: 22
     col: 46
-    type: 0
+    type: 4
   - row: 22
     col: 47
-    type: 0
+    type: 4
   - row: 22
     col: 48
     type: 0
@@ -3828,7 +3828,7 @@ MonoBehaviour:
     type: 0
   - row: 23
     col: 5
-    type: 0
+    type: 4
   - row: 23
     col: 6
     type: 1
@@ -3837,25 +3837,25 @@ MonoBehaviour:
     type: 1
   - row: 23
     col: 8
-    type: 0
+    type: 4
   - row: 23
     col: 9
-    type: 0
+    type: 4
   - row: 23
     col: 10
-    type: 0
+    type: 4
   - row: 23
     col: 11
-    type: 0
+    type: 4
   - row: 23
     col: 12
-    type: 0
+    type: 1
   - row: 23
     col: 13
-    type: 0
+    type: 4
   - row: 23
     col: 14
-    type: 0
+    type: 4
   - row: 23
     col: 15
     type: 0
@@ -3897,10 +3897,10 @@ MonoBehaviour:
     type: 1
   - row: 23
     col: 28
-    type: 4
+    type: 1
   - row: 23
     col: 29
-    type: 4
+    type: 1
   - row: 23
     col: 30
     type: 1
@@ -3927,37 +3927,37 @@ MonoBehaviour:
     type: 1
   - row: 23
     col: 38
-    type: 0
+    type: 4
   - row: 23
     col: 39
-    type: 0
+    type: 1
   - row: 23
     col: 40
-    type: 0
+    type: 1
   - row: 23
     col: 41
-    type: 0
+    type: 1
   - row: 23
     col: 42
-    type: 0
+    type: 1
   - row: 23
     col: 43
-    type: 0
+    type: 1
   - row: 23
     col: 44
-    type: 0
+    type: 1
   - row: 23
     col: 45
-    type: 0
+    type: 1
   - row: 23
     col: 46
-    type: 0
+    type: 1
   - row: 23
     col: 47
-    type: 0
+    type: 4
   - row: 23
     col: 48
-    type: 0
+    type: 4
   - row: 23
     col: 49
     type: 0
@@ -3996,7 +3996,7 @@ MonoBehaviour:
     type: 0
   - row: 24
     col: 6
-    type: 0
+    type: 4
   - row: 24
     col: 7
     type: 1
@@ -4023,13 +4023,13 @@ MonoBehaviour:
     type: 1
   - row: 24
     col: 15
-    type: 0
+    type: 4
   - row: 24
     col: 16
     type: 0
   - row: 24
     col: 17
-    type: 0
+    type: 4
   - row: 24
     col: 18
     type: 1
@@ -4047,7 +4047,7 @@ MonoBehaviour:
     type: 4
   - row: 24
     col: 23
-    type: 4
+    type: 1
   - row: 24
     col: 24
     type: 1
@@ -4065,7 +4065,7 @@ MonoBehaviour:
     type: 1
   - row: 24
     col: 29
-    type: 1
+    type: 8
   - row: 24
     col: 30
     type: 1
@@ -4107,25 +4107,25 @@ MonoBehaviour:
     type: 4
   - row: 24
     col: 43
-    type: 0
+    type: 4
   - row: 24
     col: 44
-    type: 0
+    type: 1
   - row: 24
     col: 45
-    type: 0
+    type: 1
   - row: 24
     col: 46
-    type: 0
+    type: 1
   - row: 24
     col: 47
-    type: 0
+    type: 1
   - row: 24
     col: 48
-    type: 0
+    type: 1
   - row: 24
     col: 49
-    type: 0
+    type: 4
   - row: 24
     col: 50
     type: 0
@@ -4161,7 +4161,7 @@ MonoBehaviour:
     type: 0
   - row: 25
     col: 6
-    type: 0
+    type: 4
   - row: 25
     col: 7
     type: 1
@@ -4188,13 +4188,13 @@ MonoBehaviour:
     type: 1
   - row: 25
     col: 15
-    type: 0
+    type: 2
   - row: 25
     col: 16
-    type: 0
+    type: 4
   - row: 25
     col: 17
-    type: 0
+    type: 4
   - row: 25
     col: 18
     type: 1
@@ -4212,7 +4212,7 @@ MonoBehaviour:
     type: 1
   - row: 25
     col: 23
-    type: 1
+    type: 3
   - row: 25
     col: 24
     type: 1
@@ -4251,46 +4251,46 @@ MonoBehaviour:
     type: 4
   - row: 25
     col: 36
-    type: 4
+    type: 1
   - row: 25
     col: 37
-    type: 4
+    type: 1
   - row: 25
     col: 38
-    type: 0
+    type: 1
   - row: 25
     col: 39
-    type: 0
+    type: 1
   - row: 25
     col: 40
-    type: 0
+    type: 1
   - row: 25
     col: 41
-    type: 0
+    type: 1
   - row: 25
     col: 42
-    type: 0
+    type: 1
   - row: 25
     col: 43
-    type: 0
+    type: 4
   - row: 25
     col: 44
-    type: 0
+    type: 4
   - row: 25
     col: 45
-    type: 0
+    type: 4
   - row: 25
     col: 46
-    type: 0
+    type: 4
   - row: 25
     col: 47
-    type: 0
+    type: 1
   - row: 25
     col: 48
-    type: 0
+    type: 1
   - row: 25
     col: 49
-    type: 0
+    type: 4
   - row: 25
     col: 50
     type: 0
@@ -4329,7 +4329,7 @@ MonoBehaviour:
     type: 0
   - row: 26
     col: 7
-    type: 0
+    type: 4
   - row: 26
     col: 8
     type: 1
@@ -4356,7 +4356,7 @@ MonoBehaviour:
     type: 1
   - row: 26
     col: 16
-    type: 0
+    type: 2
   - row: 26
     col: 17
     type: 1
@@ -4395,10 +4395,10 @@ MonoBehaviour:
     type: 1
   - row: 26
     col: 29
-    type: 1
+    type: 3
   - row: 26
     col: 30
-    type: 1
+    type: 3
   - row: 26
     col: 31
     type: 4
@@ -4425,37 +4425,37 @@ MonoBehaviour:
     type: 1
   - row: 26
     col: 39
-    type: 0
+    type: 1
   - row: 26
     col: 40
-    type: 0
+    type: 1
   - row: 26
     col: 41
-    type: 0
+    type: 1
   - row: 26
     col: 42
-    type: 0
+    type: 1
   - row: 26
     col: 43
-    type: 0
+    type: 1
   - row: 26
     col: 44
-    type: 0
+    type: 1
   - row: 26
     col: 45
-    type: 0
+    type: 4
   - row: 26
     col: 46
-    type: 0
+    type: 4
   - row: 26
     col: 47
-    type: 0
+    type: 1
   - row: 26
     col: 48
-    type: 0
+    type: 1
   - row: 26
     col: 49
-    type: 0
+    type: 4
   - row: 26
     col: 50
     type: 0
@@ -4494,7 +4494,7 @@ MonoBehaviour:
     type: 0
   - row: 27
     col: 7
-    type: 0
+    type: 4
   - row: 27
     col: 8
     type: 1
@@ -4521,13 +4521,13 @@ MonoBehaviour:
     type: 1
   - row: 27
     col: 16
-    type: 0
+    type: 4
   - row: 27
     col: 17
-    type: 0
+    type: 4
   - row: 27
     col: 18
-    type: 0
+    type: 4
   - row: 27
     col: 19
     type: 1
@@ -4539,7 +4539,7 @@ MonoBehaviour:
     type: 1
   - row: 27
     col: 22
-    type: 5
+    type: 1
   - row: 27
     col: 23
     type: 1
@@ -4587,40 +4587,40 @@ MonoBehaviour:
     type: 1
   - row: 27
     col: 38
-    type: 0
+    type: 1
   - row: 27
     col: 39
-    type: 0
+    type: 5
   - row: 27
     col: 40
-    type: 0
+    type: 1
   - row: 27
     col: 41
-    type: 0
+    type: 1
   - row: 27
     col: 42
-    type: 0
+    type: 1
   - row: 27
     col: 43
-    type: 0
+    type: 1
   - row: 27
     col: 44
-    type: 0
+    type: 1
   - row: 27
     col: 45
-    type: 0
+    type: 1
   - row: 27
     col: 46
-    type: 0
+    type: 1
   - row: 27
     col: 47
-    type: 0
+    type: 1
   - row: 27
     col: 48
-    type: 0
+    type: 1
   - row: 27
     col: 49
-    type: 0
+    type: 4
   - row: 27
     col: 50
     type: 0
@@ -4662,13 +4662,13 @@ MonoBehaviour:
     type: 0
   - row: 28
     col: 8
-    type: 0
+    type: 4
   - row: 28
     col: 9
-    type: 0
+    type: 4
   - row: 28
     col: 10
-    type: 0
+    type: 4
   - row: 28
     col: 11
     type: 0
@@ -4695,13 +4695,13 @@ MonoBehaviour:
     type: 0
   - row: 28
     col: 19
-    type: 0
+    type: 4
   - row: 28
     col: 20
-    type: 0
+    type: 4
   - row: 28
     col: 21
-    type: 0
+    type: 4
   - row: 28
     col: 22
     type: 1
@@ -4731,7 +4731,7 @@ MonoBehaviour:
     type: 1
   - row: 28
     col: 31
-    type: 1
+    type: 9
   - row: 28
     col: 32
     type: 1
@@ -4740,7 +4740,7 @@ MonoBehaviour:
     type: 1
   - row: 28
     col: 34
-    type: 1
+    type: 2
   - row: 28
     col: 35
     type: 4
@@ -4758,34 +4758,34 @@ MonoBehaviour:
     type: 1
   - row: 28
     col: 40
-    type: 0
+    type: 1
   - row: 28
     col: 41
-    type: 0
+    type: 1
   - row: 28
     col: 42
-    type: 0
+    type: 1
   - row: 28
     col: 43
-    type: 0
+    type: 1
   - row: 28
     col: 44
-    type: 0
+    type: 1
   - row: 28
     col: 45
-    type: 0
+    type: 1
   - row: 28
     col: 46
-    type: 0
+    type: 1
   - row: 28
     col: 47
-    type: 0
+    type: 1
   - row: 28
     col: 48
-    type: 0
+    type: 4
   - row: 28
     col: 49
-    type: 0
+    type: 4
   - row: 28
     col: 50
     type: 0
@@ -4833,7 +4833,7 @@ MonoBehaviour:
     type: 0
   - row: 29
     col: 10
-    type: 0
+    type: 4
   - row: 29
     col: 11
     type: 1
@@ -4845,7 +4845,7 @@ MonoBehaviour:
     type: 4
   - row: 29
     col: 14
-    type: 0
+    type: 4
   - row: 29
     col: 15
     type: 0
@@ -4866,16 +4866,16 @@ MonoBehaviour:
     type: 0
   - row: 29
     col: 21
-    type: 0
+    type: 4
   - row: 29
     col: 22
-    type: 0
+    type: 4
   - row: 29
     col: 23
-    type: 0
+    type: 4
   - row: 29
     col: 24
-    type: 0
+    type: 4
   - row: 29
     col: 25
     type: 4
@@ -4938,13 +4938,13 @@ MonoBehaviour:
     type: 1
   - row: 29
     col: 45
-    type: 0
+    type: 1
   - row: 29
     col: 46
-    type: 0
+    type: 4
   - row: 29
     col: 47
-    type: 0
+    type: 4
   - row: 29
     col: 48
     type: 0
@@ -5001,13 +5001,13 @@ MonoBehaviour:
     type: 0
   - row: 30
     col: 11
-    type: 0
+    type: 4
   - row: 30
     col: 12
-    type: 0
+    type: 4
   - row: 30
     col: 13
-    type: 0
+    type: 4
   - row: 30
     col: 14
     type: 0
@@ -5097,7 +5097,7 @@ MonoBehaviour:
     type: 0
   - row: 30
     col: 43
-    type: 0
+    type: 4
   - row: 30
     col: 44
     type: 4
@@ -5106,10 +5106,10 @@ MonoBehaviour:
     type: 4
   - row: 30
     col: 46
-    type: 0
+    type: 4
   - row: 30
     col: 47
-    type: 0
+    type: 4
   - row: 30
     col: 48
     type: 0
@@ -5496,7 +5496,7 @@ MonoBehaviour:
     type: 0
   - row: 33
     col: 11
-    type: 5
+    type: 0
   - row: 33
     col: 12
     type: 0

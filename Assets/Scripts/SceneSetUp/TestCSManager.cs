@@ -5,12 +5,12 @@ public class TestCSManager : IGlobalManager
 {
     public void MgrDispose()
     {
-        UnityEngine.Debug.Log("TestCSManager-Dispose");
+        DebugManager.Log(EDebugCategory.General, "TestCSManager-Dispose");
     }
 
     public void MgrInit(GameRoot gameRoot)
     {
-        UnityEngine.Debug.Log("TestCSManager-Init");
+        DebugManager.Log(EDebugCategory.General, "TestCSManager-Init");
 
     }
 
@@ -19,6 +19,6 @@ public class TestCSManager : IGlobalManager
 
     }
     public void GGG() {
-        UnityEngine.Debug.Log("wox-GGG");
+        DebugManager.Log(EDebugCategory.General, "wox-GGG");
     }
 }

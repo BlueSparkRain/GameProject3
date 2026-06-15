@@ -1,7 +1,9 @@
+using System;
 using Core.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Core;
 namespace Core
 {
     /// <summary>
@@ -110,6 +112,10 @@ namespace Core
             RegisterGlobal_MonoManager<ActionPointsManager>();
             //装备背包管理器
             RegisterGlobal_MonoManager<EquipBacketManager>();
+            //房间重生管理器(战斗冷却/随机事件刷新)
+            RegisterGlobal_MonoManager<RoomRespawnManager>();
+            //随机事件管理器
+            RegisterGlobal_MonoManager<UnknownEventManager>();
 
             // 游戏失败监听
             EventCenter.AddEventListener(E_EventType.GameOver, OnGameOver);
@@ -137,12 +143,12 @@ namespace Core
             DisposeGlobalManagers();
             DisposeSceneManagers();
             instance = null;
-            Debug.Log("[GameRoot]---应用退出，所有管理器已清理！");
+            DebugManager.Log(EDebugCategory.General, "[GameRoot]---应用退出，所有管理器已清理！");
         }
 
         void OnGameOver()
         {
-            Debug.Log("[GameRoot]---游戏结束，活力归零");
+            DebugManager.Log(EDebugCategory.General, "[GameRoot]---游戏结束，活力归零");
             EventCenter.RemoveEventListener(E_EventType.GameOver, OnGameOver);
             var uiMgr = GetManager<UIManager>();
             uiMgr.OpenPanel<MessagePanel>(E_UIPanelType.MessagePanel,
@@ -248,16 +254,34 @@ namespace Core
         }
 
         /// <summary>
-        /// 回收所有局内管理器（对外暴露，供场景切换时调用）
+        /// 回收全部局内管理器（应用退出时用）
         /// </summary>
         public void DisposeSceneManagers(){
-            foreach (var manager in sceneManagers){
+            foreach (var manager in sceneManagers)
                 manager.MgrDispose();
-                //日志打印
-                //Debug.Log($"[GameRoot]---局内管理器已回收：{manager.GetType().Name}");
-            }
             sceneManagers.Clear();
-            Debug.Log("[GameRoot]---当前所有局内管理器已清空！");
+        }
+
+        /// <summary>
+        /// 只回收指定场景中的局内管理器（Additive 卸载时用）
+        /// </summary>
+        public void DisposeSceneManagers(UnityEngine.SceneManagement.Scene fromScene){
+            for (int i = sceneManagers.Count - 1; i >= 0; i--)
+            {
+                var m = sceneManagers[i];
+                var mb = m as MonoBehaviour;
+                // Unity 卸载场景时 GameObject 比回调先销毁，需判活
+                if (mb == null || mb.gameObject == null)
+                {
+                    sceneManagers.RemoveAt(i); // 僵尸引用清理
+                    continue;
+                }
+                if (mb.gameObject.scene == fromScene)
+                {
+                    m.MgrDispose();
+                    sceneManagers.RemoveAt(i);
+                }
+            }
         }
 
         #endregion

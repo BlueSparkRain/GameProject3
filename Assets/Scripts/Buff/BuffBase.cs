@@ -1,15 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
-
 public enum E_Dot{
     冻结,燃烧,感电,
 }
-
-public enum E_BuffPositive
-{
+public enum E_BuffPositive{
     正面, 负面
 }
-
 public enum E_BuffType
 {
     炽焰连锁,
@@ -63,23 +59,6 @@ public enum E_BuffType
     冻结之弓_正面,
     感电之枪_正面,
 }
-
-//状态效果 维持
-//每次进行特定属性伤害（不论影响） 造成特定属性伤害
-//为目标附加Dot层数
-//特定/重复 技能重复释放
-//Property临时调整
-//为static伤害 提供伤害倍率
-//摧毁/直接 修改Model
-//特定技能者（状态）受到伤害增加
-//修改技能的 释放目标
-//为static获取敌方状态（强弱化）
-//为static为目标附加状态
-//外部能够获取某一个buff（如伤害倍率）
-
-
-//角色获得一个Buff状态Tag
-//当遍历到对应的状态就会实例化一个Buff（比如攻击时）
 public class BuffBase{
     protected E_BuffType buffType;
     public E_BuffType Buff_Type => buffType;
@@ -98,7 +77,7 @@ public class BuffBase{
         buff_attr = _BuffPositive;
         buff_dura = _buff_dura;
         buffType = _buffName;
-        Debug.Log($"获得BUFF:{_buffName},BUFF属性：{_BuffPositive},BUFF时间：{_buff_dura}");
+        DebugManager.Log(EDebugCategory.BattleBuff, $"获得BUFF:{_buffName},BUFF属性：{_BuffPositive},BUFF时间：{_buff_dura}");
     }
     public virtual void OnBuffTrigger() { }
     public virtual void OnBuffUpdate() { }
@@ -157,7 +136,7 @@ public class Buff_AutoDamage : BuffBase
         if (useRandomTarget)
             target = BattleTargetSelector.GetRandomNAliveTargets(myEnemy, 1);
         else
-            target = BattleTargetSelector.GetValidTargets(self, E_SkillTargetType.对单体);
+            target = BattleTargetSelector.GetValidTargets(self, E_SkillTargetType_Auto.对单体);
         BufferLogicBucket.AdditiveWeaknessAttack(self, target, weaknessType, damageRate);
         base.OnBuffTrigger();
     }
@@ -166,7 +145,7 @@ public class Buff_AutoDamage : BuffBase
         if (timer >= 0)
             timer -= Time.deltaTime;
         else{
-            Debug.Log("Buff_AutoDamage--持续效果");
+            DebugManager.Log(EDebugCategory.BattleBuff, "Buff_AutoDamage--持续效果");
             OnBuffTrigger();
             timer = triggerInterval ;
         }
@@ -209,7 +188,7 @@ public class Buffer_AssignDot : BuffBase{
         if (timer >= 0)
             timer-= Time.deltaTime;
         else {
-            Debug.Log("Buffer_AssignDot--持续效果");
+            DebugManager.Log(EDebugCategory.BattleBuff, "Buffer_AssignDot--持续效果");
             OnBuffTrigger();
             timer= triggerInterval;
         }
@@ -226,7 +205,7 @@ public class Buff_AdjustProperty : BuffBase{
         this.propertyType = PropertyType;
         timer = _buff_dura;
         battle_Controller.AdjustCharacterPropertyValue(propertyType, adjustValue);
-        Debug.Log($"调整BUFF 生效：{propertyType}变化{adjustValue}");
+        DebugManager.Log(EDebugCategory.BattleBuff, $"调整BUFF 生效：{propertyType}变化{adjustValue}");
     }
     float adjustValue;
     float timer;
@@ -237,7 +216,7 @@ public class Buff_AdjustProperty : BuffBase{
 
     void ReSetProperty() {
         battle_Controller.AdjustCharacterPropertyValue(propertyType,-adjustValue);
-        Debug.Log($"调整BUFF 失效：{propertyType}变化{-adjustValue}");}
+        DebugManager.Log(EDebugCategory.BattleBuff, $"调整BUFF 失效：{propertyType}变化{-adjustValue}");}
 
     public override void OnBuffRemove() { ReSetProperty(); }
 
@@ -301,7 +280,7 @@ public class Buff_SkillRecast : BuffBase{
         if (_isRecasting) return;
         _isRecasting = true;
         for (int i = 0; i < recastCount; i++){
-            Debug.Log($"[大魔法化]重放技能:{skill.GetType().Name},次数:{i + 1}/{recastCount}");
+            DebugManager.Log(EDebugCategory.BattleBuff, $"[大魔法化]重放技能:{skill.GetType().Name},次数:{i + 1}/{recastCount}");
             skill.SkillExcute(skillLevel,henctime);
         }
         _isRecasting = false;
@@ -325,26 +304,22 @@ public class Buff_Vulnerable : BuffBase{
         timer = _buff_dura;
         controller.AdjustCharacterPropertyValue(E_CharacterPropertyType.Phy_Resistance, -phyReduce);
         controller.AdjustCharacterPropertyValue(E_CharacterPropertyType.Mag_Resistance, -magReduce);
-        Debug.Log($"脆弱BUFF生效：物抗-{phyReduce}，魔抗-{magReduce}");
+        DebugManager.Log(EDebugCategory.BattleBuff, $"脆弱BUFF生效：物抗-{phyReduce}，魔抗-{magReduce}");
     }
 
     void Revert(){
         controller.AdjustCharacterPropertyValue(E_CharacterPropertyType.Phy_Resistance, phyReduce);
         controller.AdjustCharacterPropertyValue(E_CharacterPropertyType.Mag_Resistance, magReduce);
-        Debug.Log($"脆弱BUFF失效：物抗+{phyReduce}，魔抗+{magReduce}");
+        DebugManager.Log(EDebugCategory.BattleBuff, $"脆弱BUFF失效：物抗+{phyReduce}，魔抗+{magReduce}");
     }
-
     public override void OnBuffRemove() { Revert(); }
-
     public override void OnBuffUpdate(){
         base.OnBuffUpdate();
         if (timer >= 0)
             timer -= Time.deltaTime;
-        else
-            Revert();
+        else Revert();
     }
 }
-
 /// <summary>
 /// Buff_附魔：特定弱点攻击附加Dot层数
 /// </summary>
@@ -352,7 +327,6 @@ public class Buff_DotOnAttack : BuffBase{
     E_WeaknessType triggerWeakness;
     E_Dot dotType;
     IBattlable self;
-
     public Buff_DotOnAttack(E_BuffType _buffName, E_BuffPositive _BuffPositive, float _buff_dura,
         E_WeaknessType _triggerWeakness, E_Dot _dotType, IBattlable _self)
         : base(_buffName, _BuffPositive, _buff_dura){
@@ -360,11 +334,9 @@ public class Buff_DotOnAttack : BuffBase{
         dotType = _dotType;
         self = _self;
     }
-
     public override void OnBuffTrigger(){
         base.OnBuffTrigger();
     }
-
     public void TryApplyDot(E_WeaknessType attackWeakness, IBattlable target){
         if (attackWeakness == triggerWeakness){
             DotBase dot = CreateDot(target);
@@ -372,7 +344,6 @@ public class Buff_DotOnAttack : BuffBase{
                 EventCenter.EventTrigger(E_EventType.Battle_RegisterDot, target.battleDamageHandler.DotHandler, dot, 1);
         }
     }
-
     DotBase CreateDot(IBattlable target){
         switch (dotType){
             case E_Dot.燃烧: return new Dot_Burn(E_Dot.燃烧, target, 1);
@@ -382,7 +353,6 @@ public class Buff_DotOnAttack : BuffBase{
         return null;
     }
 }
-
 public class Buff_FieldDot : BuffBase {
     E_Dot dotType;
     E_Camp enemyCamp;

@@ -271,7 +271,7 @@ GameObject:
   - component: {fileID: 5353265351674716576}
   - component: {fileID: 4311348916785003601}
   - component: {fileID: 5880534022433887867}
-  - component: {fileID: 7235717351689853168}
+  - component: {fileID: 9059085511816081469}
   m_Layer: 5
   m_Name: NPCPanel
   m_TagString: Untagged
@@ -391,7 +391,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &7235717351689853168
+--- !u!114 &9059085511816081469
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -400,20 +400,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 4505720089143226173}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e76dd8c00b14889498d45de4db7a5208, type: 3}
+  m_Script: {fileID: 11500000, guid: 79c9d8188446a484fbb08489b2dd447b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panelRoot: {fileID: 660980774232746656}
-  Anim_Duration: 1
+  panelRoot: {fileID: 0}
+  Anim_Duration: 0.8
   Anim_EaseType: 27
-  Anim_BornPos: {x: 0, y: -600, z: 0}
-  Anim_TargetTrans: {x: 0, y: 600, z: 0}
+  Anim_BornPos: {x: 0, y: -1000, z: 0}
+  Anim_TargetTrans: {x: 0, y: 1000, z: 0}
   enableTimeScaleControl: 1
   Anim_DoFadeIn: 1
-  Anim_NeedAlphaFadeIn: 1
+  Anim_NeedAlphaFadeIn: 0
+  freezeCameraOnOpen: 1
   canOpen: 1
-  GetButton: {fileID: 5868373487199452011}
-  RejectButton: {fileID: 8660187083879471300}
+  backgroundImage: {fileID: 0}
+  eventNameText: {fileID: 0}
+  buttonsContent: {fileID: 0}
+  optionItemPrefab: {fileID: 0}
+  emptyHintText: {fileID: 0}
 --- !u!1 &5033419887100214518
 GameObject:
   m_ObjectHideFlags: 0

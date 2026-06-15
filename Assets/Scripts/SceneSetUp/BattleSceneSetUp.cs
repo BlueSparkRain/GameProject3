@@ -1,20 +1,47 @@
 using UnityEngine;
 using Core;
 using System.Collections;
+using UnityEngine.UI;
+using DG.Tweening;
+
 public class BattleSceneSetUp : MonoBehaviour
 {
     GameRoot gameRoot;
+    [Header("å½“é‡Šæ”¾ä¸»åŠ¨æŠ€èƒ½è¿‡ç¨‹ä¸­ä¼šè¿›å…¥ä¸“æ³¨æ¨¡å¼")]
+    public CanvasGroup FreezeBlack;
+    [Header("ä¸“æ³¨æ¨¡å¼è¿‡æ¸¡æ—¶é—´")]
+    public float freezeFadeDuration = 0.15f;
+
     private void Awake(){
         gameRoot=GameRoot.Instance;
-        gameRoot.RegisterScene_MonoManager<BattleTargetsSelectManager>();
+        gameRoot.RegisterScene_MonoManager<BattleStateManager>();
         gameRoot.RegisterScene_MonoManager<BattleLoadManager>();
+        gameRoot.RegisterScene_MonoManager<BattlePhaseManager>();
+        gameRoot.RegisterScene_MonoManager<BattleDebugManager>();
+        gameRoot.RegisterScene_MonoManager<BattleActionQueue>();
+        gameRoot.RegisterScene_MonoManager<SkillVfxDirectorManager>();
+
+
+        EventCenter.AddEventListener<bool>(E_EventType.PrepareATBSkillExcute, OnPrepareATB);
     }
+
+    void OnPrepareATB(bool entering)
+    {
+        if (FreezeBlack == null) return;
+        FreezeBlack.DOKill();
+        FreezeBlack.DOFade(entering ? 1f : 0f, freezeFadeDuration).SetUpdate(true);
+    }
+
+    private void OnDestroy()
+    {
+        EventCenter.RemoveEventListener<bool>(E_EventType.PrepareATBSkillExcute, OnPrepareATB);
+    }
+
     private void Start(){
         StartCoroutine(LoadGame());
     }
-    
-    IEnumerator LoadGame() { 
-        //Ê¹ÓÃBattlemanager½øĞĞÕ½¶·³¡¾°µÄ¼ÓÔØ
+
+    IEnumerator LoadGame() {
         yield return  new WaitForSeconds(2);
         GameRoot.GetManager<GameBattleManager>().SpawnBattleCharacter();
     }

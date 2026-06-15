@@ -37,7 +37,7 @@ public class ShopPanel : UIPanelBase
         var chaosMgr = GameRoot.GetManager<ChaosLevelManager>();
         int chaosLevel = chaosMgr != null ? chaosMgr.currentLevel : 1;
         generatedEquipments = EquipmentGenerator.GenerateBatch(5, chaosLevel);
-        Debug.Log($"[ShopPanel] 生成了{generatedEquipments.Count}件随机装备(混沌等级:{chaosLevel})");
+        DebugManager.Log(EDebugCategory.UIPanel,$"[ShopPanel] 生成了{generatedEquipments.Count}件随机装备(混沌等级:{chaosLevel})");
     }
 
     int GetChaosAdjustedPrice(int basePrice)
@@ -74,7 +74,7 @@ public class ShopPanel : UIPanelBase
         {
             var gm = GameRoot.GetManager<GoldManager>();
             int gold = gm != null ? gm.Gold : 0;
-            goldText.text = $"金币: {gold}";
+            goldText.text = $"{gold}";
         }
     }
 }

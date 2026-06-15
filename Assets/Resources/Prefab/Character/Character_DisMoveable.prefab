@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &300065389133017476
 Transform:
   m_ObjectHideFlags: 0
@@ -176,9 +176,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   restSkillSlotNum: 20
-  normalSkillSlotNum: 5
-  atbSkillSlotNum: 5
   canActSettle: 0
+  _instanceSaveId: 
 --- !u!114 &392350666827927310
 MonoBehaviour:
   m_ObjectHideFlags: 0

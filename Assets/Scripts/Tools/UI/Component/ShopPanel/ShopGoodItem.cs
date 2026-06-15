@@ -68,13 +68,14 @@ public class ShopGoodItem : MonoBehaviour
             priceText.text = $"{price} G";
 
         if (slotImage != null)
-            TryLoadSlotSprite(data.slot);
+            TryLoadSlotSprite(data);
     }
 
-    void TryLoadSlotSprite(E_EquipmentSlot slot)
+    void TryLoadSlotSprite(EquipData data)
     {
-        if (slotImage == null) return;
-        var sprite = EquipIconPath.LoadSlotIcon(slot);
+        if (slotImage == null || data == null) return;
+        var sprite = EquipIconPath.LoadEquipIcon(data.iconResourcePath)
+                  ?? EquipIconPath.LoadSlotIcon(data.slot);
         if (sprite != null)
             slotImage.sprite = sprite;
     }
@@ -127,6 +128,6 @@ public class ShopGoodItem : MonoBehaviour
         int remainGold = GameRoot.GetManager<GoldManager>()?.Gold ?? 0;
 
         string msg = $"[购买装备] {equipData.GetEquipName()};[部位]: {equipData.GetSlotName()};[混沌等级]: {equipData.chaosLevel};[词条]:{affixStr};[弱点]: {equipData.weakness}\n;[价格]: {adjustedPrice}";
-        Debug.Log(msg);
+        DebugManager.Log(EDebugCategory.UIPanel,msg);
     }
 }

@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 public class StageUpGradeMode : IUpGradable
 {
@@ -8,7 +8,7 @@ public class StageUpGradeMode : IUpGradable
 
     public StageUpGradeMode(E_CharacterType characterType, CharacterData data)
     {
-        UnityEngine.Debug.Log("我是阶段升级型角色");
+        DebugManager.Log(EDebugCategory.Character, "我是阶段升级型角色");
         growthData = ResourcesLoader.FindCharaterGrowthSO(characterType);
         characterData = data;
     }

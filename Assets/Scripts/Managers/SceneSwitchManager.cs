@@ -29,14 +29,12 @@ namespace Core
         }
 
         /// <summary>
-        /// 场景卸载回调：旧场景卸载后，立即回收局内管理器
+        /// 场景卸载回调：只回收被卸载场景中的局内管理器，保留其他场景的管理器
         /// </summary>
-        /// <param name="unloadedScene">被卸载的场景</param>
         void OnSceneUnloaded(Scene unloadedScene)
         {
-            Debug.Log($"[SceneSwitchManager]---场景 {unloadedScene.name} 已卸载，开始回收局内管理器！");
-            // 调用GameRoot的清理方法，回收所有局内管理器
-            GameRoot.Instance.DisposeSceneManagers();
+            DebugManager.Log(EDebugCategory.General, $"[SceneSwitchManager]---场景 {unloadedScene.name} 已卸载，回收该场景局内管理器");
+            GameRoot.Instance.DisposeSceneManagers(unloadedScene);  // 仅回收该场景的管理器
         }
 
         /// <summary>
@@ -44,7 +42,7 @@ namespace Core
         /// </summary>
         void OnSceneLoaded(Scene loadedScene, LoadSceneMode mode)
         {
-            Debug.Log($"[SceneSwitchManager]---场景 {loadedScene.name} 加载完成（模式：{mode}）");
+            DebugManager.Log(EDebugCategory.General, $"[SceneSwitchManager]---场景 {loadedScene.name} 加载完成（模式：{mode}）");
             // 可扩展：场景加载完成后自动初始化局内管理器等逻辑
         }
 
@@ -73,7 +71,7 @@ namespace Core
 
             try
             {
-                Debug.Log($"[SceneSwitchManager]---开始加载场景：{sceneName}（模式：{mode}）");
+                DebugManager.Log(EDebugCategory.General, $"[SceneSwitchManager]---开始加载场景：{sceneName}（模式：{mode}）");
                 SceneManager.LoadScene(sceneName, loadMode);
             }
             catch (System.Exception e)
@@ -108,7 +106,7 @@ namespace Core
         {
             // 第一步：停止当前场景所有协程（核心兜底）
             yield return GameRoot.GetManager<CoroutineManager>().CleanupCoroutinesByScene(SceneManager.GetActiveScene());
-            Debug.Log($"[SceneSwitchManager]---开始异步加载场景：{sceneName}");
+            DebugManager.Log(EDebugCategory.General, $"[SceneSwitchManager]---开始异步加载场景：{sceneName}");
             AsyncOperation asyncOp = SceneManager.LoadSceneAsync(sceneName, mode);
             asyncOp.allowSceneActivation = true; // 立即激活场景（可改为加载完成后激活）
 
@@ -116,12 +114,33 @@ namespace Core
             while (!asyncOp.isDone)
             {
                 float progress = Mathf.Clamp01(asyncOp.progress / 0.9f); // Unity加载进度到0.9即完成
-                Debug.Log($"[SceneSwitchManager]---场景 {sceneName} 加载进度：{progress:P0}");
+                DebugManager.Log(EDebugCategory.General, $"[SceneSwitchManager]---场景 {sceneName} 加载进度：{progress:P0}");
                 yield return null;
             }
 
-            Debug.Log($"[SceneSwitchManager]---场景 {sceneName} 异步加载完成！");
+            DebugManager.Log(EDebugCategory.General, $"[SceneSwitchManager]---场景 {sceneName} 异步加载完成！");
         }
+        /// <summary>
+        /// 异步卸载场景（Additive 模式下返回时用）
+        /// </summary>
+        public void UnloadSceneAsync(string sceneName)
+        {
+            StartCoroutine(UnloadSceneCoroutine(sceneName));
+        }
+
+        IEnumerator UnloadSceneCoroutine(string sceneName)
+        {
+            var op = SceneManager.UnloadSceneAsync(sceneName);
+            if (op == null)
+            {
+                Debug.LogWarning($"[SceneSwitchManager] 场景 {sceneName} 未加载，跳过卸载");
+                yield break;
+            }
+            while (!op.isDone)
+                yield return null;
+            DebugManager.Log(EDebugCategory.General, $"[SceneSwitchManager] 场景 {sceneName} 已异步卸载");
+        }
+
         #endregion
 
         // 重写回收逻辑（全局管理器，仅在应用退出时回收）

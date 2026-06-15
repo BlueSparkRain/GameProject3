@@ -1,19 +1,14 @@
 using UnityEngine;
 [CreateAssetMenu(menuName = "SOData/CharcterPropertyGrowthSO", fileName = "CharcterPropertyGrowthSO")]
-public class CharcterPropertyGrowthSO : ScriptableObject
-{
+public class CharcterPropertyGrowthSO : ScriptableObject{
     [Header("物理固穿")]
     public float Phy_Flat_Penetration_grow = 0.02f;
-
     [Header("法术固穿")]
     public float Mag_Flat_Penetration_grow = 0.02f;
-
     [Header("物抗")]
     public float Phy_Resistance_grow = 0.02f;
-
     [Header("魔抗")]
     public float Mag_Resistance_grow = 0.02f;
-
     [Header("物攻")]
     public float Phy_Attack_grow = 0.02f;
 
@@ -51,8 +46,13 @@ public class CharcterPropertyGrowthSO : ScriptableObject
     [Header("护盾强化")]
     public float Shield_Amplification_grow = 0.02f;
 
-
     [Header("初始ATB点数")]
     public int Maximum_ATB_grow = 1;
+
+    [Header("暴击率成长")]
+    public float CritRate_grow = 0.02f;
+
+    [Header("暴击伤害成长")]
+    public float CritDamage_grow = 0.02f;
 
 }

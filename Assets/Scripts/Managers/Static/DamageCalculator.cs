@@ -27,7 +27,7 @@ public static class DamageCalculator
     public static float GetFinalDamage(float _damageValue, float _resistanceRate)
     {
         float value = _damageValue *  _resistanceRate;
-        Debug.Log($"收到实际伤害计算：[伤害值]{_damageValue}*[减伤率]{_resistanceRate}={value}");
+        DebugManager.Log(EDebugCategory.General, $"收到实际伤害计算：[伤害值]{_damageValue}*[减伤率]{_resistanceRate}={value}");
         return _damageValue * _resistanceRate;
     }
 }

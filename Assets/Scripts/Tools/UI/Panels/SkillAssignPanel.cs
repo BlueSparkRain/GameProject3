@@ -38,16 +38,6 @@ public class SkillAssignPanel : UIPanelBase
         int atbSkillSlotNum,
         List<SkillData> _ATBSkillDatas)
     {
-        //不要在关闭的时候再次加载
-        if (!Anim_DoFadeIn)
-            return;
-        Debug.Log("加载玩家Slot-[rest]" + restSkillSlotNum);
-        Debug.Log("加载玩家Slot-[Normal]" +normalSkillSlotNum);
-        Debug.Log("加载玩家Slot-[ATB]" + atbSkillSlotNum);
-        //先立即卸载所有按钮
-        Debug.Log(_RestWholeSkillDatas.Count + "???_RestWholeSkillDatas");
-        Debug.Log(_NormalSkillDatas.Count + "???_NormalSkillDatas");
-        Debug.Log(_ATBSkillDatas.Count + "???_ATBSkillDatas");
         restWholeSkillsSpawner.LoadSlotsAndSkills(restSkillSlotNum, _RestWholeSkillDatas, canPlayerDrag);
         normalSkillsSpawner.LoadSlotsAndSkills(normalSkillSlotNum, _NormalSkillDatas, canPlayerDrag);
         ATBSkillsSpawner.LoadSlotsAndSkills(atbSkillSlotNum, _ATBSkillDatas, canPlayerDrag);
@@ -83,7 +73,7 @@ public class SkillAssignPanel : UIPanelBase
     {
         canOpen = false; // 动画期间禁止重复打开
         UpdateSettleBackSkiller();
-        Debug.Log("离场前卸载Icons");
+        DebugManager.Log(EDebugCategory.UIPanel,"离场前卸载Icons");
         base.BeforeFadeOutAnimCallBack();
         restWholeSkillsSpawner.UnloadSkills();
         normalSkillsSpawner.UnloadSkills();

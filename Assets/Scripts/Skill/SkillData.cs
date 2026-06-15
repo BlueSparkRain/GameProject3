@@ -1,39 +1,43 @@
 using UnityEngine;
 /// <summary>
-/// 后期可本地保存为json文件
+/// 锟斤拷锟节可憋拷锟截憋拷锟斤拷为json锟侥硷拷
 /// </summary>
 public class SkillData
 {
-    //记录一份技能当前的基础属性，MapIcon可以通过读取一份skillData来加载信息
-    [Header("技能ID")]
+    //锟斤拷录一锟捷硷拷锟杰碉拷前锟侥伙拷锟斤拷锟斤拷锟皆ｏ拷MapIcon锟斤拷锟斤拷通锟斤拷锟斤拷取一锟斤拷skillData锟斤拷锟斤拷锟斤拷锟斤拷息
+    [Header("锟斤拷锟斤拷ID")]
     public int skill_ID;
-    [Header("[当前]技能图标")]
+    [Header("[锟斤拷前]锟斤拷锟斤拷图锟斤拷")]
     public Sprite skill_Sprite;
-    [Header("技能名称")]
+    [Header("锟斤拷锟斤拷锟斤拷锟斤拷")]
     public string skill_Name;
-    [Header("技能描述")]
+    [Header("锟斤拷锟斤拷锟斤拷锟斤拷")]
     [Multiline]
     public string skill_Description;
-    [Header("[当前]技能冷却")]
+    [Header("[锟斤拷前]锟斤拷锟斤拷锟斤拷却")]
     public float skill_CoolDown;
-    [Header("[当前]技能法力消耗")]
+    [Header("[锟斤拷前]锟斤拷锟杰凤拷锟斤拷锟斤拷锟斤拷")]
     public float skill_sp_cost;
-    [Header("[当前]技能ATB消耗")]
+    [Header("[锟斤拷前]锟斤拷锟斤拷ATB锟斤拷锟斤拷")]
     public int skill_atb_cost;
-    [Header("[当前]技能怒气增长")]
+    [Header("[锟斤拷前]锟斤拷锟斤拷怒锟斤拷锟斤拷锟斤拷")]
     public float skill_ang_grow;
-    [Header("[当前]技能的目标类型")]
-    public E_SkillTargetType skill_targetType;
+    [Header("[锟斤拷前]锟斤拷锟杰碉拷目锟斤拷锟斤拷锟斤拷")]
+    public E_SkillTargetType_Auto skill_targetType;
+    public E_SkillTargetType_ATB skill_ATBTargetType;
+    public SkillDeliveryType skill_DeliveryType;
 
     public SkillData(SkillPropertySO sodata) { 
         skill_ID=sodata.skill_ID;
         skill_Sprite=sodata.skill_Sprite;
         skill_Name=sodata.skill_Name;
         skill_Description=sodata.skill_Description;
-        skill_CoolDown=sodata.skill_CoolDown_origin;
+        skill_CoolDown=sodata.skill_CoolDown_Auto;
         skill_sp_cost=sodata.skill_sp_cost;
-        skill_atb_cost=sodata.skill_atb_cost;
+        skill_atb_cost=sodata.skill_AtbCost_ATB;
         skill_ang_grow=sodata.skill_ang_grow;
-        skill_targetType=sodata.skill_targetType;
+        skill_targetType=sodata.skill_targetType_Auto;
+        skill_ATBTargetType=sodata.skill_targetType_ATB;
+        skill_DeliveryType = sodata.skill_DeliveryType;
     }
 }

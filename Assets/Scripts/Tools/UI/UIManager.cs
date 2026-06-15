@@ -18,7 +18,6 @@ public enum E_UIPanelType
     ShopPanel,
     BattlePanel,
     NPCPanel,
-    UnknownPanel,
     /// <summary>
     /// 技能配置买哪般
     /// </summary>
@@ -30,6 +29,14 @@ public enum E_UIPanelType
     /// </summary>
     SkillSelectPanel,
     EquipmentPanel,
+    UnknownEventPanel,
+
+    MenuPanel,
+    SkillDetailPanel,
+    /// <summary>
+    /// 神像奖励面板(三选一)
+    /// </summary>
+    RewardPanel,
 }
 
 /// <summary>
@@ -94,18 +101,21 @@ public class UIManager : MonoGlobalManager
         _panelRoot.localScale = Vector3.one;
     }
 
-    void InitPanelModeConfig()
-    {
+    void InitPanelModeConfig(){
         _panelModeConfig[E_UIPanelType.MessagePanel] = PanelInstanceMode.Multiple; // 多实例
+        _panelModeConfig[E_UIPanelType.MenuPanel] = PanelInstanceMode.Single;
         _panelModeConfig[E_UIPanelType.TestTPanel] = PanelInstanceMode.Single;
         _panelModeConfig[E_UIPanelType.ShopPanel] = PanelInstanceMode.Single;
         _panelModeConfig[E_UIPanelType.BattlePanel] = PanelInstanceMode.Single;
         _panelModeConfig[E_UIPanelType.NPCPanel]= PanelInstanceMode.Single;
-        _panelModeConfig[E_UIPanelType.UnknownPanel]= PanelInstanceMode.Single;
         _panelModeConfig[E_UIPanelType.SkillAssignPanel]= PanelInstanceMode.Single;
+        _panelModeConfig[E_UIPanelType.SkillSelectPanel]= PanelInstanceMode.Single;
         _panelModeConfig[E_UIPanelType.MapTerrainEditorPanel]= PanelInstanceMode.Single;
         _panelModeConfig[E_UIPanelType.SettingsPanel]= PanelInstanceMode.Single;
         _panelModeConfig[E_UIPanelType.EquipmentPanel]= PanelInstanceMode.Single;
+        _panelModeConfig[E_UIPanelType.UnknownEventPanel]= PanelInstanceMode.Single;
+        _panelModeConfig[E_UIPanelType.SkillDetailPanel]= PanelInstanceMode.Single;
+        _panelModeConfig[E_UIPanelType.RewardPanel]= PanelInstanceMode.Single;
 
         foreach (var type in Enum.GetValues(typeof(E_UIPanelType)))
             _multiPanelIDCounter[(E_UIPanelType)type] = 0;
@@ -153,9 +163,9 @@ public class UIManager : MonoGlobalManager
 
                 if (existPanel.canOpen)
                 {
-                    unityAction?.Invoke(existPanel as T);
                     existPanel.transform.SetAsLastSibling();
                     existPanel.Show();
+                    unityAction?.Invoke(existPanel as T);
                 }
                 
                 return existPanel as T;
@@ -251,8 +261,8 @@ public class UIManager : MonoGlobalManager
 
         panel.Init(type, uniqueID);
         panel.transform.SetAsLastSibling();
-        action?.Invoke(panel);
         panel.Show();
+        action?.Invoke(panel);
 
         _allPanelIDMap[uniqueID] = panel;
         if (_panelModeConfig[type] == PanelInstanceMode.Single)

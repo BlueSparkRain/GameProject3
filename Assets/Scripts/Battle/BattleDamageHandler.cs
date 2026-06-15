@@ -39,8 +39,6 @@ public class BattleDamageHandler : MonoBehaviour{
         }
         return 0;
     }
-
-
     /// <summary>
     /// 检查本次攻击是否命中目标弱点→返回弱点倍率(1.0或2.0)
     /// </summary>
@@ -49,7 +47,6 @@ public class BattleDamageHandler : MonoBehaviour{
             return 1f;
         return weaknessHandler.ProcessWeaknessHit(weaknessType);
     }
-
     /// <summary>
     /// 外部接口：手动对battleController的属性进行修改
     /// </summary>
@@ -82,7 +79,10 @@ public class BattleDamageHandler : MonoBehaviour{
 
                 da = Mathf.Min(da, battleController.IsBreak ? 9999f : 999f);
 
-                Debug.Log(name + "Get-----税后伤害:" + da);
+                DebugManager.Log(EDebugCategory.BattleDamage,name + "Get-----税后伤害:" + da);
+                BattleDebugManager.LogFormat("{0} 受到 {1:0.#} 点物理伤害{2}",
+                    battleController.CharacterData.Character_Name, da,
+                    battleController.IsBreak ? " (力竭加成)" : "");
 
                 battleController.AdjustCharacterModelValue(E_BattleModelType.HP, da);
                 break;
@@ -94,7 +94,10 @@ public class BattleDamageHandler : MonoBehaviour{
 
                 db = Mathf.Min(db, battleController.IsBreak ? 9999f : 999f);
 
-                Debug.Log(name + "Get-----税后伤害:" + db);
+                DebugManager.Log(EDebugCategory.BattleDamage,name + "Get-----税后伤害:" + db);
+                BattleDebugManager.LogFormat("{0} 受到 {1:0.#} 点魔法伤害{2}",
+                    battleController.CharacterData.Character_Name, db,
+                    battleController.IsBreak ? " (力竭加成)" : "");
                 battleController.AdjustCharacterModelValue(E_BattleModelType.HP, db);
                 break;
             default:

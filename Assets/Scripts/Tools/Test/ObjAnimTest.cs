@@ -5,12 +5,12 @@ using UnityEngine;
 
 public class ObjAnimTest : MonoBehaviour
 {
-    [Header("¶¯»­Ä¿±ê")]
-    public GameObject nonSOTarget; // ÍÏÈëÒ»¸ö²âÊÔÎïÌå
+    [Header("ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½")]
+    public GameObject nonSOTarget; // ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public Ease nonSOEase = Ease.OutBack;
-    [Tooltip("ÉÏÏÂ°Ú¶¯¾àÀë")]
+    [Tooltip("ï¿½ï¿½ï¿½Â°Ú¶ï¿½ï¿½ï¿½ï¿½ï¿½")]
     public float swingDistance = 1f;
-    [Tooltip("µ¥´Î°Ú¶¯Ê±³¤")]
+    [Tooltip("ï¿½ï¿½ï¿½Î°Ú¶ï¿½Ê±ï¿½ï¿½")]
     public float swingDuration = 1f;
     MagicAnimationManager animManager;
 
@@ -18,17 +18,17 @@ public class ObjAnimTest : MonoBehaviour
 
     private void Start()
     {
-        // ¿ÕÖµÐ£Ñé
+        // ï¿½ï¿½ÖµÐ£ï¿½ï¿½
         if (nonSOTarget == null)
         {
-            Debug.LogError("ÇëÍÏÈë²âÊÔÎïÌå£¡");
+            Debug.LogError("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½å£¡");
             return;
         }
         animManager = GameRoot.GetManager<MagicAnimationManager>();
         coroutineManager = GameRoot.GetManager<CoroutineManager>();
-        //ÑÓ³Ù
+        //ï¿½Ó³ï¿½
         //coroutineManager.StartDelayedCoroutine(5,PlaySwingAnim());
-        //ÖØ¸´
+        //ï¿½Ø¸ï¿½
         //coroutineManager.StartRepeatingCoroutine(1, 4, PlaySwingAnim,this);
         //coroutineManager.StartCoroutine(PlaySwingAnim());
 
@@ -36,7 +36,7 @@ public class ObjAnimTest : MonoBehaviour
 
     IEnumerator PlaySwingAnim()
     {
-        //ÖÆ¶¨¶¯»­²ÎÊý
+        //ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         var swingParams = new AnimParams
         {
             Duration = swingDuration,
@@ -52,20 +52,20 @@ public class ObjAnimTest : MonoBehaviour
             .SetRelative(false),
             swingParams
             );
-        Debug.Log("gangangan");
+        DebugManager.Log(EDebugCategory.General, "gangangan");
 
     }
 
-    // ¿ÉÑ¡£º¿ìËÙÍ£Ö¹ËùÓÐ¶¯»­£¨¿É°ó¶¨UI°´Å¥£©
+    // ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í£Ö¹ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É°ï¿½UIï¿½ï¿½Å¥ï¿½ï¿½
     public void StopAllAnims()
     {
         animManager.InterruptAnimation(MagicAnimationManager.GetAnimID(E_TweenType.Swing_Box));
-        Debug.Log("ÒÑÍ£Ö¹ËùÓÐ°Ú¶¯¶¯»­");
+        DebugManager.Log(EDebugCategory.General, "ï¿½ï¿½Í£Ö¹ï¿½ï¿½ï¿½Ð°Ú¶ï¿½ï¿½ï¿½ï¿½ï¿½");
     }
 
     void OnDestroy()
     {
-        // ×Ô¶¯ÇåÀí¶¯»­
+        // ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         StopAllAnims();
     }
 }

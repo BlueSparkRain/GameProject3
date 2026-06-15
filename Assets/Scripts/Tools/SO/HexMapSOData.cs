@@ -31,11 +31,11 @@ public class MapSaveSOData : ScriptableObject
                     loaded++;
                 }
             }
-            Debug.Log($"加载已保存的地图数据：{loaded}/{savedCells.Length} 个地块（越界已忽略）");
+            //Debug.Log($"加载已保存的地图数据：{loaded}/{savedCells.Length} 个地块");
             return;
         }
 
-        Debug.Log("初始化地图：海洋");
+        //Debug.Log("初始化地图：海洋");
         for (int r = 0; r < mapRows; r++)
             for (int c = 0; c < mapCols; c++)
                 cellData[r, c] = E_HexTerrainType.Obstacle_Ocean;
@@ -78,7 +78,7 @@ public class MapSaveSOData : ScriptableObject
         cellData = null;
         InitializeIfEmpty();
         SaveAssetImmediate();
-        Debug.Log("已彻底清空所有地图数据!");
+        DebugManager.Log(EDebugCategory.MapRoom, "已彻底清空所有地图数据!");
     }
 
     private void SaveAssetImmediate()

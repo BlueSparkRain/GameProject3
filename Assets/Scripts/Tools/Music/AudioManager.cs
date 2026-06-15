@@ -167,7 +167,7 @@ public class AudioManager : MonoGlobalManager
 
         // 可选：卸载未使用的音频资源（减少内存占用）
         Resources.UnloadUnusedAssets();
-        Debug.Log($"[AudioManager] 清理缓存：{leastUsedPath}（缓存数量已达上限）");
+        DebugManager.Log(EDebugCategory.General, $"[AudioManager] 清理缓存：{leastUsedPath}（缓存数量已达上限）");
     }
 
     /// <summary>
@@ -180,7 +180,7 @@ public class AudioManager : MonoGlobalManager
         {
             _audioClipCache.Remove(path);
             _clipAccessOrder.Remove(path);
-            Debug.Log($"[AudioManager] 清理指定缓存：{path}");
+            DebugManager.Log(EDebugCategory.General, $"[AudioManager] 清理指定缓存：{path}");
         }
     }
 
@@ -194,7 +194,7 @@ public class AudioManager : MonoGlobalManager
             _audioClipCache.Clear();
             _clipAccessOrder.Clear();
             Resources.UnloadUnusedAssets();
-            Debug.Log("[AudioManager] 清空所有AudioClip缓存");
+            DebugManager.Log(EDebugCategory.General, "[AudioManager] 清空所有AudioClip缓存");
         }
     }
     #endregion
@@ -489,7 +489,7 @@ public class AudioManager : MonoGlobalManager
         var source = GetFreeSfxSource();
         if (source == null)
         {
-            Debug.LogWarning("[SFX] 对象池已满，无法播放音效");
+            DebugManager.LogWarning(EDebugCategory.General, "[SFX] 对象池已满，无法播放音效");
             return;
         }
 

@@ -14,19 +14,18 @@ public class BattleLoadManager : MonoSceneManager{
     int playerIndex = 0;
     int enemyIndex = 0;
     float offset = 700;
-
     /// <summary>
     /// 战斗过程中可能有新角色加入战斗
     /// 外部接口：由BattleManager调用
     /// </summary>
-    public void LoadAPlayer(CharacterData data){
-        var battlerObj = Instantiate(ResourcesLoader.FindBattleCharacterObj(),Vector3.zero,Quaternion.identity, PlayerAreaContent);
-        //一段动画，表示卡牌弹出
-        Vector3 targetPos = PlayerAreaStartPivot.position + Vector3.right * (playerIndex++) * offset;
-        battlerObj.transform.DOMove(targetPos, 0.5f).SetEase(Ease.OutBounce).From(targetPos+new Vector3(0, -800, 0));
-        //卡牌出场完毕后，统一开始战斗
-        battlerObj.GetComponent<BattleHandler>().InitBattler(data);
-    }
+    //public void LoadAPlayer(CharacterData data){
+    //    var battlerObj = Instantiate(ResourcesLoader.FindBattleCharacterObj(),Vector3.zero,Quaternion.identity, PlayerAreaContent);
+    //    //一段动画，表示卡牌弹出
+    //    Vector3 targetPos = PlayerAreaStartPivot.position + Vector3.right * (playerIndex++) * offset;
+    //    battlerObj.transform.DOMove(targetPos, 0.5f).SetEase(Ease.OutBounce).From(targetPos+new Vector3(0, -800, 0));
+    //    //卡牌出场完毕后，统一开始战斗
+    //    battlerObj.GetComponent<BattleHandler>().InitBattler(data);
+    //}
     public void LoadAEnemy(CharacterData data){
         var battlerObj = Instantiate(ResourcesLoader.FindBattleCharacterObj(), Vector3.zero, Quaternion.identity, EnemyAreaContent);
 

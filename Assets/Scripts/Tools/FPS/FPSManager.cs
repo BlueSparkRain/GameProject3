@@ -45,7 +45,7 @@ public class FPSManager : MonoGlobalManager
         base.MgrInit(gameRoot);
         ResetAllStats();
         InitUIStyle();
-        Debug.Log("[FPSManager] 全局性能监控初始化完成");
+        DebugManager.Log(EDebugCategory.General, "[FPSManager] 全局性能监控初始化完成");
     }
 
     public override void MgrUpdate(float deltaTime)

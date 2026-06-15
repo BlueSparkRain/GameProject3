@@ -2,6 +2,7 @@ using Core;
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -119,7 +120,7 @@ public class GameMapManager : MonoGlobalManager
 
         if (validRooms.Count == 0)
         {
-            Debug.LogWarning("区域内无可用房间");
+            DebugManager.LogWarning(EDebugCategory.MapRoom, "区域内无可用房间");
             return null;
         }
 
@@ -164,6 +165,31 @@ public class GameMapManager : MonoGlobalManager
         return hexRoomData;
     }
 
+    /// <summary>获取地图中心附近的一个可行走房间（玩家出生点）</summary>
+    public HexRoomTag GetCenterWalkableRoom()
+    {
+        int centerRow = mapRow / 2;
+        int centerCol = mapCol / 2;
+
+        for (int radius = 0; radius < Mathf.Max(mapRow, mapCol); radius++)
+        {
+            for (int dr = -radius; dr <= radius; dr++)
+            {
+                for (int dc = -radius; dc <= radius; dc++)
+                {
+                    if (Mathf.Abs(dr) != radius && Mathf.Abs(dc) != radius) continue;
+                    int r = centerRow + dr;
+                    int c = centerCol + dc;
+                    if (r < 0 || r >= mapRow || c < 0 || c >= mapCol) continue;
+                    var key = new Vector2Int(r, c);
+                    if (_hexRoomMap.TryGetValue(key, out var room) && room.walkable)
+                        return room;
+                }
+            }
+        }
+        return GetRnadomRoom();
+    }
+
     public HexRoomTag GetTargetRoom(Vector2Int pos)
     {
         if (_hexRoomMap.TryGetValue(pos, out var room))
@@ -201,10 +227,10 @@ public class GameMapManager : MonoGlobalManager
     /// (1)读取SO数据加载自定义的初始地图
     /// (2)依据存档信息来替换某些发生变化的地块的信息
     /// </summary>
-    /// <param name="_x_offset"></param>
-    /// <param name="_y_offset"></param>
-    /// <param name="_MapRadius"></param>
-    /// <param name="_MapPivotPos"></param>
+    /// <param resName="_x_offset"></param>
+    /// <param resName="_y_offset"></param>
+    /// <param resName="_MapRadius"></param>
+    /// <param resName="_MapPivotPos"></param>
     public void GameMapManagerInit(float _x_offset, float _y_offset, int _mapCols, int _mapRows, Vector3 _MapPivotPos){
         x_Offset = _x_offset;
         y_Offset = _y_offset;
@@ -221,19 +247,17 @@ public class GameMapManager : MonoGlobalManager
     }
     public void CreateWholeMap(){
         // 加载材质
-        obstacle_oceanMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_Ocean");
-        walkable_landMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_Land");
-        obstacle_TreeMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_Tree");
-        obstacle_StoneMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_Stone");
-        obstacle_MountainMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_Mountain");
-        
-        walkable_BattleLow_RoomMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_BattleLow");
-        walkable_BattleMid_RoomMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_BattleMid");
-        walkable_BattleHigh_RoomMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_BattleHigh");
-
-        walkable_EventRoomMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_Event");
-        walkable_RewardRoomMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_Reward");
-        walkable_CityRoomMat = Resources.Load<Material>("Material/HexRoom/2.0/Base_HexRoom_City");
+        obstacle_oceanMat = GetVisableMat("2.0", "Base_HexRoom_Ocean"); 
+        walkable_landMat = GetVisableMat("2.0", "Base_HexRoom_Land");                  
+        obstacle_TreeMat = GetVisableMat("2.0", "Base_HexRoom_Tree");                  
+        obstacle_StoneMat = GetVisableMat("2.0", "Base_HexRoom_Stone");                
+        obstacle_MountainMat =       GetVisableMat("2.0", "Base_HexRoom_Mountain");    
+        walkable_BattleLow_RoomMat = GetVisableMat("2.0", "Base_HexRoom_BattleLow");   
+        walkable_BattleMid_RoomMat = GetVisableMat("2.0", "Base_HexRoom_BattleMid");   
+        walkable_BattleHigh_RoomMat =GetVisableMat("2.0", "Base_HexRoom_BattleHigh");  
+        walkable_EventRoomMat =      GetVisableMat("2.0", "Base_HexRoom_Event");       
+        walkable_RewardRoomMat =     GetVisableMat("2.0", "Base_HexRoom_Reward");      
+        walkable_CityRoomMat =       GetVisableMat("2.0", "Base_HexRoom_City");        
         coroutineManager = GameRoot.GetManager<CoroutineManager>();
       
         // 优先读取SO数据生成地图
@@ -241,6 +265,7 @@ public class GameMapManager : MonoGlobalManager
             LoadMapFromSaveData();
         }
     }
+    Material GetVisableMat(string version,string resName){ return Resources.Load<Material>($"Material/HexRoom/{version}/{resName}"); }
 
     #region 正六边形地图生成
     IEnumerator MapCreateCoro()
@@ -254,7 +279,8 @@ public class GameMapManager : MonoGlobalManager
             i++;
             StartCoroutine(CreatRowRooms(row, fromleft));
             fromleft = !fromleft;
-            yield return i % 2 == 0 ? rowBatchDealy : null;
+            //yield return i % 2 == 0 ? rowBatchDealy : null;
+            yield return null;
         }
         EventCenter.EventTrigger(E_EventType.LoadMapEnd);
     }
@@ -320,7 +346,7 @@ public class GameMapManager : MonoGlobalManager
         if (allCells[_row, _col] != null)
         {
             var existRoom = allCells[_row, _col];
-            existRoom.transform.DOScale(new Vector3(1, 1, 0.5f), 0.4f).From(new Vector3(0.7f, 0.7f, 0));
+            existRoom.transform.DOScale(new Vector3(1, 1, 0.5f), 0.2f).From(new Vector3(0.7f, 0.7f, 0));
             existRoom.GetComponent<HexJumpAnimHandler>().TriggerJump(0.3f);
             return;
         }
@@ -337,8 +363,8 @@ public class GameMapManager : MonoGlobalManager
 
         newHexRoom.SetCellState(isWalkable);
 
-        newHexRoom.transform.DOScale(new Vector3(1,1,0.5f), 0.4f).From(new Vector3(0.7f,0.7f,0));
-        newHexRoom.GetComponent<HexJumpAnimHandler>().TriggerJump(0.3f);
+        newHexRoom.transform.DOScale(new Vector3(1,1,0.5f), 0.2f).From(new Vector3(0.7f,0.7f,0));
+        newHexRoom.GetComponent<HexJumpAnimHandler>().TriggerJump(0.15f);
 
         SetCellMaterial(newHexRoom, cellType);
     }
@@ -397,7 +423,7 @@ public class GameMapManager : MonoGlobalManager
 
     void CreateHexFace(int row, int col)
     {
-        var faceObj = GameRoot.GetManager<ObjectPoolManager>().GetInstance(E_PoolType.HexFace_六边形面);
+        var faceObj = GameRoot.GetManager<ObjectPoolManager>().GetInstance(E_PoolType.HexFace_投影面片);
         if (faceObj == null) return;
 
         var faceTag = faceObj.GetComponent<HexFaceTag>();

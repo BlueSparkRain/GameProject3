@@ -4,11 +4,9 @@ using DG.Tweening;
 /// <summary>
 /// 负责管理本槽内的技能图标/交换逻辑
 /// </summary>
-public class SkillSlot : MonoBehaviour
-{
+public class SkillSlot : MonoBehaviour{
     [Header("当前Icon")]
     public SkillIcon icon;
-
     public void SetIcon(SkillIcon icon) {
         this.icon = icon;
     }
@@ -24,6 +22,6 @@ public class SkillSlot : MonoBehaviour
         else icon=transform.GetComponentInChildren<SkillIcon>();
         if (icon == null)return;
         icon.GetComponent<SlotSwaperHandler>().MoveToTargetSlot(targetSlot);
-        Debug.Log("交换成功");
+        DebugManager.Log(EDebugCategory.SkillUI, "交换成功");
     }
 }

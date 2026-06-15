@@ -3,9 +3,9 @@ public enum E_Skill_DamageType{
     魔法
 }
 public enum E_WeaknessType{
-    剑, 刀, 斧, 杖, 弓, 枪, 通解,
-    风, 雷, 冰, 火, 光, 暗, 究极,
-    无,//单纯的伤害，不削盾
+    剑, 刀_, 斧_, 杖_, 弓, 枪, 通解_,
+    风_, 雷, 冰, 火, 光_, 暗_, 究极_,
+    无_,//单纯的伤害，不削盾
 }
 
 /// <summary>
@@ -17,12 +17,12 @@ public static class DamageTypeChecker {
         E_Skill_DamageType type = E_Skill_DamageType.魔法;
         if (
             Weakness == E_WeaknessType.剑 ||
-            Weakness == E_WeaknessType.刀 ||
-            Weakness == E_WeaknessType.斧 ||
-            Weakness == E_WeaknessType.杖 ||
+            Weakness == E_WeaknessType.刀_ ||
+            Weakness == E_WeaknessType.斧_ ||
+            Weakness == E_WeaknessType.杖_ ||
             Weakness == E_WeaknessType.弓 ||
             Weakness == E_WeaknessType.枪 ||
-            Weakness == E_WeaknessType.通解)
+            Weakness == E_WeaknessType.通解_)
             type = E_Skill_DamageType.物理;
 
         return type;

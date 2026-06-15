@@ -18,6 +18,9 @@ public class HexRoomTag : MonoBehaviour
     IHexRoom iHexRoom;
     public IHexRoom IHexRoom => iHexRoom;
 
+    /// <summary>新的房间逻辑组件(IRoomLogic)——替代旧IHexRoom</summary>
+    public IRoomLogic RoomLogic { get; private set; }
+
     bool hasCloude;
     public void InitRoomTag(int _row, int _col)
     {
@@ -26,6 +29,14 @@ public class HexRoomTag : MonoBehaviour
     public void GetIHexRoom(IHexRoom hexRoom) {
         iHexRoom = hexRoom;
         iHexRoom.DoHexRoomInit();
+    }
+
+    /// <summary>设置房间逻辑组件(新架构)</summary>
+    public void SetRoomLogic(IRoomLogic logic)
+    {
+        RoomLogic = logic;
+        if (logic != null)
+            logic.InitLogic(this);
     }
 
     /// <summary>
@@ -38,7 +49,6 @@ public class HexRoomTag : MonoBehaviour
     
     }
     public void CallBattle(){
-        Debug.Log("Go");
         GameRoot.GetManager<UIManager>().OpenPanel<BattlePanel>(E_UIPanelType.BattlePanel);
     }
 }
@@ -58,5 +68,7 @@ public interface IHexRoom
     public void DoHexRoomInit();
     public void DoHexRoomLogic(UnityAction roomJob = null);
     public void DoHexRoomModel(Vector3 pos);
+    /// <summary>销毁视觉模型（BattleHexRoom 使用，其余空实现）</summary>
+    public void DestroyModel();
 }
 

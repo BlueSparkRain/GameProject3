@@ -29,10 +29,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BlurStrength: 0
+    - _BlurStrength: 5
     - _Distortion: 0.5
     - _FresnelIntensity: 0.713
-    - _FresnelPower: 3.26
+    - _FresnelPower: 2
     m_Colors:
-    - _BaseColor: {r: 0.58805025, g: 0.8729951, b: 1, a: 0.83137256}
+    - _BaseColor: {r: 0.22352931, g: 0.9867613, b: 1, a: 0}
   m_BuildTextureStacks: []

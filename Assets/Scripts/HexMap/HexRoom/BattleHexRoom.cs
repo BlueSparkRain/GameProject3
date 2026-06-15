@@ -6,6 +6,9 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
 
+/// <summary>
+/// æˆ˜æ–—æˆ¿é—´é€»è¾‘(æ—§æ¶æ„, ä¿æŒå‘åå…¼å®¹)
+/// </summary>
 public class BattleHexRoom : IHexRoom
 {
     E_CharacterType enemyCharacterType;
@@ -13,11 +16,12 @@ public class BattleHexRoom : IHexRoom
     E_BattleType battleType;
     CharacterDataSO enemyCharacterDataSO;
     public E_CharacterType EnemyType => enemyCharacterType;
+    CharacterHandler _spawnedModel;
 
     float scaleRate = 1;
     HexRoomTag roomTag;
 
-    #region µĞÈËÀàĞÍ³Ø£¨°´Ç°×º¶¯Ì¬¹¹½¨£¬ĞÂÔöÃ¶¾ÙÖµ×Ô¶¯ÄÉÈë£©
+    #region æ•Œäººç±»å‹æ± ï¼ˆæŒ‰å‰ç¼€åŠ¨æ€åŒ¹é…æšä¸¾å€¼ï¼‰
     static Dictionary<string, E_CharacterType[]> _enemyPools;
     static Dictionary<string, E_CharacterType[]> EnemyPools
     {
@@ -39,17 +43,17 @@ public class BattleHexRoom : IHexRoom
     }
 
     /// <summary>
-    /// ´ÓÖ¸¶¨Ç°×ºµÄµĞÈË³ØÖĞËæ»ú³éÈ¡Ò»ÖÖµĞÈËÀàĞÍ
+    /// ä»æŒ‡å®šå‰ç¼€çš„æ•Œäººæ± ä¸­éšæœºå–ä¸€ç§æ•Œäººç±»å‹
     /// </summary>
     static E_CharacterType GetRandomEnemyType(string prefix)
     {
         if (!EnemyPools.TryGetValue(prefix, out var pool) || pool.Length == 0)
         {
-            Debug.LogError($"[BattleHexRoom] µĞÈË³ØÎª¿Õ£¬Ç°×º: {prefix}");
-            return E_CharacterType.LE_½£±ø; // ¶µµ×
+            Debug.LogError($"[BattleHexRoom] æ•Œäººæ± ä¸ºç©ºï¼Œå‰ç¼€: {prefix}");
+            return E_CharacterType.LE_å‰‘å…µ;
         }
-        int index =UnityEngine. Random.Range(0, pool.Length);
-        Debug.Log($"[BattleHexRoom] ´Ó{prefix}³ØËæ»ú³éÈ¡: {pool[index]} (index:{index}/{pool.Length})");
+        int index = UnityEngine.Random.Range(0, pool.Length);
+        DebugManager.Log(EDebugCategory.MapRoom, $"[BattleHexRoom] ä»{prefix}æ± ä¸­éšæœºå–: {pool[index]} (index:{index}/{pool.Length})");
         return pool[index];
     }
     #endregion
@@ -62,24 +66,24 @@ public class BattleHexRoom : IHexRoom
 
     public void DoHexRoomInit()
     {
-        // ¸ù¾İ·¿¼äÕ½¶·µÈ¼¶£¬´Ó¶ÔÓ¦Ç°×ºµÄµĞÈË³ØÖĞËæ»ú³éÈ¡Ò»ÖÖµĞÈË
+        // æ ¹æ®æˆ˜æ–—ç­‰çº§ä»å¯¹åº”å‰ç¼€çš„æ•Œäººæ± ä¸­éšæœºå–ä¸€ç§æ•Œäºº
         string poolPrefix;
         switch (battleType)
         {
-            case E_BattleType.ÔÓÓãµĞÈË:
+            case E_BattleType.Low:
                 scaleRate = 0.8f;
                 poolPrefix = "LE_";
                 break;
-            case E_BattleType.¾«Ó¢µĞÈË:
+            case E_BattleType.Mid:
                 scaleRate = 1f;
                 poolPrefix = "ME_";
                 break;
-            case E_BattleType.Ê×ÁìµĞÈË:
+            case E_BattleType.Boss:
                 scaleRate = 1.5f;
                 poolPrefix = "BOSS_";
                 break;
             default:
-                Debug.LogError($"[BattleHexRoom] Î´´¦ÀíµÄÕ½¶·ÀàĞÍ: {battleType}");
+                Debug.LogError($"[BattleHexRoom] æœªå®šä¹‰æˆ˜æ–—ç±»å‹: {battleType}");
                 scaleRate = 1f;
                 poolPrefix = "LE_";
                 break;
@@ -89,7 +93,7 @@ public class BattleHexRoom : IHexRoom
         enemyCharacterDataSO = Resources.Load<CharacterDataSO>(enemyCharacterSoDataPath + enemyCharacterType);
 
         if (enemyCharacterDataSO == null)
-            Debug.LogError($"[BattleHexRoom] ÎŞ·¨¼ÓÔØµĞÈËSO: {enemyCharacterSoDataPath}{enemyCharacterType}");
+            Debug.LogError($"[BattleHexRoom] æ— æ³•åŠ è½½æ•ŒäººSO: {enemyCharacterSoDataPath}{enemyCharacterType}");
     }
 
     int num = 0;
@@ -98,7 +102,7 @@ public class BattleHexRoom : IHexRoom
         GameBattleManager gameBattleManager = GameRoot.GetManager<GameBattleManager>();
         EventCenter.EventTrigger(E_EventType.Mover_MoveStop);
         EventCenter.EventTrigger(E_EventType.PlayerBeforeIntoBattle);
-        Debug.Log(roomTag + "--½øÈëÕ½¶··¿¼ä" + num++);
+        DebugManager.Log(EDebugCategory.MapRoom, roomTag + "--è¿›å…¥æˆ˜æ–—æˆ¿é—´" + num++);
         gameBattleManager.CheckBattleEnemy(roomTag);
         GameRoot.GetManager<UIManager>().OpenPanel<BattlePanel>(E_UIPanelType.BattlePanel);
     }
@@ -110,5 +114,15 @@ public class BattleHexRoom : IHexRoom
         charac.transform.localScale = Vector3.zero;
         charac.transform.localPosition = modelPos;
         charac.transform.DOScale(scaleRate, 0.5f);
+        _spawnedModel = charac;
+    }
+
+    public void DestroyModel()
+    {
+        if (_spawnedModel != null)
+        {
+            UnityEngine.Object.Destroy(_spawnedModel.gameObject);
+            _spawnedModel = null;
+        }
     }
 }

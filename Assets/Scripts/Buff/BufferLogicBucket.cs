@@ -3,7 +3,7 @@ using System.Collections.Generic;
 public static class BufferLogicBucket{
 
     /// <summary>
-    /// ÏñÌØ¶¨Ä¿±ê·¢¶¯Ò»´ÎÌØ¶¨ÈõµãµÄ¹¥»÷
+    /// ï¿½ï¿½ï¿½Ø¶ï¿½Ä¿ï¿½ê·¢ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ø¶ï¿½ï¿½ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½ï¿½
     /// </summary>
     /// <param name="self"></param>
     /// <param name="targets"></param>
@@ -15,21 +15,21 @@ public static class BufferLogicBucket{
         E_Skill_DamageType damageType=DamageTypeChecker.GetDamageType(weaknessType);
         float base_attack = 1;
 
-        //if (damageType == E_Skill_DamageType.ÎïÀí)
+        //if (damageType == E_Skill_DamageType.ï¿½ï¿½ï¿½ï¿½)
         //    base_attack = self.battleDamageHandler.BattleController.GetCharacterPropertyValue(E_CharacterPropertyType.Phy_Attack);
         //else 
         //    base_attack = self.battleDamageHandler.BattleController.GetCharacterPropertyValue(E_CharacterPropertyType.Mag_Attack);
 
-        UnityEngine.Debug.Log($"¸½¼ÓÉËº¦BUFF--´¥·¢Ð§¹û£¡Ôì³É¸½¼Ó{base_attack* damageRate}µã{weaknessType}[{damageType}]ÉËº¦");
-        //ÉèÖÃ¹¥»÷×´Ì¬£¨ÄÚ²¿½áËãÊ±»á×Ô¶¯¿¼ÂÇ½ÇÉ«µÄ¹¥»÷Á¦£©
+        DebugManager.Log(EDebugCategory.BattleBuff, $"ï¿½ï¿½ï¿½ï¿½ï¿½Ëºï¿½BUFF--ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¸ï¿½ï¿½ï¿½{base_attack* damageRate}ï¿½ï¿½{weaknessType}[{damageType}]ï¿½Ëºï¿½");
+        //ï¿½ï¿½ï¿½Ã¹ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½Ç½ï¿½É«ï¿½Ä¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         attack_Skill.SetAttackState(weaknessType,-base_attack, damageRate);
-        //ÒÀ´ÎÎªÄ¿±ê½áËã
+        //ï¿½ï¿½ï¿½ï¿½ÎªÄ¿ï¿½ï¿½ï¿½ï¿½ï¿½
         foreach (IBattlable target in targets)
             attack_Skill.Excute(self, target);
     }
 
     /// <summary>
-    /// ÎªÄ¿±êÔö¼ÓÒ»²ãÌØ¶¨Ä¿±êÀàÐÍµÄBuff
+    /// ÎªÄ¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ø¶ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½Íµï¿½Buff
     /// </summary>
     public static void Assign_a_Dot() { 
         

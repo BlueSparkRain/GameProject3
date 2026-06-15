@@ -7,15 +7,10 @@ Shader "Custom/CRTPostEffect"
         _Saturation ("Saturation", Range(0, 3)) = 1.0
         _Contrast ("Contrast", Range(0, 5)) = 1.0
         _FlipUV ("Flip UV Y Axis", Int) = 1
-
-        _FilmEnable ("Enable Old Film Effect", Range(0,1)) = 0
-        _FlickerSpeed ("Flicker Speed", Range(0.5, 10)) = 2.5
-        _FlickerPower ("Flicker Brightness", Range(0, 0.6)) = 0.2
-        _NoiseDensity ("Noise Line Density", Range(50, 300)) = 120
-        _NoisePower ("Film Noise Strength", Range(0, 0.25)) = 0.2
-        _EdgeRange ("Screen Edge Range", Range(0.1, 0.5)) = 0.25 // 边缘范围
-        _LineCurve ("Line Curvature", Range(0.1, 5)) = 1.2 // 弯曲度
-        _LineLength ("Line Length", Range(0.01, 1)) = 0.1 // 线条长度
+        _EdgeColor ("Edge Color", Color) = (0, 0, 0, 1)
+        _EdgeThickness ("Edge Thickness", Range(0, 0.5)) = 0.1
+        _EdgeStrength ("Edge Strength", Range(0, 1)) = 1
+        _EdgeGradient ("Edge Gradient", Range(0, 2)) = 0.5
     }
 
     SubShader
@@ -52,22 +47,10 @@ Shader "Custom/CRTPostEffect"
             float _Saturation;
             float _Contrast;
             int _FlipUV;
-
-            // 老电影参数
-            float _FilmEnable;
-            float _FlickerSpeed;
-            float _FlickerPower;
-            float _NoiseDensity;
-            float _NoisePower;
-            float _EdgeRange;
-            float _LineCurve;
-            float _LineLength; // ✅ 线条长度
-
-            // 随机函数
-            float Random(float2 uv)
-            {
-                return frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453 + _Time.y);
-            }
+            float4 _EdgeColor;
+            float _EdgeThickness;
+            float _EdgeStrength;
+            float _EdgeGradient;
 
             v2f vert (appdata v)
             {
@@ -98,42 +81,26 @@ Shader "Custom/CRTPostEffect"
 
             half4 frag (v2f i) : SV_Target
             {
-                // 原版CRT逻辑（完全不变）
+                float2 texelSize = _MainTex_TexelSize.xy;
+
+                // 像素块边界检测（在像素化之前计算）
+                float2 pixelSizeUV = texelSize * _PixelSize;
+                float2 blockCenter = (floor(i.uv / pixelSizeUV) + 0.5) * pixelSizeUV;
+                float2 fromCenter = (i.uv - blockCenter) / pixelSizeUV; // [-0.5, 0.5]
+                float2 toEdge = 0.5 - abs(fromCenter);                   // 距最近边缘
+                float minEdge = min(toEdge.x, toEdge.y);
+                float edgeFactor = 1.0 - smoothstep(0, max(0.001, _EdgeThickness), minEdge);
+
                 float2 pixelUV = PixelateUV(i.uv, _PixelSize);
                 half4 col = tex2D(_MainTex, pixelUV);
                 col.rgb = AdjustColor(col.rgb, _Saturation, _Contrast);
 
-                if(_FilmEnable > 0.5)
-                {
-                    // 1. 屏闪效果
-                    float flicker = sin(_Time.y * _FlickerSpeed) * 0.4 + 0.6;
-                    float randomFlicker = Random(i.uv) * 0.15;
-                    col.rgb *= 1.0 - (flicker + randomFlicker) * _FlickerPower;
+                // 径向渐变遮罩：画面中心→0，边缘→1
+                float distFromCenter = length(i.uv - 0.5) * 2.0;          // 0(中心) ~ 1.4(角落)
+                float radialMask = smoothstep(0.001, max(0.001, _EdgeGradient), distFromCenter);
 
-                    // 2. ✅ EdgeRange 生效：控制线条边缘范围
-                    float dist = length(i.uv - 0.5);
-                    float edgeMask = smoothstep(_EdgeRange, _EdgeRange + 0.2, dist);
-
-                    // 3. ✅ 核心：真正的线条（非点状）+ 长度可控
-                    float timeSeed = _Time.y * 6.0;
-                    float randDir = Random(i.uv + timeSeed);
-                    float uvCoord = randDir > 0.5 ? i.uv.x : i.uv.y;
-                    // ✅ LineCurve 生效：线条弯曲度
-                    float wave = sin(uvCoord * 25 * _LineCurve + Random(i.uv * 10)) * 0.04;
-                    
-                    // ✅ LineLength 生效：控制线条长短（核心修复！）
-                    float randomUV = (uvCoord + wave) * _NoiseDensity;
-                    float lineShape = frac(randomUV);
-                    float scratch = smoothstep(_LineLength, _LineLength + 0.02, lineShape);
-                    scratch = 1 - scratch; // 反转成长条
-                    scratch = saturate(scratch * 1.3);
-
-                    // 4. 噪点合成
-                    float grain = Random(i.uv * 12 + timeSeed) * 0.3;
-                    float finalNoise = (scratch * 0.8 + grain * 0.2) * _NoisePower * edgeMask;
-                    col.rgb = saturate(col.rgb - finalNoise);
-                }
-
+                // 边缘线叠加（强度 × 径向渐变）
+                col.rgb = lerp(col.rgb, _EdgeColor.rgb, edgeFactor * _EdgeStrength * radialMask);
                 return col;
             }
             ENDHLSL

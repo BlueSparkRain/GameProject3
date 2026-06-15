@@ -33,13 +33,14 @@ public class BattleDotHandler : MonoBehaviour{
         if (dotHandle == this ){
             if (!DotDic.ContainsKey(dot.Dot_type)){
                 DotDic.Add(dot.Dot_type, dot);
-                Debug.Log(string.Format("{0} 首次获得 Dot:{1},当前层数{2}", self.Camp, dot.Dot_type,dot.Dot_count));
+                DebugManager.Log(EDebugCategory.BattleDOT,string.Format("{0} 首次获得 Dot:{1},当前层数{2}", self.Camp, dot.Dot_type,dot.Dot_count));
+                BattleDebugManager.LogFormat("{0} 获得了 {1} ×{2}层", self.Camp, dot.Dot_type, dot.Dot_count);
             }
             else {
                 //新增的层数直接加到已存在的Dot上
-                Debug.Log(string.Format("{0} Dot:{1} 当前层数{2} 增加层数{3}", self.Camp, dot.Dot_type,dot.Dot_count,adjustCount));
+                DebugManager.Log(EDebugCategory.BattleDOT,string.Format("{0} Dot:{1} 当前层数{2} 增加层数{3}", self.Camp, dot.Dot_type,dot.Dot_count,adjustCount));
                 DotDic[dot.Dot_type].AdjustDotLevel(adjustCount);
-                Debug.Log(string.Format("{0} Dot:{1} 当前层数{2} 层数已更新", self.Camp, dot.Dot_type,dot.Dot_count));
+                DebugManager.Log(EDebugCategory.BattleDOT,string.Format("{0} Dot:{1} 当前层数{2} 层数已更新", self.Camp, dot.Dot_type,dot.Dot_count));
             }
         }
     }
@@ -48,7 +49,8 @@ public class BattleDotHandler : MonoBehaviour{
     /// </summary>
     public void UnRegistDot(BattleDotHandler dotHandle, E_Dot dot_type){
         if (dotHandle == this && DotDic.ContainsKey(dot_type)){
-            Debug.Log(self.Camp + "移除了Dot：" + dot_type);
+            DebugManager.Log(EDebugCategory.BattleDOT,self.Camp + "移除了Dot：" + dot_type);
+            BattleDebugManager.LogFormat("{0} 的 {1} 已移除", self.Camp, dot_type);
             DotDic.Remove(dot_type);
         }
     }
@@ -63,7 +65,8 @@ public class BattleDotHandler : MonoBehaviour{
         if (DotDic.TryGetValue(dotType, out var dot)) {
             int layers = dot.Dot_count;
             DotDic.Remove(dotType);
-            Debug.Log($"{self.Camp}清除了Dot：{dotType}，层数{layers}");
+            DebugManager.Log(EDebugCategory.BattleDOT,$"{self.Camp}清除了Dot：{dotType}，层数{layers}");
+            BattleDebugManager.LogFormat("{0} 的 {1} ×{2}层 已清除", self.Camp, dotType, layers);
             return layers;
         }
         return 0;

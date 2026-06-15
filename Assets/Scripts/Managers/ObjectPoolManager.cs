@@ -1,16 +1,19 @@
 using Core;
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum E_PoolType
-{
+public enum E_PoolType{
     MapRoom_地图房间,
     RoomCloude_房间遮云,
     SkillIcon_技能图标,
     SkillSlot_技能槽位,
     RoomModel_房间纸片,
-    HexFace_六边形面,
+    HexFace_投影面片,
+    HexRoomIcon_房间图标,
+    FloatingText_跳字,
+    ATBDot_ATB点数,
 }
 
 public class ObjectPoolManager : MonoGlobalManager
@@ -23,6 +26,9 @@ public class ObjectPoolManager : MonoGlobalManager
     Transform SkillIconsTrans;
     Transform SkillSlotsTrans;
     Transform HexFacesTrans;
+    Transform HexRoomIconsTrans;
+    Transform FloatingTextsTrans;
+    Transform ATBDotsTrans;
 
     void CreatePoolParent(){
         // 重复运行时，先销毁旧的父物体，避免残留
@@ -31,6 +37,9 @@ public class ObjectPoolManager : MonoGlobalManager
         if (SkillIconsTrans != null) Destroy(SkillIconsTrans.gameObject);
         if (SkillSlotsTrans != null) Destroy(SkillSlotsTrans.gameObject);
         if (HexFacesTrans != null) Destroy(HexFacesTrans.gameObject);
+        if (HexRoomIconsTrans != null) Destroy(HexRoomIconsTrans.gameObject);
+        if (FloatingTextsTrans != null) Destroy(FloatingTextsTrans.gameObject);
+        if (ATBDotsTrans != null) Destroy(ATBDotsTrans.gameObject);
 
         HexRoomsTrans = new GameObject("HexRooms").transform;
         HexRoomsTrans.SetParent(transform);
@@ -46,6 +55,15 @@ public class ObjectPoolManager : MonoGlobalManager
 
         HexFacesTrans = new GameObject("HexFaces").transform;
         HexFacesTrans.SetParent(transform);
+
+        HexRoomIconsTrans = new GameObject("HexRoomIcons").transform;
+        HexRoomIconsTrans.SetParent(transform);
+
+        FloatingTextsTrans = new GameObject("FloatingTexts").transform;
+        FloatingTextsTrans.SetParent(transform);
+
+        ATBDotsTrans = new GameObject("ATBDots").transform;
+        ATBDotsTrans.SetParent(transform);
     }
     protected override void MgrOnInit(){
         base.MgrOnInit();
@@ -54,12 +72,15 @@ public class ObjectPoolManager : MonoGlobalManager
         // 初始化前清空字典，防止重复添加
         poolDataDic.Clear();
 
-        poolDataDic.Add(E_PoolType.MapRoom_地图房间, new PoolData(HexRoomsTrans, ResourcesLoader.FindHexRoomObj(), 2700));
-        poolDataDic.Add(E_PoolType.RoomCloude_房间遮云, new PoolData(RoomCloudesTrans, ResourcesLoader.FindRoomCloudeObj(), 2700));
+        poolDataDic.Add(E_PoolType.MapRoom_地图房间, new PoolData(HexRoomsTrans, ResourcesLoader.FindHexRoomObj(), 1925));
+        poolDataDic.Add(E_PoolType.RoomCloude_房间遮云, new PoolData(RoomCloudesTrans, ResourcesLoader.FindRoomCloudeObj(), 1000));
         poolDataDic.Add(E_PoolType.SkillIcon_技能图标, new PoolData(SkillIconsTrans, ResourcesLoader.FindSkillIconObj(), 30));
         poolDataDic.Add(E_PoolType.SkillSlot_技能槽位, new PoolData(SkillSlotsTrans, ResourcesLoader.FindSkillSlotObj(), 30));
         poolDataDic.Add(E_PoolType.RoomModel_房间纸片, new PoolData(SkillSlotsTrans, ResourcesLoader.FindSkillSlotObj(), 30));
-        poolDataDic.Add(E_PoolType.HexFace_六边形面, new PoolData(HexFacesTrans, ResourcesLoader.FindHexFaceObj(), 2700));
+        poolDataDic.Add(E_PoolType.HexFace_投影面片, new PoolData(HexFacesTrans, ResourcesLoader.FindHexFaceObj(), 2700));
+        poolDataDic.Add(E_PoolType.HexRoomIcon_房间图标, new PoolData(HexRoomIconsTrans, ResourcesLoader.FindHexRoomIconObj(), 100));
+        poolDataDic.Add(E_PoolType.FloatingText_跳字, new PoolData(FloatingTextsTrans, ResourcesLoader.FindFloatingTextObj(), 40));
+        poolDataDic.Add(E_PoolType.ATBDot_ATB点数, new PoolData(ATBDotsTrans, ResourcesLoader.FindATBDotObj(), 20));
 
         // 注册事件
         EventCenter.AddEventListener<E_PoolType>(E_EventType.LoadObjPool, LoadOnePool);
@@ -94,6 +115,9 @@ public class ObjectPoolManager : MonoGlobalManager
         if (SkillIconsTrans != null) Destroy(SkillIconsTrans.gameObject);
         if (SkillSlotsTrans != null) Destroy(SkillSlotsTrans.gameObject);
         if (HexFacesTrans != null) Destroy(HexFacesTrans.gameObject);
+        if (HexRoomIconsTrans != null) Destroy(HexRoomIconsTrans.gameObject);
+        if (FloatingTextsTrans != null) Destroy(FloatingTextsTrans.gameObject);
+        if (ATBDotsTrans != null) Destroy(ATBDotsTrans.gameObject);
     }
 
     void LoadOnePool(E_PoolType poolType){
@@ -128,9 +152,9 @@ public class ObjectPoolManager : MonoGlobalManager
         if (poolData.prefab == null) return null;
 
         GameObject instance;
-        if (poolType == E_PoolType.MapRoom_地图房间 || poolType == E_PoolType.RoomCloude_房间遮云)
+        if (poolType == E_PoolType.MapRoom_地图房间 || poolType == E_PoolType.RoomCloude_房间遮云 || poolType == E_PoolType.HexRoomIcon_房间图标)
             instance = Instantiate(poolData.prefab, transform.position + new Vector3(-10, 0, 0), Quaternion.Euler(-90, 0, 0), poolData.parent);
-        else if (poolType == E_PoolType.HexFace_六边形面)
+        else if (poolType == E_PoolType.HexFace_投影面片)
             instance = Instantiate(poolData.prefab, transform.position + new Vector3(-10, 0, 0), Quaternion.identity, poolData.parent);
         else
             instance = Instantiate(poolData.prefab, transform.position + new Vector3(-10, 0, 0), Quaternion.identity, poolData.parent);
@@ -169,8 +193,34 @@ public class ObjectPoolManager : MonoGlobalManager
 
     public void ReturnPool(E_PoolType poolType, GameObject obj){
         if (obj == null || !poolDataDic.ContainsKey(poolType)) return;
+        obj.transform.DOKill();
         obj.transform.SetParent(poolDataDic[poolType].parent);
         obj.SetActive(false);
+    }
+
+    /// <summary>场景切换前强制回收指定类型所有活跃实例（防止跨场景SetParent报错）</summary>
+    public void ReclaimAll(E_PoolType poolType)
+    {
+        if (!poolDataDic.ContainsKey(poolType)) return;
+
+        var pool = poolDataDic[poolType].pool;
+        var poolParent = poolDataDic[poolType].parent;
+
+        for (int i = pool.Count - 1; i >= 0; i--)
+        {
+            var obj = pool[i];
+            if (obj == null)
+            {
+                pool.RemoveAt(i);
+                continue;
+            }
+            if (obj.activeSelf || obj.transform.parent != poolParent)
+            {
+                obj.transform.DOKill();
+                obj.transform.SetParent(poolParent);
+                obj.SetActive(false);
+            }
+        }
     }
 
     public override void MgrUpdate(float deltaTime) { }

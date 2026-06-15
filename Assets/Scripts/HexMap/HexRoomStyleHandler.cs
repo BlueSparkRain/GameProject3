@@ -2,11 +2,11 @@ using Core;
 using UnityEngine;
 
 /// <summary>
-/// ¹ÜÀí·¿¼äµÄÍâ¹Û×°ÔØ ¼° ¸¡ÔÆÕÙ»½ ¼° ·¿¼äÄ£ĞÍ
+/// è´Ÿè´£æˆ¿é—´ç±»å‹åˆ†é…ã€æˆ¿é—´é€»è¾‘ç»„ä»¶çš„åˆ›å»ºä¸æ¨¡å‹ç”Ÿæˆ
 /// </summary>
 public class HexRoomStyleHandler : MonoBehaviour{
-    [Header("·¿¼äÀàĞÍ")]
-    E_HexRoomType roomType = E_HexRoomType.None_ÎŞ½»»¥µØĞÎ;
+    [Header("æˆ¿é—´ç±»å‹")]
+    E_HexRoomType roomType = E_HexRoomType.None;
 
     HexJumpAnimHandler hexJumpAnimation;
     HexRoomTag roomTag;
@@ -14,9 +14,7 @@ public class HexRoomStyleHandler : MonoBehaviour{
     public void InitRoomStyle(HexRoomTag _roomTag){
         hexJumpAnimation = GetComponent<HexJumpAnimHandler>();
         roomTag = _roomTag;
-        //Ö»ÓĞº£Ñó²»»á²úÉúÔÆ¶ä
 
-        //²âÊÔÏÈ²»Éú³ÉÔÆ
         return;
         if (GetComponent<HexTerrainStyleHandler>().HexTerrainType != E_HexTerrainType.Obstacle_Ocean)
         {
@@ -25,26 +23,80 @@ public class HexRoomStyleHandler : MonoBehaviour{
     }
 
     void LoadRoomCloude(){
-        var cloude = GameRoot.GetManager<ObjectPoolManager>().GetInstance(E_PoolType.RoomCloude_·¿¼äÕÚÔÆ);
+        var cloude = GameRoot.GetManager<ObjectPoolManager>().GetInstance(E_PoolType.RoomCloude_æˆ¿é—´é®äº‘);
         cloude.transform.position = transform.position + Vector3.up * 23f;
         hexJumpAnimation.CloudeAppear(cloude.transform);
     }
+
     public void SetRoomType(E_HexRoomType _roomType,HexRoomTag _roomTag){
         roomType = _roomType;
-        roomTag= _roomTag;
+        roomTag = _roomTag;
+
+        // é None ç±»å‹ç”Ÿæˆæˆ¿é—´å›¾æ ‡
+        if (_roomType != E_HexRoomType.None)
+            HexRoomIcon.CreateForRoom(transform, _roomType);
+
+        // 1. æ¸…ç†æ—§é€»è¾‘ç»„ä»¶
+        RemoveOldLogicComponents();
+
+        // 2. åˆ›å»ºæ–°é€»è¾‘ç»„ä»¶(GameObjectå­ç‰©ä½“ + RoomLogicComponent)
+        RoomLogicComponent logic = CreateLogicComponent(_roomType);
+        if (logic != null)
+        {
+            roomTag.SetRoomLogic(logic);
+            logic.SpawnModel(transform.position + Vector3.up);
+        }
+
+        // 3. æ—§IHexRoomå…¼å®¹(åç»­é€æ­¥ç§»é™¤)
+        // æ¸…ç†æ—§ IHexRoom æ¨¡å‹å†æ›¿æ¢
+        roomTag.IHexRoom?.DestroyModel();
         IHexRoom iHexRoom = null;
         switch (roomType){
-            case E_HexRoomType.None_ÎŞ½»»¥µØĞÎ: iHexRoom = new NoneHexRoom(); break;
-            case E_HexRoomType.Battle_LowLevel_Õ½¶·_ÔÓÓã: iHexRoom = new BattleHexRoom(_roomTag, E_BattleType.ÔÓÓãµĞÈË); break;
-            case E_HexRoomType.Battle_MidLevel_Õ½¶·_¾«Ó¢: iHexRoom = new BattleHexRoom(_roomTag, E_BattleType.¾«Ó¢µĞÈË); break;
-            case E_HexRoomType.Battle_HighLevel_Õ½¶·_Ê×Áì: iHexRoom = new BattleHexRoom(_roomTag, E_BattleType.Ê×ÁìµĞÈË); break;
-            case E_HexRoomType.NPC_ÌØ¶¨½»»¥: iHexRoom = new NPCHexRoom(); break;
-            case E_HexRoomType.UnknownEvent_Ëæ»úÊÂ¼ş: iHexRoom = new UnknownEventHexRoom(); break;
-            case E_HexRoomType.Reward_ÉñÏñ½±Àø: iHexRoom = new RewardHexRoom(); break;
-            case E_HexRoomType.CityShop_³ÇÉÌÕò: iHexRoom = new CityShopHexRoom(); break;
+            case E_HexRoomType.None: iHexRoom = new NoneHexRoom(); break;
+            case E_HexRoomType.Battle_LowLevel:
+            case E_HexRoomType.Battle_MidLevel:
+            case E_HexRoomType.Battle_HighLevel:
+                iHexRoom = new BattleHexRoom(_roomTag, roomType.ToBattleType()); break;
+            case E_HexRoomType.NPC: iHexRoom = new NPCHexRoom(); break;
+            case E_HexRoomType.UnknownEvent: iHexRoom = new UnknownEventHexRoom(); break;
+            case E_HexRoomType.Reward: iHexRoom = new RewardHexRoom(); break;
+            case E_HexRoomType.CityShop: iHexRoom = new CityShopHexRoom(); break;
             default: break;
         }
-        GetComponent<HexRoomTag>().GetIHexRoom(iHexRoom);
+        roomTag.GetIHexRoom(iHexRoom);
         iHexRoom.DoHexRoomModel(transform.position + Vector3.up);
+    }
+
+    RoomLogicComponent CreateLogicComponent(E_HexRoomType rType)
+    {
+        GameObject child = new GameObject("[Logic] " + rType);
+        child.transform.SetParent(transform);
+        child.transform.localPosition = Vector3.zero;
+
+        switch (rType)
+        {
+            case E_HexRoomType.None: return child.AddComponent<NoneRoomLogic>();
+            case E_HexRoomType.Battle_LowLevel:
+            case E_HexRoomType.Battle_MidLevel:
+            case E_HexRoomType.Battle_HighLevel:
+                var battle = child.AddComponent<BattleRoomLogic>();
+                battle.SetBattleType(rType.ToBattleType());
+                return battle;
+            case E_HexRoomType.NPC: return child.AddComponent<NPCRoomLogic>();
+            case E_HexRoomType.UnknownEvent: return child.AddComponent<UnknownEventRoomLogic>();
+            case E_HexRoomType.Reward: return child.AddComponent<RewardRoomLogic>();
+            case E_HexRoomType.CityShop: return child.AddComponent<CityShopRoomLogic>();
+            default: return null;
+        }
+    }
+
+    void RemoveOldLogicComponents()
+    {
+        for (int i = transform.childCount - 1; i >= 0; i--)
+        {
+            var child = transform.GetChild(i);
+            if (child.name.StartsWith("[Logic]"))
+                Destroy(child.gameObject);
+        }
     }
 }

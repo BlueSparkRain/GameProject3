@@ -12,6 +12,8 @@ public class Player : IBattlable
     List<E_WeaknessType> _weaknesses = new List<E_WeaknessType>();
     public List<E_WeaknessType> weaknesses => _weaknesses;
 
+    public System.Action OnWeaknessChanged { get; set; }
+
     public Player(BattleDamageHandler _damageHandle)
     {
         battleDamageHandler = _damageHandle;
@@ -28,11 +30,15 @@ public class Player : IBattlable
     public void AddWeakness(E_WeaknessType w)
     {
         if (!_weaknesses.Contains(w))
+        {
             _weaknesses.Add(w);
+            OnWeaknessChanged?.Invoke();
+        }
     }
 
     public void RemoveWeakness(E_WeaknessType w)
     {
-        _weaknesses.Remove(w);
+        if (_weaknesses.Remove(w))
+            OnWeaknessChanged?.Invoke();
     }
 }

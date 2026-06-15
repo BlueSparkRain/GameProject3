@@ -14,27 +14,27 @@ public enum E_TweenType
 public class MagicAnimationManager : MonoGlobalManager
 {
     /// <summary>
-    /// ¶¯»­¾ä±ú£¨ÒÆ³ýTCS£¬ÐÂÔöCoroutine×Ö¶Î¹ÜÀíÐ­³Ì£©
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ³ï¿½TCSï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Coroutineï¿½Ö¶Î¹ï¿½ï¿½ï¿½Ð­ï¿½Ì£ï¿½
     /// </summary>
     struct AnimationHandle
     {
         public Tween TweenObj;
         public AnimParams Params;
         public string TargetInstanceId;
-        public Coroutine Coroutine; // ÐÂÔö£º¹ÜÀíÐ­³ÌÉúÃüÖÜÆÚ
+        public Coroutine Coroutine; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     }
 
     /// <summary>
-    /// »îÔ¾¶¯»­»º´æ
+    /// ï¿½ï¿½Ô¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     readonly Dictionary<string, AnimationHandle> _activeAnimations = new();
 
-    // Ëø¶ÔÏó£¬±£Ö¤Ïß³Ì°²È«
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ó£¬±ï¿½Ö¤ï¿½ß³Ì°ï¿½È«
     readonly object _lockObj = new object();
 
     protected override void Awake(){
         base.Awake();
-        //³õÊ¼»¯DOTween
+        //ï¿½ï¿½Ê¼ï¿½ï¿½DOTween
         DOTween.Init(true, true, LogBehaviour.ErrorsOnly).SetCapacity(200, 50);
 
         InitTweenerDic();
@@ -43,7 +43,7 @@ public class MagicAnimationManager : MonoGlobalManager
     public static Dictionary<E_TweenType, string> tweenDic = new Dictionary<E_TweenType, string>();
     
     /// <summary>
-    /// ³õÊ¼»¯¶¯»­×Öµä
+    /// ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½
     /// </summary>
     void InitTweenerDic(){
         RegisterTweenDic(E_TweenType.Swing_Box);
@@ -51,11 +51,11 @@ public class MagicAnimationManager : MonoGlobalManager
     }
 
     /// <summary>
-    /// ×¢²á»º¶¯¶¯»­Ã¶¾Ù
+    /// ×¢ï¿½á»ºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¶ï¿½ï¿½
     /// </summary>
     /// <param name="e_TweenType"></param>
     void RegisterTweenDic(E_TweenType e_TweenType){
-        if (!tweenDic.ContainsKey(e_TweenType)) // ÏÈ¼ì²é¼üÊÇ·ñ´æÔÚ
+        if (!tweenDic.ContainsKey(e_TweenType)) // ï¿½È¼ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½
             tweenDic.Add(e_TweenType, GenerateUniqueAnimId(e_TweenType.ToString()));
     }
 
@@ -67,54 +67,54 @@ public class MagicAnimationManager : MonoGlobalManager
         CleanupDestroyedTargetAnimations();
     }
 
-    //·ÀÖ¹ÄÚ´æÐ¹Â©
+    //ï¿½ï¿½Ö¹ï¿½Ú´ï¿½Ð¹Â©
     void OnApplicationQuit(){
-        //Í£Ö¹ËùÓÐ¶¯»­ 
+        //Í£Ö¹ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½ 
         StopAllAnimations();
-        //Çå¿Õ»îÔ¾¶¯»­»º´æ
+        //ï¿½ï¿½Õ»ï¿½Ô¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         _activeAnimations.Clear();
-        //Ö÷¶¯Ïú»Ùµ¥Àý¶ÔÏó
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ùµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         Destroy(gameObject);
     }
 
     void OnDestroy(){
-        //¼ÓËø±£»¤ 
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
         lock (_lockObj){
-            //Í£Ö¹ËùÓÐ¶¯»­
+            //Í£Ö¹ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½
             StopAllAnimations();
-            //Çå¿Õ»º´æ
+            //ï¿½ï¿½Õ»ï¿½ï¿½ï¿½
             _activeAnimations.Clear();
 
-            //Ç¿ÖÆÉ±ËÀ DOTween µÄËùÓÐ¶¯»­
+            //Ç¿ï¿½ï¿½É±ï¿½ï¿½ DOTween ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½
             DOTween.KillAll();
         }
     }
 
-    #region ¶ÔÍâºËÐÄAPI
+    #region ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½API
     /// <summary>
-    /// Éú³ÉÈ«¾ÖÎ¨Ò»µÄ¶¯»­ID
+    /// ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½Î¨Ò»ï¿½Ä¶ï¿½ï¿½ï¿½ID
     /// </summary>
-    /// <param name="prefix">¶¯»­IDÇ°×º(±ãÓÚµ÷ÊÔÇø·Ö)</param>
+    /// <param name="prefix">ï¿½ï¿½ï¿½ï¿½IDÇ°×º(ï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)</param>
     /// <returns></returns>
     public string GenerateUniqueAnimId(string prefix = "Anim_"){
         return $"{prefix}{Guid.NewGuid():N}";
     }
 
     /// <summary>
-    /// Ð­³Ì²¥·Å[µ¥¸ö]Tween¶¯»­¡ª¡ªÌæ»»Ô­ÓÐÒì²½½Ó¿Ú
-    /// Íâ²¿µ÷ÓÃ£ºStartCoroutine(MagicAnimationManager.Instance.PlayAnimation(...))
+    /// Ð­ï¿½Ì²ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½]Tweenï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ»»Ô­ï¿½ï¿½ï¿½ì²½ï¿½Ó¿ï¿½
+    /// ï¿½â²¿ï¿½ï¿½ï¿½Ã£ï¿½StartCoroutine(MagicAnimationManager.Instance.PlayAnimation(...))
     /// </summary>
-    /// <param name="animId">¶¯»­Î¨Ò»ID</param>
-    /// <param name="target">¶¯»­Ä¿±ê¶ÔÏó</param>
-    /// <param name="tweenCreator">¶¯»­´´½¨Î¯ÍÐ</param>
-    /// <param name="animationParams">¶¯»­²ÎÊý</param>
-    /// <returns>Ð­³Ì¶ÔÏó£¨±ãÓÚÍâ²¿¹ÜÀí£©</returns>
+    /// <param name="animId">ï¿½ï¿½ï¿½ï¿½Î¨Ò»ID</param>
+    /// <param name="target">ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½</param>
+    /// <param name="tweenCreator">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î¯ï¿½ï¿½</param>
+    /// <param name="animationParams">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</param>
+    /// <returns>Ð­ï¿½Ì¶ï¿½ï¿½ó£¨±ï¿½ï¿½ï¿½ï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</returns>
     public Coroutine PlayAnimation(string animId, object target, Func<AnimParams, Tween> tweenCreator, AnimParams animationParams){
         if (_activeAnimations.ContainsKey(animId))
             InterruptAnimation(animId);
 
         var coroutine = StartCoroutine(InternalPlayAnimationCoroutine(animId, target, () => tweenCreator(animationParams), animationParams));
-        // ¼æÈÝÐ´·¨£º¸üÐÂÐ­³ÌÒýÓÃ
+        // ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         lock (_lockObj){
             if (_activeAnimations.ContainsKey(animId)){
                 var oldHandle = _activeAnimations[animId];
@@ -131,12 +131,12 @@ public class MagicAnimationManager : MonoGlobalManager
     }
 
     /// <summary>
-    /// Ð­³Ì²¥·Å[Sequence]ÐòÁÐ¶¯»­¡ª¡ªÌæ»»Ô­ÓÐÒì²½½Ó¿Ú
+    /// Ð­ï¿½Ì²ï¿½ï¿½ï¿½[Sequence]ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ»»Ô­ï¿½ï¿½ï¿½ì²½ï¿½Ó¿ï¿½
     /// </summary>
-    /// <param name="sequenceId">¶¯»­Î¨Ò»ID</param>
-    /// <param name="sequenceCreator">ÐòÁÐ´´½¨Î¯ÍÐ</param>
-    /// <param name="animationParams">¶¯»­²ÎÊý</param>
-    /// <returns>Ð­³Ì¶ÔÏó</returns>
+    /// <param name="sequenceId">ï¿½ï¿½ï¿½ï¿½Î¨Ò»ID</param>
+    /// <param name="sequenceCreator">ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½Î¯ï¿½ï¿½</param>
+    /// <param name="animationParams">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</param>
+    /// <returns>Ð­ï¿½Ì¶ï¿½ï¿½ï¿½</returns>
     public Coroutine PlaySequence(string sequenceId, Func<AnimParams, Sequence> sequenceCreator, AnimParams animationParams){
         if (_activeAnimations.ContainsKey(sequenceId))
             InterruptAnimation(sequenceId);
@@ -159,59 +159,59 @@ public class MagicAnimationManager : MonoGlobalManager
     }
 
     /// <summary>
-    /// Ç¿ÖÆÖÐ¶ÏÖ¸¶¨IDµÄ¶¯»­
+    /// Ç¿ï¿½ï¿½ï¿½Ð¶ï¿½Ö¸ï¿½ï¿½IDï¿½Ä¶ï¿½ï¿½ï¿½
     /// </summary>
-    /// <param name="animId">ÒªÖÐ¶ÏµÄ¶¯»­ID</param>
-    /// <param name="completeImmediately">ÊÇ·ñÈÃ¶¯»­Íê³É:true->¶¯»­Ö±½ÓÌøµ½½áÊø×´Ì¬£¬false->¶¯»­Í£ÔÚµ±Ç°×´Ì¬</param>
+    /// <param name="animId">Òªï¿½Ð¶ÏµÄ¶ï¿½ï¿½ï¿½ID</param>
+    /// <param name="completeImmediately">ï¿½Ç·ï¿½ï¿½Ã¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:true->ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½false->ï¿½ï¿½ï¿½ï¿½Í£ï¿½Úµï¿½Ç°×´Ì¬</param>
     public void InterruptAnimation(string animId, bool completeImmediately = false){
         lock (_lockObj){
             if (!_activeAnimations.ContainsKey(animId))
                 return;
 
             var handle = _activeAnimations[animId];
-            // Í£Ö¹Ð­³Ì
+            // Í£Ö¹Ð­ï¿½ï¿½
             if (handle.Coroutine != null)
                 StopCoroutine(handle.Coroutine);
 
             // Í£Ö¹Tween
             handle.TweenObj?.Kill(completeImmediately);
-            // ´¥·¢ÖÐ¶Ï»Øµ÷
+            // ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶Ï»Øµï¿½
             handle.Params.OnInterrupt?.Invoke();
-            // ÒÆ³ý¶¯»­
+            // ï¿½Æ³ï¿½ï¿½ï¿½ï¿½ï¿½
             RemoveAnimation(animId);
         }
     }
 
     /// <summary>
-    /// ÔÝÍ£Ö¸¶¨IDµÄ¶¯»­
+    /// ï¿½ï¿½Í£Ö¸ï¿½ï¿½IDï¿½Ä¶ï¿½ï¿½ï¿½
     /// </summary>
-    /// <param name="animId">¶¯»­ID</param>
+    /// <param name="animId">ï¿½ï¿½ï¿½ï¿½ID</param>
     public void PauseAnimation(string animId){
         lock (_lockObj){
             if (_activeAnimations.TryGetValue(animId, out var handle))
                 handle.TweenObj?.Pause();
             else
-                Debug.Log($"[MagicAnimationManager]---¶¯»­ID£º{animId} ÔÝÎ´×¢²á£¬ÎÞÐèÔÝÍ£");
+                DebugManager.Log(EDebugCategory.General, $"[MagicAnimationManager]---ï¿½ï¿½ï¿½ï¿½IDï¿½ï¿½{animId} ï¿½ï¿½Î´×¢ï¿½á£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í£");
         }
     }
 
     /// <summary>
-    /// »Ö¸´ÔÝÍ£µÄ¶¯»­
+    /// ï¿½Ö¸ï¿½ï¿½ï¿½Í£ï¿½Ä¶ï¿½ï¿½ï¿½
     /// </summary>
-    /// <param name="animId">Òª»Ö¸´µÄ¶¯»­ID</param>
+    /// <param name="animId">Òªï¿½Ö¸ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½ID</param>
     public void ResumeAnimation(string animId){
         lock (_lockObj){
             if (_activeAnimations.TryGetValue(animId, out var handle))
                 handle.TweenObj?.Play();
             else
-                Debug.Log($"[MagicAnimationManager]---¶¯»­ID£º{animId} ÔÝÎ´×¢²á£¬ÎÞÐè»Ö¸´");
+                DebugManager.Log(EDebugCategory.General, $"[MagicAnimationManager]---ï¿½ï¿½ï¿½ï¿½IDï¿½ï¿½{animId} ï¿½ï¿½Î´×¢ï¿½á£¬ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½");
         }
     }
 
     /// <summary>
-    /// Í£Ö¹ËùÓÐ»îÔ¾¶¯»­
+    /// Í£Ö¹ï¿½ï¿½ï¿½Ð»ï¿½Ô¾ï¿½ï¿½ï¿½ï¿½
     /// </summary>
-    /// <param name="completeImmediately">ÊÇ·ñÈÃ¶¯»­Íê³É</param>
+    /// <param name="completeImmediately">ï¿½Ç·ï¿½ï¿½Ã¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</param>
     public void StopAllAnimations(bool completeImmediately = false)
     {
         lock (_lockObj)
@@ -223,15 +223,15 @@ public class MagicAnimationManager : MonoGlobalManager
             {
                 if (_activeAnimations.TryGetValue(animId, out var handle))
                 {
-                    // Í£Ö¹Ð­³Ì
+                    // Í£Ö¹Ð­ï¿½ï¿½
                     if (handle.Coroutine != null)
                         StopCoroutine(handle.Coroutine);
 
                     // Í£Ö¹Tween
                     handle.TweenObj?.Kill(!completeImmediately);
-                    // ´¥·¢ÖÐ¶Ï»Øµ÷
+                    // ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶Ï»Øµï¿½
                     handle.Params.OnInterrupt?.Invoke();
-                    // ÒÆ³ý¶¯»­
+                    // ï¿½Æ³ï¿½ï¿½ï¿½ï¿½ï¿½
                     RemoveAnimation(animId);
                 }
             }
@@ -240,9 +240,9 @@ public class MagicAnimationManager : MonoGlobalManager
     }
 
     /// <summary>
-    /// Í£Ö¹Ö¸¶¨ Unity ¶ÔÏóµÄËùÓÐ¶¯»­
+    /// Í£Ö¹Ö¸ï¿½ï¿½ Unity ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½
     /// </summary>
-    /// <param name="target">Ä¿±ê¶ÔÏó</param>
+    /// <param name="target">Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½</param>
     public void StopTargetAllAnimations(UnityEngine.Object target)
     {
         string targetId = target.GetInstanceID().ToString();
@@ -254,13 +254,13 @@ public class MagicAnimationManager : MonoGlobalManager
             {
                 if (kvp.Value.TargetInstanceId == targetId)
                 {
-                    // Í£Ö¹Ð­³Ì
+                    // Í£Ö¹Ð­ï¿½ï¿½
                     if (kvp.Value.Coroutine != null)
                         StopCoroutine(kvp.Value.Coroutine);
 
                     // Í£Ö¹Tween
                     kvp.Value.TweenObj?.Kill();
-                    // ´¥·¢ÖÐ¶Ï»Øµ÷
+                    // ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶Ï»Øµï¿½
                     kvp.Value.Params.OnInterrupt?.Invoke();
                     toRemove.Add(kvp.Key);
                 }
@@ -274,35 +274,35 @@ public class MagicAnimationManager : MonoGlobalManager
     #endregion
 
 
-    #region ÄÚ²¿ºËÐÄÂß¼­£¨Ð­³ÌÊµÏÖ£©
+    #region ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß¼ï¿½ï¿½ï¿½Ð­ï¿½ï¿½Êµï¿½Ö£ï¿½
     /// <summary>
-    /// ²¥·Åµ¥¸ö¶¯»­µÄÐ­³ÌÂß¼­
+    /// ï¿½ï¿½ï¿½Åµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð­ï¿½ï¿½ï¿½ß¼ï¿½
     /// </summary>
-    /// <param name="animId">¶¯»­ID</param>
-    /// <param name="target">Ä¿±ê¶ÔÏó</param>
-    /// <param name="tweenCreator">¶¯»­´´½¨Î¯ÍÐ</param>
-    /// <param name="animationParams">¶¯»­²ÎÊý</param>
-    /// <returns>Ð­³Ìµü´úÆ÷</returns>
+    /// <param name="animId">ï¿½ï¿½ï¿½ï¿½ID</param>
+    /// <param name="target">Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½</param>
+    /// <param name="tweenCreator">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î¯ï¿½ï¿½</param>
+    /// <param name="animationParams">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</param>
+    /// <returns>Ð­ï¿½Ìµï¿½ï¿½ï¿½ï¿½ï¿½</returns>
     IEnumerator InternalPlayAnimationCoroutine(string animId, object target, Func<Tween> tweenCreator, AnimParams animationParams)
     {
 
-        //»ñÈ¡Ä¿±ê¶ÔÏóµÄÎ¨Ò» ID
+        //ï¿½ï¿½È¡Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î¨Ò» ID
         string targetId = string.Empty;
         if (target is UnityEngine.Object unityObj)
             targetId = unityObj.GetInstanceID().ToString();
         else
             targetId = target.GetHashCode().ToString();
 
-        //´´½¨ Tween ¶ÔÏó
+        //ï¿½ï¿½ï¿½ï¿½ Tween ï¿½ï¿½ï¿½ï¿½
         Tween tween = tweenCreator.Invoke();
         if (tween == null)
         {
-            Debug.LogError($"[MagicAnimationManager]---¶¯»­´´½¨Ê§°Ü£ºtweenCreator·µ»Ønull£¨ID£º{animId}£©");
+            Debug.LogError($"[MagicAnimationManager]---ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê§ï¿½Ü£ï¿½tweenCreatorï¿½ï¿½ï¿½ï¿½nullï¿½ï¿½IDï¿½ï¿½{animId}ï¿½ï¿½");
             RemoveAnimation(animId);
             yield break;
         }
 
-        //ÅäÖÃ Tween ²ÎÊý
+        //ï¿½ï¿½ï¿½ï¿½ Tween ï¿½ï¿½ï¿½ï¿½
         tween.SetDelay(animationParams.Delay)
              .SetEase(animationParams.Ease)
              .OnUpdate(() =>
@@ -310,11 +310,11 @@ public class MagicAnimationManager : MonoGlobalManager
                  float progress = tween.ElapsedPercentage();
                  animationParams.OnUpdate?.Invoke(progress);
              })
-             // ÒÆ³ýOnComplete/OnKillµÄ»Øµ÷°ó¶¨£¨¸ÄÓÉÐ­³Ì¿ØÖÆ£©
+             // ï¿½Æ³ï¿½OnComplete/OnKillï¿½Ä»Øµï¿½ï¿½ó¶¨£ï¿½ï¿½ï¿½ï¿½ï¿½Ð­ï¿½Ì¿ï¿½ï¿½Æ£ï¿½
              .OnComplete(() => { })
              .OnKill(() => { });
 
-        //´¦ÀíÑ­»·Ä£Ê½
+        //ï¿½ï¿½ï¿½ï¿½Ñ­ï¿½ï¿½Ä£Ê½
         if (animationParams.LoopMode != AnimationLoopType.None)
         {
             var dotweenLoopType = animationParams.LoopMode == AnimationLoopType.Restart
@@ -323,7 +323,7 @@ public class MagicAnimationManager : MonoGlobalManager
             tween.SetLoops(animationParams.LoopCount, dotweenLoopType);
         }
 
-        //¼ÇÂ¼¶¯»­¾ä±ú
+        //ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         lock (_lockObj)
         {
             _activeAnimations[animId] = new AnimationHandle
@@ -331,42 +331,42 @@ public class MagicAnimationManager : MonoGlobalManager
                 TweenObj = tween,
                 Params = animationParams,
                 TargetInstanceId = targetId,
-                Coroutine = null // Ð­³ÌÒýÓÃºóÐøÓÉÍâ²¿¸³Öµ
+                Coroutine = null // Ð­ï¿½ï¿½ï¿½ï¿½ï¿½Ãºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â²¿ï¿½ï¿½Öµ
             };
         }
 
-        //²¥·Å¶¯»­
+        //ï¿½ï¿½ï¿½Å¶ï¿½ï¿½ï¿½
         tween.Play();
 
-        // Ð­³ÌµÈ´ý¶¯»­Íê³É£¨ºËÐÄ£ºÌæ´úÒì²½await£©
+        // Ð­ï¿½ÌµÈ´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É£ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ì²½awaitï¿½ï¿½
         yield return tween.WaitForCompletion();
 
-        // ¶¯»­Íê³Éºó´¥·¢»Øµ÷
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Éºó´¥·ï¿½ï¿½Øµï¿½
         animationParams.OnComplete?.Invoke();
 
-        // ÇåÀí¶¯»­
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         lock (_lockObj)
             RemoveAnimation(animId);
     }
 
     /// <summary>
-    /// ²¥·ÅÐòÁÐ¶¯»­µÄÐ­³ÌÂß¼­
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½Ð­ï¿½ï¿½ï¿½ß¼ï¿½
     /// </summary>
-    /// <param name="sequenceId">ÐòÁÐID</param>
-    /// <param name="sequenceCreator">ÐòÁÐ´´½¨Î¯ÍÐ</param>
-    /// <param name="animationParams">¶¯»­²ÎÊý</param>
-    /// <returns>Ð­³Ìµü´úÆ÷</returns>
+    /// <param name="sequenceId">ï¿½ï¿½ï¿½ï¿½ID</param>
+    /// <param name="sequenceCreator">ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½Î¯ï¿½ï¿½</param>
+    /// <param name="animationParams">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</param>
+    /// <returns>Ð­ï¿½Ìµï¿½ï¿½ï¿½ï¿½ï¿½</returns>
     IEnumerator InternalPlaySequenceCoroutine(string sequenceId, Func<Sequence> sequenceCreator, AnimParams animationParams)
     {
         Sequence sequence = sequenceCreator.Invoke();
         if (sequence == null)
         {
-            Debug.LogError($"[MagicAnimationManager]---ÐòÁÐ´´½¨Ê§°Ü£ºsequenceCreator·µ»Ønull£¨ID£º{sequenceId}£©");
+            Debug.LogError($"[MagicAnimationManager]---ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½Ê§ï¿½Ü£ï¿½sequenceCreatorï¿½ï¿½ï¿½ï¿½nullï¿½ï¿½IDï¿½ï¿½{sequenceId}ï¿½ï¿½");
             RemoveAnimation(sequenceId);
             yield break;
         }
 
-        //ÅäÖÃÐòÁÐ²ÎÊý
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð²ï¿½ï¿½ï¿½
         sequence.SetDelay(animationParams.Delay)
                 .OnUpdate(() =>
                 {
@@ -376,7 +376,7 @@ public class MagicAnimationManager : MonoGlobalManager
                 .OnComplete(() => { })
                 .OnKill(() => { });
 
-        //´¦ÀíÑ­»·Ä£Ê½
+        //ï¿½ï¿½ï¿½ï¿½Ñ­ï¿½ï¿½Ä£Ê½
         if (animationParams.LoopMode != AnimationLoopType.None)
         {
             var dotweenLoopType = animationParams.LoopMode == AnimationLoopType.Restart
@@ -385,7 +385,7 @@ public class MagicAnimationManager : MonoGlobalManager
             sequence.SetLoops(animationParams.LoopCount, dotweenLoopType);
         }
 
-        //¼ÇÂ¼¶¯»­¾ä±ú
+        //ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         lock (_lockObj)
         {
             _activeAnimations[sequenceId] = new AnimationHandle
@@ -397,35 +397,35 @@ public class MagicAnimationManager : MonoGlobalManager
             };
         }
 
-        //²¥·ÅÐòÁÐ
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         sequence.Play();
 
-        // Ð­³ÌµÈ´ýÐòÁÐÍê³É
+        // Ð­ï¿½ÌµÈ´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         yield return sequence.WaitForCompletion();
 
-        // ´¥·¢Íê³É»Øµ÷
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É»Øµï¿½
         animationParams.OnComplete?.Invoke();
 
-        // ÇåÀí¶¯»­
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         lock (_lockObj)
             RemoveAnimation(sequenceId);
     }
 
     /// <summary>
-    /// ×Ô¶¯ÇåÀíÎÞÐ§¶¯»­£¨Ã¿Ö¡µ÷ÓÃ£©
+    /// ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¿Ö¡ï¿½ï¿½ï¿½Ã£ï¿½
     /// </summary>
     void CleanupDestroyedTargetAnimations()
     {
         var toRemove = new List<string>();
         lock (_lockObj)
         {
-            // 1. ÇåÀíÎÞÐ§Key£¨TweenObjÎª¿Õ£©
+            // 1. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§Keyï¿½ï¿½TweenObjÎªï¿½Õ£ï¿½
             foreach (var kvp in _activeAnimations)
             {
                 if (kvp.Value.TweenObj == null)
                     toRemove.Add(kvp.Key);
             }
-            // 2. ÇåÀíÒÑÏú»ÙÄ¿±êµÄ¶¯»­Key
+            // 2. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½Key
             foreach (var kvp in _activeAnimations)
             {
                 if (int.TryParse(kvp.Value.TargetInstanceId, out int instanceId))
@@ -441,20 +441,20 @@ public class MagicAnimationManager : MonoGlobalManager
                     }
                     if (!isTargetAlive)
                     {
-                        // Í£Ö¹Ð­³Ì
+                        // Í£Ö¹Ð­ï¿½ï¿½
                         if (kvp.Value.Coroutine != null)
                             StopCoroutine(kvp.Value.Coroutine);
 
                         // Í£Ö¹Tween
                         kvp.Value.TweenObj?.Kill();
-                        // ´¥·¢ÖÐ¶Ï»Øµ÷
+                        // ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶Ï»Øµï¿½
                         kvp.Value.Params.OnInterrupt?.Invoke();
                         toRemove.Add(kvp.Key);
                     }
                 }
             }
 
-            // Í³Ò»ÒÆ³ý
+            // Í³Ò»ï¿½Æ³ï¿½
             foreach (var id in toRemove)
             {
                 RemoveAnimation(id);
@@ -463,9 +463,9 @@ public class MagicAnimationManager : MonoGlobalManager
     }
 
     /// <summary>
-    /// ´Ó¶¯»­¾ä±ú×ÖµäÖÐÒÆ³ýÄ¿±êÔªËØ
+    /// ï¿½Ó¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½Æ³ï¿½Ä¿ï¿½ï¿½Ôªï¿½ï¿½
     /// </summary>
-    /// <param name="animId">¾ä±úID</param>
+    /// <param name="animId">ï¿½ï¿½ï¿½ID</param>
     void RemoveAnimation(string animId)
     {
         lock (_lockObj)

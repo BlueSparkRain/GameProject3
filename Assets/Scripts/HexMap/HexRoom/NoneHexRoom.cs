@@ -18,4 +18,6 @@ public class NoneHexRoom :IHexRoom
     public void DoHexRoomModel(Vector3 pos)
     {
     }
+
+    public void DestroyModel() { }
 }

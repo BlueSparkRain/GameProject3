@@ -20,10 +20,9 @@ public class Player_CharacterMapMover : IMapMoveable
     PlayerMapIcon mapIcon;
     //记录角色的位置
     Transform charcaterTrans;
-
     public bool IsMoving { get { return isMoving; } }
     /// <summary>
-    /// Mover正在移动？
+    /// Mover正在移动
     /// </summary>
     bool isMoving = false;
 
@@ -45,25 +44,20 @@ public class Player_CharacterMapMover : IMapMoveable
         coroutineManager.StartCoroutine(WaitMapIcon(), charcaterTrans);
     }
 
+    void PlayerGetMovePoints(){
+        int charLevel = charcaterTrans.GetComponent<CharacterHandler>()?.CharacterData?.CurrentLevel ?? 1;
+        int storedPoints = Mathf.Min(apManager.RemainActionPoints, charLevel);
 
-    void PlayerGetMovePoints()
-    {
-        // 结余储存: 未用完的行动点存起来，上限=当前混沌等级
-        int chaosLevel = GameRoot.GetManager<ChaosLevelManager>()?.currentLevel ?? 1;
-        int storedPoints = Mathf.Min(apManager.RemainActionPoints, chaosLevel);
-
-        var (maxPoints, remainPoints) = apManager.EndRound(chaosLevel, storedPoints);
+        var (maxPoints, remainPoints) = apManager.EndRound(charLevel, storedPoints);
         moveStop = remainPoints <= 0;
         mapIcon.SetMoveDot(remainPoints);
         EventCenter.EventTrigger<IMapMoveable>(E_EventType.OneMoverEndRound, this);
     }
-
     IEnumerator WaitMapIcon(){
         yield return new WaitForSeconds(1f);
         mapIcon = GameRoot.GetManager<MapMoverManager>().CreateNewMapIcon(this, charcaterTrans);
         mapIcon.SetMoveDot(apManager.RemainActionPoints);
     }
-
     void OneTimeMove_MinusActionPoint() { apManager.SpendActionPoints(1); }
 
     void MoveStop(){
@@ -94,17 +88,24 @@ public class Player_CharacterMapMover : IMapMoveable
         coroutineManager.StartCoroutine(MoveAnim(path), charcaterTrans);
     }
 
+    /// <summary>战败踢飞移动 — 使用翻滚动画变种，不影响正常行走</summary>
+    public void DoKickMove(List<HexRoomTag> path)
+    {
+        EventCenter.EventTrigger(E_EventType.Mover_PlayerStartMove);
+        coroutineManager.StartCoroutine(KickMoveAnim(path), charcaterTrans);
+    }
+
     IEnumerator MoveAnim(List<HexRoomTag> roomPath){
         if (roomPath.Last() != null){
             //寻找终点，相机缓慢平移到目标点
-            GameRoot.GetManager<OrthoCameraNavigator>().FocusOnTarget(roomPath.Last().gameObject, 3);
+            GameRoot.GetManager<OrthoCameraNavigator>().FocusOnTarget(roomPath.Last().gameObject);
         }
         moveStop = apManager.RemainActionPoints <= 0;
         //Debug.Log("Mover开始移动：路径长度" + roomPath.Count);
         isMoving = true;
         for (int i = 0; i < roomPath.Count; i++){
             if (moveStop){
-                Debug.Log("Mover被打断，剩余移动点" + apManager.RemainActionPoints);
+                DebugManager.Log(EDebugCategory.MapRoom, "Mover被打断，剩余移动点" + apManager.RemainActionPoints);
                 break;
             }
             var targetPos = roomPath[i].transform.position + Vector3.up * GameRoot.GetManager<GameMapManager>().characterYOffset;
@@ -116,6 +117,25 @@ public class Player_CharacterMapMover : IMapMoveable
             EventCenter.EventTrigger(E_EventType.Mover_CheckCurrrentRoom, this as IMapMoveable, charcaterTrans.position);
             EventCenter.EventTrigger(E_EventType.Mover_OneTimeMove);
 
+        }
+        EventCenter.EventTrigger(E_EventType.Mover_MoveStop);
+        isMoving = false;
+    }
+
+    IEnumerator KickMoveAnim(List<HexRoomTag> roomPath)
+    {
+        if (roomPath.Last() != null)
+            GameRoot.GetManager<OrthoCameraNavigator>().FocusOnTarget(roomPath.Last().gameObject);
+
+        isMoving = true;
+        for (int i = 0; i < roomPath.Count; i++)
+        {
+            var targetPos = roomPath[i].transform.position + Vector3.up * GameRoot.GetManager<GameMapManager>().characterYOffset;
+            MagicAnimExtens.RollingKick_WorldAnim(charcaterTrans, targetPos);
+
+            yield return new WaitForSeconds(0.45f);
+            EventCenter.EventTrigger(E_EventType.Mover_CheckCurrrentRoom, this as IMapMoveable, charcaterTrans.position);
+            EventCenter.EventTrigger(E_EventType.Mover_OneTimeMove);
         }
         EventCenter.EventTrigger(E_EventType.Mover_MoveStop);
         isMoving = false;

@@ -65,9 +65,9 @@ public class HexPathFindingManager : MonoGlobalManager
     [Tooltip("HexRoom自身Z轴上升高度")]
     public float roomFloatHeight = 1.0f;
     [Tooltip("上升/归位动画时长")]
-    public float roomFloatDuration = 0.2f;
+    public float roomFloatDuration = 0.1f;
     [Tooltip("首个子物体透明度过渡时长")]
-    public float childFadeDuration = 0.3f;
+    public float childFadeDuration = 0.2f;
 
     [Header("调试配置")]
     public bool enableDebugLog = false;
@@ -110,6 +110,10 @@ public class HexPathFindingManager : MonoGlobalManager
     private HashSet<HexRoomTag> _floatingSet = new HashSet<HexRoomTag>();                       // 当前上浮中的房间
     private HashSet<HexRoomTag> _pendingDown = new HashSet<HexRoomTag>();                       // 正在下沉动画中
 
+    // 延迟材质恢复：离开路径后等0.2s再检测，若仍不在路径中才恢复
+    private Dictionary<HexRoomTag, float> _materialRestoreTimers = new Dictionary<HexRoomTag, float>();
+    const float MaterialRestoreDelay = 0.2f;
+
     // 自动路径模式数据
     private bool _isManualDrawing;
     private List<HexRoomTag> _autoFullPath;
@@ -122,7 +126,7 @@ public class HexPathFindingManager : MonoGlobalManager
         InitDrawData();
 
         if (enableDebugLog)
-            Debug.Log("[HexPathDrawMgr] 初始化完成（全功能版）");
+            DebugManager.Log(EDebugCategory.MapRoom, "[HexPathDrawMgr] 初始化完成（全功能版）");
     }
 
     void InitDependencies()
@@ -214,6 +218,7 @@ public class HexPathFindingManager : MonoGlobalManager
         base.MgrDispose();
         HoverDownAll();
         ClearPathVisual();
+        _materialRestoreTimers.Clear();
         _originMatCache.Clear();
         _originChildMatCache.Clear();
         _diswalkablePath.Clear();
@@ -230,12 +235,12 @@ public class HexPathFindingManager : MonoGlobalManager
                 room = moverMgr.currentIMovable.currentRoom;
 
             if (room == null){
-                Debug.LogWarning("[HexPathDrawMgr]---玩家起始地块为空！");
+                DebugManager.LogWarning(EDebugCategory.MapRoom, "[HexPathDrawMgr]---玩家起始地块为空！");
                 return;
             }
         }
         if (!IsRoomWalkable(room)){
-            Debug.LogWarning("[HexPathDrawMgr]---玩家起始地块不可行走！");
+            DebugManager.LogWarning(EDebugCategory.MapRoom, "[HexPathDrawMgr]---玩家起始地块不可行走！");
             return;
         }
         _playerStartRoom = room;
@@ -257,13 +262,13 @@ public class HexPathFindingManager : MonoGlobalManager
             List<HexRoomTag> startNeighbors = GetAllHexNeighbors(room);
         }
         if (enableDebugLog)
-            Debug.Log($"[HexPathDrawMgr] 玩家起始地块已设置：({room.row},{room.col})");
+            DebugManager.Log(EDebugCategory.MapRoom, $"[HexPathDrawMgr] 玩家起始地块已设置：({room.row},{room.col})");
     }
     public void UpdateMaxActionPoints(int newPoints){
         currentActionPoints = Mathf.Max(newPoints, 1);
         RefreshPathOnActionPointChange();
         if (enableDebugLog)
-            Debug.Log($"[HexPathDrawMgr] 最大行动点数更新为：{currentActionPoints}");
+            DebugManager.Log(EDebugCategory.MapRoom, $"[HexPathDrawMgr] 最大行动点数更新为：{currentActionPoints}");
     }
 
     public List<HexRoomTag> GetDrawnPath()
@@ -274,6 +279,38 @@ public class HexPathFindingManager : MonoGlobalManager
     public List<HexRoomTag> GetUnreachablePath()
     {
         return new List<HexRoomTag>(_diswalkablePath);
+    }
+
+    /// <summary>公开BFS寻路——用于AI自动移动</summary>
+    public List<HexRoomTag> FindPath(HexRoomTag start, HexRoomTag target)
+    {
+        return BFSFindShortestPath(start, target);
+    }
+
+    /// <summary>获取周围可行走邻居</summary>
+    public List<HexRoomTag> GetWalkableNeighbors(HexRoomTag room)
+    {
+        var result = new List<HexRoomTag>();
+        foreach (var n in GetAllHexNeighbors(room))
+            if (IsRoomWalkable(n)) result.Add(n);
+        return result;
+    }
+
+    /// <summary>获取所有特殊类型的房间(战斗/随机事件/奖励/商店/NPC)</summary>
+    public List<HexRoomTag> GetSpecialRooms()
+    {
+        var result = new List<HexRoomTag>();
+        foreach (var kvp in _mapManager.HexRoomMap)
+        {
+            var room = kvp.Value;
+            if (IsRoomWalkable(room))
+            {
+                var handler = room.GetComponent<HexRoomStyleHandler>();
+                if (handler != null && handler.RoomType != E_HexRoomType.None)
+                    result.Add(room);
+            }
+        }
+        return result;
     }
     #endregion
 
@@ -293,7 +330,7 @@ public class HexPathFindingManager : MonoGlobalManager
             _currentDrawRoom = newMouseRoom;
 
             if (enableDebugLog)
-                Debug.Log($"[HexPathDrawMgr] 鼠标当前地块：({newMouseRoom.row},{newMouseRoom.col})");
+                DebugManager.Log(EDebugCategory.MapRoom, $"[HexPathDrawMgr] 鼠标当前地块：({newMouseRoom.row},{newMouseRoom.col})");
         }
     }
     #endregion
@@ -462,7 +499,7 @@ public class HexPathFindingManager : MonoGlobalManager
         {
             _autoFullPath = BFSFindShortestPath(_playerStartRoom, _currentDrawRoom);
             if (enableDebugLog)
-                Debug.Log($"[HexPathDrawMgr] BFS结果: fullPath={_autoFullPath.Count}, target walkable={IsRoomWalkable(_currentDrawRoom)}, target=({_currentDrawRoom.row},{_currentDrawRoom.col})");
+                DebugManager.Log(EDebugCategory.MapRoom, $"[HexPathDrawMgr] BFS结果: fullPath={_autoFullPath.Count}, target walkable={IsRoomWalkable(_currentDrawRoom)}, target=({_currentDrawRoom.row},{_currentDrawRoom.col})");
             SplitPath(_autoFullPath);
             return;
         }
@@ -555,6 +592,7 @@ public class HexPathFindingManager : MonoGlobalManager
 
     #region 路径可视化（含终点高亮）
     private void RefreshPathVisual(){
+        ProcessDelayedMaterialRestores();
         // 在ClearPathVisual之前标记即将下沉的房间，防止材质被提前恢复
         MarkPendingDown();
         ClearPathVisual();
@@ -581,7 +619,7 @@ public class HexPathFindingManager : MonoGlobalManager
         // 同步路径房间上浮状态
         SyncPathFloat();
         if (enableDebugLog)
-            Debug.Log($"[HexPathDrawMgr] RefreshPathVisual: walkablePath={_walkablePath.Count}, diswalkablePath={_diswalkablePath.Count}, floatingSet={_floatingSet.Count}, pendingDown={_pendingDown.Count}");
+            DebugManager.Log(EDebugCategory.MapRoom, $"[HexPathDrawMgr] RefreshPathVisual: walkablePath={_walkablePath.Count}, diswalkablePath={_diswalkablePath.Count}, floatingSet={_floatingSet.Count}, pendingDown={_pendingDown.Count}");
     }
 
     /// <summary>
@@ -682,12 +720,58 @@ public class HexPathFindingManager : MonoGlobalManager
         //TargetMoverPath.Clear();
     }
 
+    /// <summary>
+    /// 处理延迟材质恢复计时器：过期后检测地块是否仍在当前路径中，不在则恢复原始材质
+    /// </summary>
+    void ProcessDelayedMaterialRestores()
+    {
+        if (_materialRestoreTimers.Count == 0) return;
+
+        var currentPath = new HashSet<HexRoomTag>();
+        if (_playerStartRoom != null) currentPath.Add(_playerStartRoom);
+        foreach (var room in _walkablePath) currentPath.Add(room);
+        foreach (var room in _diswalkablePath) currentPath.Add(room);
+        if (_currentDrawRoom != null) currentPath.Add(_currentDrawRoom);
+
+        var expired = new List<HexRoomTag>();
+        float now = Time.time;
+        foreach (var kvp in _materialRestoreTimers)
+        {
+            if (now >= kvp.Value)
+                expired.Add(kvp.Key);
+        }
+
+        foreach (var room in expired)
+        {
+            _materialRestoreTimers.Remove(room);
+            if (currentPath.Contains(room)) continue; // 重新加入路径，保留路径材质
+
+            if (_originMatCache.TryGetValue(room, out var originMat))
+            {
+                var renderer = room.GetComponent<MeshRenderer>();
+                if (renderer != null) renderer.material = originMat;
+                _originMatCache.Remove(room);
+            }
+            if (_originChildMatCache.TryGetValue(room, out var originChildMat))
+            {
+                var childRenderer = GetFirstChildRenderer(room);
+                if (childRenderer != null) childRenderer.material = originChildMat;
+                _originChildMatCache.Remove(room);
+            }
+            if (room == _playerStartRoom)
+                ResetPlayer_currentRoom();
+        }
+    }
+
     private void ClearPathVisual()
     {
-        // 保留正在下沉动画中的房间的缓存，延后恢复
+        // 保留正在下沉动画中 + 有延迟恢复计时器的房间的缓存
         var pendingMatCache = new Dictionary<HexRoomTag, Material>();
         var pendingChildCache = new Dictionary<HexRoomTag, Material>();
-        foreach (var room in _pendingDown)
+        var protectedRooms = new HashSet<HexRoomTag>(_pendingDown);
+        foreach (var room in _materialRestoreTimers.Keys)
+            protectedRooms.Add(room);
+        foreach (var room in protectedRooms)
         {
             if (_originMatCache.TryGetValue(room, out var mat))
                 pendingMatCache[room] = mat;
@@ -716,7 +800,7 @@ public class HexPathFindingManager : MonoGlobalManager
         foreach (var kvp in pendingChildCache)
             _originChildMatCache[kvp.Key] = kvp.Value;
 
-        if (!_pendingDown.Contains(_playerStartRoom))
+        if (!protectedRooms.Contains(_playerStartRoom))
             ResetPlayer_currentRoom();
     }
 
@@ -757,10 +841,11 @@ public class HexPathFindingManager : MonoGlobalManager
             FloatDown(room);
         }
 
-        // 新进入路径的 → 上浮
+        // 新进入路径的 → 上浮，同时取消延迟材质恢复
         foreach (var room in shouldFloat)
         {
             if (_floatingSet.Contains(room) || _pendingDown.Contains(room)) continue;
+            _materialRestoreTimers.Remove(room);
 
             if (!_roomOrigY.ContainsKey(room))
                 _roomOrigY[room] = room.transform.localPosition.y;
@@ -780,33 +865,17 @@ public class HexPathFindingManager : MonoGlobalManager
         if (!_roomOrigY.TryGetValue(room, out float origY)) return;
 
         _pendingDown.Add(room);
+        // 启动延迟材质恢复计时器：0.2s后检测若仍不在路径中才恢复
+        _materialRestoreTimers[room] = Time.time + MaterialRestoreDelay;
 
         room.transform.DOKill();
-        var tween = room.transform.DOLocalMoveY(origY, roomFloatDuration).SetEase(Ease.OutQuad);
+        //var tween = room.transform.DOLocalMoveY(origY, roomFloatDuration).SetEase(Ease.OutQuad);
+        var tween = room.transform.DOLocalMoveY(origY, 0).SetEase(Ease.OutQuad);
         FadeFirstChild(room, 0f);
 
-        // 动画结束后恢复材质
         tween.OnComplete(() =>
         {
             _pendingDown.Remove(room);
-            // 恢复原始材质
-            if (_originMatCache.TryGetValue(room, out var originMat))
-            {
-                var renderer = room.GetComponent<MeshRenderer>();
-                if (renderer != null)
-                    renderer.material = originMat;
-                _originMatCache.Remove(room);
-            }
-            if (_originChildMatCache.TryGetValue(room, out var originChildMat))
-            {
-                var childRenderer = GetFirstChildRenderer(room);
-                if (childRenderer != null)
-                    childRenderer.material = originChildMat;
-                _originChildMatCache.Remove(room);
-            }
-            // 恢复玩家起点材质
-            if (room == _playerStartRoom)
-                ResetPlayer_currentRoom();
         });
     }
 

@@ -147,7 +147,7 @@ public class RegionTextureMapper : MonoBehaviour
         GameMapManager map = GameRoot.GetManager<GameMapManager>();
         if (map == null || map.HexRoomMap == null || map.HexRoomMap.Count == 0)
         {
-            Debug.LogWarning("[RegionTextureMapper] GameMapManager 未就绪或房间为空");
+            DebugManager.LogWarning(EDebugCategory.MapRoom, "[RegionTextureMapper] GameMapManager 未就绪或房间为空");
             return;
         }
         if (_sharedMaterial == null) InitMaterial();
@@ -186,7 +186,7 @@ public class RegionTextureMapper : MonoBehaviour
             _faceTransforms.Add(faceTag.transform);
         }
 
-        Debug.Log($"[RegionTextureMapper] 找到 {_faceRenderers.Count} 个独立 HexFace Renderer");
+        //Debug.Log($"[RegionTextureMapper] 找到 {_faceRenderers.Count} 个独立 HexFace Renderer");
         ResetFadeTransition(fromZero: true);
         ApplySharedMPB();
         ApplyFaceTransforms();

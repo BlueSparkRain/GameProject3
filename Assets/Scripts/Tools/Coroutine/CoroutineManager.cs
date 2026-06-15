@@ -132,7 +132,7 @@ public class CoroutineManager : MonoGlobalManager
         // 核心安全校验：自身已销毁，直接返回，不报错
         if (this == null || gameObject == null)
         {
-            Debug.LogWarning("【协程管理器】对象已销毁，跳过协程启动");
+            DebugManager.LogWarning(EDebugCategory.General, "【协程管理器】对象已销毁，跳过协程启动");
             return string.Empty;
         }
 
@@ -309,7 +309,7 @@ public class CoroutineManager : MonoGlobalManager
             // 每次迭代前验活：目标已销毁则安全终止
             if (!IsTargetAlive(handle.Target))
             {
-                Debug.LogWarning($"[CoroutineManager] 协程 {coroutineId} 的目标对象已销毁，安全终止");
+                DebugManager.LogWarning(EDebugCategory.General, $"[CoroutineManager] 协程 {coroutineId} 的目标对象已销毁，安全终止");
                 handle.State = CoroutineState.Completed;
                 ReturnCoroutineHandleToPool(handle);
                 _activeCoroutines.Remove(coroutineId);

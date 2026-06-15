@@ -22,6 +22,8 @@ public class HexRoomHandler : MonoBehaviour
 
         if (playAnim)
             jumpAnimHandler.TriggerJump(0.4f);
+
+        jumpAnimHandler.ShowRingThenFadeOut();
     }
 
     public void PlayAppearAnimation()

@@ -62,6 +62,8 @@ public class SlotSwaperHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
     {
         if (!canDrag) return;
 
+        SkillDetailPanel.ForceHide();
+
         _originPos = transform.position;
         _originParent = transform.parent;
 
@@ -74,7 +76,7 @@ public class SlotSwaperHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
         GetComponent<UnityEngine.UI.Graphic>().raycastTarget = false;
 
-        Debug.Log("开始拖拽");
+        DebugManager.Log(EDebugCategory.SkillUI, "开始拖拽");
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -95,12 +97,12 @@ public class SlotSwaperHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
         {
             targetSlot.SwapIcon(currentSlot);
             StartCoroutine(MoveToSlot(targetSlot));
-            Debug.Log($"成功移动到槽位:{targetSlot.name}");
+            DebugManager.Log(EDebugCategory.SkillUI, $"成功移动到槽位:{targetSlot.name}");
         }
         else
         {
             StartCoroutine(ReturnToOrigin());
-            Debug.Log("未检测到目标槽位，返回原位置");
+            DebugManager.Log(EDebugCategory.SkillUI, "未检测到目标槽位，返回原位置");
         }
 
         targetSlot = null;
@@ -110,7 +112,7 @@ public class SlotSwaperHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
     {
         // 先动画移动到目标槽位世界坐标（此时图标仍在Canvas顶层）
         yield return null;
-        Tween moveTween = transform.DOMove(slot.transform.position, 0.2f);
+        Tween moveTween = transform.DOMove(slot.transform.position, 0.2f).SetUpdate(true);
         yield return moveTween.WaitForCompletion();
 
         // 动画结束后嵌入目标槽位
@@ -123,7 +125,7 @@ public class SlotSwaperHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
     IEnumerator ReturnToOrigin()
     {
         yield return null;
-        Tween moveTween = transform.DOMove(_originPos, 0.2f);
+        Tween moveTween = transform.DOMove(_originPos, 0.2f).SetUpdate(true);
         yield return moveTween.WaitForCompletion();
 
         if (_originParent != null)
@@ -151,7 +153,7 @@ public class SlotSwaperHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
             if (slot != null)
             {
                 targetSlot = slot;
-                Debug.Log($"当前穿过的槽位{slot.name}");
+                DebugManager.Log(EDebugCategory.SkillUI, $"当前穿过的槽位{slot.name}");
                 break;
             }
         }

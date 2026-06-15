@@ -1,5 +1,5 @@
 /// <summary>
-/// 有些技能的逻辑是通用的（如多段数伤害技能，延迟回收技能，延迟释放技能）
+/// 锟斤拷些锟斤拷锟杰碉拷锟竭硷拷锟斤拷通锟矫的ｏ拷锟斤拷锟斤拷锟斤拷锟剿猴拷锟斤拷锟杰ｏ拷锟接迟伙拷锟秸硷拷锟杰ｏ拷锟接筹拷锟酵放硷拷锟杰ｏ拷
 /// </summary>
 public abstract class SkillDecorator : ISkill
 {
@@ -9,7 +9,7 @@ public abstract class SkillDecorator : ISkill
     public virtual void Excute(IBattlable self, IBattlable target)
     {
         iSkill.Excute(self, target);
-        UnityEngine.Debug.Log("Excute!");
+        DebugManager.Log(EDebugCategory.SkillExecution,"Excute!");
     }
 }
 

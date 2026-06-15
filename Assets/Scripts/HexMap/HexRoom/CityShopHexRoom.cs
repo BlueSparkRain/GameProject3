@@ -13,4 +13,6 @@ public class CityShopHexRoom : IHexRoom
     }
 
     public void DoHexRoomModel(Vector3 pos) { }
+
+    public void DestroyModel() { }
 }

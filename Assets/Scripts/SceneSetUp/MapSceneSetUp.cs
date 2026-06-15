@@ -21,6 +21,8 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load
     public TMP_Text roundUIText;
     [Header("Test-活力点数文本")]
     public TMP_Text vitalityPointsUIText;
+    [Header("混沌等级文本")]
+    public TMP_Text chaosLevelUIText;
 
     [Header("玩家技能按钮")]
     public Button PlayerSkillButton;
@@ -42,35 +44,34 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load
         gameMapManager = GameRoot.GetManager<GameMapManager>();
         gameMapManager.GameMapManagerInit(y_Offset, x_Offset, mapWidth, mapHeight, MapPivot.position);
 
+        BindUI();
+        StartCoroutine(LoadAllPool());
+        StartCoroutine(LoadMap());
         StartCoroutine(LoadCharacter(1));
     }
 
     private void OnApplicationQuit(){
         JsonSaver.Save(new FirstLoadMap(false));
+
+        var cam = Camera.main;
+        if (cam != null)
+            JsonSaver.Save(new CameraSaveData(cam.transform.position, cam.orthographicSize));
     }
 
     public void InitBySelf(){
-        //读取是否加载过地图,如果加载过，忽略
         gameRoot = GameRoot.Instance;
-        //地图生成管理器
-        gameRoot.RegisterGlobal_MonoManager<GameMapManager>();
-        gameRoot.RegisterGlobal_CSManager(new GameBattleManager());
-
-        //地图寻路管理器
-        gameRoot.RegisterGlobal_MonoManager<HexPathFindingManager>();
-        //地图房间交互管理器
-        gameRoot.RegisterGlobal_MonoManager<HexMapInteractManager>();
-        //移动管理器
-        gameRoot.RegisterGlobal_MonoManager<MapMoverManager>();
-        //活力点数管理器
-        gameRoot.RegisterGlobal_MonoManager<VitalityPointsManager>();
-
-        //回合记录管理器
-        gameRoot.RegisterGlobal_MonoManager<GameRoundManager>();
 
         gameMapManager = GameRoot.GetManager<GameMapManager>();
         gameMapManager.GameMapManagerInit(y_Offset, x_Offset, mapWidth, mapHeight, MapPivot.position);
+        BindUI();
+        StartCoroutine(LoadAllPool());
+        StartCoroutine(LoadMap());
+        StartCoroutine(LoadCharacter(4));
+        JsonSaver.Save(new FirstLoadMap(true));
+    }
 
+    void BindUI()
+    {
         if (EndRoundButton)
         {
             EndRoundButton.onClick.RemoveAllListeners();
@@ -79,27 +80,49 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load
 
         PlayerSkillButton.onClick.RemoveAllListeners();
         PlayerSkillButton.onClick.AddListener(() => EventCenter.EventTrigger(E_EventType.CallSkillPanel));
-        
-        //PlayerSkillButton.onClick.AddListener(() => GameRoot.GetManager<UIManager>().OpenPanel<SkillPanel>(E_UIPanelType.SkillPanel, (panel) => Debug.Log("打开技能面板")));
-
-        ////测试代码
-        //EventCenter.AddEventListener(E_EventType.NewRound, UpdateRoundText);
-        //EventCenter.AddEventListener(E_EventType.UpdateUIVitalityPoints, UpdateValityText);
-
-        //地图加载
-        StartCoroutine(LoadSkillInfoPool());
-        StartCoroutine(LoadMap());
-        StartCoroutine(LoadCharacter(2));
-        JsonSaver.Save(new FirstLoadMap(true));
     }
-    void Awake()
-    {
+
+
+    IEnumerator LoadAllPool(){
+        WaitForSeconds delay = new WaitForSeconds(0.4f);
+        yield return delay;
+        EventCenter.EventTrigger(E_EventType.LoadObjPool, E_PoolType.SkillSlot_技能槽位);
+        EventCenter.EventTrigger(E_EventType.LoadObjPool, E_PoolType.SkillIcon_技能图标);
+        EventCenter.EventTrigger(E_EventType.LoadObjPool, E_PoolType.FloatingText_跳字);
+
+    }
+    void Awake(){
         EventCenter.ClearAllEvents();
         //读取是否加载过地图,如果加载过，忽略
         gameRoot = GameRoot.Instance;
         BattleSkillFactory.RegisterAllSkills();
 
-        //正交相机漫游管理器
+        // 在注册OrthoCameraNavigator之前恢复相机存档，确保其Awake读到正确位置
+        var csd = JsonSaver.Load<CameraSaveData>();
+        if (csd.IsValid()){
+            var cam = Camera.main;
+            if (cam != null)
+            {
+                cam.transform.position = new Vector3(csd.cPosX, csd.cPosY, csd.cPosZ);
+                cam.orthographicSize = csd.cSize;
+            }
+        }
+
+        //地图生成管理器
+        gameRoot.RegisterGlobal_MonoManager<GameMapManager>();
+        gameRoot.RegisterGlobal_CSManager(new GameBattleManager());
+        //地图寻路管理器
+        gameRoot.RegisterGlobal_MonoManager<HexPathFindingManager>();
+        //地图房间交互管理器
+        gameRoot.RegisterGlobal_MonoManager<HexMapInteractManager>();
+        //移动管理器
+        gameRoot.RegisterGlobal_MonoManager<MapMoverManager>();
+        //活力点数管理器
+        gameRoot.RegisterGlobal_MonoManager<VitalityPointsManager>();
+        //回合记录管理器
+        gameRoot.RegisterGlobal_MonoManager<GameRoundManager>();
+
+        //正交相机漫游管理器（此时Camera.main已在上面恢复好位置）
         gameRoot.RegisterScene_MonoManager<OrthoCameraNavigator>();
         //技能管理器
         gameRoot.RegisterScene_MonoManager<MapSkillerCheker>();
@@ -107,7 +130,8 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load
         gameRoot.RegisterScene_MonoManager<CharacterRayCasterManager>();
         //混沌等级管理器
         gameRoot.RegisterScene_MonoManager<ChaosLevelManager>();
-
+        //等级奖励管理器
+        gameRoot.RegisterScene_MonoManager<LevelRewardManager>();
 
         JsonSaver.InitData<FirstLoadMap>(this, JsonSaver.Load<FirstLoadMap>().GetState);
 
@@ -115,21 +139,25 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load
         //EventCenter.AddEventListener(E_EventType.NewRound, UpdateRoundText);
         EventCenter.AddEventListener(E_EventType.UpdateRoundState, UpdateRoundText);
         EventCenter.AddEventListener(E_EventType.UpdateUIVitalityPoints, UpdateValityText);
+        EventCenter.AddEventListener(E_EventType.BattleEnd, OnBattleReturn);
+        EventCenter.AddEventListener<int>(E_EventType.ChaosLevelUP, UpdateChaosLevelUI);
+
+        // ClearAllEvents 会清掉全局管理器的监听，重新绑定房间重生管理器的事件
+        GameRoot.GetManager<RoomRespawnManager>()?.RebindEvents();
     }
     private void Start()
     {
         EventCenter.EventTrigger(E_EventType.UpdateRoundState);
         EventCenter.EventTrigger(E_EventType.UpdateUIVitalityPoints);
+        // 初始化混沌等级 UI
+        int chaosLevel = GameRoot.GetManager<ChaosLevelManager>()?.currentLevel ?? 1;
+        UpdateChaosLevelUI(chaosLevel);
     }
 
-
-
-    IEnumerator LoadSkillInfoPool()
+    void UpdateChaosLevelUI(int level)
     {
-        WaitForSeconds delay = new WaitForSeconds(0.5f);
-        EventCenter.EventTrigger(E_EventType.LoadObjPool, E_PoolType.SkillSlot_技能槽位);
-        yield return delay;
-        EventCenter.EventTrigger(E_EventType.LoadObjPool, E_PoolType.SkillIcon_技能图标);
+        if (chaosLevelUIText != null)
+            chaosLevelUIText.text = level.ToString();
     }
 
     IEnumerator LoadCharacter(float delay)
@@ -140,21 +168,62 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load
         //支持外部角色调整
         player1.InitCharacterDataTag(E_CharacterType.P_海螺骑士, true, true);
 
-        //GameRoot.GetManager<OrthoCameraNavigator>().FocusOnTarget(player1.gameObject);
-        (player1.GetComponent<CharacterMapMoveHandle>().iMapMover as Player_CharacterMapMover).CharacterZeroMove();
-        //yield return new WaitForSeconds(delay/2);
-        
-        ////地图还没有加载，还没来得及注册
-        //HexRoomTag randonoom = gameMapManager.GetRnadomRoom();
+        var mover = player1.GetComponent<CharacterMapMoveHandle>().iMapMover as Player_CharacterMapMover;
+        var battleMgr = GameRoot.GetManager<GameBattleManager>();
 
-        //player1.transform.position = randonoom.transform.position + Vector3.up * characterHeight;
-        //player1.transform.localScale = Vector3.zero;
-        ////把玩家放到一个特殊的位置,然后原地走一格
+        // 战败踢出：先站在战败房间上2秒，再用DoMoveFunc强制移动1格（模拟被踢开）
+        if (battleMgr != null && battleMgr.TryGetKickTarget(player1.transform.position, out HexRoomTag kickTarget))
+        {
+            battleMgr.SuppressBattleTrigger = true;
+            mover.CharacterZeroMove();
+            battleMgr.SuppressBattleTrigger = false;
 
-        //yield return new WaitForSeconds(1.2f);
-        //player1.transform.DOScale(1.5f, 0.3f).SetEase(Ease.InQuart).From(0);
-        //yield return new WaitForSeconds(0.3f);
-        //player1.transform.DOScale(1, 0.2f).SetEase(Ease.OutQuart);
+            yield return new WaitForSeconds(2f);
+
+            mover.DoMoveFunc(new System.Collections.Generic.List<HexRoomTag> { kickTarget });
+
+            battleMgr.ClearPendingKick();
+        }
+        else
+        {
+            mover.CharacterZeroMove();
+        }
+    }
+
+    void OnBattleReturn()
+    {
+        StartCoroutine(OnBattleReturnCoro());
+    }
+
+    IEnumerator OnBattleReturnCoro()
+    {
+        // BattleScene 卸载后回到 MapScene，处理战后逻辑（非首次进入，无需新建角色）
+        yield return null; // 等一帧让 BattleScene 完全卸载
+
+        var player = CharacterHandler.PlayerInstance;
+        if (player == null) yield break;
+
+        var mover = player.GetComponent<CharacterMapMoveHandle>()?.iMapMover as Player_CharacterMapMover;
+        if (mover == null) yield break;
+
+        var battleMgr = GameRoot.GetManager<GameBattleManager>();
+
+        // 战败踢出
+        if (battleMgr != null && battleMgr.TryGetKickTarget(player.transform.position, out HexRoomTag kickTarget))
+        {
+            battleMgr.SuppressBattleTrigger = true;
+            yield return new WaitForSeconds(3f);
+            mover.DoKickMove(new System.Collections.Generic.List<HexRoomTag> { kickTarget });
+            battleMgr.SuppressBattleTrigger = false;
+            battleMgr.ClearPendingKick();
+        }
+        else
+        {
+            // 相机重新聚焦玩家
+            var nav = GameRoot.GetManager<OrthoCameraNavigator>();
+            if (nav != null)
+                nav.FocusOnTarget(player.gameObject, force: true);
+        }
     }
 
     IEnumerator LoadMap(){
@@ -182,4 +251,22 @@ public class FirstLoadMap : IValidatable
     {
         return true;
     }
+}
+
+[Serializable]
+public class CameraSaveData : IValidatable
+{
+    public float cPosX, cPosY, cPosZ;
+    public float cSize;
+    public bool hasData;
+
+    public CameraSaveData() { hasData = false; }
+    public CameraSaveData(Vector3 pos, float size)
+    {
+        cPosX = pos.x; cPosY = pos.y; cPosZ = pos.z;
+        cSize = size;
+        hasData = true;
+    }
+
+    public bool IsValid() => hasData;
 }

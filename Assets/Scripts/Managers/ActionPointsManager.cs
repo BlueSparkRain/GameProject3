@@ -44,8 +44,8 @@ public class ActionPointsManager : MonoGlobalManager, ICanSave_And_Load
     /// <summary>
     /// 回合结束时结算：剩余点数存入，计算下回合点数
     /// </summary>
-    public (int maxPoints, int remainPoints) EndRound(int chaosLevel, int storedPoints){
-        int newMax = UnityEngine.Random.Range(6, 9) + storedPoints;
+    public (int maxPoints, int remainPoints) EndRound(int characterLevel, int storedPoints){
+        int newMax = 6 + characterLevel / 10 + storedPoints;
         MaxActionPoints = newMax;
         RemainActionPoints = newMax;
         SaveAndNotify();

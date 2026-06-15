@@ -140,6 +140,41 @@ public static class MagicAnimExtens
         seq.Play();
     }
 
+    /// <summary>
+    /// 战败踢飞动画变种：跳跃 + 360° 翻滚 + 三轴缩放
+    /// 翻滚180°顶点: X=0.4 Y=0.2 Z=0.4（压扁感）
+    /// </summary>
+    public static void RollingKick_WorldAnim(Transform charcaterTrans, Vector3 targetPos)
+    {
+        charcaterTrans.DOKill();
+        Vector3 originalEuler = charcaterTrans.eulerAngles;
+        float totalDur = 0.25f;
+        float halfDur = totalDur * 0.5f;
+
+        Sequence seq = DOTween.Sequence();
+
+        seq.Join(charcaterTrans.DOJump(targetPos, 0.6f, 1, totalDur).SetEase(Ease.InOutSine));
+        // 转 2 圈 (720°)
+        seq.Join(charcaterTrans
+            .DORotate(new Vector3(originalEuler.x, originalEuler.y + 360f, originalEuler.z),
+                totalDur, RotateMode.FastBeyond360).SetEase(Ease.InOutSine));
+
+        // XZ: 1 → 0.4 → 0.8 → 1
+        seq.Insert(0,       charcaterTrans.DOScaleX(0.4f, halfDur).SetEase(Ease.InSine));
+        seq.Insert(0,       charcaterTrans.DOScaleZ(0.4f, halfDur).SetEase(Ease.InSine));
+        seq.Insert(halfDur, charcaterTrans.DOScaleX(0.8f, halfDur).SetEase(Ease.InOutSine));
+        seq.Insert(halfDur, charcaterTrans.DOScaleZ(0.8f, halfDur).SetEase(Ease.InOutSine));
+
+        // Y:  1 → 0.4 → 0.4 → 1（顶点更扁）
+        seq.Insert(0,       charcaterTrans.DOScaleY(0.4f, halfDur).SetEase(Ease.InSine));
+
+        // 统一回弹
+        seq.Append(charcaterTrans.DOScale(1f, 0.08f).SetEase(Ease.OutBack));
+        seq.Append(charcaterTrans.DORotate(originalEuler, 0.06f).SetEase(Ease.OutSine));
+
+        seq.Play();
+    }
+
 
 
     /// <summary>

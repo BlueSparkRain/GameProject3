@@ -35,14 +35,14 @@ public class VitalityPointsManager : MonoGlobalManager, ICanSave_And_Load
         else
             valityPoint = newValue;
 
-        Debug.Log($"[VitalityPointsManager]活力变化{transValue}, 当前:{valityPoint}/{max_VitalityPoints}");
+        DebugManager.Log(EDebugCategory.MapRoom, $"[VitalityPointsManager]活力变化{transValue}, 当前:{valityPoint}/{max_VitalityPoints}");
 
         JsonSaver.Save(new Save_VitalityPoins(valityPoint, max_VitalityPoints));
         EventCenter.EventTrigger(E_EventType.UpdateUIVitalityPoints);
 
         if (valityPoint <= 0)
         {
-            Debug.Log("[VitalityPointsManager]活力归零，游戏结束");
+            DebugManager.Log(EDebugCategory.MapRoom, "[VitalityPointsManager]活力归零，游戏结束");
             EventCenter.EventTrigger(E_EventType.GameOver);
         }
     }

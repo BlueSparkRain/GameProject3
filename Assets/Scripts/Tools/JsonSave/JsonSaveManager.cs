@@ -35,23 +35,27 @@ public static class JsonSaver
         try
         {
             string path = GetSavePath<T>();
-            if (!File.Exists(path)) return false;
-            string json = File.ReadAllText(path);
+            string oldPath = Path.Combine(SaveRoot, typeof(T).Name + FileExtension);
+            if (!File.Exists(path) && !File.Exists(oldPath)) return false;
+            string actualPath = File.Exists(path) ? path : oldPath;
+            string json = File.ReadAllText(actualPath);
             T data = JsonUtility.FromJson<T>(json);
             return data != null && data.IsValid();
         }
         catch { return false; }
     }
 
-    // ✅ 新增：按ID判断是否有有效存档
+    // 按ID判断是否有有效存档
     public static bool HasValidData<T>(string uniqueId) where T : class, IValidatable, new()
     {
         try
         {
             string path = GetSavePath<T>(uniqueId);
-            if (!File.Exists(path)) {
-                return false; }
-            string json = File.ReadAllText(path);
+            string oldPath = Path.Combine(SaveRoot, $"{typeof(T).Name}_{uniqueId}{FileExtension}");
+            if (!File.Exists(path) && !File.Exists(oldPath))
+                return false;
+            string actualPath = File.Exists(path) ? path : oldPath;
+            string json = File.ReadAllText(actualPath);
             T data = JsonUtility.FromJson<T>(json);
             return data != null && data.IsValid();
         }
@@ -79,47 +83,60 @@ public static class JsonSaver
     #endregion
 
     #region 加载数据
+    static string OldGetSavePath<T>() => Path.Combine(SaveRoot, typeof(T).Name + FileExtension);
+
     public static T Load<T>() where T : class, IValidatable, new()
     {
         try
         {
             string path = GetSavePath<T>();
+            string oldPath = OldGetSavePath<T>();
+            // 迁移旧版平铺存档 → 新子文件夹
+            if (!File.Exists(path) && File.Exists(oldPath))
+            {
+                EnsureDir(Path.GetDirectoryName(path));
+                File.Move(oldPath, path);
+            }
+
             if (File.Exists(path))
             {
                 string json = File.ReadAllText(path);
                 T data = JsonUtility.FromJson<T>(json);
                 if (data != null && data.IsValid()) return data;
-                Debug.LogWarning($"存档损坏，自动重置: {typeof(T).Name}");
+                DebugManager.LogWarning(EDebugCategory.General, $"存档损坏，自动重置: {typeof(T).Name}");
             }
             T defaultData = new T();
-            //Save(defaultData);
             return defaultData;
         }
         catch (Exception e)
         {
             Debug.LogError($"读取失败 {typeof(T).Name}: {e.Message}");
             T fallback = new T();
-            //Save(fallback);
             return fallback;
         }
     }
 
-    // ✅ 核心新增：按【唯一ID】加载单个角色的数据
+    // 按【唯一ID】加载单个角色的数据
     public static T Load<T>(string uniqueId) where T : class, IValidatable, new()
     {
         try
         {
             string path = GetSavePath<T>(uniqueId);
+            string oldPath = Path.Combine(SaveRoot, $"{typeof(T).Name}_{uniqueId}{FileExtension}");
+            // 迁移旧版
+            if (!File.Exists(path) && File.Exists(oldPath))
+            {
+                EnsureDir(Path.GetDirectoryName(path));
+                File.Move(oldPath, path);
+            }
+
             if (File.Exists(path))
             {
                 string json = File.ReadAllText(path);
                 T data = JsonUtility.FromJson<T>(json);
                 if (data != null && data.IsValid())
-                {
-                    Debug.Log($"加载【角色存档】ID:{uniqueId}");
                     return data;
-                }
-                Debug.LogWarning($"角色存档损坏 ID:{uniqueId}，自动重置");
+                DebugManager.LogWarning(EDebugCategory.General, $"角色存档损坏 ID:{uniqueId}，自动重置");
             }
             T defaultData = new T();
             Save(defaultData, uniqueId);
@@ -143,8 +160,10 @@ public static class JsonSaver
                 Debug.LogError($"拒绝保存无效数据: {typeof(T).Name}");
                 return;
             }
+            string path = GetSavePath<T>();
+            EnsureDir(Path.GetDirectoryName(path));
             string json = JsonUtility.ToJson(data, true);
-            File.WriteAllText(GetSavePath<T>(), json);
+            File.WriteAllText(path, json);
         }
         catch (Exception e){
             Debug.LogError($"保存失败 {typeof(T).Name}: {e.Message}");
@@ -158,9 +177,10 @@ public static class JsonSaver
                 Debug.LogError($"拒绝保存无效角色数据 ID:{uniqueId}");
                 return;
             }
+            string path = GetSavePath<T>(uniqueId);
+            EnsureDir(Path.GetDirectoryName(path));
             string json = JsonUtility.ToJson(data, true);
-
-            File.WriteAllText(GetSavePath<T>(uniqueId), json);
+            File.WriteAllText(path, json);
         }
         catch (Exception e){
             Debug.LogError($"保存角色失败 ID:{uniqueId}: {e.Message}");
@@ -173,13 +193,15 @@ public static class JsonSaver
     {
         try
         {
-            Debug.Log("新游戏：清空所有存档");
+            DebugManager.Log(EDebugCategory.General, "新游戏：清空所有存档");
             if (Directory.Exists(SaveRoot))
             {
+                foreach (var dir in Directory.GetDirectories(SaveRoot))
+                    Directory.Delete(dir, true);
                 foreach (var file in Directory.GetFiles(SaveRoot))
                     File.Delete(file);
             }
-            Debug.Log("新游戏数据初始化完成");
+            DebugManager.Log(EDebugCategory.General, "新游戏数据初始化完成");
         }
         catch (Exception e)
         {
@@ -189,11 +211,17 @@ public static class JsonSaver
     #endregion
 
     #region 工具方法
-    // 原有：按类型存档
-    public static string GetSavePath<T>() => Path.Combine(SaveRoot, typeof(T).Name + FileExtension);
+    // 按类型存档（存入类型子文件夹: GameSaves/TypeName/TypeName.xjson）
+    public static string GetSavePath<T>() => Path.Combine(SaveRoot, typeof(T).Name, typeof(T).Name + FileExtension);
 
-    // ✅ 新增：按【类型+唯一ID】生成独立存档路径（多角色不覆盖）
-    public static string GetSavePath<T>(string uniqueId) => Path.Combine(SaveRoot, $"{typeof(T).Name}_{uniqueId}{FileExtension}");
+    // 按【类型+唯一ID】生成独立存档路径
+    public static string GetSavePath<T>(string uniqueId) => Path.Combine(SaveRoot, typeof(T).Name, $"{typeof(T).Name}_{uniqueId}{FileExtension}");
+
+    static void EnsureDir(string dir)
+    {
+        if (!Directory.Exists(dir))
+            Directory.CreateDirectory(dir);
+    }
 
     //public static string GetSaveFilePath<T>() where T : class
     //{

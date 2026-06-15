@@ -29,7 +29,7 @@ public class BattleArtEffectHandller : MonoBehaviour{
         if (damageHandler == this.damageHandler) {
             float colorRate = (getDamage - minDamage) / (maxDamage - minDamage);
             float shakeRate = (getDamage - minDamage) / (maxDamage - minDamage);
-            Debug.Log($"[BattleArtEffectHandller]-{this.damageHandler.name},动画强度：{colorRate}");
+            DebugManager.Log(EDebugCategory.BattleDamage,$"[BattleArtEffectHandller]-{this.damageHandler.name},动画强度：{colorRate}");
             DamageFlash(getDamage,colorRate);
             DamageShake(getDamage,shakeRate);
         }

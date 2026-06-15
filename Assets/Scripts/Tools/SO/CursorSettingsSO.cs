@@ -71,7 +71,7 @@ public class CursorSettingsSO : ScriptableObject
             }
             else
             {
-                Debug.LogWarning($"[CursorSO] 样式{config.style}重复配置，保留第一个！");
+                DebugManager.LogWarning(EDebugCategory.General, $"[CursorSO] 样式{config.style}重复配置，保留第一个！");
             }
         }
     }

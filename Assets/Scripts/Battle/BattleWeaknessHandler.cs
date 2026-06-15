@@ -2,21 +2,38 @@ using UnityEngine;
 
 /// <summary>
 /// 弱点击中处理——读取对应角色弱点配置、维护弱点列表、处理弱点命中时的护盾扣除。
+/// 初始化时寻找自身的 Battle_Viewer，将弱点图标UI同步到 weaknessIconContent 中。
 /// 重构原因：原本散落在 Attack_Skill 中的"弱点判定→伤害x2+破盾"逻辑。
 /// </summary>
 public class BattleWeaknessHandler : MonoBehaviour{
     IBattlable self;
+    Battle_Viewer viewer;
+    WeaknessIconConfigSO weaknessIconConfig;
+
     /// <summary>
     /// 加载弱点配置并初始化到战斗单位上。
     /// </summary>
     public void InitWeaknessHandle(IBattlable _self, CharacterWeaknessConfigSO config){
         self = _self;
 
+        // 寻找同一 GameObject 上的 Battle_Viewer
+        viewer = GetComponent<Battle_Viewer>();
+
+        // 加载弱点图标配置
+        weaknessIconConfig = ResourcesLoader.FindWeaknessIconConfig();
+
         if (config != null){
             foreach (var w in config.weaknesses)
                 self.AddWeakness(w);
-            Debug.Log($"[BattleWeaknessHandler] {config.characterType} 初始化弱点:{self.weaknesses.Count}个");
+            DebugManager.Log(EDebugCategory.BattleSkiller,$"[BattleWeaknessHandler] {config.characterType} 初始化弱点:{self.weaknesses.Count}个");
         }
+
+        // 订阅弱点变更事件，驱动 UI 同步
+        if (self != null)
+            self.OnWeaknessChanged += SyncToViewer;
+
+        // 初始同步
+        SyncToViewer();
     }
 
     /// <summary>
@@ -53,5 +70,20 @@ public class BattleWeaknessHandler : MonoBehaviour{
 
         self.battleDamageHandler.DoModelValue(E_BattleModelType.ShieldPoints, -1);
         return 2f;
+    }
+
+    /// <summary>
+    /// 将当前弱点列表同步到 Battle_Viewer 的 weaknessIconContent
+    /// </summary>
+    void SyncToViewer()
+    {
+        if (viewer != null && self?.weaknesses != null)
+            viewer.SyncWeaknessIcons(self.weaknesses, weaknessIconConfig);
+    }
+
+    void OnDestroy()
+    {
+        if (self != null)
+            self.OnWeaknessChanged -= SyncToViewer;
     }
 }

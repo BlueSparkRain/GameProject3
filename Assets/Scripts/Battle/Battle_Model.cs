@@ -2,146 +2,130 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// 战斗角色数据模型
+/// 战斗角色数据模型。所有核心数值的权威来源。
+/// 使用脏标记合并 OnDataChanged 事件：一帧内多次变更只触发一次 UI 刷新。
 /// </summary>
 public class Battle_Model
 {
-    // 核心属�?
-    private float _maxHP;
-    private float _hp;
-    private float _maxSP;
-    private float _sp;
-    private float _maxAG;
-    private float _ag;
-    private int _maxAtbPoints;
-    private int _AtbPoints;
+    float _maxHP;
+    float _hp;
+    float _maxSP;
+    float _sp;
+    float _maxAG;
+    float _ag;
+    int _maxAtbPoints;
+    int _atbPoints;
+    int _maxShieldPoints;
+    int _shieldPoints;
 
-    //盾点Info
-    private int _maxShieldPoints;
-    private int _shieldPoints;
+    bool _dirty;
 
     public event Action OnDataChanged;
     public event Action OnHPZero;
     public event Action<float, float> OnHPChanged;
     public event Action OnShieldBreak;
-    private float SafeValue(float value, float min, float max)
+
+    static float SafeValue(float value, float min, float max)
     {
-        if (float.IsNaN(value) || float.IsInfinity(value))
-            return min;
+        if (float.IsNaN(value) || float.IsInfinity(value)) return min;
         return Mathf.Clamp(value, min, max);
     }
-    private int SafeValue(int value, int min, int max)
-    {
-        return Mathf.Clamp(value, min, max);
-    }
-    // 生命�?
-    public float HP
-    {
+    static int SafeValue(int value, int min, int max) => Mathf.Clamp(value, min, max);
+    // ── HP ──
+    public float HP{
         get => _hp;
         set{
             _hp = SafeValue(value, 0, _maxHP);
-            OnDataChanged?.Invoke();
+            MarkDirty();
             OnHPChanged?.Invoke(_hp, _maxHP);
-            if(_hp<=0)
-                OnHPZero?.Invoke();}
+            if (_hp <= 0) OnHPZero?.Invoke();
+        }
     }
     public float MaxHP
     {
         get => _maxHP;
-        set{
-            _maxHP = SafeValue(value, 1, float.MaxValue);
-            OnDataChanged?.Invoke();}
+        set { _maxHP = SafeValue(value, 1, float.MaxValue); MarkDirty(); }
     }
 
-    // 法力�?能量
+    // ── SP ──
     public float SP
     {
         get => _sp;
-        set{
-            _sp = SafeValue(value, 0, _maxSP);
-            OnDataChanged?.Invoke();}
+        set { _sp = SafeValue(value, 0, _maxSP); MarkDirty(); }
     }
-    public float MaxSP{
+    public float MaxSP
+    {
         get => _maxSP;
-        set{
-            _maxSP = SafeValue(value, 1, float.MaxValue);
-            OnDataChanged?.Invoke();}
+        set { _maxSP = SafeValue(value, 1, float.MaxValue); MarkDirty(); }
     }
 
-    // 怒气�?
-    public float AG{
+    // ── AG → ATB 自动溢出转换 ──
+    public float AG
+    {
         get => _ag;
-        set{
-            float newAG = value;
-            while (newAG >= _maxAG)
+        set
+        {
+            float v = value;
+            while (v >= _maxAG)
             {
-                newAG -= _maxAG;
-                _AtbPoints = SafeValue(_AtbPoints + 1, 0, _maxAtbPoints);
+                v -= _maxAG;
+                _atbPoints = SafeValue(_atbPoints + 1, 0, _maxAtbPoints);
             }
-            _ag = SafeValue(newAG, 0, _maxAG);
-            OnDataChanged?.Invoke();}
+            _ag = SafeValue(v, 0, _maxAG);
+            MarkDirty();
+        }
     }
     public float MaxAG
     {
         get => _maxAG;
-        set{
-            _maxAG = SafeValue(value, 1, float.MaxValue);
-            OnDataChanged?.Invoke();}
+        set { _maxAG = SafeValue(value, 1, float.MaxValue); MarkDirty(); }
     }
 
-    // ATB行动�?
-    public int ATBPoints{
-        get => _AtbPoints;
-        set{
-            _AtbPoints = SafeValue(value, 0, _maxAtbPoints);
-            OnDataChanged?.Invoke();}
+    // ── ATB ──
+    public int ATBPoints
+    {
+        get => _atbPoints;
+        set { _atbPoints = SafeValue(value, 0, _maxAtbPoints); MarkDirty(); }
     }
     public int MaxATBPoints
     {
         get => _maxAtbPoints;
-        set
-        {
-            _maxAtbPoints = SafeValue(value, 1, int.MaxValue);
-            OnDataChanged?.Invoke();
-        }
+        set { _maxAtbPoints = SafeValue(value, 1, int.MaxValue); MarkDirty(); }
     }
 
+    // ── Shield ──
     public int ShieldPoints
     {
         get => _shieldPoints;
-        set{
+        set
+        {
             _shieldPoints = SafeValue(value, 0, _maxShieldPoints);
-            OnDataChanged?.Invoke();
-            if (_shieldPoints <= 0)
-                OnShieldBreak?.Invoke();
+            MarkDirty();
+            if (_shieldPoints <= 0) OnShieldBreak?.Invoke();
         }
     }
     public int MaxShieldPoints
     {
         get => _maxShieldPoints;
-        set
-        {
-            _maxShieldPoints = SafeValue(value, 1, int.MaxValue);
-            OnDataChanged?.Invoke();
-        }
+        set { _maxShieldPoints = SafeValue(value, 1, int.MaxValue); MarkDirty(); }
     }
 
+    void MarkDirty() { _dirty = true; }
 
-    // 构造函�?
-    public Battle_Model(float maxHp, float maxSp, int maxAtb, float maxAg=100,int maxShiled=5){
-        MaxHP = maxHp;
-        HP = maxHp;
+    /// <summary>每帧调用一次：有脏数据时才触发 UI 刷新</summary>
+    public void FlushUI()
+    {
+        if (!_dirty) return;
+        _dirty = false;
+        OnDataChanged?.Invoke();
+    }
 
-        MaxSP = maxSp;
-        SP = maxSp;
-
-        MaxAG = maxAg;
-        AG = 0;
-
-        MaxATBPoints = maxAtb;
-        ATBPoints = 0;
-
-        MaxShieldPoints = maxShiled;
-        ShieldPoints = maxShiled;
+    public Battle_Model(float maxHp, float maxSp, int maxAtb, float maxAg = 100, int maxShield = 5)
+    {
+        MaxHP = maxHp;        HP = maxHp;
+        MaxSP = maxSp;        SP = maxSp;
+        MaxAG = maxAg;        AG = 0;
+        MaxATBPoints = maxAtb; ATBPoints = 0;
+        MaxShieldPoints = maxShield; ShieldPoints = maxShield;
     }
 }

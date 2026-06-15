@@ -1,6 +1,3 @@
-using Core;
-using DG.Tweening;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,6 +17,10 @@ public class SkillIconSpawner : MonoBehaviour
     [Header("槽位配置")]
     public bool bornBornSlot = false;
 
+    [Header("技能模式")]
+    [Tooltip("决定SkillIcon的AutoMode/ATBMode")]
+    public E_SkillMode skillMode = E_SkillMode.Auto;
+
     [Header("动画加载")]
     [Tooltip("逐个加载时每个槽位的生成间隔（秒）")]
     public float slotLoadInterval = 0.05f;
@@ -29,8 +30,7 @@ public class SkillIconSpawner : MonoBehaviour
     /// </summary>
     public System.Action onLoadComplete;
 
-    public List<SkillData> GetSettledSkilldatas()
-    {
+    public List<SkillData> GetSettledSkilldatas(){
         List<SkillData> icons = new List<SkillData>();
         for (int i = 0; i < slotsParent.childCount; i++)
         {
@@ -40,20 +40,17 @@ public class SkillIconSpawner : MonoBehaviour
         }
         return icons;
     }
-
     public void UnloadSkills()
     {
         foreach (var icon in currentIcons)
-            SkillIconCaller.UnLoadSkillIcon(E_PoolType.SkillIcon_技能图标, icon.gameObject, 1);
+            SkillIconCaller.UnLoadSkillIcon(E_PoolType.SkillIcon_技能图标, icon.gameObject, 1, false);
         currentIcons.Clear();
-
         foreach (var slot in slots)
         {
             slot.transform.SetParent(transform);
-            SkillIconCaller.UnLoadSkillIcon(E_PoolType.SkillSlot_技能槽位, slot.gameObject, 1);
+            SkillIconCaller.UnLoadSkillIcon(E_PoolType.SkillSlot_技能槽位, slot.gameObject, 1, false);
         }
         slots.Clear();
-
         for (int i = slotsParent.childCount - 1; i >= 0; i--)
         {
             var child = slotsParent.GetChild(i);
@@ -67,67 +64,24 @@ public class SkillIconSpawner : MonoBehaviour
     /// </summary>
     public List<SkillIcon> LoadSlotsAndSkills(int slotNum, List<SkillData> skillDatas, bool canDrag, bool isImmeditely = true)
     {
-        //if (!isImmeditely)
-        //{
-        //    StartCoroutine(LoadSlotsAndSkillsCoroutine(slotNum, skillDatas, canDrag));
-        //    return null;
-        //}
-
         UnloadSkills();
-
         for (int i = 0; i < slotNum; i++)
         {
-            var slot = SkillIconCaller.LoadSkillSlot(slotsParent);
+            var slot = SkillIconCaller.LoadSkillSlot(slotsParent, false);
             slots.Add(slot);
         }
-
         this.skillDatas = skillDatas;
         skillIcons.Clear();
-        for (int i = 0; i < skillDatas.Count; i++)
+        int iconCount = Mathf.Min(slotNum, skillDatas.Count);
+        for (int i = 0; i < iconCount; i++)
         {
-            var newSkillIcon = SkillIconCaller.LoadSkillIcon(slots[i].transform, canDrag);
+            var newSkillIcon = SkillIconCaller.LoadSkillIcon(slots[i].transform, canDrag, false);
             newSkillIcon.InitSkillIcon(skillDatas[i], slots[i], canDrag);
+            newSkillIcon.PendingSkillMode = skillMode;
             skillIcons.Add(newSkillIcon);
         }
-
         currentIcons = skillIcons;
         return currentIcons;
     }
-
-    /// <summary>
-    /// 逐个加载槽位+技能（协程动画版本，适合面板打开时的入场效果）
-    /// 每隔 slotLoadInterval 秒生成一个槽位及其对应图标
-    /// </summary>
-    IEnumerator LoadSlotsAndSkillsCoroutine(int slotNum, List<SkillData> skillDatas, bool canDrag)
-    {
-        UnloadSkills();
-
-        this.skillDatas = skillDatas;
-        skillIcons.Clear();
-
-        WaitForSeconds delay = new WaitForSeconds(slotLoadInterval);
-
-        for (int i = 0; i < slotNum; i++)
-        {
-            // 生成槽位
-            var slot = SkillIconCaller.LoadSkillSlot(slotsParent);
-            slots.Add(slot);
-
-            // 如果该位置有对应的技能数据，一并生成图标
-            if (i < skillDatas.Count)
-            {
-                var newSkillIcon = SkillIconCaller.LoadSkillIcon(slots[i].transform, canDrag);
-                newSkillIcon.InitSkillIcon(skillDatas[i], slots[i], canDrag);
-                skillIcons.Add(newSkillIcon);
-            }
-
-            yield return delay;
-        }
-
-        currentIcons = skillIcons;
-        onLoadComplete?.Invoke();
-        Debug.Log($"[SkillIconSpawner] 动画加载完成: {slotNum}槽位, {skillIcons.Count}图标");
-    }
-
     List<SkillIcon> skillIcons = new List<SkillIcon>();
 }

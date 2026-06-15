@@ -223,7 +223,7 @@ Transform:
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.2, z: 0}
   m_LocalScale: {x: 0.85, y: 0.85, z: 0.85}
-  m_ConstrainProportionsScale: 1
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3117315003848007281}
   - {fileID: 7874025069577768448}
@@ -282,10 +282,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bc079763ab93004dad62f601c4688d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  restSkillSlotNum: 20
-  normalSkillSlotNum: 5
-  atbSkillSlotNum: 5
   canActSettle: 0
+  _instanceSaveId: 
 --- !u!114 &3866674452186410950
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -349,9 +347,9 @@ Transform:
   m_GameObject: {fileID: 6229459602272027085}
   serializedVersion: 2
   m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: -0.6, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 0.08, y: -0.1, z: 0}
+  m_LocalScale: {x: 0.35, y: 0.35, z: 0.35}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 8795855537690547855}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 180}
@@ -396,7 +394,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 869c900ccbc2f8647a6f05de8b3bbbed, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c56d361d4aeb47f4ca33dfb01d342de6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

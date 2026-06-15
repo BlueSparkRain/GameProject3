@@ -1,7 +1,9 @@
 using UnityEngine;
-
 public enum E_CharacterType{
     P_海螺骑士,
+    R_复制体1,
+    R_复制体2,
+    R_复制体3,
 
     LE_剑兵,
     LE_枪兵,
@@ -111,6 +113,14 @@ public class CharacterDataSO : ScriptableObject
     [Tooltip("初始ATB点数上限")]
     public int Maximum_ATB;
 
+    [Header("暴击率")]
+    [Tooltip("暴击率")]
+    public float CritRate = 0.05f;
+
+    [Header("暴击伤害")]
+    [Tooltip("暴击伤害倍率")]
+    public float CritDamage = 1.5f;
+
     [Header("角色初始自动化槽数量")]
     [Tooltip("战斗中自动循环释放的技能槽位数量")]
     public int autoSkillSlotCount = 9;
@@ -120,10 +130,8 @@ public class CharacterDataSO : ScriptableObject
     public int atbSkillSlotCount = 5;
     #endregion
 
-    public float GetProperty(E_CharacterPropertyType type)
-    {
-        switch (type)
-        {
+    public float GetProperty(E_CharacterPropertyType type){
+        switch (type){
             case E_CharacterPropertyType.Phy_Flat_Penetration: return Phy_Flat_Penetration;
             case E_CharacterPropertyType.Mag_Flat_Penetration: return Mag_Flat_Penetration;
             case E_CharacterPropertyType.Phy_Resistance: return Phy_Resistance;
@@ -141,6 +149,8 @@ public class CharacterDataSO : ScriptableObject
             case E_CharacterPropertyType.Heal_Amplification: return Heal_Amplification;
             case E_CharacterPropertyType.Shield_Amplification: return Shield_Amplification;
             case E_CharacterPropertyType.Maximum_ATB: return Maximum_ATB;
+            case E_CharacterPropertyType.CritRate: return CritRate;
+            case E_CharacterPropertyType.CritDamage: return CritDamage;
             default: Debug.LogError("属性不存在"); return 0;
         }
     }

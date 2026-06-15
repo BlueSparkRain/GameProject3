@@ -81,14 +81,28 @@ public class EquipBacketManager : MonoGlobalManager, ICanSave_And_Load
     {
         var data = JsonSaver.Load<Save_EquipBacket>();
         if (data != null && data.equipmentList != null)
+        {
+            // 过滤掉无效的装备数据(旧格式/损坏数据)
+            int removed = data.equipmentList.RemoveAll(eq => eq == null || !eq.IsValid());
+            if (removed > 0)
+            {
+                DebugManager.LogWarning(EDebugCategory.Equipment,$"[EquipBacketManager] 清理了{removed}件无效装备数据，存档将被更新");
+                SaveEquipBacket();
+            }
             ownedEquipments = data.equipmentList;
+            DebugManager.Log(EDebugCategory.Equipment,$"[EquipBacketManager] 从存档加载了{ownedEquipments.Count}件装备");
+        }
         else
+        {
             ownedEquipments = new List<EquipData>();
+            DebugManager.Log(EDebugCategory.Equipment,"[EquipBacketManager] 存档为空，初始化空背包");
+        }
     }
 
     public void InitBySelf()
     {
         ownedEquipments = new List<EquipData>();
+        DebugManager.Log(EDebugCategory.Equipment,"[EquipBacketManager] 首次初始化，创建空背包");
     }
 
     void SaveEquipBacket()
@@ -109,5 +123,5 @@ public class Save_EquipBacket : IValidatable
         equipmentList = list;
     }
 
-    public bool IsValid() => true;
+    public bool IsValid() => equipmentList != null && equipmentList.TrueForAll(eq => eq != null && eq.IsValid());
 }

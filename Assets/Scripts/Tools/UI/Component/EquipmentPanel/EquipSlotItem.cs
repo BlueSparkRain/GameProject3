@@ -1,3 +1,4 @@
+using Core;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,8 +7,7 @@ using UnityEngine.UI;
 /// 装备槽位组件——配置部位枚举，内部存储EquipData
 /// 点击按钮打开可选装备列表，选择后直接显示
 /// </summary>
-public class EquipSlotItem : MonoBehaviour
-{
+public class EquipSlotItem : MonoBehaviour{
     [Header("部位类型")]
     public E_EquipmentSlot slotType;
 
@@ -39,17 +39,16 @@ public class EquipSlotItem : MonoBehaviour
 
     public System.Action<EquipSlotItem> onClicked;
 
-    void Start()
-    {
+    void Start(){
         if (slotButton != null)
             slotButton.onClick.AddListener(() => onClicked?.Invoke(this));
         LoadSlotIcon();
         UpdateSlotName();
-        ShowEquippedDisplay(false);
+        if (!HasEquipped)
+            ShowEquippedDisplay(false);
     }
 
-    void LoadSlotIcon()
-    {
+    void LoadSlotIcon(){
         if (slotIcon == null) return;
         var sprite = EquipIconPath.LoadSlotIcon(slotType);
         if (sprite != null) slotIcon.sprite = sprite;
@@ -81,12 +80,14 @@ public class EquipSlotItem : MonoBehaviour
             ShowEquippedDisplay(false);
             return;
         }
+        GameRoot.GetManager<AudioManager>().PlaySFX("Music/SFX/ConfirmAction");
         ShowEquippedDisplay(true);
         if (equipNameText != null)
             equipNameText.text = data.GetEquipName();
         if (equipIcon != null)
         {
-            var sprite = EquipIconPath.LoadSlotIcon(data.slot);
+            var sprite = EquipIconPath.LoadEquipIcon(data.iconResourcePath)
+                      ?? EquipIconPath.LoadSlotIcon(data.slot);
             if (sprite != null) equipIcon.sprite = sprite;
         }
     }

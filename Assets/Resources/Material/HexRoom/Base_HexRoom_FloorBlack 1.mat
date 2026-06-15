@@ -25,7 +25,7 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _BlindCount: 40
+    - _BlindCount: 150
     - _BlindIntensity: 2.13
     - _BlindRotation: 222
     - _BlindThickness: 0.5
@@ -38,8 +38,8 @@ Material:
     - _BaseColor: {r: 0.90132046, g: 1, b: 0, a: 1}
     - _GradientCenter: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _GradientColor: {r: 0, g: 0.9213741, b: 1, a: 1}
-    - _GradientColorA: {r: 0.64465404, g: 0.7838227, b: 1, a: 1}
-    - _GradientColorB: {r: 1, g: 1, b: 1, a: 1}
-    - _MainColor: {r: 0.61635214, g: 0.61635214, b: 0.61635214, a: 1}
-    - _ShadowColor: {r: 1, g: 1, b: 1, a: 1}
+    - _GradientColorA: {r: 0.6509433, g: 1, b: 0.863115, a: 1}
+    - _GradientColorB: {r: 0.21953231, g: 0.8547894, b: 0.9308176, a: 1}
+    - _MainColor: {r: 1, g: 1, b: 1, a: 1}
+    - _ShadowColor: {r: 0, g: 0.4833712, b: 1, a: 1}
   m_BuildTextureStacks: []

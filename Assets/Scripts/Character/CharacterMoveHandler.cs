@@ -15,18 +15,24 @@ public class CharacterMapMoveHandle : MonoBehaviour, ICanSave_And_Load
     public int currentCol;
 
     MapMoverPosition moverPosData;
+    bool _isPlayer;
 
     public IMapMoveable iMapMover;
+
+    public void SetUniqueId(string id) { uniqueId = id; }
+
     /// <summary>
     /// 已知是高级角色（可以寻路）
     /// </summary>
     /// <param name="isPlayer"></param>
     public void InitMover(bool isPlayer, E_CharacterType characterType)
     {
+        _isPlayer = isPlayer;
         //characterType = GetComponent<CharacterData>().characterType;
         iMapMover = isPlayer ?
             new Player_CharacterMapMover(characterType, transform) :
-            new Robot_CharacterMapMover();
+            new Robot_CharacterMapMover(transform, GetComponent<CharacterHandler>(),
+                GetComponent<CharacterLevelUpHandler>(), GetComponent<CharacterMapSkiller>());
         JsonSaver.InitData<MapMoverPosition>(this, uniqueId);
         //StartCoroutine(WaitMapLoad());
         //注册Mover
@@ -51,18 +57,11 @@ public class CharacterMapMoveHandle : MonoBehaviour, ICanSave_And_Load
         Gizmos.color = Color.cyan;
         Gizmos.DrawLine(transform.position, transform.position + Vector3.down * 4);
     }
-
     void OnDestroy(){
         JsonSaver.Save(moverPosData, moverPosData.uniqueId);
-        Debug.Log($"存档已更新角色Map位置{currentRow},{currentCol}");
-
+        DebugManager.Log(EDebugCategory.MapRoom, $"存档已更新角色Map位置{currentRow},{currentCol}");
     }
-
-    IEnumerator SetCharacterPos(Vector3 pos)
-    {
-        //HexRoomTag randonoom = GameRoot.GetManager<GameMapManager>().GetTargetRoom(pos);
-
-        //yield return new WaitForSeconds(1f);
+    IEnumerator SetCharacterPos(Vector3 pos){
         transform.position = pos + Vector3.up * GameRoot.GetManager<GameMapManager>().characterYOffset;
         transform.localScale = Vector3.zero;
 
@@ -77,7 +76,7 @@ public class CharacterMapMoveHandle : MonoBehaviour, ICanSave_And_Load
     public void InitBySaveData()
     {
         MapMoverPosition data = JsonSaver.Load<MapMoverPosition>(uniqueId);
-        Debug.Log($"读取到位置记录：{data.pos.x},{data.pos.y}");
+        //Debug.Log($"读取到位置记录：{data.pos.x},{data.pos.y}");
         // 把存档数据赋值给角色实例
         currentRow = data.pos.x;
         currentCol = data.pos.y;
@@ -86,9 +85,7 @@ public class CharacterMapMoveHandle : MonoBehaviour, ICanSave_And_Load
         else
             moverPosData.SetPos(data.pos.x, data.pos.y);
 
-        //var targetPos = roomPath[i].transform.position + Vector3.up * 0.6f;
         StartCoroutine(SetCharacterPos(GameRoot.GetManager<GameMapManager>().GetTargetRoom(data.pos).transform.position ));
-        Debug.Log($"角色 {uniqueId} 加载完成：坐标({currentRow},{currentCol})");
     }
 
     /// <summary>
@@ -96,7 +93,10 @@ public class CharacterMapMoveHandle : MonoBehaviour, ICanSave_And_Load
     /// </summary>
     public void InitBySelf(){
         if (!JsonSaver.HasValidData<MapMoverPosition>(uniqueId)){
-            HexRoomTag room = GameRoot.GetManager<GameMapManager>().GetRnadomRoom();
+            var mapMgr = GameRoot.GetManager<GameMapManager>();
+            HexRoomTag room = _isPlayer
+                ? mapMgr.GetTargetRoom(new Vector2Int(10, 43))
+                : mapMgr.GetRnadomRoom();
             if (room == null){
                 Debug.LogError("无法获取随机房间，地图可能未初始化");
                 return;

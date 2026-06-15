@@ -4,7 +4,7 @@ using Core;
 public class GameRoundManager : MonoGlobalManager, ICanSave_And_Load
 {
     /// <summary>
-    /// µ±Ç°ÓÎÏ·½øĞĞµÄ»ØºÏÊı
+    /// ï¿½ï¿½Ç°ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ĞµÄ»Øºï¿½ï¿½ï¿½
     /// </summary>
     int roundNum = 0;
     public int RoundNum => roundNum;
@@ -12,7 +12,7 @@ public class GameRoundManager : MonoGlobalManager, ICanSave_And_Load
 
     public void InitBySaveData()
     {
-        //¶ÁÈ¡´æµµ¼ÇÂ¼
+        //ï¿½ï¿½È¡ï¿½æµµï¿½ï¿½Â¼
         roundSaveData = JsonSaver.Load<Save_GameRoundState>();
         roundNum = roundSaveData.currentRound;
     }
@@ -21,7 +21,7 @@ public class GameRoundManager : MonoGlobalManager, ICanSave_And_Load
         JsonSaver.Save<Save_GameRoundState>(roundSaveData);
     }
 
-    //ÔÚÌØ¶¨²¨´ÎĞŞ¸Ä»ìãçµÈ¼¶
+    //ï¿½ï¿½ï¿½Ø¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ş¸Ä»ï¿½ï¿½ï¿½È¼ï¿½
     public override void MgrUpdate(float deltaTime){
     }
 
@@ -38,7 +38,7 @@ public class GameRoundManager : MonoGlobalManager, ICanSave_And_Load
 
     void PlusRoundNum()
     {
-        UnityEngine.Debug.Log("»ØºÏÊı+1");
+        DebugManager.Log(EDebugCategory.MapRoom, "å›åˆæ•°+1");
         roundNum++;
         EventCenter.EventTrigger(E_EventType.UpdateRoundState);
         roundSaveData.currentRound = roundNum;

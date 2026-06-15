@@ -10,7 +10,8 @@ public class BattlePanel : UIPanelBase
 
     void OnClickBattleButton(){
         GameRoot.GetManager<TimeManager>()?.SetTimeScale(1f, 0.3f);
-        GameRoot.GetManager<SceneSwitchManager>().SwitchSceneAsync("BattleScene");
+        // Additive 加载：BattleScene 叠在 MapScene 上，六边形地图保留不销毁
+        GameRoot.GetManager<SceneSwitchManager>().SwitchSceneAsync("BattleScene", SceneSwitchManager.LoadMode.Additive);
         Hide();
     }
     void OnClickQuitButton()
@@ -40,7 +41,7 @@ public class BattlePanel : UIPanelBase
 
         Anim_BornPos = bornPos;
         Anim_TargetTrans = targetPos;
-        Debug.Log("设置新位置");
+        DebugManager.Log(EDebugCategory.UIPanel,"设置新位置");
     }
 
     protected override void PlayEnterAnim(System.Action onComplete)

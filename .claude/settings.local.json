@@ -19,7 +19,31 @@
       "Bash(echo \"EXIT:$?\")",
       "Bash(python -c \"print\\('python ok'\\)\")",
       "Bash(python *)",
-      "Bash(sort -t: -k2 -rn)"
+      "Bash(sort -t: -k2 -rn)",
+      "Bash(iconv -f utf-8 -t gbk)",
+      "Bash(r)",
+      "Bash(git show *)",
+      "Bash(iconv -f utf-8 -t gbk /tmp/SkillPropertySO_original.cs)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(sed -i 's/  skill_DeliveryType: 1/  skill_DeliveryType: 2/' S_2.asset)",
+      "Bash(sed -i 's/  skill_DeliveryType: 1/  skill_DeliveryType: 4/' S_4.asset)",
+      "Bash(sed -i 's/  skill_DeliveryType: 1/  skill_DeliveryType: 2/' S_5.asset)",
+      "Bash(sed -i 's/  skill_DeliveryType: 3/  skill_DeliveryType: 2/' S_6.asset)",
+      "Bash(sed -i 's/  skill_DeliveryType: 0/  skill_DeliveryType: 2/' S_20.asset)",
+      "Bash(sed -i 's/  skill_DeliveryType: 2/  skill_DeliveryType: 3/' S_40.asset)",
+      "Bash(sed -i 's/  skill_DeliveryType: 2/  skill_DeliveryType: 3/' S_41.asset)",
+      "Bash(sed -i 's/  skill_DeliveryType: 3/  skill_DeliveryType: 0/' S_43.asset)",
+      "Bash(sed -i 's/  skill_DeliveryType: 1/  skill_DeliveryType: 3/' S_44.asset)",
+      "Bash(sed -i 's/  skill_DeliveryType: 1/  skill_DeliveryType: 2/' S_45.asset)",
+      "Bash(sed -i 's/  skill_DeliveryType: 4/  skill_DeliveryType: 2/' S_90.asset)",
+      "Bash(sed -i 's/  skill_DeliveryType: 4/  skill_DeliveryType: 2/' S_91.asset)",
+      "Bash(sed -i 's/  skill_DeliveryType: 4/  skill_DeliveryType: 2/' S_92.asset)",
+      "Bash(sed -i 's/  skill_DeliveryType: 4/  skill_DeliveryType: 2/' S_93.asset)",
+      "PowerShell($path = 'D:\\\\Projects\\\\Unity\\\\GameProject3\\\\Assets\\\\Scripts\\\\Tools\\\\UI\\\\Panels\\\\SkillSelectPanel.cs'; $bytes = [System.IO.File]::ReadAllBytes\\($path\\); $gbk = [System.Text.Encoding]::GetEncoding\\('gbk'\\); $text = $gbk.GetString\\($bytes\\); $lines = $text -split \"`n\"; for \\($i = 6; $i -lt [Math]::Min\\($lines.Length, 25\\); $i++\\) { Write-Output $lines[$i] })",
+      "PowerShell($path = 'D:\\\\Projects\\\\Unity\\\\GameProject3\\\\Assets\\\\Scripts\\\\Tools\\\\UI\\\\Panels\\\\SkillSelectPanel.cs'; $utf8Bytes = [System.IO.File]::ReadAllBytes\\($path\\); $text = [System.Text.Encoding]::UTF8.GetString\\($utf8Bytes\\); $gbk = [System.Text.Encoding]::GetEncoding\\('gbk'\\); $gbkBytes = $gbk.GetBytes\\($text\\); [System.IO.File]::WriteAllBytes\\($path, $gbkBytes\\); Write-Output 'OK')",
+      "PowerShell($gbk = [System.Text.Encoding]::GetEncoding\\('gbk'\\); $text = [System.IO.File]::ReadAllText\\('D:\\\\Projects\\\\Unity\\\\GameProject3\\\\Assets\\\\Scripts\\\\Tools\\\\UI\\\\Panels\\\\SkillSelectPanel.cs', $gbk\\); Write-Output $text)",
+      "PowerShell($path = 'D:\\\\Projects\\\\Unity\\\\GameProject3\\\\Assets\\\\Scripts\\\\Tools\\\\UI\\\\Panels\\\\SkillSelectPanel.cs'; $utf8Bytes = [System.IO.File]::ReadAllBytes\\($path\\); $text = [System.Text.Encoding]::UTF8.GetString\\($utf8Bytes\\); $gbk = [System.Text.Encoding]::GetEncoding\\('gbk'\\); $gbkBytes = $gbk.GetBytes\\($text\\); [System.IO.File]::WriteAllBytes\\($path, $gbkBytes\\); Write-Output 'GBK done')",
+      "Bash(grep -B1 \"^[0-9]*:.*{$\")"
     ]
   }
 }

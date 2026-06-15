@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class GoldManager : MonoGlobalManager, ICanSave_And_Load{
     public int Gold { get; private set; }
-
     protected override void MgrOnInit(){
         base.MgrOnInit();
         JsonSaver.InitData<Save_Gold>(this);
@@ -33,8 +32,7 @@ public class GoldManager : MonoGlobalManager, ICanSave_And_Load{
 }
 
 [Serializable]
-public class Save_Gold : IValidatable
-{
+public class Save_Gold : IValidatable{
     public int gold;
     public Save_Gold() { }
     public Save_Gold(int g) { gold = g; }

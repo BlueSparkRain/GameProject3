@@ -31,7 +31,7 @@ public class MapSceneDebugTest : MonoBehaviour
             if (chaos != null)
             {
                 chaos.AdjustChaosLevelByRound(chaos.currentLevel * 10 + 1);
-                Debug.Log($"[Debug] 混沌等级提升至 {chaos.currentLevel}，敌人倍率 x{chaos.EnemyStrengthMultiplier:F2}");
+                DebugManager.Log(EDebugCategory.General, $"[Debug] 混沌等级提升至 {chaos.currentLevel}，敌人倍率 x{chaos.EnemyStrengthMultiplier:F2}");
             }
         }
 
@@ -40,11 +40,23 @@ public class MapSceneDebugTest : MonoBehaviour
         {
             var ap = GameRoot.GetManager<ActionPointsManager>();
             if (ap != null)
-                Debug.Log($"[Debug] 当前行动点: {ap.RemainActionPoints}/{ap.MaxActionPoints}");
+                DebugManager.Log(EDebugCategory.General, $"[Debug] 当前行动点: {ap.RemainActionPoints}/{ap.MaxActionPoints}");
         }
 
-        // ========== 直接打开商店 ==========
-        if (Input.GetKeyDown(KeyCode.S))
-            GameRoot.GetManager<UIManager>()?.OpenPanel<ShopPanel>(E_UIPanelType.ShopPanel);
+        // ========== 切换商店(打开/关闭) ==========
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            var uiMgr = GameRoot.GetManager<UIManager>();
+            if (uiMgr == null) return;
+            var panel = uiMgr.GetPanel<ShopPanel>(E_UIPanelType.ShopPanel);
+            if (panel != null && panel.IsAnimating) return;
+            if (panel != null && panel.gameObject.activeSelf)
+                panel.Hide();
+            else
+                uiMgr.OpenPanel<ShopPanel>(E_UIPanelType.ShopPanel);
+        }
+        if (Input.GetKeyDown(KeyCode.R)){
+            GameRoot.GetManager<UIManager>().OpenPanel<RewardPanel>(E_UIPanelType.RewardPanel,null);
+        }
     }
 }

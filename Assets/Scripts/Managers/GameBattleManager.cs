@@ -17,6 +17,13 @@ public class GameBattleManager : IGlobalManager{
     int battleRadius = 2;
     int max_enemyNum = 3;
 
+    /// <summary>当前触发的战斗房间（战败时用于踢出玩家）</summary>
+    HexRoomTag _currentBattleRoom;
+    /// <summary>战败后下次加载MapScene时需要踢出玩家</summary>
+    bool _pendingKickOnLoad;
+    /// <summary>战败回场时抑制战斗房间触发（让玩家先站在房间上再被踢开）</summary>
+    public bool SuppressBattleTrigger { get; set; }
+
     public void MgrInit(GameRoot gameRoot){
         delay = new WaitForSeconds(spawnInterval);
         EventCenter.AddEventListener(E_EventType.PlayerOutBattle, UnregisterCharacterToBattle);
@@ -37,19 +44,20 @@ public class GameBattleManager : IGlobalManager{
     /// 当玩家进入一个战斗房间时触发,扫描一定半径范围内的敌人并自动加入战斗
     /// </summary>
     public void CheckBattleEnemy(HexRoomTag roomTag){
+        _currentBattleRoom = roomTag;
         if(!gameMapManager) gameMapManager=GameRoot.GetManager<GameMapManager>();
         List<Vector2Int> radiusRowCols = HexCoordinateUtility.GetRowColsInRadius(roomTag.row,roomTag.col, battleRadius);
-        Debug.Log("[GameBattleManager]-----开始扫描战斗中近邻范围内的敌人:" + radiusRowCols.Count);
-        for (int i = 0; i < radiusRowCols.Count ; i++)
-        {
+        //DebugManager.Log(EDebugCategory.MapRoom, "[GameBattleManager]-----开始扫描战斗中近邻范围内的敌人:" + radiusRowCols.Count);
+        for (int i = 0; i < radiusRowCols.Count ; i++){
             HexRoomTag cur_room = gameMapManager.GetTargetRoom(radiusRowCols[i]);
             if (cur_room && enemysData.Count< max_enemyNum) {
-
                 var roomType = cur_room.GetComponent<HexRoomStyleHandler>().RoomType;
-                if (roomType==E_HexRoomType.Battle_LowLevel_战斗_杂鱼||
-                    roomType == E_HexRoomType.Battle_MidLevel_战斗_精英) {
-                    CharacterData enemyData = new CharacterData((cur_room.IHexRoom as BattleHexRoom).EnemyType);
-                    Debug.Log("检测到一只怪物：---"+ (cur_room.IHexRoom as BattleHexRoom).EnemyType);
+                if (roomType == E_HexRoomType.Battle_LowLevel ||
+                    roomType == E_HexRoomType.Battle_MidLevel) {
+                    var battleLogic = cur_room.RoomLogic as BattleRoomLogic;
+                    if (battleLogic == null) continue;
+                    CharacterData enemyData = new CharacterData(battleLogic.EnemyType);
+                    //DebugManager.Log(EDebugCategory.MapRoom, "检测到一只怪物：---"+ battleLogic.EnemyType);
                     //根据当前的混沌等级，缩放原始数值
                     var chaosMgr = GameRoot.GetManager<ChaosLevelManager>();
                     if (chaosMgr != null)
@@ -58,7 +66,7 @@ public class GameBattleManager : IGlobalManager{
                 }
             }
         }
-        Debug.Log("[GameBattleManager]---战斗注册结束:" + enemysData.Count+"名敌人");
+        DebugManager.Log(EDebugCategory.MapRoom, "[GameBattleManager]---战斗注册结束:" + enemysData.Count+"名敌人");
     }
 
     /// <summary>
@@ -79,20 +87,102 @@ public class GameBattleManager : IGlobalManager{
     /// [MapScene]战斗结束后清空历史数据，让新地图随战斗生成新的当前地块内容
     /// </summary>
     void UnregisterCharacterToBattle(){
-        Debug.Log("清除战斗场景内战斗注册信息");
-        Debug.Log($"清空前{playersData.Count}---{enemysData.Count}");
+        DebugManager.Log(EDebugCategory.MapRoom, "清除战斗场景内战斗注册信息");
+        DebugManager.Log(EDebugCategory.MapRoom, $"清空前{playersData.Count}---{enemysData.Count}");
         playersData.Clear();
         enemysData.Clear();
-        Debug.Log($"清空后{playersData.Count}---{enemysData.Count}");
+        DebugManager.Log(EDebugCategory.MapRoom, $"清空后{playersData.Count}---{enemysData.Count}");
     }
+
+    /// <summary>战斗结果处理：胜利消耗房间，战败标记踢出</summary>
+    public void OnBattleResult(bool playerWin)
+    {
+        if (playerWin && _currentBattleRoom != null)
+        {
+            var battleLogic = _currentBattleRoom.RoomLogic as BattleRoomLogic;
+            battleLogic?.Consume();
+        }
+        else if (!playerWin)
+        {
+            _pendingKickOnLoad = true;
+        }
+        _currentBattleRoom = null;
+    }
+
+    /// <summary>战败后获取踢出目标房间（相邻随机可行走地块）</summary>
+    public bool TryGetKickTarget(Vector3 playerPos, out HexRoomTag targetRoom)
+    {
+        targetRoom = null;
+        if (!_pendingKickOnLoad) return false;
+
+        if (!gameMapManager) gameMapManager = GameRoot.GetManager<GameMapManager>();
+        if (gameMapManager == null) return false;
+
+        // 找到玩家所在的房间（忽略Y轴高度差）
+        HexRoomTag currentRoom = null;
+        Vector3 playerPosXZ = new Vector3(playerPos.x, 0, playerPos.z);
+        foreach (var room in gameMapManager.HexRoomMap.Values)
+        {
+            if (room == null) continue;
+            Vector3 roomPosXZ = new Vector3(room.transform.position.x, 0, room.transform.position.z);
+            if (Vector3.Distance(roomPosXZ, playerPosXZ) < 0.5f)
+            {
+                currentRoom = room;
+                break;
+            }
+        }
+        if (currentRoom == null) return false;
+
+        // 扫描相邻1格内的可行走地块
+        var neighbors = HexCoordinateUtility.GetRowColsInRadius(currentRoom.row, currentRoom.col, 1);
+        var candidates = new System.Collections.Generic.List<HexRoomTag>();
+        foreach (var rc in neighbors)
+        {
+            var room = gameMapManager.GetTargetRoom(rc);
+            if (room == null || room == currentRoom) continue;
+            var terrain = room.GetComponent<HexTerrainStyleHandler>();
+            if (terrain != null && !terrain.HexTerrainType.ToString().StartsWith("Obstacle"))
+                candidates.Add(room);
+        }
+
+        if (candidates.Count > 0)
+        {
+            targetRoom = candidates[Random.Range(0, candidates.Count)];
+            DebugManager.Log(EDebugCategory.MapRoom, $"[GameBattleManager] 战败踢出: ({currentRoom.row},{currentRoom.col}) → ({targetRoom.row},{targetRoom.col})");
+            return true;
+        }
+
+        DebugManager.LogWarning(EDebugCategory.MapRoom, "[GameBattleManager] 战败踢出失败：无相邻可行走地块");
+        return false;
+    }
+
+    /// <summary>战败踢出完成后清除标记</summary>
+    public void ClearPendingKick() { _pendingKickOnLoad = false; }
 
     /// <summary>
     /// 根据之前注册的战斗信息，在战斗场景中生成战斗角色
     /// </summary>
     public void SpawnBattleCharacter() {
         CoroutineManager corManager= GameRoot.GetManager<CoroutineManager>();
-        corManager.StartCoroutine(SpawnBattleCardByData(playersData,true));
-        corManager.StartCoroutine(SpawnBattleCardByData(enemysData, false));
+        corManager.StartCoroutine(SpawnAll());
+    }
+
+    IEnumerator SpawnAll() {
+        // 玩家：若场景中存在 PlayerBattleBoard，直接传数据给它；否则走旧版预制件生成
+        var playerBoard = GameObject.FindObjectOfType<PlayerBattleBoard>();
+        if (playerBoard != null && playersData.Count > 0)
+        {
+            foreach (var data in playersData)
+                playerBoard.InitPlayerBoard(data);
+        }
+        else
+        {
+            yield return SpawnBattleCardByData(playersData, true);
+        }
+
+        // 敌人：始终使用 CharacterBattleArea 预制件生成
+        yield return SpawnBattleCardByData(enemysData, false);
+        GameRoot.GetManager<BattlePhaseManager>()?.OnAllCharactersLoaded();
     }
 
     /// <summary>
@@ -101,14 +191,13 @@ public class GameBattleManager : IGlobalManager{
     IEnumerator SpawnBattleCardByData(List<CharacterData> datas,bool isPlayer){
         BattleLoadManager battleLoadManager=GameRoot.GetManager<BattleLoadManager>();
         if (isPlayer){
-            Debug.Log("生成Battle的PlayerCamp" + datas.Count);
-            for (int i = 0; i < datas.Count; i++){
-                battleLoadManager.LoadAPlayer(datas[i]);
-                yield return delay;
-            }
+            // 玩家不再通过 LoadAPlayer 生成，场景中已预置 PlayerBattleBoard
+            // 此分支仅作为无预置玩家时的兜底（理论上不会走到这里）
+            DebugManager.LogWarning(EDebugCategory.MapRoom, "SpawnBattleCardByData(isPlayer=true) 被意外调用，玩家应通过PlayerBattleBoard初始化");
+            yield break;
         }
         else {
-            Debug.Log("生成Battle的EnemyCamp"+datas.Count);
+            DebugManager.Log(EDebugCategory.MapRoom, "生成Battle的EnemyCamp"+datas.Count);
             for (int i = 0; i < datas.Count; i++)
             {
                 battleLoadManager.LoadAEnemy(datas[i]);

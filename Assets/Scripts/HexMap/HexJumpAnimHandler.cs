@@ -19,13 +19,13 @@ public class HexJumpAnimHandler : MonoBehaviour
 
     [Header("悬浮配置")]
     [Tooltip("鼠标悬浮时子物体上浮高度")]
-    public float hoverHeight = 0.5f;
+    float hoverHeight = 0.4f;
     [Tooltip("悬浮动画时长")]
-    public float hoverDuration = 0.1f;
+    float hoverDuration = 0.1f;
     [Tooltip("悬浮时透明度渐入时长（应比hoverDuration长约0.2s）")]
-    public float hoverFadeInDuration = 0.4f;
+    float hoverFadeInDuration = 0.3f;
     [Tooltip("悬浮结束时透明度渐出时长")]
-    public float hoverFadeOutDuration = 0.3f;
+    float hoverFadeOutDuration = 0.2f;
 
     [Header("(可行走)地形高度差")]
     float heightDistance = 0.2f;
@@ -153,5 +153,18 @@ public class HexJumpAnimHandler : MonoBehaviour
         else{
             _firstChild.DOLocalMoveZ(_childOriginalPos.z, hoverDuration).SetEase(Ease.OutQuad);
         }
+    }
+
+    /// <summary>房间初始化时显示Ring，2秒后渐隐</summary>
+    public void ShowRingThenFadeOut(float showDuration = 2f, float fadeDuration = 0.5f)
+    {
+        CacheFirstChild();
+        if (_firstChildSprite == null) return;
+
+        _firstChildSprite.DOKill();
+        var c = _firstChildSprite.color;
+        c.a = 1f;
+        _firstChildSprite.color = c;
+        _firstChildSprite.DOFade(0f, fadeDuration).SetDelay(showDuration).SetEase(Ease.OutQuad);
     }
 }

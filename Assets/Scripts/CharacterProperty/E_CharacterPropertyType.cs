@@ -88,5 +88,15 @@ public enum E_CharacterPropertyType{
     /// <summary>
     /// 当前等级
     /// </summary>
-    CurrentLevel
+    CurrentLevel,
+
+    /// <summary>
+    /// 暴击率
+    /// </summary>
+    CritRate,
+
+    /// <summary>
+    /// 暴击伤害
+    /// </summary>
+    CritDamage
 }

@@ -13,16 +13,22 @@ public class CursorManager : MonoGlobalManager{
         this.enabled = false;
         //LogInfo("[CursorManager]---光标管理器初始化完成");
     }
-  
     CursorSettingsSO cursorSettings;
-
     #region 状态缓存（零冗余操作关键）
     CursorStyle _currentStyle;       // 当前光标样式
     CursorStyle _baseStyle;          // 基础样式（松开后恢复）
     bool _isCursorVisible;           // 显示状态
     bool _isMousePressed;            // 按下状态
     #endregion
-
+    /// <summary>是否需要软件渲染（OnGUI）：调试模式 或 缩放≠1（硬件光标不支持缩放）</summary>
+    bool UseSoftwareCursor => _showSystemCursor || Mathf.Abs(_cursorScale - 1f) > 0.001f;
+    [Header("编辑器调试")]
+    [Tooltip("热点偏移：叠加到 SO 的 hotSpot 上，方便实时微调（调好后复制到 SO 的 hotSpot 中保存）")]
+    [SerializeField] Vector2 _hotSpotOffset = new Vector2(100, 60);
+    [Tooltip("光标贴图缩放（1=原始大小），硬件光标模式下不支持缩放，非1时自动切换为软件渲染")]
+    [SerializeField] float _cursorScale = 0.6f;
+    [Tooltip("显示系统光标：开启后同时显示系统光标 + 自定义贴图，方便对照调整 hotSpot")]
+    [SerializeField] bool _showSystemCursor = false;
     #region 初始化（仅执行一次，读取SO静态数据）
     /// <summary>
     /// 初始化光标系统（读取SO配置，构建缓存）
@@ -50,7 +56,6 @@ public class CursorManager : MonoGlobalManager{
         ApplyCursorStyle(_baseStyle);
     }
     #endregion
-
     #region 核心逻辑（状态驱动）
     /// <summary>
     /// 应用光标样式（仅样式变化时执行）
@@ -75,13 +80,30 @@ public class CursorManager : MonoGlobalManager{
 
         // 性能优化：仅样式/显示状态变化时更新
         if (_currentStyle != style || !_isCursorVisible){
-            Cursor.SetCursor(
-                config.cursorTexture,
-                config.hotSpot,
-                CursorMode.Auto // 硬件光标优先，零性能消耗
-            );
+            if (UseSoftwareCursor)
+            {
+                // 软件渲染（支持缩放）：OnGUI 绘制自定义贴图
+                // 系统光标仅在 _showSystemCursor 开启时保留，否则隐藏
+                if (_showSystemCursor)
+                {
+                    Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                    Cursor.visible = true;
+                }
+                else
+                {
+                    Cursor.visible = false;
+                }
+            }
+            else
+            {
+                Cursor.SetCursor(
+                    config.cursorTexture,
+                    config.hotSpot + _hotSpotOffset,
+                    CursorMode.Auto
+                );
+            }
+            this.enabled = UseSoftwareCursor;
             _currentStyle = style;
-            //LogInfo($"切换光标样式：{style}");
         }
     }
 
@@ -96,7 +118,6 @@ public class CursorManager : MonoGlobalManager{
         ApplyCursorStyle(targetStyle);
     }
     #endregion
-
     #region 外部调用接口（保持简洁，高性能）
     /// <summary>
     /// 设置基础光标样式（松开状态）
@@ -171,11 +192,10 @@ public class CursorManager : MonoGlobalManager{
         SetBaseCursorStyle(cursorSettings.defaultCursorStyle);
     }
     #endregion
-
     #region 辅助方法（日志+输入检测）
     void LogInfo(string msg){
         if (cursorSettings != null && cursorSettings.isDebugMode)
-            Debug.Log($"[CursorManager]---{msg}");
+            DebugManager.Log(EDebugCategory.General, $"[CursorManager]---{msg}");
     }
 
     void LogError(string msg){
@@ -183,7 +203,6 @@ public class CursorManager : MonoGlobalManager{
             Debug.LogError($"[CursorManager]---{msg}");
     }
     #endregion
-
     #region 安全释放
     void OnDestroy(){
         if (cursorSettings == null) return;
@@ -197,6 +216,30 @@ public class CursorManager : MonoGlobalManager{
         //仅启用自动检测时执行（零空轮询）
         if (Input.GetMouseButtonDown(0)) UpdateMousePressedState(true);
         else if (Input.GetMouseButtonUp(0)) UpdateMousePressedState(false);
+    }
+    #endregion
+    #region 软件渲染（缩放 / 双光标对照模式）
+    void OnGUI(){
+        if (!UseSoftwareCursor || cursorSettings == null) return;
+        var config = cursorSettings.GetStyleConfig(_isMousePressed ? CursorStyle.Press : _baseStyle);
+        if (config?.cursorTexture == null) return;
+        Vector2 mousePos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+
+        // 鼠标不在 Game 窗口内时，恢复系统光标并跳过绘制
+        bool insideWindow = mousePos.x > 0 && mousePos.x < Screen.width &&
+                            mousePos.y > 0 && mousePos.y < Screen.height;
+        Cursor.visible = _showSystemCursor || !insideWindow;
+
+        if (!insideWindow) return;
+
+        Vector2 offset = (config.hotSpot + _hotSpotOffset) * _cursorScale;
+        var tex = config.cursorTexture;
+        float w = tex.width * _cursorScale;
+        float h = tex.height * _cursorScale;
+        GUI.DrawTexture(
+            new Rect(mousePos.x - offset.x, Screen.height - mousePos.y - offset.y, w, h),
+            tex
+        );
     }
     #endregion
 }

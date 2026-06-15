@@ -4,7 +4,12 @@ public interface IUpGradable
     CharacterData characterData { get; set; }
     public void UpGrade()
     {
-        UnityEngine.Debug.Log("升级了！属性提升并保存");
+        if (characterData == null || growthData == null)
+        {
+            DebugManager.LogWarning(EDebugCategory.Character, "[IUpGradable] Skip upgrade - growthData is null (normal for stage-based chars)");
+            return;
+        }
+        DebugManager.Log(EDebugCategory.Character, "升级了！属性提升并保存");
         characterData.AdjustProperty(E_CharacterPropertyType.Phy_Flat_Penetration, growthData.Phy_Flat_Penetration_grow);
         characterData.AdjustProperty(E_CharacterPropertyType.Mag_Flat_Penetration, growthData.Mag_Flat_Penetration_grow);
         characterData.AdjustProperty(E_CharacterPropertyType.Phy_Resistance, growthData.Phy_Resistance_grow);
@@ -22,11 +27,11 @@ public interface IUpGradable
         characterData.AdjustProperty(E_CharacterPropertyType.Heal_Amplification, growthData.Heal_Amplification_grow);
         characterData.AdjustProperty(E_CharacterPropertyType.Shield_Amplification, growthData.Shield_Amplification_grow);
         characterData.AdjustProperty(E_CharacterPropertyType.Maximum_ATB, growthData.Maximum_ATB_grow);
+        characterData.AdjustProperty(E_CharacterPropertyType.CritRate, growthData.CritRate_grow);
+        characterData.AdjustProperty(E_CharacterPropertyType.CritDamage, growthData.CritDamage_grow);
 
-        UnityEngine.Debug.Log("保存Save_CharacterData文件:" + JsonSaver.GetSavePath<Save_CharacterData>(characterData.characterType.ToString()));
+        DebugManager.Log(EDebugCategory.Character, "保存Save_CharacterData文件:" + JsonSaver.GetSavePath<Save_CharacterData>(characterData.characterType.ToString()));
         // 修改完直接保存，永久生效
         JsonSaver.Save(new Save_CharacterData(characterData), characterData.characterType.ToString());
     }
 }
-
-

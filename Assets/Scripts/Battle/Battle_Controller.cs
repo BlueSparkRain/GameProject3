@@ -8,167 +8,158 @@ public class Battle_Controller
 {
     public Battle_Viewer viewer;
     Battle_Model model;
-    Dictionary<E_BattleModelType, Action<float>> modelDic = new Dictionary<E_BattleModelType, Action<float>>();
+    Dictionary<E_BattleModelType, Action<float>> modelDic;
 
-    //上个场景中传递而来的对局角色属性数据,后期继续将角色属性数据解耦
     CharacterData characterData;
     public CharacterData CharacterData => characterData;
 
     BattlerStateTag battlerStateTag;
+    IBattlable _battler;
 
     WaitForSeconds breakRefreshDelay;
-    /// <summary>
-    /// 力竭恢复时间
-    /// </summary>
     float breakRefreshDuration = 8;
 
     float modelUpdateTimer;
     float modelUpdateInterval = 1;
-    public Battle_Controller(CharacterData _charData, Battle_Viewer _viewer, BattlerStateTag _battlerStateTag, int initialShieldPoints = 5){
-        characterData = _charData;
-        viewer = _viewer;
-        battlerStateTag= _battlerStateTag;
+
+    public Battle_Controller(CharacterData charData, Battle_Viewer viewer, BattlerStateTag stateTag, IBattlable battler, int initialShieldPoints = 5)
+    {
+        characterData = charData;
+        this.viewer = viewer;
+        battlerStateTag = stateTag;
+        _battler = battler;
+
         model = new Battle_Model(
-            characterData.Maximum_Health + characterData.EquipHandler.GetGreenBonus(E_CharacterPropertyType.Maximum_Health),
-            characterData.Maximum_Mana + characterData.EquipHandler.GetGreenBonus(E_CharacterPropertyType.Maximum_Mana),
-            (int)(characterData.Maximum_ATB + characterData.EquipHandler.GetGreenBonus(E_CharacterPropertyType.Maximum_ATB)),
-            maxShiled: initialShieldPoints + characterData.GetShieldBonus());
+            charData.Maximum_Health + charData.EquipHandler.GetGreenBonus(E_CharacterPropertyType.Maximum_Health),
+            charData.Maximum_Mana   + charData.EquipHandler.GetGreenBonus(E_CharacterPropertyType.Maximum_Mana),
+            (int)(charData.Maximum_ATB + charData.EquipHandler.GetGreenBonus(E_CharacterPropertyType.Maximum_ATB)),
+            maxShield: initialShieldPoints + charData.GetShieldBonus());
+
+        BuildModelDictionary();
+
         viewer.UpdataUI(model);
-        modelDic.Add(E_BattleModelType.HP, val => model.HP += val);
-        modelDic.Add(E_BattleModelType.MAX_HP, val => model.MaxHP += val);
-        modelDic.Add(E_BattleModelType.SP, val => model.SP += val);
-        modelDic.Add(E_BattleModelType.MAX_SP, val => model.MaxSP += val);
-        modelDic.Add(E_BattleModelType.AG, val => model.AG += val);
-        modelDic.Add(E_BattleModelType.MAX_AG, val => model.MaxAG += val);
-        modelDic.Add(E_BattleModelType.ATBPoints, val => model.ATBPoints += (int)val);
-        modelDic.Add(E_BattleModelType.MAX_ATBPoints, val => model.MaxATBPoints += (int)val);
-        modelDic.Add(E_BattleModelType.ShieldPoints, val => model.ShieldPoints += (int)val);
-        modelDic.Add(E_BattleModelType.Max_ShieldPoints, val => model.MaxShieldPoints += (int)val);
-
         model.OnDataChanged += () => viewer.UpdataUI(model);
-        model.OnHPZero += CharacterDead;
-        model.OnShieldBreak += CharacterBreak;
+        model.OnHPZero += OnCharacterDead;
+        model.OnShieldBreak += OnCharacterBreak;
 
-        breakRefreshDelay=new WaitForSeconds(breakRefreshDuration);
+        breakRefreshDelay = new WaitForSeconds(breakRefreshDuration);
         modelUpdateTimer = modelUpdateInterval;
     }
 
-    /// <summary>
-    /// 角色死亡-Model私有委托
-    /// </summary>
-    void CharacterDead(){
-        Debug.Log(characterData.Character_Name + "角色已死亡");
-        if (!battlerStateTag.State_Dead){
-            battlerStateTag.SetDeadState(true);
-            //禁用本角色的技能更新+检测游戏结束
-            EventCenter.EventTrigger(E_EventType.Battle_CharacterDead, battlerStateTag);
-        }
+    void BuildModelDictionary()
+    {
+        modelDic = new Dictionary<E_BattleModelType, Action<float>>
+        {
+            { E_BattleModelType.HP,              v => model.HP += v },
+            { E_BattleModelType.MAX_HP,          v => model.MaxHP += v },
+            { E_BattleModelType.SP,              v => model.SP += v },
+            { E_BattleModelType.MAX_SP,          v => model.MaxSP += v },
+            { E_BattleModelType.AG,              v => model.AG += v },
+            { E_BattleModelType.MAX_AG,          v => model.MaxAG += v },
+            { E_BattleModelType.ATBPoints,       v => model.ATBPoints += (int)v },
+            { E_BattleModelType.MAX_ATBPoints,   v => model.MaxATBPoints += (int)v },
+            { E_BattleModelType.ShieldPoints,    v => model.ShieldPoints += (int)v },
+            { E_BattleModelType.Max_ShieldPoints,v => model.MaxShieldPoints += (int)v },
+        };
     }
 
-    /// <summary>
-    /// 角色力竭-Model私有委托
-    /// </summary>
-    void CharacterBreak() {
-        Debug.Log(characterData.Character_Name + "角色已力竭");
-        if (!battlerStateTag.State_Break) {
-            battlerStateTag.SetBreakState(true);
-            //打断本角色的技能更新
-            EventCenter.EventTrigger(E_EventType.Battle_CharacterBreak,battlerStateTag);
-            GameRoot.GetManager<CoroutineManager>().StartCoroutine(BreakRefresh(), viewer);
-        }
+    // ── 死亡 / 力竭 ──
+    void OnCharacterDead()
+    {
+        DebugManager.Log(EDebugCategory.BattleState,characterData.Character_Name + "角色已死亡");
+        BattleDebugManager.LogFormat("{0} 已阵亡！", characterData.Character_Name);
+        if (battlerStateTag.State_Dead) return;
+        battlerStateTag.SetDeadState(true);
+        EventCenter.EventTrigger(E_EventType.Battle_CharacterDead, battlerStateTag);
     }
 
-    IEnumerator BreakRefresh() {
-        Debug.Log("角色力竭中");
+    void OnCharacterBreak()
+    {
+        DebugManager.Log(EDebugCategory.BattleState,characterData.Character_Name + "角色已力竭");
+        BattleDebugManager.LogFormat("{0} 力竭！", characterData.Character_Name);
+        if (battlerStateTag.State_Break) return;
+        battlerStateTag.SetBreakState(true);
+        viewer.OnBreakStarted(breakRefreshDuration);
+        EventCenter.EventTrigger(E_EventType.Battle_CharacterBreak, battlerStateTag);
+        GameRoot.GetManager<CoroutineManager>().StartCoroutine(BreakRecovery(), viewer);
+    }
+
+    IEnumerator BreakRecovery()
+    {
+        DebugManager.Log(EDebugCategory.BattleState,"角色力竭中");
         yield return breakRefreshDelay;
         battlerStateTag.SetBreakState(false);
         model.ShieldPoints = model.MaxShieldPoints;
+        viewer.OnBreakEnded();
         EventCenter.EventTrigger(E_EventType.Battle_CharacterBreakRefresh);
-        Debug.Log("角色力竭结束");
+        DebugManager.Log(EDebugCategory.BattleState,"角色力竭结束");
+        BattleDebugManager.LogFormat("{0} 力竭恢复", characterData.Character_Name);
     }
 
-    /// <summary>
-    /// 角色是否处于力竭状态
-    /// </summary>
-    public bool IsBreak => battlerStateTag != null && battlerStateTag.State_Break;
+    public bool IsBreak => battlerStateTag is { State_Break: true };
 
     public float GetCharacterPropertyValue(E_CharacterPropertyType propertyType)
         => characterData.GetEffectiveProperty(propertyType);
-
-    /// <summary>
-    /// 获取角色原始属性值（不含装备加成）
-    /// </summary>
     public float GetCharacterBasePropertyValue(E_CharacterPropertyType propertyType)
         => characterData.GetProperty(propertyType);
- 
-    /// <summary>
-    /// 修改角色的属性
-    /// </summary>
-    public void AdjustCharacterPropertyValue(E_CharacterPropertyType propertyType, float targetValue,bool useMulti=false){
-        CharacterData.AdjustProperty(propertyType, targetValue,useMulti);
-    }
-
-    /// <summary>
-    /// 修改角色模型
-    /// </summary>
-    public void AdjustCharacterModelValue(E_BattleModelType modelType, float targetValue){
-        modelDic[modelType].Invoke(targetValue);
-    }
+    public void AdjustCharacterPropertyValue(E_CharacterPropertyType propertyType, float targetValue, bool useMulti = false)
+        => CharacterData.AdjustProperty(propertyType, targetValue, useMulti);
 
     public float GetHPPercentage()
     {
-        float hp = model.HP;
-        float maxHp = model.MaxHP;
-        return maxHp > 0 ? hp / maxHp : 0f;
+        float hp = model.HP, max = model.MaxHP;
+        return max > 0 ? hp / max : 0f;
     }
 
     public Battle_Model Model => model;
 
-    public float GetCharacterModelValue(E_BattleModelType modelType){
-        return modelType switch{
-            E_BattleModelType.HP => model.HP,
-            E_BattleModelType.MAX_HP => model.MaxHP,
-            E_BattleModelType.SP => model.SP,
-            E_BattleModelType.MAX_SP => model.MaxSP,
-            E_BattleModelType.AG => model.AG,
-            E_BattleModelType.MAX_AG => model.MaxAG,
-            E_BattleModelType.ATBPoints => model.ATBPoints,
-            E_BattleModelType.MAX_ATBPoints => model.MaxATBPoints,
-            E_BattleModelType.ShieldPoints => model.ShieldPoints,
-            E_BattleModelType.Max_ShieldPoints => model.MaxShieldPoints,
-            _ => throw new ArgumentOutOfRangeException(nameof(modelType), modelType, null)
-        };
+    public float GetCharacterModelValue(E_BattleModelType modelType) => modelType switch
+    {
+        E_BattleModelType.HP                => model.HP,
+        E_BattleModelType.MAX_HP           => model.MaxHP,
+        E_BattleModelType.SP               => model.SP,
+        E_BattleModelType.MAX_SP           => model.MaxSP,
+        E_BattleModelType.AG               => model.AG,
+        E_BattleModelType.MAX_AG           => model.MaxAG,
+        E_BattleModelType.ATBPoints        => model.ATBPoints,
+        E_BattleModelType.MAX_ATBPoints    => model.MaxATBPoints,
+        E_BattleModelType.ShieldPoints     => model.ShieldPoints,
+        E_BattleModelType.Max_ShieldPoints => model.MaxShieldPoints,
+        _ => throw new ArgumentOutOfRangeException(nameof(modelType), modelType, null)
+    };
+
+    /// <summary>修改模型值（统一入口），同时通知浮字系统</summary>
+    public void AdjustCharacterModelValue(E_BattleModelType modelType, float delta)
+    {
+        modelDic[modelType].Invoke(delta);
+        EventCenter.EventTrigger(E_EventType.Battle_ModelValueChanged,
+            _battler, viewer.transform.position, modelType, delta);
     }
 
     /// <summary>
-    /// 每隔1s回复生命值和法力值
+    /// 每帧驱动：被动回复（1s间隔）+ 合并UI刷新（每帧）
     /// </summary>
-    public void OnBattleControlUpdate(){
-        if (modelUpdateTimer >= 0)
-            modelUpdateTimer -= Time.deltaTime;
-        else{
+    public void OnBattleControlUpdate()
+    {
+        // 被动回复
+        modelUpdateTimer -= Time.deltaTime;
+        if (modelUpdateTimer <= 0)
+        {
             modelUpdateTimer = modelUpdateInterval;
-            AdjustCharacterModelValue(E_BattleModelType.SP,20);
-            AdjustCharacterModelValue(E_BattleModelType.AG,10);
+            AdjustCharacterModelValue(E_BattleModelType.SP, 20);
+            AdjustCharacterModelValue(E_BattleModelType.AG, 10);
         }
+
+        // 脏标记合并：一帧内多次模型变更只触发一次 UI 全量刷新
+        model.FlushUI();
     }
 }
 
 public enum E_BattleModelType
 {
-    //血量值
-    HP,
-    MAX_HP,
-    //蓝量值
-    SP,
-    MAX_SP,
-    //怒气值
-    AG,
-    MAX_AG,
-    //ATB点数
-    ATBPoints,
-    MAX_ATBPoints,
-    //盾点值
-    ShieldPoints,
-    Max_ShieldPoints,
+    HP, MAX_HP,
+    SP, MAX_SP,
+    AG, MAX_AG,
+    ATBPoints, MAX_ATBPoints,
+    ShieldPoints, Max_ShieldPoints,
 }

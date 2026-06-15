@@ -10,10 +10,10 @@ public static class MapCharacterCaller
     /// </summary>
     /// <param name="characterType"></param>
     /// <param name="backStr"></param>
-    public static CharacterDataTag CallNewCharacter(string backStr)
+    public static CharacterHandler CallNewCharacter(string backStr)
     {
         var target = GameObject.Instantiate(ResourcesLoader.FindCharacterObj(backStr));
-        return target.GetComponent<CharacterDataTag>();
+        return target.GetComponent<CharacterHandler>();
     }
 
 /***

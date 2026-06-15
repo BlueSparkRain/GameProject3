@@ -1,54 +1,96 @@
+using Core;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class SkillSelector_UIItem : MonoBehaviour, IPointerEnterHandler
+public class SkillSelector_UIItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [Header("技能Image")]
     public Image skillImage;
-
-    [Header("技能名称")]
-    public TMP_Text skillNameText;
-    [Header("技能x效果")]
-    public TMP_Text skillDescriptionText;
-    [Header("刷新按钮")]
+    [Header("技能名称Text")]
+    public Text skillNameText;
+    
+    [Header("刷新按钮Button")]
     public Button refreshButton;
+    [Header("冻结刷新挡板Obj")]
+    public GameObject freezeRefreshImage;
 
-    /// <summary>
-    /// 当前持有的技能数据
-    /// </summary>
+    [Header("选中高亮标记Obj")]
+    public GameObject highlightTag;
+    [Header("选中按钮Button")]
+    public Button selectButton;
+
+    [Header("悬浮提示")]
+    [SerializeField] float _hoverDelay = 0.3f;
+    [SerializeField] Vector2 _tooltipOffset = new Vector2(0, 80f);
+
     SkillPropertySO skillData;
-    //随机一种技能数据,由Panel传入分配
+    public SkillPropertySO SkillData => skillData;
+    public int SkillID => skillData?.skill_ID ?? -1;
+    SkillTooltipHover _hoverTooltip;
+    System.Action<SkillSelector_UIItem> _onClicked;
 
 
-    /// <summary>
-    ///根据传入的数据来初始化选择器
-    /// </summary>
+
     public void InitSelf(SkillPropertySO skillData)
     {
-
         this.skillData = skillData;
         skillImage.sprite = skillData.skill_Sprite;
         skillNameText.text = skillData.skill_Name;
-        skillDescriptionText.text = skillData.skill_Description;
+        _hoverTooltip?.Dispose();
+        _hoverTooltip = new SkillTooltipHover(this, transform, skillData.skill_Description, _hoverDelay, _tooltipOffset);
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
+    public void SetClickCallback(System.Action<SkillSelector_UIItem> onClicked)
     {
-        GetComponentInParent<SkillSelectPanel>().ShowDetailBoard(GetComponent<RectTransform>(), Vector3.down, skillData);
+        _onClicked = onClicked;
     }
-    /// <summary>
-    /// 刷新一种新的技能（通知SkillSelectPanel来分配）
-    /// </summary>
-    void OnClickRefreshButton()
+
+    public void SetHighlighted(bool highlighted)
     {
+        if (highlightTag != null)
+            highlightTag.SetActive(highlighted);
+    }
+
+    void Awake()
+    {
+        if (selectButton != null)
+            selectButton.onClick.AddListener(OnClickSelect);
+        if (refreshButton != null)
+            refreshButton.onClick.AddListener(OnClickRefreshButton);
+        if (highlightTag != null)
+            highlightTag.SetActive(false);
+        freezeRefreshImage.SetActive(false);
+    }
+
+    void OnClickSelect()
+    {
+        _onClicked?.Invoke(this);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData){
+        _hoverTooltip?.Enter();
+    }
+    public void OnPointerExit(PointerEventData eventData){
+        _hoverTooltip?.Exit();
+    }
+    void OnClickRefreshButton(){
         GetComponentInParent<SkillSelectPanel>().AssignNewSkillData(this);
-
+        _hoverTooltip?.SetDescription(skillData.skill_Description);
+        freezeRefreshImage.SetActive(true);
     }
-    void Start()
+
+    void OnDisable()
     {
-        refreshButton.onClick.AddListener(OnClickRefreshButton);
+        _hoverTooltip?.Exit();
     }
 
+    void OnDestroy()
+    {
+        if (selectButton != null)
+            selectButton.onClick.RemoveListener(OnClickSelect);
+        _hoverTooltip?.Dispose();
+        _hoverTooltip = null;
+    }
 }

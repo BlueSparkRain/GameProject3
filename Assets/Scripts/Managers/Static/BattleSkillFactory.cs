@@ -24,7 +24,7 @@ public static class BattleSkillFactory
     private static readonly Dictionary<int, Func<SkillBase>> _skillMap = new();
 
     // 缓存：ID → 构造函数 (TargetType)
-    private static readonly Dictionary<int, Func<E_SkillTargetType, SkillBase>> _skillConstructors = new();
+    private static readonly Dictionary<int, Func<E_SkillTargetType_Auto, SkillBase>> _skillConstructors = new();
 
     static BattleSkillFactory()
     {
@@ -47,7 +47,7 @@ public static class BattleSkillFactory
             if (idAttr == null) continue;
 
             // 获取带 TargetType 参数的构造函数
-            var ctor = type.GetConstructor(new[] { typeof(E_SkillTargetType) });
+            var ctor = type.GetConstructor(new[] { typeof(E_SkillTargetType_Auto) });
             if (ctor == null)
             {
                 Debug.LogError($"技能 {type.Name} 没有带 TargetType 的构造函数！");
@@ -74,13 +74,13 @@ public static class BattleSkillFactory
             if (skillSo == null) break; // 找不到就停止
 
             int skillId = skillSo.skill_ID;
-            E_SkillTargetType targetType = skillSo.skill_targetType;
+            E_SkillTargetType_Auto targetType = skillSo.skill_targetType_Auto;
 
             // 从构造器缓存中自动创建对应技能
             if (_skillConstructors.TryGetValue(skillId, out var ctor))
             {
                 _skillMap[skillId] = () => ctor(targetType);
-                Debug.Log($"注册技能 ID:{skillId}-{skillSo.skill_Name}");
+                //Debug.Log($"注册技能 ID:{skillId}-{skillSo.skill_Name}");
             }
             else
             {
@@ -117,7 +117,7 @@ public static class BattleSkillFactory
             var so = ResourcesLoader.FindSkillSOByID(skillId);
             if (so != null)
             {
-                skill.AtbCost = so.skill_atb_cost;
+                skill.AtbCost = so.skill_AtbCost_ATB;
                 skill.AngGrow = so.skill_ang_grow;
             }
             return skill;
