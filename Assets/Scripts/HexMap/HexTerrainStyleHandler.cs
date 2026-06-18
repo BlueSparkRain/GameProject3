@@ -23,6 +23,8 @@ public class HexTerrainStyleHandler : MonoBehaviour
     public void InitTerrainStyle(E_HexTerrainType _hexTerrainType,HexRoomTag roomTag){
         hexTerrainType = _hexTerrainType;
         isEdited = true;
+        // 持久化地形变更，确保场景重载后恢复
+        GameRoot.GetManager<GameMapManager>()?.UpdateCellTerrain(roomTag.row, roomTag.col, _hexTerrainType);
         GetComponent<HexRoomStyleHandler>().SetRoomType(GetRoomType(),roomTag);
         SetRoomSprite();
         SetTerrainSprite();

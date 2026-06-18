@@ -112,7 +112,7 @@ public class SlotSwaperHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
     {
         // 先动画移动到目标槽位世界坐标（此时图标仍在Canvas顶层）
         yield return null;
-        Tween moveTween = transform.DOMove(slot.transform.position, 0.2f).SetUpdate(true);
+        Tween moveTween = transform.DOMove(slot.transform.position, 0.08f).SetUpdate(true);
         yield return moveTween.WaitForCompletion();
 
         // 动画结束后嵌入目标槽位
@@ -125,7 +125,7 @@ public class SlotSwaperHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
     IEnumerator ReturnToOrigin()
     {
         yield return null;
-        Tween moveTween = transform.DOMove(_originPos, 0.2f).SetUpdate(true);
+        Tween moveTween = transform.DOMove(_originPos, 0.08f).SetUpdate(true);
         yield return moveTween.WaitForCompletion();
 
         if (_originParent != null)

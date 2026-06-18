@@ -31,6 +31,24 @@ public class MapMoverManager : MonoGlobalManager
         EventCenter.AddEventListener<IMapMoveable>(E_EventType.OneMoverEndRound, OneMoverEndRound);
         EventCenter.AddEventListener(E_EventType.NewRound, OnNewRound_Reset);
     }
+
+    /// <summary>重新绑定事件（MapSceneSetUp 中 ClearAllEvents 后会清掉全局管理器的事件绑定）</summary>
+    public void RebindEvents()
+    {
+        // 清理上一次 Session 残留的 Icon 映射（旧 PlayerMapIcon 已随场景销毁）
+        playerIconMoverDic.Clear();
+        _robotQueue.Clear();
+        iconNum = 0;
+
+        EventCenter.RemoveEventListener<IMapMoveable, Vector3>(E_EventType.Mover_CheckCurrrentRoom, CheckCurrentRoom);
+        EventCenter.RemoveEventListener<IMapMoveable>(E_EventType.Character_Mover_Regist, RegisterBornMover);
+        EventCenter.RemoveEventListener<IMapMoveable>(E_EventType.OneMoverEndRound, OneMoverEndRound);
+        EventCenter.RemoveEventListener(E_EventType.NewRound, OnNewRound_Reset);
+        EventCenter.AddEventListener<IMapMoveable, Vector3>(E_EventType.Mover_CheckCurrrentRoom, CheckCurrentRoom);
+        EventCenter.AddEventListener<IMapMoveable>(E_EventType.Character_Mover_Regist, RegisterBornMover);
+        EventCenter.AddEventListener<IMapMoveable>(E_EventType.OneMoverEndRound, OneMoverEndRound);
+        EventCenter.AddEventListener(E_EventType.NewRound, OnNewRound_Reset);
+    }
     //每回合，所有可以移动的角色会依次行动（先按照固定顺序）
     //玩家回合，无限/有限时间，可以根据玩家鼠标来寻路
     //敌人回合，时间，根据策略来自动调用寻路。
@@ -107,22 +125,39 @@ public class MapMoverManager : MonoGlobalManager
         }
         else
         {
-            foreach (var kvp in playerIconMoverDic)
-            {
-                if (kvp.Value is Player_CharacterMapMover playerMover && !playerMover.IsMoving)
-                {
-                    if (kvp.Value.currentRoom == null) continue;
-                    int points = GameRoot.GetManager<ActionPointsManager>().RemainActionPoints;
-                    if (points <= 0) continue;
+            IMapMoveable target = null;
+            if (currentIMovable is Player_CharacterMapMover pm && !pm.IsMoving && ((IMapMoveable)pm).currentRoom != null)
+                target = currentIMovable;
 
-                    currentIMovable = kvp.Value;
-                    hexPathFindingManager.SetPlayerStartRoom(kvp.Value.currentRoom);
-                    hexPathFindingManager.SetPathFindState(true, points);
-                    UpdateIconHighlight(true);
-                    GameRoot.GetManager<AudioManager>().PlaySFX("Music/SFX/StartAction", default, 0.3f, 1.5f);
-                    break;
+            if (target == null)
+            {
+                foreach (var kvp in playerIconMoverDic)
+                {
+                    if (kvp.Value is Player_CharacterMapMover playerMover && !playerMover.IsMoving)
+                    {
+                        if (kvp.Value.currentRoom == null) continue;
+                        target = kvp.Value;
+                        break;
+                    }
                 }
             }
+
+            if (target == null) return;
+
+            int points = GameRoot.GetManager<ActionPointsManager>().RemainActionPoints;
+            if (points <= 0)
+            {
+                var apMgr = GameRoot.GetManager<ActionPointsManager>();
+                apMgr.FillActionPoints(apMgr.MaxActionPoints > 0 ? apMgr.MaxActionPoints : 6);
+                points = apMgr.RemainActionPoints;
+            }
+            if (points <= 0) return;
+
+            currentIMovable = target;
+            hexPathFindingManager.SetPlayerStartRoom(target.currentRoom);
+            hexPathFindingManager.SetPathFindState(true, points);
+            UpdateIconHighlight(true);
+            GameRoot.GetManager<AudioManager>().PlaySFX("Music/SFX/mambo", default, 0.3f, 1.2f);
         }
     }
 
@@ -148,34 +183,50 @@ public class MapMoverManager : MonoGlobalManager
     ///// 所有Mover在每次移动后都会更新当前所处的Room
     ///// </summary>
     void CheckCurrentRoom(IMapMoveable imover, Vector3 rayStart){
-        Ray ray = new Ray(rayStart, Vector3.down);
-        if (Physics.Raycast(ray, out RaycastHit hit, 5, LayerMask.GetMask("HexRoom"))){
-            HexRoomTag downRoom = hit.collider.GetComponent<HexRoomTag>();
-            if (downRoom != imover.currentRoom){
-                hexPathFindingManager.SetPlayerStartRoom(downRoom);
-                posDic[imover].SetPos(downRoom.row, downRoom.col);
-            }
-            if (downRoom != null)
-            {
-                //脱战检测
-                if (imover.currentRoom)
-                {
-                    E_HexRoomType roomType = imover.currentRoom.GetComponent<HexRoomStyleHandler>().RoomType;
-                    if (roomType.IsBattleRoom())
-                        EventCenter.EventTrigger(E_EventType.PlayerOutBattle);
-                }
-                //触发对应的房间逻辑
-                imover.currentRoom = downRoom;
+        HexRoomTag downRoom = null;
 
-                // 机器人自动结算，玩家打开面板
-                if (imover is Robot_CharacterMapMover robot)
-                    robot.ResolveRoom(downRoom);
-                else if (downRoom.RoomLogic != null)
-                    downRoom.RoomLogic.OnPlayerEnter(downRoom);
-                else if (downRoom.IHexRoom != null)
-                    downRoom.IHexRoom.DoHexRoomLogic();
+        Ray ray = new Ray(rayStart, Vector3.down);
+        if (Physics.Raycast(ray, out RaycastHit hit, 5, LayerMask.GetMask("HexRoom")))
+            downRoom = hit.collider.GetComponent<HexRoomTag>();
+
+        // 同帧激活的 pooled 对象物理未就绪 → raycast 落空 → 用存档坐标补查
+        if (downRoom == null && posDic.TryGetValue(imover, out var savedPos))
+        {
+            var mapMgr = GameRoot.GetManager<GameMapManager>();
+            mapMgr?.HexRoomMap.TryGetValue(new Vector2Int(savedPos.pos.x, savedPos.pos.y), out downRoom);
+        }
+
+        if (downRoom == null) return;
+
+        if (downRoom != imover.currentRoom)
+        {
+            hexPathFindingManager.SetPlayerStartRoom(downRoom);
+            if (posDic.TryGetValue(imover, out var posData))
+                posData.SetPos(downRoom.row, downRoom.col);
+            if (imover is Player_CharacterMapMover pm && pm.CharacterTransform != null)
+            {
+                var handle = pm.CharacterTransform.GetComponent<CharacterMapMoveHandle>();
+                if (handle != null)
+                    handle.UpdatePosition(downRoom.row, downRoom.col);
             }
         }
+
+        // 脱战检测
+        if (imover.currentRoom)
+        {
+            E_HexRoomType roomType = imover.currentRoom.GetComponent<HexRoomStyleHandler>().RoomType;
+            if (roomType.IsBattleRoom())
+                EventCenter.EventTrigger(E_EventType.PlayerOutBattle);
+        }
+
+        // 触发对应的房间逻辑
+        imover.currentRoom = downRoom;
+        if (imover is Robot_CharacterMapMover robot)
+            robot.ResolveRoom(downRoom);
+        else if (downRoom.RoomLogic != null)
+            downRoom.RoomLogic.OnPlayerEnter(downRoom);
+        else if (downRoom.IHexRoom != null)
+            downRoom.IHexRoom.DoHexRoomLogic();
     }
 
     //加载数据对应

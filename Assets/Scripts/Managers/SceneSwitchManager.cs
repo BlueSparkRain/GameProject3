@@ -61,7 +61,9 @@ namespace Core
                 return;
             }
 
-            // 第一步：停止当前场景所有协程（核心兜底）
+            // 同步加载无法等待淡出，直接停止BGM
+            GameRoot.GetManager<AudioManager>()?.StopAllBGM(fadeOut: false);
+            // 停止当前场景所有协程（核心兜底）
             GameRoot.GetManager<CoroutineManager>().CleanupCoroutinesByScene(SceneManager.GetActiveScene());
 
 
@@ -93,7 +95,10 @@ namespace Core
                 Debug.LogError("[SceneSwitchManager]---异步场景切换失败：场景名称为空！");
                 return;
             }
-          
+
+            // 异步加载期间淡出BGM（协程在 DontDestroyOnLoad 的 AudioManager 上运行，不受场景卸载影响）
+            GameRoot.GetManager<AudioManager>()?.StopAllBGM(fadeOut: true);
+
             LoadSceneMode loadMode = mode == LoadMode.Single
                 ? LoadSceneMode.Single
                 : LoadSceneMode.Additive;
@@ -125,6 +130,7 @@ namespace Core
         /// </summary>
         public void UnloadSceneAsync(string sceneName)
         {
+            GameRoot.GetManager<AudioManager>()?.StopAllBGM(fadeOut: true);
             StartCoroutine(UnloadSceneCoroutine(sceneName));
         }
 

@@ -2778,10 +2778,10 @@ MonoBehaviour:
     type: 1
   - row: 16
     col: 40
-    type: 1
+    type: 5
   - row: 16
     col: 41
-    type: 5
+    type: 1
   - row: 16
     col: 42
     type: 1
@@ -2925,7 +2925,7 @@ MonoBehaviour:
     type: 1
   - row: 17
     col: 34
-    type: 1
+    type: 5
   - row: 17
     col: 35
     type: 1
@@ -3078,7 +3078,7 @@ MonoBehaviour:
     type: 1
   - row: 18
     col: 30
-    type: 1
+    type: 5
   - row: 18
     col: 31
     type: 1
@@ -3189,7 +3189,7 @@ MonoBehaviour:
     type: 1
   - row: 19
     col: 12
-    type: 1
+    type: 8
   - row: 19
     col: 13
     type: 1
@@ -3258,7 +3258,7 @@ MonoBehaviour:
     type: 4
   - row: 19
     col: 35
-    type: 1
+    type: 5
   - row: 19
     col: 36
     type: 1

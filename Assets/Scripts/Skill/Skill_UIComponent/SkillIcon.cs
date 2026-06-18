@@ -20,10 +20,10 @@ public class SkillIcon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     [Header("ATB主动模式UI(可选)")]
     [SerializeField] Button _atbSelectButton;
     [SerializeField] Image _atbEnhanceImage;
+    [SerializeField] Image _selectionIndicator;
 
     [Header("增幅等级颜色 [0]白 [1]蓝 [2]黄 [3]红")]
-    [SerializeField] Color[] _enhanceColors = new Color[]
-    {
+    [SerializeField] Color[] _enhanceColors = new Color[]{
         Color.white,
         Color.blue,
         Color.yellow,
@@ -73,9 +73,18 @@ public class SkillIcon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         SkillMode?.Dispose();
         SkillMode = null;
 
+        // ATB UI 默认禁用，仅主动模式激活
+        if (_atbSelectButton != null)
+            _atbSelectButton.enabled = false;
+        if (_atbEnhanceImage != null)
+            _atbEnhanceImage.gameObject.SetActive(false);
+        if (_selectionIndicator != null)
+            _selectionIndicator.gameObject.SetActive(false);
+
         switch (PendingSkillMode)
         {
             case E_SkillMode.Auto:
+                if (skillCoolDownImage) skillCoolDownImage.gameObject.SetActive(true);
                 var auto = new AutoMode();
                 auto.OnCooldownChanged += f => { if (skillCoolDownImage) skillCoolDownImage.fillAmount = f; };
                 auto.OnSPStatusChanged += noSP => { if (skillImage) skillImage.color = noSP ? Color.blue : Color.white; };
@@ -84,10 +93,12 @@ public class SkillIcon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
                 break;
 
             case E_SkillMode.ATB:
+                if (skillCoolDownImage) skillCoolDownImage.gameObject.SetActive(false);
                 var atb = new ATBMode();
                 atb.OnSPStatusChanged += noSP => { if (skillImage) skillImage.color = noSP ? Color.blue : Color.white; };
                 atb.OnSelectionChanged += OnATBSelectionChanged;
                 atb.OnEnhanceLevelChanged += OnATBEnhanceChanged;
+                atb.OnATBStatusChanged += noATB => { if (_atbSelectButton) _atbSelectButton.interactable = !noATB; };
                 atb.Init(skillData, skill);
                 SkillMode = atb;
                 SetupATBUI();
@@ -154,10 +165,16 @@ public class SkillIcon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         _atbSelectButton.onClick.AddListener(() =>
         {
             var atbMode = SkillMode as ATBMode;
-            if (atbMode != null)
+            if (atbMode == null) return;
+
+            atbMode.ToggleSelection();
+
+            // 若选中了敌方单体类技能，触发目标选择事件
+            if (ATBMode.CurrentSelected == atbMode
+                && (SkillData.skill_ATBTargetType == E_SkillTargetType_ATB.敌方单体
+                    || SkillData.skill_ATBTargetType == E_SkillTargetType_ATB.自身加敌方单体))
             {
-                EventCenter.EventTrigger(E_EventType.SkillIconATBSelected, (RectTransform)transform);
-                atbMode.ToggleSelection();
+                EventCenter.EventTrigger(E_EventType.ActiveSkillCastTarget);
             }
         });
 
@@ -174,14 +191,17 @@ public class SkillIcon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         }
 
         _atbEnhanceImage.color = _enhanceColors[0];
+        if (_selectionIndicator != null)
+            _selectionIndicator.gameObject.SetActive(false);
+
+        _atbSelectButton.enabled = true;
+        _atbEnhanceImage.gameObject.SetActive(true);
     }
 
     void OnATBSelectionChanged(bool selected)
     {
-        if (_atbSelectButton != null)
-            _atbSelectButton.GetComponent<Image>().color = selected
-                ? new Color(1f, 0.85f, 0.3f, 1f)
-                : new Color(1f, 1f, 1f, 0.6f);
+        if (_selectionIndicator != null)
+            _selectionIndicator.gameObject.SetActive(selected);
     }
 
     void OnATBEnhanceChanged(int level)

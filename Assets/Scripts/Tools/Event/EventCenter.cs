@@ -445,6 +445,9 @@ public enum E_EventType
     /// </summary>
     Character_Upgrade,
 
+    /// <summary>角色获得新技能</summary>
+    Character_GetNewSkill,
+
     /// <summary>
     ///登记MapSkiller
     /// </summary>
@@ -611,4 +614,10 @@ public enum E_EventType
     /// ATB技能图标被选中时触发，传入SkillIcon的屏幕坐标(Vector2)，用于贝塞尔箭头定位
     /// </summary>
     SkillIconATBSelected,
+
+    /// <summary>
+    /// ATB主动技能目标选择：SkillIcon点击后，若技能为敌方单体类型则触发，
+    /// ActiveSkillTargetSelectorManager 接收后进入目标选择模式
+    /// </summary>
+    ActiveSkillCastTarget,
 }

@@ -7,6 +7,11 @@ public class GoldManager : MonoGlobalManager, ICanSave_And_Load{
     protected override void MgrOnInit(){
         base.MgrOnInit();
         JsonSaver.InitData<Save_Gold>(this);
+        JsonSaver.OnNewGame += InitBySelf;
+    }
+    public override void MgrDispose(){
+        JsonSaver.OnNewGame -= InitBySelf;
+        base.MgrDispose();
     }
     public override void MgrUpdate(float deltaTime) { }
     public void AddGold(int amount){

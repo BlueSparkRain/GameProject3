@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "MapSaveSOData", menuName = "HexMap/MapSaveSOData")]
@@ -32,13 +33,23 @@ public class MapSaveSOData : ScriptableObject
                 }
             }
             //Debug.Log($"加载已保存的地图数据：{loaded}/{savedCells.Length} 个地块");
+            Debug.Log($"[MapSaveSOData] 从SO加载地图: {loaded}/{savedCells.Length} 个地块 (BattleRoom等类型已就绪)");
             return;
         }
 
-        //Debug.Log("初始化地图：海洋");
+        Debug.Log("[MapSaveSOData] ⚠️ savedCells 为空! 全部初始化为海洋。请在Editor中调用SaveData()持久化地图数据。");
         for (int r = 0; r < mapRows; r++)
             for (int c = 0; c < mapCols; c++)
                 cellData[r, c] = E_HexTerrainType.Obstacle_Ocean;
+    }
+
+    /// <summary>更新单个单元格地形（仅更新运行时 cellData，不修改序列化的 savedCells）</summary>
+    public void SetCellTerrain(int row, int col, E_HexTerrainType type)
+    {
+        if (cellData != null && row >= 0 && row < mapRows && col >= 0 && col < mapCols)
+            cellData[row, col] = type;
+        // 注意：不再修改 savedCells。savedCells 是初始地图模板，只通过编辑器 SaveData() 修改。
+        // 运行时地图变更通过 JSON 存档（MapTerrainDiffData）持久化。
     }
 
     public void SaveData()
@@ -110,4 +121,46 @@ public enum E_MapShape
 {
     Hex,
     Rectangle
+}
+
+/// <summary>
+/// 运行时地图地形变更的 JSON 存档（替代直接修改 SO）。
+/// 每次玩家消耗战斗房间/事件房间后，变更写入此存档；
+/// MapScene 加载时覆盖到 cellData 上。
+/// </summary>
+[System.Serializable]
+public class MapTerrainDiffData : IValidatable
+{
+    public List<MapTerrainDiffEntry> entries = new List<MapTerrainDiffEntry>();
+
+    public void SetDiff(int row, int col, E_HexTerrainType type)
+    {
+        for (int i = 0; i < entries.Count; i++)
+        {
+            if (entries[i].row == row && entries[i].col == col)
+            {
+                entries[i] = new MapTerrainDiffEntry(row, col, type);
+                return;
+            }
+        }
+        entries.Add(new MapTerrainDiffEntry(row, col, type));
+    }
+
+    public bool IsValid() => true;
+}
+
+[System.Serializable]
+public class MapTerrainDiffEntry
+{
+    public int row;
+    public int col;
+    public E_HexTerrainType type;
+
+    public MapTerrainDiffEntry() { }
+    public MapTerrainDiffEntry(int row, int col, E_HexTerrainType type)
+    {
+        this.row = row;
+        this.col = col;
+        this.type = type;
+    }
 }

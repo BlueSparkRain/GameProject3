@@ -481,12 +481,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetVolume: {fileID: 628444131}
   minIntensity: 0.2
-  maxIntensity: 1
+  maxIntensity: 0.5
   overallSpeed: 1
   riseSpeedMin: 0.5
   riseSpeedMax: 1
-  fallSpeedMin: 1
-  fallSpeedMax: 1.5
+  fallSpeedMin: 0.5
+  fallSpeedMax: 1
 --- !u!1 &863204810
 GameObject:
   m_ObjectHideFlags: 0

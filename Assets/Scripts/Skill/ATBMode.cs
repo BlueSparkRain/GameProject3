@@ -22,8 +22,11 @@ public class ATBMode : ISkillMode
     public event Action<bool> OnSelectionChanged;
     /// <summary>增幅等级变化 (0~3)</summary>
     public event Action<int> OnEnhanceLevelChanged;
+    /// <summary>ATB点数是否不足释放基础版本</summary>
+    public event Action<bool> OnATBStatusChanged;
 
     SkillBase _skill;
+    bool _lastNoATB;
     public IBattlable Caster => _skill?.self;
     int _enhanceLevel;
     bool _selected;
@@ -45,6 +48,9 @@ public class ATBMode : ISkillMode
 
     public void Update(float currentSP, float deltaTime)
     {
+        // 始终检查 ATB 是否足够释放基础版本（用于按钮禁用显示）
+        CheckATBStatus();
+
         if (_frozen || !_selected) return;
 
         if (Input.GetKeyDown(KeyCode.Q))
@@ -110,14 +116,22 @@ public class ATBMode : ISkillMode
 
     void Release(float currentSP)
     {
-        // SP检测
-        if (SkillData.skill_sp_cost > currentSP)
+        var caster = _skill.self;
+
+        // ATB检测+扣除：每层增幅多消耗一份基础 ATB 消耗
+        int totalAtbCost = SkillData.skill_atb_cost * (_enhanceLevel + 1);
+        if (totalAtbCost > 0)
         {
-            OnSPStatusChanged?.Invoke(true);
-            return;
+            var controller = caster.battleDamageHandler?.BattleController;
+            float currentATB = controller?.GetCharacterModelValue(E_BattleModelType.ATBPoints) ?? 0;
+            if (currentATB < totalAtbCost)
+            {
+                DebugManager.Log(EDebugCategory.General, $"[ATBMode] ATB不足，无法释放(需要{totalAtbCost}, 当前{currentATB})");
+                return;
+            }
+            controller.AdjustCharacterModelValue(E_BattleModelType.ATBPoints, -totalAtbCost);
         }
 
-        var caster = _skill.self;
         IBattlable target = ResolveATBTarget(caster);
 
         var queue = GameRoot.GetManager<BattleActionQueue>();
@@ -131,14 +145,14 @@ public class ATBMode : ISkillMode
             skill, charName, SkillData.skill_Name,
             SkillData.skill_DeliveryType,
             _enhanceLevel > 0 ? E_SkillLevel.加强版本 : E_SkillLevel.基础版本,
-            prepaidSP: SkillData.skill_sp_cost,
+            prepaidSP: 0,   // ATB 模式不消耗 SP
             target: target,
             henceTime: _enhanceLevel,
             isATB: true);
 
         queue.Enqueue(action);
 
-        EventCenter.EventTrigger<IBattlable, float>(E_EventType.SkillExcute, caster, SkillData.skill_sp_cost);
+        EventCenter.EventTrigger<IBattlable, float>(E_EventType.SkillExcute, caster, 0);
         OnExecuted?.Invoke();
         Deselect();
     }
@@ -194,6 +208,18 @@ public class ATBMode : ISkillMode
         OnEnhanceLevelChanged?.Invoke(0);
     }
 
+    void CheckATBStatus()
+    {
+        int neededAtb = SkillData.skill_atb_cost * (_enhanceLevel + 1);
+        bool noATB = neededAtb > 0
+            && (Caster?.battleDamageHandler?.BattleController?.GetCharacterModelValue(E_BattleModelType.ATBPoints) ?? 0) < neededAtb;
+        if (noATB != _lastNoATB)
+        {
+            _lastNoATB = noATB;
+            OnATBStatusChanged?.Invoke(noATB);
+        }
+    }
+
     public void Dispose()
     {
         if (_selected) Deselect();
@@ -204,6 +230,7 @@ public class ATBMode : ISkillMode
         OnExecuted = null;
         OnSelectionChanged = null;
         OnEnhanceLevelChanged = null;
+        OnATBStatusChanged = null;
     }
 
     static void SlowTime(bool enter)

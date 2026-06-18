@@ -16,7 +16,7 @@ MonoBehaviour:
   skill_name: 3
   skill_Sprite: {fileID: -635372783, guid: ad017595f6aef2f43a740047dd433e39, type: 3}
   skill_Name: "\u731B\u51FB\u8981\u5BB3"
-  skill_Description: "\u65E0\u89C6\u5F31\u70B9\uFF0C\u524A\u51CF\u5BF9\u65B91\u70B9\u62A4\u76FE\u70B9\u6570\uFF0C\u5E76\u9020\u6210\u4E2D\u91CF\u7269\u7406\u4F24\u5BB3\uFF08\u4E2D\u4F4E\u8017\uFF09\uFF08\u521D\u59CB\u6280\u80FD\uFF09"
+  skill_Description: "\u65E0\u89C6\u5F31\u70B9\uFF0C\u524A\u51CF\u5BF9\u65B91\u70B9\u62A4\u76FE\u70B9\u6570\uFF0C\u5E76\u9020\u6210\u4E2D\u91CF\u7269\u7406\u4F24\u5BB3\u6280\u80FD\uFF09"
   skill_CoolDown_Auto: 5
   skill_sp_cost: 50
   skill_AtbCost_ATB: 1

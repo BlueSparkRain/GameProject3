@@ -9,8 +9,8 @@ using UnityEngine;
 public class CharacterMapSkiller : MonoBehaviour{
     CharacterHandler characterDataTag;
     public int restSkillSlotNum => Mathf.Max(restWholeSkillDatas.Count, 3);
-    public int normalSkillSlotNum => characterDataTag?.CharacterData?.AutoSkillSlotCount ?? 9;
-    public int atbSkillSlotNum => characterDataTag?.CharacterData?.AtbSkillSlotCount ?? 5;
+    public int normalSkillSlotNum => characterDataTag?.CharacterData?.AutoSkillSlotCount ?? 6;
+    public int atbSkillSlotNum => characterDataTag?.CharacterData?.AtbSkillSlotCount ?? 4;
     private List<SkillData> restWholeSkillDatas = new List<SkillData>();
     private List<SkillData> normalSkillDatas = new List<SkillData>();
     private List<SkillData> atbSkillDatas = new List<SkillData>();
@@ -31,8 +31,11 @@ public class CharacterMapSkiller : MonoBehaviour{
         return _instanceSaveId;
     }
 
-    private void Start(){
+    private void Awake(){
         characterDataTag = GetComponent<CharacterHandler>();
+    }
+
+    private void Start(){
         EventCenter.EventTrigger(E_EventType.Character_Skiller_Regist, this, characterDataTag.isPlayer);
         LoadSkillAssignments();
     }
@@ -57,7 +60,7 @@ public class CharacterMapSkiller : MonoBehaviour{
     public void GetNewSkill(int skillID){
         var newSkillData = new SkillData(ResourcesLoader.FindSkillSOByID(skillID));
         restWholeSkillDatas.Add(newSkillData);
-        //DebugManager.Log(EDebugCategory.MapRoom, "获取到新技能:" + newSkillData.skill_Name + " 总数:" + restWholeSkillDatas.Count);
+        EventCenter.EventTrigger(E_EventType.Character_GetNewSkill);
     }
 
     void SaveSkillAssignments(){

@@ -20,6 +20,7 @@ public class Player_CharacterMapMover : IMapMoveable
     PlayerMapIcon mapIcon;
     //记录角色的位置
     Transform charcaterTrans;
+    public Transform CharacterTransform => charcaterTrans;
     public bool IsMoving { get { return isMoving; } }
     /// <summary>
     /// Mover正在移动

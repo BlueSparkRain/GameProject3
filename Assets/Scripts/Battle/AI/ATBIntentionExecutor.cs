@@ -125,11 +125,13 @@ public class ATBIntentionExecutor
         var skillSO = GetCurrentSkillSO();
         if (skillSO == null) return;
 
+        int atbCost = skillSO.skill_AtbCost_ATB;
         int modelATB = (int)controller.GetCharacterModelValue(E_BattleModelType.ATBPoints);
-        if (modelATB < skillSO.skill_AtbCost_ATB)
+        if (modelATB < atbCost)
             return;
 
-        DebugManager.Log(EDebugCategory.ATBIntention,$"[ATBExecutor] {controller.CharacterData.Character_Name} ATB满足释放条件! 模型ATB={modelATB}, 技能消耗{skillSO.skill_AtbCost_ATB}, 意图索引={currentIndex}");
+        DebugManager.Log(EDebugCategory.ATBIntention,$"[ATBExecutor] {controller.CharacterData.Character_Name} ATB满足释放条件! 模型ATB={modelATB}, 技能消耗{atbCost}, 意图索引={currentIndex}");
+        controller.AdjustCharacterModelValue(E_BattleModelType.ATBPoints, -atbCost);
         ExecuteCurrentIntention();
         _nextCheckCooldown = Random.Range(CooldownRange.x, CooldownRange.y);
     }

@@ -36,7 +36,6 @@ public class Skill_40 : SkillBase
 {
     float baseRate = 0.3f;
     float ratePer100SP = 0.02f;
-
     public Skill_40(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType) { }
     public override bool IsMagicType => true;
 

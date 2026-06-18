@@ -4511,6 +4511,16 @@ PrefabInstance:
       propertyPath: _propertyType
       value: 19
       objectReference: {fileID: 0}
+    - target: {fileID: 5994904606437714673, guid: f268563c5c8a614469fc043ea860c783,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 5994904606437714673, guid: f268563c5c8a614469fc043ea860c783,
+        type: 3}
+      propertyPath: m_fontSizeBase
+      value: 22
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

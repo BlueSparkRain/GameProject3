@@ -10,6 +10,7 @@ public class MenuSceneSetUp : MonoBehaviour{
     private void Start()
     {
         ObjectPoolManager obj = GameRoot.GetManager<ObjectPoolManager>();
+        GameRoot.GetManager<AudioManager>()?.PlayBGM("Music/BGM/地图BGM");
 
         GameRoot.GetManager<UIManager>().OpenPanel<MenuPanel>(E_UIPanelType.MenuPanel,null);
         StartCoroutine(LoadAllPool());

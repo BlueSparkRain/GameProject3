@@ -4,8 +4,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load
-{
+public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load{
     GameRoot gameRoot;
 
     float x_Offset = 0.88f;//每行内的偏移
@@ -23,6 +22,8 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load
     public TMP_Text vitalityPointsUIText;
     [Header("混沌等级文本")]
     public TMP_Text chaosLevelUIText;
+    [Header("玩家等级文本")]
+    public TMP_Text playerLevelText;
 
     [Header("玩家技能按钮")]
     public Button PlayerSkillButton;
@@ -139,11 +140,16 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load
         //EventCenter.AddEventListener(E_EventType.NewRound, UpdateRoundText);
         EventCenter.AddEventListener(E_EventType.UpdateRoundState, UpdateRoundText);
         EventCenter.AddEventListener(E_EventType.UpdateUIVitalityPoints, UpdateValityText);
-        EventCenter.AddEventListener(E_EventType.BattleEnd, OnBattleReturn);
         EventCenter.AddEventListener<int>(E_EventType.ChaosLevelUP, UpdateChaosLevelUI);
 
         // ClearAllEvents 会清掉全局管理器的监听，重新绑定房间重生管理器的事件
         GameRoot.GetManager<RoomRespawnManager>()?.RebindEvents();
+        // 重新绑定 HexMapInteractManager 的事件（悬浮云朵检测、编辑器地形切换）
+        GameRoot.GetManager<HexMapInteractManager>()?.RebindEvents();
+        // 重新绑定 MapMoverManager 的事件（玩家位置更新、回合检测、机器人队列）
+        GameRoot.GetManager<MapMoverManager>()?.RebindEvents();
+        // 每次进入 MapScene 刷新寻路管理器的依赖引用
+        GameRoot.GetManager<HexPathFindingManager>()?.ReInitForScene();
     }
     private void Start()
     {
@@ -152,6 +158,36 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load
         // 初始化混沌等级 UI
         int chaosLevel = GameRoot.GetManager<ChaosLevelManager>()?.currentLevel ?? 1;
         UpdateChaosLevelUI(chaosLevel);
+        // 初始化玩家等级 UI
+        UpdatePlayerLevelUI();
+        StartCoroutine(WaitBGM());
+    }
+
+    void OnEnable()
+    {
+        EventCenter.AddEventListener<int, int>(E_EventType.CharacterLevelUp, OnPlayerLevelUp);
+    }
+
+    void OnDisable()
+    {
+        EventCenter.RemoveEventListener<int, int>(E_EventType.CharacterLevelUp, OnPlayerLevelUp);
+    }
+
+    void OnPlayerLevelUp(int oldLevel, int newLevel)
+    {
+        UpdatePlayerLevelUI();
+    }
+
+    void UpdatePlayerLevelUI()
+    {
+        if (playerLevelText == null) return;
+        int lv = CharacterHandler.PlayerInstance?.CharacterData?.CurrentLevel ?? 1;
+        playerLevelText.text = $"Lv.{lv}";
+    }
+    IEnumerator WaitBGM()
+    {
+        yield return new WaitForSeconds(2);
+        GameRoot.GetManager<AudioManager>().PlayBGM("Music/BGM/地图BGM");
     }
 
     void UpdateChaosLevelUI(int level)
@@ -188,41 +224,27 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load
         {
             mover.CharacterZeroMove();
         }
-    }
 
-    void OnBattleReturn()
-    {
-        StartCoroutine(OnBattleReturnCoro());
-    }
-
-    IEnumerator OnBattleReturnCoro()
-    {
-        // BattleScene 卸载后回到 MapScene，处理战后逻辑（非首次进入，无需新建角色）
-        yield return null; // 等一帧让 BattleScene 完全卸载
-
-        var player = CharacterHandler.PlayerInstance;
-        if (player == null) yield break;
-
-        var mover = player.GetComponent<CharacterMapMoveHandle>()?.iMapMover as Player_CharacterMapMover;
-        if (mover == null) yield break;
-
-        var battleMgr = GameRoot.GetManager<GameBattleManager>();
-
-        // 战败踢出
-        if (battleMgr != null && battleMgr.TryGetKickTarget(player.transform.position, out HexRoomTag kickTarget))
+        // 首次存档授予14个初始技能（Skill0~Skill13，每个存档只一次）
+        yield return new WaitForSeconds(2f);
+        yield return null; // 等一帧确保 CharacterMapSkiller.Start() 已执行
+        var flag = JsonSaver.Load<InitialSkillsGranted>();
+        if (!flag.granted)
         {
-            battleMgr.SuppressBattleTrigger = true;
-            yield return new WaitForSeconds(3f);
-            mover.DoKickMove(new System.Collections.Generic.List<HexRoomTag> { kickTarget });
-            battleMgr.SuppressBattleTrigger = false;
-            battleMgr.ClearPendingKick();
-        }
-        else
-        {
-            // 相机重新聚焦玩家
-            var nav = GameRoot.GetManager<OrthoCameraNavigator>();
-            if (nav != null)
-                nav.FocusOnTarget(player.gameObject, force: true);
+            var skiller = player1.GetComponent<CharacterMapSkiller>();
+            if (skiller != null)
+            {
+                for (int i = 0; i <= 59; i++)
+                    skiller.GetNewSkill(i);
+                skiller.UpdateActableDataList(skiller.RestWholeSkillDatas, skiller.NormalSkillDatas, skiller.ATBSkillDatas);
+                JsonSaver.Save(new InitialSkillsGranted(true));
+
+                GameRoot.GetManager<UIManager>().OpenPanel<MessagePanel>(
+                    E_UIPanelType.MessagePanel,
+                    //p => p.SetMessage("获得14个初始技能")
+                    p => p.SetMessage("获得59个全部技能")
+                );
+            }
         }
     }
 
@@ -269,4 +291,13 @@ public class CameraSaveData : IValidatable
     }
 
     public bool IsValid() => hasData;
+}
+
+[Serializable]
+public class InitialSkillsGranted : IValidatable
+{
+    public bool granted;
+    public bool IsValid() => true;
+    public InitialSkillsGranted() { }
+    public InitialSkillsGranted(bool g) { granted = g; }
 }

@@ -267,6 +267,15 @@ public class HexMapInteractManager : MonoGlobalManager
         _originMaterialMap.Clear();
         _currentHoverRoom = null;
     }
+
+    /// <summary>重新绑定事件（MapSceneSetUp 中 ClearAllEvents 后会清掉全局管理器的事件绑定）</summary>
+    public void RebindEvents()
+    {
+        EventCenter.RemoveEventListener(E_EventType.Mover_OneTimeMove, OneMoverCloudeCheck);
+        EventCenter.RemoveEventListener(E_EventType.Editor_Terrain_OneTime, SwitchEditingState);
+        EventCenter.AddEventListener(E_EventType.Mover_OneTimeMove, OneMoverCloudeCheck);
+        EventCenter.AddEventListener(E_EventType.Editor_Terrain_OneTime, SwitchEditingState);
+    }
     #endregion
 
 

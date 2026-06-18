@@ -77,15 +77,18 @@ public class MapSkillerCheker : MonoSceneManager
         if (panel != null)
             panel.canOpen = true;
         uiManager.OpenPanel<SkillAssignPanel>(E_UIPanelType.SkillAssignPanel,
-            p => p.LoadSkillIconBySettle(
-                currentSkiller.canActSettle,
-                currentSkiller.restSkillSlotNum,
-                currentSkiller.RestWholeSkillDatas,
-                currentSkiller.normalSkillSlotNum,
-                currentSkiller.NormalSkillDatas,
-                currentSkiller.atbSkillSlotNum,
-                currentSkiller.ATBSkillDatas
-            ));
+            p => {
+                p.currentMapSkiller = currentSkiller;
+                p.LoadSkillIconBySettle(
+                    currentSkiller.canActSettle,
+                    currentSkiller.restSkillSlotNum,
+                    currentSkiller.RestWholeSkillDatas,
+                    currentSkiller.normalSkillSlotNum,
+                    currentSkiller.NormalSkillDatas,
+                    currentSkiller.atbSkillSlotNum,
+                    currentSkiller.ATBSkillDatas
+                );
+            });
     }
 
     public void GetSkill(CharacterMapSkiller skiller, int skillID)

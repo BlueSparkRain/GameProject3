@@ -63,6 +63,9 @@ public class GameMapManager : MonoGlobalManager
 
     CoroutineManager coroutineManager;
 
+    // 运行时地形变更缓存（仅在场景切换/退出时写入 JSON，避免每次修改都触发文件 I/O）
+    MapTerrainDiffData _terrainDiff = new MapTerrainDiffData();
+
     #region 运行时地块管理
     // 坐标到房间的映射表（高效查找）
     Dictionary<Vector2Int, HexRoomTag> _hexRoomMap = new Dictionary<Vector2Int, HexRoomTag>();
@@ -242,6 +245,16 @@ public class GameMapManager : MonoGlobalManager
         mapSaveData.mapRows = _mapRows;
         mapSaveData.mapShape = mapShape;
         mapSaveData.InitializeIfEmpty();
+
+        // 加载 JSON 地形变更存档（玩家消耗战斗房间等运行时修改），覆盖到 cellData 上
+        var diff = JsonSaver.Load<MapTerrainDiffData>();
+        if (diff != null && diff.entries.Count > 0)
+        {
+            foreach (var entry in diff.entries)
+                mapSaveData.SetCellTerrain(entry.row, entry.col, entry.type);
+            DebugManager.Log(EDebugCategory.MapRoom, $"[GameMapManager] 已应用 JSON 地形变更: {diff.entries.Count} 条");
+        }
+
         allCells = new HexRoomTag[mapRow, mapCol];
         EventCenter.AddEventListener<Vector2Int, E_HexTerrainType>(E_EventType.Editor_Terrain, UpdateHexTag);
     }
@@ -365,8 +378,6 @@ public class GameMapManager : MonoGlobalManager
 
         newHexRoom.transform.DOScale(new Vector3(1,1,0.5f), 0.2f).From(new Vector3(0.7f,0.7f,0));
         newHexRoom.GetComponent<HexJumpAnimHandler>().TriggerJump(0.15f);
-
-        SetCellMaterial(newHexRoom, cellType);
     }
 
     /// <summary>
@@ -374,26 +385,42 @@ public class GameMapManager : MonoGlobalManager
     /// </summary>
     void SetCellMaterial(HexRoomTag room, E_HexTerrainType type)
     {
-        if (useCustomHexRoomMaterial) return;
+        if (useCustomHexRoomMaterial)
+        {
+            Debug.LogWarning("[GameMapManager] useCustomHexRoomMaterial=true，跳过材质设置");
+            return;
+        }
         MeshRenderer renderer = room.GetComponent<MeshRenderer>();
+        if (renderer == null)
+        {
+            Debug.LogError($"[GameMapManager] {room.name} 缺少 MeshRenderer！");
+            return;
+        }
         renderer.enabled = true;
 
-        switch (type)
+        Material mat = type switch
         {
-            case E_HexTerrainType.Obstacle_Ocean : renderer.material = obstacle_oceanMat; break;
-            case E_HexTerrainType.Walkable_EmptyLand: renderer.material = walkable_landMat; break;
-            case E_HexTerrainType.Obstacle_Tree: renderer.material = obstacle_TreeMat; break;
-            case E_HexTerrainType.Obstacle_Stone: renderer.material = obstacle_StoneMat; break;
-            case E_HexTerrainType.Obstacle_Mountain: renderer.material = obstacle_MountainMat; break;
-            
-            case E_HexTerrainType.Walkable_LowLevel_BattleRoom: renderer.material = walkable_BattleLow_RoomMat; break;
-            case E_HexTerrainType.Walkable_MidLevel_BattleRoom: renderer.material = walkable_BattleMid_RoomMat; break;
-            case E_HexTerrainType.Walkable_HighLevel_BattleRoom: renderer.material = walkable_BattleHigh_RoomMat; break;
+            E_HexTerrainType.Obstacle_Ocean => obstacle_oceanMat,
+            E_HexTerrainType.Walkable_EmptyLand => walkable_landMat,
+            E_HexTerrainType.Obstacle_Tree => obstacle_TreeMat,
+            E_HexTerrainType.Obstacle_Stone => obstacle_StoneMat,
+            E_HexTerrainType.Obstacle_Mountain => obstacle_MountainMat,
+            E_HexTerrainType.Walkable_LowLevel_BattleRoom => walkable_BattleLow_RoomMat,
+            E_HexTerrainType.Walkable_MidLevel_BattleRoom => walkable_BattleMid_RoomMat,
+            E_HexTerrainType.Walkable_HighLevel_BattleRoom => walkable_BattleHigh_RoomMat,
+            E_HexTerrainType.Walkable_UnknownEventRoom => walkable_EventRoomMat,
+            E_HexTerrainType.Walkable_RewardRoom => walkable_RewardRoomMat,
+            E_HexTerrainType.Walkable_CityShopRoom => walkable_CityRoomMat,
+            _ => null
+        };
 
-            case E_HexTerrainType.Walkable_UnknownEventRoom: renderer.material = walkable_EventRoomMat; break;
-            case E_HexTerrainType.Walkable_RewardRoom: renderer.material = walkable_RewardRoomMat; break;
-            case E_HexTerrainType.Walkable_CityShopRoom: renderer.material = walkable_CityRoomMat; break;
+        if (mat == null)
+        {
+            Debug.LogError($"[GameMapManager] 地块类型 {type} 对应的材质为 null！检查 Resources.Load 路径是否正确。");
+            return;
         }
+
+        renderer.material = mat;
     }
 
 
@@ -402,6 +429,9 @@ public class GameMapManager : MonoGlobalManager
     {
         HexRoomTag newHexRoomTag = GameRoot.GetManager<ObjectPoolManager>()
             .GetInstance(E_PoolType.MapRoom_地图房间).GetComponent<HexRoomTag>();
+
+        // 材质必须在设置位置之前赋值，避免地块带着旧材质出现在场景中
+        SetCellMaterial(newHexRoomTag, cellType);
 
         if (row % 2 == 0)
             newHexRoomTag.GetComponent<HexJumpAnimHandler>().InitPos(MapPivotPos + new Vector3(y_Offset * col, 0, x_Offset * row));
@@ -412,7 +442,6 @@ public class GameMapManager : MonoGlobalManager
         {
             newHexRoomTag.InitRoomTag(row, col);
             newHexRoomTag.GetComponent<HexRoomHandler>().InitHexRoomHandler(newHexRoomTag, cellType, playAnim);
-            //newHexRoomTag.GetComponent<HexTerrainStyleHandler>().InitTerrainStyle(cellType);
             RegisterHexRoom(newHexRoomTag, walkable);
         }
 
@@ -426,15 +455,22 @@ public class GameMapManager : MonoGlobalManager
         var faceObj = GameRoot.GetManager<ObjectPoolManager>().GetInstance(E_PoolType.HexFace_投影面片);
         if (faceObj == null) return;
 
+        // 材质必须在设置位置之前恢复，避免 HexFace 带着丢失材质出现在场景中
+        if (_hexFaceDefaultMat == null)
+            _hexFaceDefaultMat = ResourcesLoader.FindHexFaceObj()?.GetComponent<MeshRenderer>()?.sharedMaterial;
+        var faceRenderer = faceObj.GetComponent<MeshRenderer>();
+        if (faceRenderer != null && _hexFaceDefaultMat != null)
+            faceRenderer.sharedMaterial = _hexFaceDefaultMat;
+
         var faceTag = faceObj.GetComponent<HexFaceTag>();
         if (faceTag == null) return;
 
         faceTag.Init(row, col);
         Vector3 worldPos = CalculateRoomWorldPos(row, col);
         faceObj.transform.position = worldPos + Vector3.up * 0.05f;
-        //faceObj.transform.rotation = Quaternion.Euler(90, 0, 0);
         faceObj.transform.rotation = Quaternion.identity;
     }
+    Material _hexFaceDefaultMat;
     #endregion
 
     #region 地图编辑功能：点击切换地块类型+保存数据
@@ -475,6 +511,9 @@ public class GameMapManager : MonoGlobalManager
         _walkableDic.Clear();
         allCells = new HexRoomTag[mapRow, mapCol];
 
+        // 清除 HexMapInteractManager 中缓存的旧材质引用（HexRoomTag 对象复用时，旧材质实例已失效）
+        GameRoot.GetManager<HexMapInteractManager>()?.ClearMaterialCache();
+
         // 预注册可行走位置数据（仅数据，不创建GameObject），GetRnadomRoom/GetTargetRoom立即可用
         PreRegisterWalkableFromSaveData();
 
@@ -490,5 +529,37 @@ public class GameMapManager : MonoGlobalManager
         MeshRenderer renderer = room.GetComponent<MeshRenderer>();
         renderer.material = walkable_landMat;
         renderer.enabled = true;
+    }
+
+    /// <summary>更新持久化地图数据中的单元格地形（运行时累积变更，场景切换时批量写入 JSON）</summary>
+    public void UpdateCellTerrain(int row, int col, E_HexTerrainType type)
+    {
+        mapSaveData?.SetCellTerrain(row, col, type);
+
+        // 累积到内存缓存，不在每次调用时读写文件
+        _terrainDiff.SetDiff(row, col, type);
+    }
+
+    /// <summary>将运行时地形变更批量写入 JSON（公开：Battle 结束后也会调用）</summary>
+    public void SaveTerrainDiffToJson()
+    {
+        if (_terrainDiff != null && _terrainDiff.entries.Count > 0)
+        {
+            JsonSaver.Save(_terrainDiff);
+            DebugManager.Log(EDebugCategory.MapRoom, $"[GameMapManager] 地形变更已存档: {_terrainDiff.entries.Count} 条");
+        }
+    }
+
+    /// <summary>场景切换前回收所有六边形地块到对象池</summary>
+    public void ReclaimAllRooms()
+    {
+        // 批量保存地形变更到 JSON（仅一次文件写入）
+        SaveTerrainDiffToJson();
+
+        var pool = GameRoot.GetManager<ObjectPoolManager>();
+        pool?.ReclaimAll(E_PoolType.MapRoom_地图房间);
+        pool?.ReclaimAll(E_PoolType.HexFace_投影面片);
+        pool?.ReclaimAll(E_PoolType.HexRoomIcon_房间图标);
+        allCells = new HexRoomTag[mapRow, mapCol];
     }
 }

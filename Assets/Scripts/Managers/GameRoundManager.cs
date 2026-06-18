@@ -29,8 +29,14 @@ public class GameRoundManager : MonoGlobalManager, ICanSave_And_Load
     {
         base.MgrOnInit();
         EventCenter.AddEventListener(E_EventType.NewRound, PlusRoundNum);
-        //PlusRoundNum();
         JsonSaver.InitData<Save_GameRoundState>(this);
+        JsonSaver.OnNewGame += InitBySelf;
+    }
+    public override void MgrDispose()
+    {
+        JsonSaver.OnNewGame -= InitBySelf;
+        EventCenter.RemoveEventListener(E_EventType.NewRound, PlusRoundNum);
+        base.MgrDispose();
     }
     void CheckChaosLevel() {
         GameRoot.GetManager<ChaosLevelManager>().AdjustChaosLevelByRound(roundNum);

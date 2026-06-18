@@ -189,6 +189,9 @@ public static class JsonSaver
     #endregion
 
     #region 新游戏（清空所有存档）
+    /// <summary>新游戏开始时触发，全局管理器监听此事件以重置内存数据</summary>
+    public static event System.Action OnNewGame;
+
     public static void StartNewGame()
     {
         try
@@ -201,6 +204,8 @@ public static class JsonSaver
                 foreach (var file in Directory.GetFiles(SaveRoot))
                     File.Delete(file);
             }
+            // 通知所有已注册管理器重置内存数据
+            OnNewGame?.Invoke();
             DebugManager.Log(EDebugCategory.General, "新游戏数据初始化完成");
         }
         catch (Exception e)

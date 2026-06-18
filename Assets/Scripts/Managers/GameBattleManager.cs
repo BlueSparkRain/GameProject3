@@ -17,8 +17,10 @@ public class GameBattleManager : IGlobalManager{
     int battleRadius = 2;
     int max_enemyNum = 3;
 
-    /// <summary>当前触发的战斗房间（战败时用于踢出玩家）</summary>
+    /// <summary>当前触发的战斗房间（玩家踩上的那个，战败时用于踢出玩家）</summary>
     HexRoomTag _currentBattleRoom;
+    /// <summary>本次战斗中所有被拉入的 BattleRoom（胜利后全部消耗）</summary>
+    List<HexRoomTag> _battleRoomsInCombat = new List<HexRoomTag>();
     /// <summary>战败后下次加载MapScene时需要踢出玩家</summary>
     bool _pendingKickOnLoad;
     /// <summary>战败回场时抑制战斗房间触发（让玩家先站在房间上再被踢开）</summary>
@@ -45,9 +47,11 @@ public class GameBattleManager : IGlobalManager{
     /// </summary>
     public void CheckBattleEnemy(HexRoomTag roomTag){
         _currentBattleRoom = roomTag;
+        _battleRoomsInCombat.Clear();
+        _battleRoomsInCombat.Add(roomTag);  // 玩家踩上的房间
+
         if(!gameMapManager) gameMapManager=GameRoot.GetManager<GameMapManager>();
         List<Vector2Int> radiusRowCols = HexCoordinateUtility.GetRowColsInRadius(roomTag.row,roomTag.col, battleRadius);
-        //DebugManager.Log(EDebugCategory.MapRoom, "[GameBattleManager]-----开始扫描战斗中近邻范围内的敌人:" + radiusRowCols.Count);
         for (int i = 0; i < radiusRowCols.Count ; i++){
             HexRoomTag cur_room = gameMapManager.GetTargetRoom(radiusRowCols[i]);
             if (cur_room && enemysData.Count< max_enemyNum) {
@@ -57,16 +61,17 @@ public class GameBattleManager : IGlobalManager{
                     var battleLogic = cur_room.RoomLogic as BattleRoomLogic;
                     if (battleLogic == null) continue;
                     CharacterData enemyData = new CharacterData(battleLogic.EnemyType);
-                    //DebugManager.Log(EDebugCategory.MapRoom, "检测到一只怪物：---"+ battleLogic.EnemyType);
-                    //根据当前的混沌等级，缩放原始数值
                     var chaosMgr = GameRoot.GetManager<ChaosLevelManager>();
                     if (chaosMgr != null)
                         ApplyChaosScaling(enemyData, chaosMgr.EnemyStrengthMultiplier);
                     RegisterEnemyToBattle(enemyData);
+                    // 记录此敌人对应的 BattleRoom
+                    if (!_battleRoomsInCombat.Contains(cur_room))
+                        _battleRoomsInCombat.Add(cur_room);
                 }
             }
         }
-        DebugManager.Log(EDebugCategory.MapRoom, "[GameBattleManager]---战斗注册结束:" + enemysData.Count+"名敌人");
+        DebugManager.Log(EDebugCategory.MapRoom, $"[GameBattleManager] 战斗注册: {enemysData.Count}名敌人, {_battleRoomsInCombat.Count}个BattleRoom");
     }
 
     /// <summary>
@@ -88,25 +93,31 @@ public class GameBattleManager : IGlobalManager{
     /// </summary>
     void UnregisterCharacterToBattle(){
         DebugManager.Log(EDebugCategory.MapRoom, "清除战斗场景内战斗注册信息");
-        DebugManager.Log(EDebugCategory.MapRoom, $"清空前{playersData.Count}---{enemysData.Count}");
         playersData.Clear();
         enemysData.Clear();
-        DebugManager.Log(EDebugCategory.MapRoom, $"清空后{playersData.Count}---{enemysData.Count}");
+        _battleRoomsInCombat.Clear();
     }
 
-    /// <summary>战斗结果处理：胜利消耗房间，战败标记踢出</summary>
+    /// <summary>战斗结果处理：胜利消耗所有参战房间，战败标记踢出</summary>
     public void OnBattleResult(bool playerWin)
     {
-        if (playerWin && _currentBattleRoom != null)
+        if (playerWin)
         {
-            var battleLogic = _currentBattleRoom.RoomLogic as BattleRoomLogic;
-            battleLogic?.Consume();
+            foreach (var room in _battleRoomsInCombat)
+            {
+                if (room == null) continue;
+                var battleLogic = room.RoomLogic as BattleRoomLogic;
+                battleLogic?.Consume();
+            }
         }
         else if (!playerWin)
         {
             _pendingKickOnLoad = true;
         }
         _currentBattleRoom = null;
+        _battleRoomsInCombat.Clear();
+
+        GameRoot.GetManager<GameMapManager>()?.SaveTerrainDiffToJson();
     }
 
     /// <summary>战败后获取踢出目标房间（相邻随机可行走地块）</summary>

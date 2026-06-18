@@ -163,6 +163,8 @@ public class RewardPanel : UIPanelBase{
 
     void ApplyRewardRoom(E_RewardType rewardType)
     {
+        Hide();
+        FinalizeReward();  // 先关面板，避免升级触发的奖励面板覆盖当前面板
         switch (rewardType){
             case E_RewardType.ExpAndGold:
                 ApplyExpAndGold();
@@ -174,7 +176,6 @@ public class RewardPanel : UIPanelBase{
                 ApplyRestore();
                 break;
         }
-        FinalizeReward();
     }
 
     void ApplyLevelUpSkill()

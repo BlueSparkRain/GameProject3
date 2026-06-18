@@ -17,6 +17,8 @@ public class SkillSystemDebugger : MonoBehaviour
 
     void Update()
     {
+        #region
+        //测试：空格 + 1随机技能
         if (Input.GetKeyDown(KeyCode.Space))
         {
             var sk = PlayerSkiller;
@@ -25,6 +27,7 @@ public class SkillSystemDebugger : MonoBehaviour
             else
                 DebugManager.LogWarning(EDebugCategory.General, "[SkillSystemDebugger] 玩家CharacterMapSkiller未就绪");
         }
+        #endregion
 
         if (Input.GetKeyDown(KeyCode.I))
         {

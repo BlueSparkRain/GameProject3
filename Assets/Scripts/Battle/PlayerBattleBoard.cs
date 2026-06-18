@@ -20,7 +20,13 @@ public class PlayerBattleBoard : MonoBehaviour
     [Header("技能面板切换Button")]
     public Button SwitchSkillBoard;
 
+    [Header("BUFF 面板")]
+    public Button buffToggleButton;
+    public GameObject buffPanel;
+    public Text buffInfoText;
+
     bool useAutoBoarding = true;
+    bool _buffPanelVisible;
     /// <summary>HP/SP 条更新已由 Battle_Viewer 统一负责，此处不再重复</summary>
 
     bool _initialized;
@@ -31,6 +37,70 @@ public class PlayerBattleBoard : MonoBehaviour
             StartCoroutine(FallbackPolling());
         if (SwitchSkillBoard)
             SwitchSkillBoard.onClick.AddListener(SwitchBoard);
+        if (buffToggleButton)
+            buffToggleButton.onClick.AddListener(ToggleBuffPanel);
+        if (buffPanel)
+            buffPanel.SetActive(false);
+    }
+
+    void Update()
+    {
+        if (_buffPanelVisible && buffPanel != null && buffPanel.activeSelf)
+            RefreshBuffDisplay();
+    }
+
+    void ToggleBuffPanel()
+    {
+        if (buffPanel == null) return;
+        _buffPanelVisible = !_buffPanelVisible;
+        buffPanel.SetActive(_buffPanelVisible);
+        if (_buffPanelVisible)
+            RefreshBuffDisplay();
+    }
+
+    void RefreshBuffDisplay()
+    {
+        if (buffInfoText == null) return;
+
+        // BattleBuffHandler 可能在 PlayerBattleBoard 自身、子物体、或通过 BattleHandler 引用
+        var bh = GetComponentInChildren<BattleBuffHandler>();
+        if (bh == null)
+        {
+            var handler = GetComponentInChildren<BattleHandler>();
+            bh = handler?.buffHandler;
+        }
+        if (bh == null)
+        {
+            // 回退：场景中全局查找玩家 BuffHandler
+            foreach (var h in FindObjectsOfType<BattleHandler>())
+            {
+                if (h.MVCHandler?.BattleController?.CharacterData?.characterType == E_CharacterType.P_海螺骑士)
+                {
+                    bh = h.buffHandler;
+                    break;
+                }
+            }
+        }
+
+        if (bh == null)
+        {
+            buffInfoText.text = "未找到 BUFF 组件";
+            return;
+        }
+
+        var buffs = bh.GetAllBuffInfo();
+        if (buffs.Count == 0)
+        {
+            buffInfoText.text = "当前无 BUFF";
+            return;
+        }
+
+        var sb = new System.Text.StringBuilder();
+        foreach (var (name, remaining, total) in buffs)
+        {
+            sb.AppendLine($"{name}  {remaining:F0}/{total:F0}s");
+        }
+        buffInfoText.text = sb.ToString();
     }
 
     /// <summary>

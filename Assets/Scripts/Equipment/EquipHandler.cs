@@ -12,8 +12,11 @@ public class EquipHandler
 
     public System.Action<E_EquipmentSlot, EquipData> onEquipChanged;
 
-    public EquipHandler()
+    readonly string _characterId;
+
+    public EquipHandler(E_CharacterType characterType)
     {
+        _characterId = characterType.ToString();
         LoadEquipped();
         onEquipChanged += (_, _) => SaveEquipped();
     }
@@ -117,14 +120,27 @@ public class EquipHandler
     #region 存档 (Save_EquippedItems)
     void LoadEquipped()
     {
-        var save = JsonSaver.Load<Save_EquippedItems>();
+        var save = JsonSaver.Load<Save_EquippedItems>(_characterId);
+
+        // 迁移：旧版本使用全局存档，如果按角色存档为空则尝试读取旧全局存档
+        if (save?.entries == null || save.entries.Count == 0)
+        {
+            var oldGlobal = JsonSaver.Load<Save_EquippedItems>();
+            if (oldGlobal?.entries != null && oldGlobal.entries.Count > 0)
+            {
+                save = oldGlobal;
+                JsonSaver.Save(save, _characterId);
+                DebugManager.Log(EDebugCategory.Equipment,$"[EquipHandler] 已从旧全局存档迁移{oldGlobal.entries.Count}件装备到角色存档({_characterId})");
+            }
+        }
+
         if (save?.entries == null) return;
         foreach (var entry in save.entries)
         {
             if (entry?.data != null && entry.data.IsValid())
                 currentEquips[entry.slot] = entry.data;
         }
-        DebugManager.Log(EDebugCategory.Equipment,$"[EquipHandler] 从存档加载了{currentEquips.Count}件已装备");
+        DebugManager.Log(EDebugCategory.Equipment,$"[EquipHandler] 从存档加载了{currentEquips.Count}件已装备 (角色:{_characterId})");
     }
 
     void SaveEquipped()
@@ -132,7 +148,7 @@ public class EquipHandler
         var entries = new List<EquippedEntry>();
         foreach (var kv in currentEquips)
             entries.Add(new EquippedEntry { slot = kv.Key, data = kv.Value });
-        JsonSaver.Save(new Save_EquippedItems(entries));
+        JsonSaver.Save(new Save_EquippedItems(entries), _characterId);
     }
 
     /// <summary>导出已装备列表(用于调试/编辑器)</summary>
@@ -177,13 +193,12 @@ public class Save_EquippedItems : IValidatable
 {
     public List<EquipHandler.EquippedEntry> entries;
 
-    public Save_EquippedItems() { }
+    public Save_EquippedItems() { entries = new List<EquipHandler.EquippedEntry>(); }
 
     public Save_EquippedItems(List<EquipHandler.EquippedEntry> list)
     {
-        entries = list;
+        entries = list ?? new List<EquipHandler.EquippedEntry>();
     }
 
-    public bool IsValid() => entries != null && entries.TrueForAll(e =>
-        e?.data != null && e.data.IsValid());
+    public bool IsValid() => entries != null;
 }

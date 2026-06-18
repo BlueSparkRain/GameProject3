@@ -201,6 +201,17 @@ public class BattleBuffHandler : MonoBehaviour
         }
     }
 
+    /// <summary>获取当前所有 BUFF 的名称和剩余时间，供 UI 面板显示</summary>
+    public List<(string name, float remaining, float total)> GetAllBuffInfo()
+    {
+        var result = new List<(string, float, float)>();
+        foreach (var kv in BuffDic)
+        {
+            result.Add((kv.Key.Buff_Type.ToString(), kv.Value.Remaining, kv.Value.Total));
+        }
+        return result;
+    }
+
     public float GetDamageRate()
     {
         var Buff = TryGetBuff(E_BuffType.战意_正面) as Buff_DamageBoomer;
@@ -233,6 +244,8 @@ public class BuffTimer
     float timer;
     float interval;
     bool start;
+    public float Remaining => timer;
+    public float Total => interval;
     public BuffTimer(float interval)
     {
         this.interval = interval;

@@ -129,6 +129,16 @@ public class HexPathFindingManager : MonoGlobalManager
             DebugManager.Log(EDebugCategory.MapRoom, "[HexPathDrawMgr] 初始化完成（全功能版）");
     }
 
+    /// <summary>每次进入 MapScene 时调用，刷新 _walkableDic 和 _mapManager 引用</summary>
+    public void ReInitForScene()
+    {
+        _mapManager = GameRoot.GetManager<GameMapManager>();
+        if (_mapManager != null)
+            _walkableDic = _mapManager.WalkableDic;
+        _autoFullPath?.Clear();
+        _walkablePath?.Clear();
+    }
+
     void InitDependencies()
     {
         _mapManager ??= GameRoot.GetManager<GameMapManager>();
@@ -193,12 +203,6 @@ public class HexPathFindingManager : MonoGlobalManager
     {
         if (!canPathFind)
             return;
-
-        //if (canPathFind) { 
-
-
-
-        //}
         if (!enabled || _playerStartRoom == null) return;
         UpdateCurrentMouseRoom();
         UpdateDrawPath();

@@ -44,7 +44,7 @@ public class AudioManager : MonoGlobalManager
 
     #region Inspector可配置参数（可视化调整，无需改代码）
     [Header("BGM全局配置")]
-    [Range(0f, 1f)] public float bgmBaseVolume = 0.8f; // BGM基础音量（0-1）
+    [Range(0f, 1f)] float bgmBaseVolume = 0.5f; // BGM基础音量（0-1）
     public float bgmFadeDuration = 1.5f;               // BGM淡入/淡出时长（秒）
     public bool bgmLoop = true;                        // BGM是否默认循环
 

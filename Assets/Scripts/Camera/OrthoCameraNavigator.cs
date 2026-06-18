@@ -130,7 +130,6 @@ protected override void MgrOnInit()
     {
         base.Awake();
         _isDragEnabled = true;
-        this.enabled = false;
 
         targetOrthographicCamera = Camera.main;
         _cachedCamTransform = targetOrthographicCamera.transform;
@@ -139,6 +138,24 @@ protected override void MgrOnInit()
         _targetOrthographicSize = targetOrthographicCamera.orthographicSize;
         _isFocusing = false;
         StartCoroutine(WaitStart());
+    }
+
+    /// <summary>Unity 原生 Update —— 仅处理空格键（不依赖 GameRoot 的 MgrUpdate 调度）</summary>
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            bool enteringPathFind = !GameRoot.GetManager<HexPathFindingManager>()?.canPathFind ?? false;
+            if (enteringPathFind)
+            {
+                var player = CharacterHandler.PlayerInstance;
+
+                if (player != null)
+                    FocusOnTarget(player.gameObject);
+            }
+            Debug.Log("woc----" + GameRoot.GetManager<MapMoverManager>() );
+            GameRoot.GetManager<MapMoverManager>()?.TogglePathFinding();
+        }
     }
 
     IEnumerator WaitStart()
@@ -150,11 +167,15 @@ protected override void MgrOnInit()
 
     void TryEnableRoaming()
     {
-        if (_freezeTimerDone && _hasFocused && !_roamEnabled)
-        {
-            _roamEnabled = true;
-            DebugManager.Log(EDebugCategory.General, "[OrthoCameraNavigator]---相机开始漫游");
-        }
+        if (!_freezeTimerDone || _roamEnabled) return;
+
+        // 如果有玩家：必须等聚焦玩家后才开启漫游
+        // 如果无玩家：冻结计时结束后直接开启漫游
+        bool hasPlayer = CharacterHandler.PlayerInstance != null;
+        if (hasPlayer && !_hasFocused) return;
+
+        _roamEnabled = true;
+        DebugManager.Log(EDebugCategory.General, "[OrthoCameraNavigator]---相机开始漫游" + (hasPlayer ? "" : "（无玩家模式）"));
     }
     #endregion
     #region 核心更新
@@ -162,20 +183,6 @@ protected override void MgrOnInit()
     {
         if (!use_CamPan) return;
         if (!_isDragEnabled || _cachedCamTransform == null) return;
-
-        // 空格键始终可用：进入寻路时聚焦玩家，退出寻路时不聚焦
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            var player = CharacterHandler.PlayerInstance;
-            if (player != null)
-            {
-                bool enteringPathFind = !GameRoot.GetManager<HexPathFindingManager>()?.canPathFind ?? false;
-                if (enteringPathFind)
-                    FocusOnTarget(player.gameObject);
-                GameRoot.GetManager<MapMoverManager>().TogglePathFinding();
-                return;
-            }
-        }
 
         // 漫游门控：2s冻结 + 聚焦玩家后才开启
         if (!_roamEnabled) return;
@@ -337,6 +344,7 @@ protected override void MgrOnInit()
     /// </summary>
     public void FocusOnTarget(GameObject target, float focusSmoothTime = 0.75f, bool force = false)
     {
+        Debug.Log("是单独");
         if (target == null || _cachedCamTransform == null) return;
         if (!force && IsManualInputActive) return; // 手动漫游中 → 不抢视野
         _isFocusing = true;

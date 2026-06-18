@@ -36,7 +36,7 @@ public class SkillBucket_0_to_19 { }
 [SkillID(0)]
 public class Skill_BaseAttack : SkillBase{
     #region 技能基础Info
-    float baseAttackValue = -1;
+    float baseAttackValue = -10;
     float baseAttackRate = 0.1f;
     E_WeaknessType weakness = E_WeaknessType.剑;
     Attack_Skill atk_iSkill;
@@ -403,8 +403,7 @@ public class Skill_10 : SkillBase
     ModelAdjust_Skill hpCost;
 
     public override void SkillEffect_Base(IBattlable target) { Apply(target, buffDuration, boomerRate, hpCostRate); }
-    public override void SkillEffect_Enhence(IBattlable target, int henceTime)
-    {
+    public override void SkillEffect_Enhence(IBattlable target, int henceTime){
         Apply(target, buffDuration + henceTime * 10, boomerRate, hpCostRate); // 15→25→35→45
     }
 
@@ -451,17 +450,13 @@ public class Skill_11 : SkillBase{
 ///（12）【寒冰魔法/雷电魔法/火焰魔法】对全体敌人造成冰/雷/火弱点的伤害（中耗）（方向键切换）（初始技能）
 /// </summary>
 [SkillID(12)]
-public class Skill_12 : SkillBase
-{
+public class Skill_12 : SkillBase{
     float baseAttackValue = -1;
     float baseAttackRate = 0.5f;
     E_WeaknessType weakness = E_WeaknessType.冰;
     Attack_Skill atk_iSkill;
-
     public override bool IsMagicType => true;
-
-    public Skill_12(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType)
-    {
+    public Skill_12(E_SkillTargetType_Auto _skillTargetType) : base(_skillTargetType){
         DebugManager.Log(EDebugCategory.SkillExecution,"$$$$$--技能12--$$$$$");
         atk_iSkill = new Attack_Skill();
     }

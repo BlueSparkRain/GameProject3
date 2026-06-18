@@ -21,6 +21,15 @@ public class BattleSceneSetUp : MonoBehaviour
         gameRoot.RegisterScene_MonoManager<BattleActionQueue>();
         gameRoot.RegisterScene_MonoManager<SkillVfxDirectorManager>();
 
+        GameRoot.GetManager<AudioManager>()?.PlayBGM("Music/BGM/战斗BGM");
+
+        // 确保目标选择管理器存在（用于敌方单体技能的目标切换）
+        if (FindObjectOfType<ActiveSkillTargetSelectorManager>() == null)
+        {
+            var go = new GameObject("[Manager] ActiveSkillTargetSelector");
+            go.transform.SetParent(transform);
+            go.AddComponent<ActiveSkillTargetSelectorManager>();
+        }
 
         EventCenter.AddEventListener<bool>(E_EventType.PrepareATBSkillExcute, OnPrepareATB);
     }

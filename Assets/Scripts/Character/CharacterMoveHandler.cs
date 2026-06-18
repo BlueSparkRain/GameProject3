@@ -53,13 +53,22 @@ public class CharacterMapMoveHandle : MonoBehaviour, ICanSave_And_Load
     void UpdateCurrentRoom(HexRoomTag hexRoomData){
         iMapMover.currentRoom = hexRoomData;
     }
+    /// <summary>由 CheckCurrentRoom 直接调用，不依赖事件链</summary>
+    public void UpdatePosition(int row, int col)
+    {
+        currentRow = row;
+        currentCol = col;
+        if (moverPosData != null)
+            moverPosData.SetPos(row, col);
+        // 立即持久化到 JSON
+        JsonSaver.Save(moverPosData, moverPosData.uniqueId);
+    }
     void OnDrawGizmosSelected(){
         Gizmos.color = Color.cyan;
         Gizmos.DrawLine(transform.position, transform.position + Vector3.down * 4);
     }
     void OnDestroy(){
         JsonSaver.Save(moverPosData, moverPosData.uniqueId);
-        DebugManager.Log(EDebugCategory.MapRoom, $"存档已更新角色Map位置{currentRow},{currentCol}");
     }
     IEnumerator SetCharacterPos(Vector3 pos){
         transform.position = pos + Vector3.up * GameRoot.GetManager<GameMapManager>().characterYOffset;

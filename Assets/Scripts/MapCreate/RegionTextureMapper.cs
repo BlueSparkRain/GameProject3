@@ -75,10 +75,8 @@ public class RegionTextureMapper : MonoBehaviour
     void OnDestroy(){
         EventCenter.RemoveEventListener(E_EventType.LoadMapEnd, OnLoadMapEnd);
         ClearFaceCache();
-        if (_sharedMaterial != null){
-            if (Application.isPlaying) Destroy(_sharedMaterial);
-            else DestroyImmediate(_sharedMaterial);
-        }
+        // 不销毁 _sharedMaterial —— 它被赋给了对象池中的 HexFace (sharedMaterial)，
+        // 销毁会导致池中物体材质丢失（紫色）。新场景加载时 RefreshMapping 会重新创建并覆盖。
     }
 
     void Update(){
@@ -286,7 +284,10 @@ public class RegionTextureMapper : MonoBehaviour
         foreach (var rend in _faceRenderers)
         {
             if (rend != null)
+            {
                 rend.SetPropertyBlock(null);
+                rend.sharedMaterial = null;  // 回退到预制体默认材质，避免残留已失效的 _sharedMaterial
+            }
         }
         _faceRenderers.Clear();
         _faceTransforms.Clear();

@@ -185,7 +185,7 @@ public class CharacterData : ICanSave_And_Load{
         get
         {
             if (_equipHandler == null)
-                _equipHandler = new EquipHandler();
+                _equipHandler = new EquipHandler(characterType);
             return _equipHandler;
         }
     }

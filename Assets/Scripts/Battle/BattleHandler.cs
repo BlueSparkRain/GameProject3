@@ -13,10 +13,10 @@ public class BattleHandler : MonoBehaviour{
     public IBattlable Self => self;
     public BattleMVCHandler MVCHandler;
     BattleSkillHandler skillHandler;
-    BattleBuffHandler buffHandler;
+    public BattleBuffHandler buffHandler;
     BattleDotHandler  dotHandler;
     BattleDamageHandler damageHandler;
-    BattlerStateTag battlerStateTag;
+    public BattlerStateTag battlerStateTag;
     BattleArtEffectHandller  artEffectHandller;
     BattleWeaknessHandler weaknessHandler;
 

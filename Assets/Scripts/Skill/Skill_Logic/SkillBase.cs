@@ -51,17 +51,9 @@ public abstract class SkillBase
     /// <param name="casters"></param>
     public void SkillExcute(E_SkillLevel skillLevel, int henceTime = 0)
     {
-        if (skillLevel == E_SkillLevel.加强版本 && AtbCost > 0)
-        {
-            float currentATB = Controller?.GetCharacterModelValue(E_BattleModelType.ATBPoints) ?? 0;
-            if (currentATB < AtbCost)
-            {
-                UnityEngine.Debug.LogWarning($"[SkillBase] ATB不足，无法释放加强技能(需要{AtbCost}, 当前{currentATB})");
-                return;
-            }
-            Controller.AdjustCharacterModelValue(E_BattleModelType.ATBPoints, -AtbCost);
-            UnityEngine.Debug.Log($"[SkillBase] 加强技能消耗ATB:{AtbCost}, 剩余:{currentATB - AtbCost}");
-        }
+        // ATB 消耗和检查由 ATBMode.Release 在入队前完成，此处不重复处理。
+        // 自动技能的 AtbCost/AngGrow 来自 SO 的 skill_AtbCost_ATB/skill_ang_grow 字段，
+        // 但自动技能不使用 ATB 系统，因此不在此处扣除。
 
         GetTargets();
         if (targets.Count <= 0)

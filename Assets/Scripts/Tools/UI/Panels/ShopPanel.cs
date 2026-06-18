@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+//6E6E6E
 public class ShopPanel : UIPanelBase
 {
     [Header("商品列表容器")]

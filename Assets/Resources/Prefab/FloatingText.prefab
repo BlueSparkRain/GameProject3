@@ -232,7 +232,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8364839509064018136}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
@@ -327,21 +327,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a1210db61ac59047b72c3b1e5f4db1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _popDuration: 0.07
+  _popDuration: 0.2
   _settleDuration: 0.05
-  _popOvershoot: 1.35
-  _floatDistance: 120
+  _popOvershoot: 1
+  _floatDistance: 30
   _floatDuration: 0.5
-  _fadeOutDelay: 0.25
-  _fadeOutDuration: 0.25
-  _horizontalSpread: 70
-  _squashScaleX: 1.18
-  _squashScaleY: 0.82
-  _stretchScaleX: 0.88
-  _stretchScaleY: 1.15
-  _squashDuration: 0.08
-  _stretchDuration: 0.1
-  _restoreDuration: 0.1
+  _fadeOutDelay: 0.5
+  _fadeOutDuration: 0.5
+  _horizontalSpread: 40
+  _squashScaleX: 1.2
+  _squashScaleY: 0.8
+  _stretchScaleX: 0.8
+  _stretchScaleY: 1.2
+  _squashDuration: 0.2
+  _stretchDuration: 0.2
+  _restoreDuration: 0.2
   _tmp: {fileID: 6514337904827681979}
 --- !u!225 &6604740362111428510
 CanvasGroup:

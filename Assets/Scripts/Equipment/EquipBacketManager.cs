@@ -18,6 +18,12 @@ public class EquipBacketManager : MonoGlobalManager, ICanSave_And_Load
     {
         base.MgrOnInit();
         JsonSaver.InitData<Save_EquipBacket>(this);
+        JsonSaver.OnNewGame += InitBySelf;
+    }
+    public override void MgrDispose()
+    {
+        JsonSaver.OnNewGame -= InitBySelf;
+        base.MgrDispose();
     }
 
     public override void MgrUpdate(float deltaTime) { }

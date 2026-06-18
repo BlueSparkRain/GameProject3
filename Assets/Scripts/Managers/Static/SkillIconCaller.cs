@@ -15,7 +15,7 @@ public static class SkillIconCaller{
         var newSkillIcon = ObjectPoolManager.
         GetInstance(E_PoolType.SkillIcon_技能图标);
 
-        newSkillIcon.transform.SetParent(skillSlot);
+        newSkillIcon.transform.SetParent(skillSlot.GetChild(0));
         var rect = newSkillIcon.GetComponent<RectTransform>();
         rect.anchorMin = new Vector2(0, 0);
         rect.anchorMax = new Vector2(1, 1);
@@ -28,9 +28,9 @@ public static class SkillIconCaller{
         newSkillIcon.transform.localPosition = Vector3.zero;
         newSkillIcon.transform.localScale = Vector3.zero;
         newSkillIcon.transform.DOKill();
-        newSkillIcon.transform.DOScale(1, 0.6f).From(0).SetEase(Ease.OutCubic).SetUpdate(true);
+        newSkillIcon.transform.DOScale(1, 0.3f).SetEase(Ease.OutCubic).SetUpdate(true);
         if (animateRotation)
-            newSkillIcon.transform.DORotate(new Vector3(0, 0, 360), 0.6f, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).SetUpdate(true);
+            newSkillIcon.transform.DORotate(new Vector3(0, 0, 360), 0.3f, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).SetUpdate(true);
         return newSkillIcon.GetComponent<SkillIcon>();
     }
     public static SkillSlot LoadSkillSlot(Transform slotsParent, bool animateRotation = true){
@@ -40,17 +40,18 @@ public static class SkillIconCaller{
         slot.transform.localPosition = Vector3.zero;
         slot.transform.localScale = Vector3.zero;
         slot.transform.DOKill();
-        slot.transform.DOScale(1, 0.4f).From(0).SetEase(Ease.OutCubic).SetUpdate(true);
+        slot.transform.DOScale(1, 0.2f).SetEase(Ease.OutCubic).SetUpdate(true);
         if (animateRotation)
-            slot.transform.DORotate(new Vector3(0, 0, 360), 0.4f, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).SetUpdate(true);
+            slot.transform.DORotate(new Vector3(0, 0, 360), 0.2f, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).SetUpdate(true);
         return slot.GetComponent<SkillSlot>();
     }
     public static void UnLoadSkillIcon(E_PoolType ePoolType, GameObject obj, float animScale = 0.5f, bool animateRotation = true){
         ObjectPoolManager ??= GameRoot.GetManager<ObjectPoolManager>();
+        obj.transform.localScale = Vector3.one;
         obj.transform.DOKill();
-        var scaleTween = obj.transform.DOScale(0, 0.6f * animScale).From(1).SetEase(Ease.OutQuad).SetUpdate(true);
+        var scaleTween = obj.transform.DOScale(0, 0.2f * animScale).SetEase(Ease.OutQuad).SetUpdate(true);
         if (animateRotation)
-            obj.transform.DORotate(new Vector3(0, 0, 360), 0.6f * animScale, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).SetUpdate(true)
+            obj.transform.DORotate(new Vector3(0, 0, 360), 0.2f * animScale, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).SetUpdate(true)
                 .OnComplete(() => ObjectPoolManager.ReturnPool(ePoolType, obj));
         else
             scaleTween.OnComplete(() => ObjectPoolManager.ReturnPool(ePoolType, obj));

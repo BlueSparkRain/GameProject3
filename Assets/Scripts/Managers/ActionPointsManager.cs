@@ -10,6 +10,11 @@ public class ActionPointsManager : MonoGlobalManager, ICanSave_And_Load
     protected override void MgrOnInit(){
         base.MgrOnInit();
         JsonSaver.InitData<Save_ActionPoints>(this);
+        JsonSaver.OnNewGame += InitBySelf;
+    }
+    public override void MgrDispose(){
+        JsonSaver.OnNewGame -= InitBySelf;
+        base.MgrDispose();
     }
 
     public override void MgrUpdate(float deltaTime) { }

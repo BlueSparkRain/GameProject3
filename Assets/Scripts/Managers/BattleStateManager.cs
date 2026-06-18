@@ -10,6 +10,8 @@ public class BattleStateManager : MonoSceneManager
 {
     private List<BattlerStateTag> playerControllers = new List<BattlerStateTag>();
     private List<BattlerStateTag> enemyControllers = new List<BattlerStateTag>();
+    private Dictionary<BattlerStateTag, Transform> enemyTransforms = new Dictionary<BattlerStateTag, Transform>();
+    public IReadOnlyList<BattlerStateTag> EnemyControllers => enemyControllers;
     private List<CharacterLevelUpHandler> playerLevelHandlers = new List<CharacterLevelUpHandler>();
 
     // 记录本局战斗中所有的技能释放者，方便技能初始化时分配目标
@@ -26,6 +28,19 @@ public class BattleStateManager : MonoSceneManager
             playerLevelHandlers.Add(levelUpHandler);
     }
 
+    /// <summary>注册敌人 Transform（由 BattleHandler 调用）</summary>
+    public void RegisterEnemyTransform(BattlerStateTag tag, Transform t)
+    {
+        enemyTransforms[tag] = t;
+    }
+
+    /// <summary>通过 BattlerStateTag 获取敌人 Transform</summary>
+    public Transform GetEnemyTransform(BattlerStateTag tag)
+    {
+        enemyTransforms.TryGetValue(tag, out var t);
+        return t;
+    }
+
     bool gameEnd = false;
 
     void CheckBattleEnd(BattlerStateTag characterBattle_Controller){
@@ -37,10 +52,9 @@ public class BattleStateManager : MonoSceneManager
         }
     }
 
-
     private void Update(){
         if (Input.GetKeyDown(KeyCode.Space)){
-            DebugManager.Log(EDebugCategory.General, "WTF");
+            DebugManager.Log(EDebugCategory.General, "直接获胜");
             GameEnd(true);
         }
     }
@@ -61,11 +75,10 @@ public class BattleStateManager : MonoSceneManager
         GameRoot.GetManager<GameBattleManager>()?.OnBattleResult(playWin);
 
         GameRoot.GetManager<UIManager>().OpenPanel<MessagePanel>(E_UIPanelType.MessagePanel,
-            p => p.SetMessage($"战斗{playWin}!", () =>{
-                // 回收 BattleScene 活跃资源，然后卸载 BattleScene（MapScene 始终保留）
+            p => p.SetMessage("战斗"+ (playWin?"胜利":"失败"!), () =>{
                 GameRoot.GetManager<ObjectPoolManager>()?.ReclaimAll(E_PoolType.FloatingText_跳字);
                 GameRoot.GetManager<VitalityPointsManager>().AdjustVolityPoints(-vitalityAdjust);
-                GameRoot.GetManager<SceneSwitchManager>().UnloadSceneAsync("BattleScene");
+                GameRoot.GetManager<SceneSwitchManager>().SwitchSceneAsync("MapScene", SceneSwitchManager.LoadMode.Single);
             }));
         return;
 

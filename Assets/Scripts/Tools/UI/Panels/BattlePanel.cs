@@ -10,8 +10,9 @@ public class BattlePanel : UIPanelBase
 
     void OnClickBattleButton(){
         GameRoot.GetManager<TimeManager>()?.SetTimeScale(1f, 0.3f);
-        // Additive 加载：BattleScene 叠在 MapScene 上，六边形地图保留不销毁
-        GameRoot.GetManager<SceneSwitchManager>().SwitchSceneAsync("BattleScene", SceneSwitchManager.LoadMode.Additive);
+        // 回收六边形地块到对象池，卸载 MapScene，加载 BattleScene
+        GameRoot.GetManager<GameMapManager>()?.ReclaimAllRooms();
+        GameRoot.GetManager<SceneSwitchManager>().SwitchSceneAsync("BattleScene", SceneSwitchManager.LoadMode.Single);
         Hide();
     }
     void OnClickQuitButton()

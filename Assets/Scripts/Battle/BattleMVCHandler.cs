@@ -29,6 +29,8 @@ public class BattleMVCHandler : MonoBehaviour
         DebugManager.Log(EDebugCategory.BattleState, battlemanager + "///");
         var levelUpHandler = GetComponent<CharacterLevelUpHandler>();
         battlemanager.RegisterSkiller(isplayer, battlerStateTag, levelUpHandler);
+        if (!isplayer)
+            battlemanager.RegisterEnemyTransform(battlerStateTag, transform);
     }
 
     public void OnMVCHandlerUpdate()

@@ -70,9 +70,8 @@ public class CharacterHandler : MonoBehaviour
     }
 
     void Update(){
-
         if (isPlayer && Input.GetKeyDown(KeyCode.B)){
-            iUpgrade.UpGrade();
+            levelUpHandler?.AdjustEXP(levelUpHandler.levelGoalEXP);
         }
     }
 }

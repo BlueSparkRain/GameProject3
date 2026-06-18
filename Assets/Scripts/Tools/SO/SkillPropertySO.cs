@@ -3,8 +3,7 @@ using UnityEngine;
 using UnityEngine.UIElements.Experimental;
 
 [CreateAssetMenu(menuName = "SOData/SkillPropertyData", fileName = "SkillPropertyData")]
-public class SkillPropertySO : ScriptableObject
-{
+public class SkillPropertySO : ScriptableObject{
     [Header("技能ID")]
     public int skill_ID;
 

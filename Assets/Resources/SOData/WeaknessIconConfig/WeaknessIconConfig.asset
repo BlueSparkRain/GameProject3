@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   iconEntries:
   - weaknessType: 0
-    iconSprite: {fileID: 21300000, guid: 581e80b7953884443a7a51942d9c6f80, type: 2}
+    iconSprite: {fileID: 21300000, guid: 0da760b289273a04e9bfa577ce464a3d, type: 2}
   - weaknessType: 4
-    iconSprite: {fileID: 21300000, guid: ab7b81fe1096b0e4393365acce6f8174, type: 2}
+    iconSprite: {fileID: 21300000, guid: 0256ab45cf61e314aa6f2e7ac218ca9a, type: 2}
   - weaknessType: 5
-    iconSprite: {fileID: 21300000, guid: 581e80b7953884443a7a51942d9c6f80, type: 2}
+    iconSprite: {fileID: 21300000, guid: 0cadc9a5d073b2c4ebcc3cbc9a561b2e, type: 2}
   - weaknessType: 10
-    iconSprite: {fileID: 21300000, guid: d6fd3fd68ddcdd341baa43aabd5fe91b, type: 2}
+    iconSprite: {fileID: 21300000, guid: d19afabbede44254caeee52599c195ed, type: 2}
   - weaknessType: 9
-    iconSprite: {fileID: 21300000, guid: 12ec6e71be75a354aa2d7bed2ca66bd2, type: 2}
+    iconSprite: {fileID: 21300000, guid: d5caa3d6097bff141a994de97c20d814, type: 2}
   - weaknessType: 8
-    iconSprite: {fileID: 21300000, guid: 66b5cc16a6a58864da473996f5b2287b, type: 2}
+    iconSprite: {fileID: 21300000, guid: 6505f003441dfef4784283edad0fc496, type: 2}

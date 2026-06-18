@@ -34,8 +34,7 @@ public class ShopGoodItem : MonoBehaviour
     int adjustedPrice;
     bool isSold;
 
-    void Start()
-    {
+    void Start(){
         selectButton?.onClick.AddListener(OnSelectClicked);
         ResetSoldState();
     }
@@ -65,7 +64,7 @@ public class ShopGoodItem : MonoBehaviour
             affixDescText.text = data.GetAffixDescription();
 
         if (priceText != null)
-            priceText.text = $"{price} G";
+            priceText.text = $"{price}";
 
         if (slotImage != null)
             TryLoadSlotSprite(data);
