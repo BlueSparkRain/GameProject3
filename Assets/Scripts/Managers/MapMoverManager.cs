@@ -145,12 +145,6 @@ public class MapMoverManager : MonoGlobalManager
             if (target == null) return;
 
             int points = GameRoot.GetManager<ActionPointsManager>().RemainActionPoints;
-            if (points <= 0)
-            {
-                var apMgr = GameRoot.GetManager<ActionPointsManager>();
-                apMgr.FillActionPoints(apMgr.MaxActionPoints > 0 ? apMgr.MaxActionPoints : 6);
-                points = apMgr.RemainActionPoints;
-            }
             if (points <= 0) return;
 
             currentIMovable = target;
