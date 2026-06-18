@@ -36,7 +36,7 @@ public class SkillBucket_0_to_19 { }
 [SkillID(0)]
 public class Skill_BaseAttack : SkillBase{
     #region 技能基础Info
-    float baseAttackValue = -10;
+    float baseAttackValue = -1;
     float baseAttackRate = 0.1f;
     E_WeaknessType weakness = E_WeaknessType.剑;
     Attack_Skill atk_iSkill;
@@ -255,7 +255,7 @@ public class Skill_5 : SkillBase
 }
 
 /// <summary>
-///（6）【冰霜领域】获得【冰雪场地】状态（每4秒使敌方全体获得1层冻结），持续40S（中耗）（初始技能）
+///（6）【冰霜领域】获得【冰雪场地】状态（每4秒使敌方全体获得1层冻结），持续10S（中耗）（初始技能）
 /// </summary>
 [SkillID(6)]
 public class Skill_6 : SkillBase
