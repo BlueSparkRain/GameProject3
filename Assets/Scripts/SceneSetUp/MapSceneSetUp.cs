@@ -81,8 +81,21 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load{
 
         PlayerSkillButton.onClick.RemoveAllListeners();
         PlayerSkillButton.onClick.AddListener(() => EventCenter.EventTrigger(E_EventType.CallSkillPanel));
-    }
 
+        if (PlayerEquipmentButton){
+            PlayerEquipmentButton.onClick.RemoveAllListeners();
+            PlayerEquipmentButton.onClick.AddListener(() =>
+            {
+                var uiMgr = GameRoot.GetManager<UIManager>();
+                if (uiMgr == null) return;
+                var panel = uiMgr.GetPanel<EquipmentPanel>(E_UIPanelType.EquipmentPanel);
+                if (panel != null && panel.gameObject.activeSelf)
+                    panel.Hide();
+                else
+                    uiMgr.OpenPanel<EquipmentPanel>(E_UIPanelType.EquipmentPanel);
+            });
+        }
+    }
 
     IEnumerator LoadAllPool(){
         WaitForSeconds delay = new WaitForSeconds(0.4f);

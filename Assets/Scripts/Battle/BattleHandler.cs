@@ -32,8 +32,10 @@ public class BattleHandler : MonoBehaviour{
         var damageHandler = GetComponentInChildren<BattleDamageHandler>();
         self = isplayer ? new Player(damageHandler) : new Enemy(damageHandler);
 
-        NameText.text = characterData.Character_Name;
-
+        if (NameText == null) { }
+        else
+            NameText.text = characterData.Character_Name;
+         
         //注册战斗单位
         BattleTargetSelector.RegisteNewBattler(self);
         battlerStateTag = new BattlerStateTag { CharacterType = characterData.characterType };
@@ -67,10 +69,8 @@ public class BattleHandler : MonoBehaviour{
         start=true;
         DebugManager.Log(EDebugCategory.BattleSkiller,characterData.Character_Name + "---进入战斗");
     }
-
     void Update(){
         if (!start) return;
-
         skillHandler.OnSkillerUpdate();
         buffHandler.OnBuffUpdate();
         dotHandler.OnDotUpdate();

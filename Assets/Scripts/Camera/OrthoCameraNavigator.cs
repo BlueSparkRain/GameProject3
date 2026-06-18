@@ -25,11 +25,11 @@ public class OrthoCameraNavigator : MonoSceneManager
 
     [Header("鼠标边缘移动配置")]
     [Tooltip("边缘触发像素宽度")]
-    public float edgeTriggerPixel = 200f;
+    public float edgeTriggerPixel = 50f;
     [Tooltip("边缘移动速度")]
     public float edgeMoveSpeed = 30f;
     [Tooltip("边缘灵敏度")]
-    [Range(0.1f, 2f)] public float edgeSensitivity = 2f;
+    [Range(0.1f, 2f)] public float edgeSensitivity = 1.5f;
 
     [Header("滚轮缩放配置")]
     [Tooltip("缩放灵敏度")]
