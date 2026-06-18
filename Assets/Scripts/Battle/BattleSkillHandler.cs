@@ -57,7 +57,7 @@ public class BattleSkillHandler : MonoBehaviour
     }
     void SkillCost(IBattlable skillOwner, float sp_cost){
         if (skillOwner != self) return;
-        if (sp_cost <= 0) return;  // 主动模式技能不耗蓝，ATB 模式传 0，直接跳过
+        if (sp_cost <= 0) return;  
         DebugManager.Log(EDebugCategory.BattleState,$"{battleController.CharacterData.Character_Name}释放了自动技能，消耗{sp_cost}");
         battleController.AdjustCharacterModelValue(E_BattleModelType.SP, -sp_cost);
     }

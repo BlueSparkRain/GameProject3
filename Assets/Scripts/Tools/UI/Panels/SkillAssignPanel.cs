@@ -111,7 +111,6 @@ public class SkillAssignPanel : UIPanelBase
         canOpen = false;
         UpdateSettleBackSkiller();
         base.BeforeFadeOutAnimCallBack();
-        // restWholeSkillsSpawner 只卸载图标不删槽位（24槽复用）
         restWholeSkillsSpawner.UnloadIconsOnly();
         normalSkillsSpawner.UnloadSkills();
         ATBSkillsSpawner.UnloadSkills();
