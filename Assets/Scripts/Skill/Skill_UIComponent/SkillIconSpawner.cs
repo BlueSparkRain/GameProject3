@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 /// <summary>
@@ -128,7 +129,36 @@ public class SkillIconSpawner : MonoBehaviour{
             skillIcons.Add(newSkillIcon);
         }
         currentIcons = skillIcons;
+
+        // 防御：等待动画完成后强制修正所有 slot/icon 的 scale，防止动画被中断导致缩放为0
+        if (isImmeditely && gameObject.activeInHierarchy)
+            StartCoroutine(EnsureScaleAfterAnim(new List<SkillSlot>(slots), new List<SkillIcon>(skillIcons)));
+
         return currentIcons;
+    }
+
+    System.Collections.IEnumerator EnsureScaleAfterAnim(List<SkillSlot> slotsToCheck, List<SkillIcon> iconsToCheck)
+    {
+        // 等待略长于最长动画时长 (slot 0.2s + icon 0.3s) 再加一点缓冲
+        yield return new WaitForSeconds(0.4f);
+        foreach (var slot in slotsToCheck)
+        {
+            // 仅修正仍挂载在当前 slotsParent 下的 slot（已被 UnloadSkills 移走的跳过）
+            if (slot != null && slot.transform.parent == slotsParent && slot.transform.localScale != Vector3.one)
+            {
+                slot.transform.DOKill();
+                slot.transform.localScale = Vector3.one;
+            }
+        }
+        foreach (var icon in iconsToCheck)
+        {
+            // 仅修正仍激活的 icon（已回池的 icon 为 inactive，跳过）
+            if (icon != null && icon.gameObject.activeInHierarchy && icon.transform.localScale != Vector3.one)
+            {
+                icon.transform.DOKill();
+                icon.transform.localScale = Vector3.one;
+            }
+        }
     }
     List<SkillIcon> skillIcons = new List<SkillIcon>();
 }

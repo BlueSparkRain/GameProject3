@@ -27,6 +27,12 @@ public static class BattleTargetSelector{
         }
         return targets;
     }
+    public static void ClearAll()
+    {
+        AllBattleUnits.Clear();
+        DebugManager.Log(EDebugCategory.General, "[BattleTargetSelector]---已清空所有Battler");
+    }
+
     public static void RegisteNewBattler(IBattlable battler){
         AllBattleUnits.Add(battler);
         DebugManager.Log(EDebugCategory.General, $"[BattleTargetSelector]---新增Battler：{battler.Camp},当前战斗人数{AllBattleUnits.Count} ");

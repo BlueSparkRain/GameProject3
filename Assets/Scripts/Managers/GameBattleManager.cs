@@ -25,7 +25,6 @@ public class GameBattleManager : IGlobalManager{
     bool _pendingKickOnLoad;
     /// <summary>战败回场时抑制战斗房间触发（让玩家先站在房间上再被踢开）</summary>
     public bool SuppressBattleTrigger { get; set; }
-
     public void MgrInit(GameRoot gameRoot){
         delay = new WaitForSeconds(spawnInterval);
         EventCenter.AddEventListener(E_EventType.PlayerOutBattle, UnregisterCharacterToBattle);
@@ -34,14 +33,13 @@ public class GameBattleManager : IGlobalManager{
         EventCenter.RemoveEventListener(E_EventType.PlayerOutBattle, UnregisterCharacterToBattle);
     }
     public void MgrUpdate(float deltatime) { }
-
     /// <summary>
     /// [MapScene]注册一个玩家角色数据
     /// </summary>
     public void RegisterPlayerToBattle(CharacterData data){
+        playersData.Clear();
         playersData.Add(data);
     }
-
     /// <summary>
     /// 当玩家进入一个战斗房间时触发,扫描一定半径范围内的敌人并自动加入战斗
     /// </summary>
@@ -49,6 +47,7 @@ public class GameBattleManager : IGlobalManager{
         _currentBattleRoom = roomTag;
         _battleRoomsInCombat.Clear();
         _battleRoomsInCombat.Add(roomTag);  // 玩家踩上的房间
+        enemysData.Clear();
 
         if(!gameMapManager) gameMapManager=GameRoot.GetManager<GameMapManager>();
         List<Vector2Int> radiusRowCols = HexCoordinateUtility.GetRowColsInRadius(roomTag.row,roomTag.col, battleRadius);
@@ -179,6 +178,9 @@ public class GameBattleManager : IGlobalManager{
     }
 
     IEnumerator SpawnAll() {
+        // 清空上一场战斗残留的 Battler 注册（静态池不会随场景销毁自动清空）
+        BattleTargetSelector.ClearAll();
+
         // 玩家：若场景中存在 PlayerBattleBoard，直接传数据给它；否则走旧版预制件生成
         var playerBoard = GameObject.FindObjectOfType<PlayerBattleBoard>();
         if (playerBoard != null && playersData.Count > 0)

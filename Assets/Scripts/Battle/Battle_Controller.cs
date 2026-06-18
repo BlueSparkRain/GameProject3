@@ -132,8 +132,9 @@ public class Battle_Controller
     public void AdjustCharacterModelValue(E_BattleModelType modelType, float delta)
     {
         modelDic[modelType].Invoke(delta);
-        EventCenter.EventTrigger(E_EventType.Battle_ModelValueChanged,
-            _battler, viewer.transform.position, modelType, delta);
+        if (viewer != null)
+            EventCenter.EventTrigger(E_EventType.Battle_ModelValueChanged,
+                _battler, viewer.transform.position, modelType, delta);
     }
 
     /// <summary>

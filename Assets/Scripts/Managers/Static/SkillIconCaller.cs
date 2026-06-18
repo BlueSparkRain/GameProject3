@@ -28,7 +28,8 @@ public static class SkillIconCaller{
         newSkillIcon.transform.localPosition = Vector3.zero;
         newSkillIcon.transform.localScale = Vector3.zero;
         newSkillIcon.transform.DOKill();
-        newSkillIcon.transform.DOScale(1, 0.3f).SetEase(Ease.OutCubic).SetUpdate(true);
+        newSkillIcon.transform.DOScale(1, 0.3f).SetEase(Ease.OutCubic).SetUpdate(true)
+            .OnComplete(() => { if (newSkillIcon != null) newSkillIcon.transform.localScale = Vector3.one; });
         if (animateRotation)
             newSkillIcon.transform.DORotate(new Vector3(0, 0, 360), 0.3f, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).SetUpdate(true);
         return newSkillIcon.GetComponent<SkillIcon>();
@@ -40,7 +41,8 @@ public static class SkillIconCaller{
         slot.transform.localPosition = Vector3.zero;
         slot.transform.localScale = Vector3.zero;
         slot.transform.DOKill();
-        slot.transform.DOScale(1, 0.2f).SetEase(Ease.OutCubic).SetUpdate(true);
+        slot.transform.DOScale(1, 0.2f).SetEase(Ease.OutCubic).SetUpdate(true)
+            .OnComplete(() => { if (slot != null) slot.transform.localScale = Vector3.one; });
         if (animateRotation)
             slot.transform.DORotate(new Vector3(0, 0, 360), 0.2f, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).SetUpdate(true);
         return slot.GetComponent<SkillSlot>();
