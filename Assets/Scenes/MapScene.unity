@@ -139,7 +139,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7541304
 RectTransform:
   m_ObjectHideFlags: 0
@@ -180,8 +180,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "key alpha1\uFF1A\u6D3B\u529B\u70B9\u6570\u51CF\u5C111\nkey space\uFF1A\u83B7\u5F97\u4E00\u4E2A\u968F\u673A\u6280\u80FD\nkey
-    L\uFF1A\u7ECF\u9A8C+250\nkey B\uFF1A\u73A9\u5BB6\u5347\u4E00\u7EA7\nkey G\uFF1A+500\u91D1\u5E01\nkey
-    C\uFF1A\u6DF7\u6C8C\u7B49\u7EA7+1\nkey U\uFF1A\u6253\u5F00\u6280\u80FD\u914D\u7F6E\u9762\u677F\nkey
+    B\uFF1A\u73A9\u5BB6\u5347\u4E00\u7EA7\nkey G\uFF1A+500\u91D1\u5E01\nkey U\uFF1A\u6253\u5F00\u6280\u80FD\u914D\u7F6E\u9762\u677F\nkey
     P\uFF1A\u6253\u5F00\u5546\u5E97\u9762\u677F\nkey K\uFF1A\u6253\u5F00\u968F\u673A\u4E8B\u4EF6\u9762\u677F\nkey
     J\uFF1A\u6253\u5F00\u6280\u80FD\u9009\u62E9\u9762\u677F\n"
   m_isRightToLeft: 0
@@ -1845,7 +1844,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &589116962
 RectTransform:
   m_ObjectHideFlags: 0

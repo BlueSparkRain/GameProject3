@@ -52,12 +52,13 @@ public class BattleStateManager : MonoSceneManager
         }
     }
 
-    private void Update(){
-        if (Input.GetKeyDown(KeyCode.Space)){
-            DebugManager.Log(EDebugCategory.General, "直接获胜");
-            GameEnd(true);
-        }
-    }
+    //按下空格直接胜利
+    //private void Update(){
+        //if (Input.GetKeyDown(KeyCode.Space)){
+            //DebugManager.Log(EDebugCategory.General, "直接获胜");
+            //GameEnd(true);
+        //}
+    //}
 
     void GameEnd(bool playWin) {
         gameEnd = true;

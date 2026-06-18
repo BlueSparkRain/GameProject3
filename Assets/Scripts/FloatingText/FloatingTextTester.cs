@@ -14,14 +14,14 @@ public class FloatingTextTester : MonoBehaviour
     void Update()
     {
 #if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.Alpha1) && _hpSpawner != null)
-            _hpSpawner.Show(Random.Range(-200, 200));
-        if (Input.GetKeyDown(KeyCode.Alpha2) && _spSpawner != null)
-            _spSpawner.Show(Random.Range(-80, -20));
-        if (Input.GetKeyDown(KeyCode.Alpha3) && _shieldSpawner != null)
-            _shieldSpawner.Show(Random.Range(1, 28));
-        if (Input.GetKeyDown(KeyCode.Alpha4) && _agSpawner != null)
-            _agSpawner.Show(Random.Range(5, 20));
+        //if (Input.GetKeyDown(KeyCode.Alpha1) && _hpSpawner != null)
+        //    _hpSpawner.Show(Random.Range(-200, 200));
+        //if (Input.GetKeyDown(KeyCode.Alpha2) && _spSpawner != null)
+        //    _spSpawner.Show(Random.Range(-80, -20));
+        //if (Input.GetKeyDown(KeyCode.Alpha3) && _shieldSpawner != null)
+        //    _shieldSpawner.Show(Random.Range(1, 28));
+        //if (Input.GetKeyDown(KeyCode.Alpha4) && _agSpawner != null)
+        //    _agSpawner.Show(Random.Range(5, 20));
 #else
         Destroy(this);
 #endif

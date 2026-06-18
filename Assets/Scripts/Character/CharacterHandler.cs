@@ -69,9 +69,9 @@ public class CharacterHandler : MonoBehaviour
         }
     }
 
-    void Update(){
-        if (isPlayer && Input.GetKeyDown(KeyCode.B)){
-            levelUpHandler?.AdjustEXP(levelUpHandler.levelGoalEXP);
-        }
-    }
+    //void Update(){
+        //if (isPlayer && Input.GetKeyDown(KeyCode.B)){
+            //levelUpHandler?.AdjustEXP(levelUpHandler.levelGoalEXP);
+        //}
+    //}
 }

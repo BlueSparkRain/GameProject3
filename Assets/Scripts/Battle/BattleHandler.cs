@@ -1,4 +1,5 @@
 using Core;
+using TMPro;
 using UnityEngine;
 
 [RequireComponent(typeof(BattleMVCHandler),
@@ -23,17 +24,22 @@ public class BattleHandler : MonoBehaviour{
     IMonsterAIComponent monsterAI;
     CharacterData characterDataRef;
 
+    public TMP_Text NameText;
     bool start=false;
     public void InitBattler(CharacterData characterData){
         bool isplayer = (characterData.characterType == E_CharacterType.P_海螺骑士);
 
         var damageHandler = GetComponentInChildren<BattleDamageHandler>();
         self = isplayer ? new Player(damageHandler) : new Enemy(damageHandler);
+
+        NameText.text = characterData.Character_Name;
+
         //注册战斗单位
         BattleTargetSelector.RegisteNewBattler(self);
         battlerStateTag = new BattlerStateTag { CharacterType = characterData.characterType };
         // 预先加载弱点配置(含护盾初始值，供MVC初始化使用)
         var weaknessConfig = ResourcesLoader.FindWeaknessConfig(characterData.characterType);
+
         //初始化MVCHandler
         MVCHandler = GetComponentInChildren<BattleMVCHandler>();
         MVCHandler.InitMVCHandler(isplayer, characterData, battlerStateTag, self,

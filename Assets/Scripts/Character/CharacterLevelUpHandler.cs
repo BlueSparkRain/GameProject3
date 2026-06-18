@@ -26,11 +26,11 @@ public class CharacterLevelUpHandler : MonoBehaviour{
         levelGoalEXP = LevelCalculator.GetLevelUP_EXPGoal(charData.CurrentLevel);
         TriggerEXPUIEvent(false);
     }
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.L))
-            AdjustEXP(250);
-    }
+    //private void Update()
+    //{
+        //if (Input.GetKeyDown(KeyCode.L))
+            //AdjustEXP(250);
+    //}
     public void AdjustEXP(float trans){
         bool skip = false;
         float remaining = trans;
