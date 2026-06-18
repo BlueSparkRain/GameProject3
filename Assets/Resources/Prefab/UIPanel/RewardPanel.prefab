@@ -149,14 +149,14 @@ MonoBehaviour:
   Anim_EaseType: 27
   Anim_BornPos: {x: 0, y: -1000, z: 0}
   Anim_TargetTrans: {x: 0, y: 1000, z: 0}
-  enableTimeScaleControl: 1
+  enableTimeScaleControl: 0
   Anim_DoFadeIn: 1
   Anim_NeedAlphaFadeIn: 0
   freezeCameraOnOpen: 1
   canOpen: 1
-  expGoldItem: {fileID: 4130216105013415119}
-  skillSelectItem: {fileID: 4859019106754256354}
-  restoreItem: {fileID: 183185557342773713}
+  itemA: {fileID: 4130216105013415119}
+  itemB: {fileID: 4859019106754256354}
+  itemC: {fileID: 183185557342773713}
   confirmButton: {fileID: 2477818661849001052}
   closeButton: {fileID: 0}
   titleText: {fileID: 0}
@@ -742,7 +742,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u795E\u50CF\u5956\u52B1"
+  m_text: "\u5956\u52B1"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2ae0d562a38f3ad4d83d6f7ab9e826f2, type: 2}
   m_sharedMaterial: {fileID: -2457873071800068092, guid: 2ae0d562a38f3ad4d83d6f7ab9e826f2,
@@ -1613,9 +1613,9 @@ MonoBehaviour:
   Anim_NeedAlphaFadeIn: 0
   freezeCameraOnOpen: 1
   canOpen: 1
-  expGoldItem: {fileID: 0}
-  skillSelectItem: {fileID: 0}
-  restoreItem: {fileID: 0}
+  itemA: {fileID: 0}
+  itemB: {fileID: 0}
+  itemC: {fileID: 0}
   confirmButton: {fileID: 0}
   closeButton: {fileID: 0}
   titleText: {fileID: 0}

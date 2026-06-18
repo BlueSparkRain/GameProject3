@@ -620,4 +620,9 @@ public enum E_EventType
     /// ActiveSkillTargetSelectorManager 接收后进入目标选择模式
     /// </summary>
     ActiveSkillCastTarget,
+
+    /// <summary>等级奖励：技能选择 (int level)</summary>
+    LevelUp_SkillReward,
+    /// <summary>等级奖励：槽位解锁 (int level)</summary>
+    LevelUp_SlotReward,
 }

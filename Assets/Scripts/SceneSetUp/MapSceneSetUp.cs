@@ -166,11 +166,31 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load{
     void OnEnable()
     {
         EventCenter.AddEventListener<int, int>(E_EventType.CharacterLevelUp, OnPlayerLevelUp);
+        EventCenter.AddEventListener<int>(E_EventType.LevelUp_SkillReward, OnLevelUpSkillReward);
+        EventCenter.AddEventListener<int>(E_EventType.LevelUp_SlotReward, OnLevelUpSlotReward);
     }
 
     void OnDisable()
     {
         EventCenter.RemoveEventListener<int, int>(E_EventType.CharacterLevelUp, OnPlayerLevelUp);
+        EventCenter.RemoveEventListener<int>(E_EventType.LevelUp_SkillReward, OnLevelUpSkillReward);
+        EventCenter.RemoveEventListener<int>(E_EventType.LevelUp_SlotReward, OnLevelUpSlotReward);
+    }
+
+    void OnLevelUpSkillReward(int level)
+    {
+        GameRoot.GetManager<UIManager>()?.OpenPanel<RewardPanel>(E_UIPanelType.RewardPanel, panel =>
+        {
+            panel.SetMode(E_RewardMode.LevelUpSkill, level);
+        });
+    }
+
+    void OnLevelUpSlotReward(int level)
+    {
+        GameRoot.GetManager<UIManager>()?.OpenPanel<RewardPanel>(E_UIPanelType.RewardPanel, panel =>
+        {
+            panel.SetMode(E_RewardMode.LevelUpSlot, level);
+        });
     }
 
     void OnPlayerLevelUp(int oldLevel, int newLevel)

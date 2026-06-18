@@ -1712,7 +1712,7 @@ MonoBehaviour:
   Anim_EaseType: 27
   Anim_BornPos: {x: 0, y: -1000, z: 0}
   Anim_TargetTrans: {x: 0, y: 1000, z: 0}
-  enableTimeScaleControl: 1
+  enableTimeScaleControl: 0
   Anim_DoFadeIn: 1
   Anim_NeedAlphaFadeIn: 1
   freezeCameraOnOpen: 1
