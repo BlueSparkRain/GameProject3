@@ -34,5 +34,5 @@ MonoBehaviour:
   Maximum_ATB: 8
   CritRate: 0.05
   CritDamage: 1.5
-  autoSkillSlotCount: 6
-  atbSkillSlotCount: 4
+  autoSkillSlotCount: 4
+  atbSkillSlotCount: 6

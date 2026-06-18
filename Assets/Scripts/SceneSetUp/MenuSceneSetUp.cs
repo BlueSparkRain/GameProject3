@@ -3,12 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
 public class MenuSceneSetUp : MonoBehaviour{
-
-
-    private void Start()
-    {
+    private void Start(){
         ObjectPoolManager obj = GameRoot.GetManager<ObjectPoolManager>();
         GameRoot.GetManager<AudioManager>()?.PlayBGM("Music/BGM/地图BGM");
 

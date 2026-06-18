@@ -254,15 +254,15 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load{
             var skiller = player1.GetComponent<CharacterMapSkiller>();
             if (skiller != null)
             {
-                for (int i = 0; i <= 59; i++)
+                for (int i = 0; i <= 13; i++)
                     skiller.GetNewSkill(i);
                 skiller.UpdateActableDataList(skiller.RestWholeSkillDatas, skiller.NormalSkillDatas, skiller.ATBSkillDatas);
                 JsonSaver.Save(new InitialSkillsGranted(true));
 
                 GameRoot.GetManager<UIManager>().OpenPanel<MessagePanel>(
                     E_UIPanelType.MessagePanel,
-                    //p => p.SetMessage("获得14个初始技能")
-                    p => p.SetMessage("获得59个全部技能")
+                    p => p.SetMessage("获得14个初始技能")
+                    //p => p.SetMessage("获得59个全部技能")
                 );
             }
         }
