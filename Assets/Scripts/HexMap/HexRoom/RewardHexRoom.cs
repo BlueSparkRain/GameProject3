@@ -16,7 +16,8 @@ public class RewardHexRoom : IHexRoom
     public void DoHexRoomLogic(UnityAction roomJob = null)
     {
         EventCenter.EventTrigger(E_EventType.Mover_MoveStop);
-        GameRoot.GetManager<UIManager>().OpenPanel<RewardPanel>(E_UIPanelType.RewardPanel);
+        GameRoot.GetManager<UIManager>().OpenPanel<RewardPanel>(E_UIPanelType.RewardPanel,
+            p => p.SetMode(E_RewardMode.RewardRoom));
     }
 
     public void DoHexRoomModel(Vector3 pos)

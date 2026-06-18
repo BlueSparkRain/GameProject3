@@ -32,6 +32,9 @@ public class RewardPanel : UIPanelBase
     int _rewardLevel;
     bool _setupDone;
 
+    /// <summary>用户确认奖励后的回调（供 LevelRewardManager 驱动队列）</summary>
+    public System.Action onRewardConfirmed;
+
     protected override void OnInit()
     {
         base.OnInit();
@@ -79,6 +82,7 @@ public class RewardPanel : UIPanelBase
     void SetupRewardRoom()
     {
         if (titleText != null) titleText.text = "神像奖励";
+        if (closeButton != null) closeButton.gameObject.SetActive(true); // 神像房间允许关闭
         itemA.gameObject.SetActive(true); itemB.gameObject.SetActive(true); itemC.gameObject.SetActive(true);
         itemA.SetOption("5000经验 + 1000金币", OnItemClicked);
         itemB.SetOption("技能三选一", OnItemClicked);
@@ -91,6 +95,7 @@ public class RewardPanel : UIPanelBase
     void SetupLevelUpSkill()
     {
         if (titleText != null) titleText.text = $"Lv.{_rewardLevel} 技能奖励";
+        if (closeButton != null) closeButton.gameObject.SetActive(false); // 等级奖励不许跳过
         itemA.gameObject.SetActive(true);
         itemB.gameObject.SetActive(false);
         itemC.gameObject.SetActive(false);
@@ -101,6 +106,7 @@ public class RewardPanel : UIPanelBase
     void SetupLevelUpSlot()
     {
         if (titleText != null) titleText.text = $"Lv.{_rewardLevel} 槽位解锁";
+        if (closeButton != null) closeButton.gameObject.SetActive(false); // 等级奖励不许跳过
         var charData = CharacterHandler.PlayerInstance?.CharacterData;
         int autoNow = charData?.AutoSkillSlotCount ?? 0;
         int atbNow  = charData?.AtbSkillSlotCount ?? 0;
@@ -133,16 +139,27 @@ public class RewardPanel : UIPanelBase
     {
         if (_selectedItem == null) return;
         if (!_actionMap.TryGetValue(_selectedItem, out var action)) return;
+        // 禁用确认按钮防止重复点击
+        if (confirmButton != null) confirmButton.interactable = false;
         action?.Invoke();
+        // onRewardConfirmed 由各 Apply 方法在完成后自行触发
     }
     #endregion
 
-    #region Apply — 先 Hide 立即退场，再做效果
+    #region Apply — 完成后必须调用 FireConfirmed() 通知 LevelRewardManager
+    void FireConfirmed()
+    {
+        var cb = onRewardConfirmed;
+        onRewardConfirmed = null;
+        cb?.Invoke();
+    }
+
     void ApplyExpAndGold()
     {
         Hide();
         CharacterHandler.PlayerInstance?.GetComponent<CharacterLevelUpHandler>()?.AdjustEXP(5000);
         GameRoot.GetManager<GoldManager>()?.AddGold(1000);
+        FireConfirmed();
     }
 
     void ApplySkillSelect()
@@ -151,6 +168,8 @@ public class RewardPanel : UIPanelBase
         GameRoot.GetManager<UIManager>()?.OpenPanel<SkillSelectPanel>(E_UIPanelType.SkillSelectPanel, p =>
         {
             p.SetttleSelect();
+            // 等 SkillSelectPanel 关闭后再通知队列出下一个奖励
+            p.SetCloseCallback(FireConfirmed);
         });
     }
 
@@ -166,18 +185,21 @@ public class RewardPanel : UIPanelBase
             int newAP = Mathf.Min(apMgr.RemainActionPoints + restoreAP, apMgr.MaxActionPoints);
             if (newAP > apMgr.RemainActionPoints) apMgr.AddActionPoints(newAP - apMgr.RemainActionPoints);
         }
+        FireConfirmed();
     }
 
     void ApplyAutoSlot()
     {
         Hide();
         CharacterHandler.PlayerInstance?.CharacterData?.UnlockAutoSlot(1);
+        FireConfirmed();
     }
 
     void ApplyATBSlot()
     {
         Hide();
         CharacterHandler.PlayerInstance?.CharacterData?.UnlockAtbSlot(1);
+        FireConfirmed();
     }
     #endregion
 

@@ -109,11 +109,9 @@ public class SkillIconSpawner : MonoBehaviour{
     /// <summary>
     /// 一次性加载所有槽位和技能（战斗中/需要立即就绪时使用）
     /// </summary>
-    public List<SkillIcon> LoadSlotsAndSkills(int slotNum, List<SkillData> skillDatas, bool canDrag, bool isImmeditely = true)
-    {
+    public List<SkillIcon> LoadSlotsAndSkills(int slotNum, List<SkillData> skillDatas, bool canDrag, bool isImmeditely = true){
         UnloadSkills();
-        for (int i = 0; i < slotNum; i++)
-        {
+        for (int i = 0; i < slotNum; i++){
             var slot = SkillIconCaller.LoadSkillSlot(slotsParent, false);
             slots.Add(slot);
         }

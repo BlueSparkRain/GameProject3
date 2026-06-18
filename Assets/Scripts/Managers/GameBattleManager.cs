@@ -183,17 +183,13 @@ public class GameBattleManager : IGlobalManager{
 
         // 玩家：若场景中存在 PlayerBattleBoard，直接传数据给它；否则走旧版预制件生成
         var playerBoard = GameObject.FindObjectOfType<PlayerBattleBoard>();
-        if (playerBoard != null && playersData.Count > 0)
-        {
+        if (playerBoard != null && playersData.Count > 0){
             foreach (var data in playersData)
                 playerBoard.InitPlayerBoard(data);
         }
-        else
-        {
+        else{
             yield return SpawnBattleCardByData(playersData, true);
         }
-
-        // 敌人：始终使用 CharacterBattleArea 预制件生成
         yield return SpawnBattleCardByData(enemysData, false);
         GameRoot.GetManager<BattlePhaseManager>()?.OnAllCharactersLoaded();
     }
@@ -204,15 +200,12 @@ public class GameBattleManager : IGlobalManager{
     IEnumerator SpawnBattleCardByData(List<CharacterData> datas,bool isPlayer){
         BattleLoadManager battleLoadManager=GameRoot.GetManager<BattleLoadManager>();
         if (isPlayer){
-            // 玩家不再通过 LoadAPlayer 生成，场景中已预置 PlayerBattleBoard
-            // 此分支仅作为无预置玩家时的兜底（理论上不会走到这里）
             DebugManager.LogWarning(EDebugCategory.MapRoom, "SpawnBattleCardByData(isPlayer=true) 被意外调用，玩家应通过PlayerBattleBoard初始化");
             yield break;
         }
         else {
             DebugManager.Log(EDebugCategory.MapRoom, "生成Battle的EnemyCamp"+datas.Count);
-            for (int i = 0; i < datas.Count; i++)
-            {
+            for (int i = 0; i < datas.Count; i++){
                 battleLoadManager.LoadAEnemy(datas[i]);
                 yield return delay;
             }

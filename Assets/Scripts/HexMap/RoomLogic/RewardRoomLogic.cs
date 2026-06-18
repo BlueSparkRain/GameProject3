@@ -16,7 +16,8 @@ public class RewardRoomLogic : RoomLogicComponent
         if (!_canTrigger) return;
 
         EventCenter.EventTrigger(E_EventType.Mover_MoveStop);
-        GameRoot.GetManager<UIManager>().OpenPanel<RewardPanel>(E_UIPanelType.RewardPanel);
+        GameRoot.GetManager<UIManager>().OpenPanel<RewardPanel>(E_UIPanelType.RewardPanel,
+            p => p.SetMode(E_RewardMode.RewardRoom));
 
         Consume();
     }
