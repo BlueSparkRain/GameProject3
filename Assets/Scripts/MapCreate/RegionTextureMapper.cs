@@ -68,6 +68,7 @@ public class RegionTextureMapper : MonoBehaviour
 
     void Start(){
         InitMaterial();
+        Debug.Log("d");
         EventCenter.AddEventListener(E_EventType.LoadMapEnd, OnLoadMapEnd);
         if (GameRoot.GetManager<GameMapManager>()?.HexRoomMap?.Count > 0)
             RefreshMapping();
