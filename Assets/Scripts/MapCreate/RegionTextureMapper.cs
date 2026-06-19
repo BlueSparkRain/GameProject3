@@ -68,13 +68,10 @@ public class RegionTextureMapper : MonoBehaviour
 
     void Start(){
         InitMaterial();
-        Debug.Log("d");
-        EventCenter.AddEventListener(E_EventType.LoadMapEnd, OnLoadMapEnd);
         if (GameRoot.GetManager<GameMapManager>()?.HexRoomMap?.Count > 0)
             RefreshMapping();
     }
     void OnDestroy(){
-        EventCenter.RemoveEventListener(E_EventType.LoadMapEnd, OnLoadMapEnd);
         ClearFaceCache();
         // 不销毁 _sharedMaterial —— 它被赋给了对象池中的 HexFace (sharedMaterial)，
         // 销毁会导致池中物体材质丢失（紫色）。新场景加载时 RefreshMapping 会重新创建并覆盖。
@@ -113,29 +110,11 @@ public class RegionTextureMapper : MonoBehaviour
         _materialInitialized = true;
     }
 
-    void OnLoadMapEnd()
+    /// <summary>全部房间创建完毕后由 MapCreateCoro 调用的最终映射 + 完成通知</summary>
+    public void FinalizeMapping()
     {
-        if (!isActiveAndEnabled) return;
-        StartCoroutine(DelayedRefreshCoro());
-    }
-   
-    System.Collections.IEnumerator DelayedRefreshCoro()
-    {
-        GameMapManager map = GameRoot.GetManager<GameMapManager>();
-        int lastCount = 0;
-        int stable = 0;
-        // 等待HexRoomMap稳定（连续5次无变化，且>0），确保所有房间+HexFace创建完毕
-        while (stable < 5)
-        {
-            yield return new WaitForSeconds(0.1f);
-            int count = map?.HexRoomMap?.Count ?? 0;
-            if (count == lastCount && count > 0)
-                stable++;
-            else
-                stable = 0;
-            lastCount = count;
-        }
         RefreshMapping();
+        EventCenter.EventTrigger(E_EventType.RegionMappingDone);
     }
 
     [ContextMenu("Refresh Mapping")]

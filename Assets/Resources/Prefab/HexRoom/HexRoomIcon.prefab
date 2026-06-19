@@ -182,7 +182,6 @@ GameObject:
   - component: {fileID: 9143530585165535758}
   - component: {fileID: 1227515748443662289}
   - component: {fileID: 8901600186799473978}
-  - component: {fileID: 2743633414498178433}
   m_Layer: 0
   m_Name: HexRoomIcon
   m_TagString: Untagged
@@ -275,24 +274,3 @@ MonoBehaviour:
   _hoverScale: 1.5
   _hoverDelay: 0.1
   _scaleLerpSpeed: 12
---- !u!65 &2743633414498178433
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4147443021359030341}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1.0000002, z: 0.68}
-  m_Center: {x: -0.08, y: -0.4, z: 0}

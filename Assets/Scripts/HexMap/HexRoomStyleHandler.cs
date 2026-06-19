@@ -10,7 +10,11 @@ public class HexRoomStyleHandler : MonoBehaviour{
 
     HexJumpAnimHandler hexJumpAnimation;
     HexRoomTag roomTag;
+    HexRoomIcon _currentIcon;
     public E_HexRoomType RoomType => roomType;
+
+    /// <summary>地图加载期间延迟图标创建，等 RegionTextureMapper 完成后再统一生成</summary>
+    public static bool DeferIconCreation { get; set; }
     public void InitRoomStyle(HexRoomTag _roomTag){
         hexJumpAnimation = GetComponent<HexJumpAnimHandler>();
         roomTag = _roomTag;
@@ -32,9 +36,12 @@ public class HexRoomStyleHandler : MonoBehaviour{
         roomType = _roomType;
         roomTag = _roomTag;
 
-        // 非 None 类型生成房间图标
-        if (_roomType != E_HexRoomType.None)
-            HexRoomIcon.CreateForRoom(transform, _roomType);
+        // 回收旧图标（房间类型变化或变为 None 时）
+        RecycleIcon();
+
+        // 非 None 类型生成新房间图标（地图加载期间延迟到 RegionTextureMapper 完成后统一创建）
+        if (_roomType != E_HexRoomType.None && !DeferIconCreation)
+            _currentIcon = HexRoomIcon.CreateForRoom(transform, _roomType);
 
         // 1. 清理旧逻辑组件
         RemoveOldLogicComponents();
@@ -97,6 +104,39 @@ public class HexRoomStyleHandler : MonoBehaviour{
             var child = transform.GetChild(i);
             if (child.name.StartsWith("[Logic]"))
                 Destroy(child.gameObject);
+        }
+    }
+
+    void RecycleIcon()
+    {
+        if (_currentIcon != null)
+        {
+            _currentIcon.Recycle();
+            _currentIcon = null;
+        }
+    }
+
+    void OnDestroy()
+    {
+        RecycleIcon();
+    }
+
+    /// <summary>批量创建所有延迟的 HexRoomIcon（RegionTextureMapper 完成后调用）</summary>
+    public static void CreateAllDeferredIcons()
+    {
+        var map = GameRoot.GetManager<GameMapManager>();
+        if (map == null || map.HexRoomMap == null) return;
+
+        foreach (var kvp in map.HexRoomMap)
+        {
+            var room = kvp.Value;
+            if (room == null) continue;
+            var styleHandler = room.GetComponent<HexRoomStyleHandler>();
+            if (styleHandler == null) continue;
+            if (styleHandler._currentIcon != null) continue; // 已有图标跳过
+            if (styleHandler.roomType == E_HexRoomType.None) continue;
+
+            styleHandler._currentIcon = HexRoomIcon.CreateForRoom(styleHandler.transform, styleHandler.roomType);
         }
     }
 }

@@ -164,28 +164,45 @@ public class ObjectPoolManager : MonoGlobalManager
         return instance;
     }
 
+    Dictionary<E_PoolType, int> _nextSearchIndex = new Dictionary<E_PoolType, int>();
+
     /// <summary>
-    /// 【修复】获取物体时，过滤已销毁的空对象
+    /// 获取池中可用物体。使用缓存的搜索起点避免 O(n²) 线性扫描，批量取出时接近 O(1)。
     /// </summary>
     public GameObject GetInstance(E_PoolType poolType){
         if (!poolDataDic.ContainsKey(poolType)) return null;
 
         var pool = poolDataDic[poolType].pool;
         var poolParent = poolDataDic[poolType].parent;
-        for (int i = 0; i < pool.Count; i++){
+        int count = pool.Count;
+        if (count == 0) goto CreateNew;
+
+        if (!_nextSearchIndex.TryGetValue(poolType, out int start))
+            start = 0;
+        if (start >= count) start = 0;
+
+        // 从缓存位置开始搜索（最多一圈）
+        for (int n = 0; n < count; n++)
+        {
+            int i = (start + n) % count;
             var obj = pool[i];
-            if (obj == null){
+            if (obj == null)
+            {
                 pool.RemoveAt(i);
-                i--;
+                count--;
+                if (count == 0) break;
+                n--;
                 continue;
             }
-            // 必须同时满足：自身未激活 + 父物体是池父物体（确保真的在池中，而非被移到别处后恰好未激活）
-            if (!obj.activeSelf && obj.transform.parent == poolParent){
+            if (!obj.activeSelf && obj.transform.parent == poolParent)
+            {
                 obj.SetActive(true);
+                _nextSearchIndex[poolType] = (i + 1) % pool.Count;
                 return obj;
             }
         }
-        // 池内无可用物体，创建新的
+
+        CreateNew:
         var instance = CreateNewInstance(poolType);
         if (instance != null) instance.SetActive(true);
         return instance;

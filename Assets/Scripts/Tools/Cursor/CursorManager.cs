@@ -26,7 +26,7 @@ public class CursorManager : MonoGlobalManager{
     [Tooltip("热点偏移：叠加到 SO 的 hotSpot 上，方便实时微调（调好后复制到 SO 的 hotSpot 中保存）")]
     [SerializeField] Vector2 _hotSpotOffset = new Vector2(100, 60);
     [Tooltip("光标贴图缩放（1=原始大小），硬件光标模式下不支持缩放，非1时自动切换为软件渲染")]
-    [SerializeField] float _cursorScale = 0.6f;
+    [SerializeField] float _cursorScale = 0.3f;
     [Tooltip("显示系统光标：开启后同时显示系统光标 + 自定义贴图，方便对照调整 hotSpot")]
     [SerializeField] bool _showSystemCursor = false;
     #region 初始化（仅执行一次，读取SO静态数据）

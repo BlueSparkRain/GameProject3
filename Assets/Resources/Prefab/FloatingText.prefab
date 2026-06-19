@@ -330,11 +330,11 @@ MonoBehaviour:
   _popDuration: 0.2
   _settleDuration: 0.05
   _popOvershoot: 1
-  _floatDistance: 30
-  _floatDuration: 0.5
-  _fadeOutDelay: 0.5
+  _floatDistance: 10
+  _floatDuration: 1
+  _fadeOutDelay: 0.25
   _fadeOutDuration: 0.5
-  _horizontalSpread: 40
+  _horizontalSpread: 20
   _squashScaleX: 1.2
   _squashScaleY: 0.8
   _stretchScaleX: 0.8

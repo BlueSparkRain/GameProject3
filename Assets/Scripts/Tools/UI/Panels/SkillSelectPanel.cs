@@ -31,8 +31,8 @@ public class SkillSelectPanel : UIPanelBase
     public int maxSelectCount = 1;
 
     [Header("技能ID范围")]
-    public int skillIDMin = 0;
-    public int skillIDMax = 10;
+    int skillIDMin = 0;
+    int skillIDMax = 59;
 
     public List<SkillSelector_UIItem> skillSelectorUIs = new List<SkillSelector_UIItem>();
     public List<int> skillIDList = new List<int>();
@@ -42,6 +42,9 @@ public class SkillSelectPanel : UIPanelBase
     int _confirmedCount;
     int _skipCount;
     Action _onPanelClose;
+
+    /// <summary>本次面板弹出期间已展示过的技能ID（初始3 + 刷新3，保证6个各不相同）</summary>
+    HashSet<int> _usedSkillIDs = new HashSet<int>();
 
     int EffectiveSelectedCount => _confirmedCount + _skipCount;
 
@@ -75,8 +78,10 @@ public class SkillSelectPanel : UIPanelBase
         if (blackCurtain != null)
             blackCurtain.gameObject.SetActive(false);
 
+        _usedSkillIDs.Clear();
         int spawnCount = 3;
-        List<int> skillIDs = GetBatchSkillIDS(spawnCount, skillIDMin, skillIDMax);
+        List<int> skillIDs = GetBatchSkillIDS(spawnCount, skillIDMin, skillIDMax, _usedSkillIDs);
+        foreach (int id in skillIDs) _usedSkillIDs.Add(id);
 
         for (int i = 0; i < skillIDs.Count; i++)
         {
@@ -128,6 +133,7 @@ public class SkillSelectPanel : UIPanelBase
         _spawnedItems.Clear();
         skillSelectorUIs.Clear();
         skillIDList.Clear();
+        _usedSkillIDs.Clear();
     }
 
     void OnSkillItemClicked(SkillSelector_UIItem clickedItem)
@@ -208,38 +214,26 @@ public class SkillSelectPanel : UIPanelBase
         skillSelectorUI.InitSelf(skillPropertySO);
     }
 
-    SkillPropertySO GetNewSkill()
-    {
-        int newSkillID = GetAvailableId(skillIDMin, skillIDMax);
-        DebugManager.Log(EDebugCategory.UIPanel, $"当前List内{skillIDList[0]},{skillIDList[1]},{skillIDList[2]},给skillID为{newSkillID}");
-        return ResourcesLoader.FindSkillSOByID(newSkillID);
-    }
-
-    int GetAvailableId(int min, int max)
-    {
-        var existing = new HashSet<int>(skillIDList);
-        for (int id = min; id <= max; id++)
-        {
-            if (!existing.Contains(id))
-                return id;
-        }
-        return -1;
-    }
-
+    /// <summary>为单个刷新按钮生成一个新的、与已展示技能不重复的随机 ID</summary>
     public void AssignNewSkillData(SkillSelector_UIItem skillSelectorUI)
     {
-        SkillPropertySO newSkillSo = GetNewSkill();
+        var newIDs = GetBatchSkillIDS(1, skillIDMin, skillIDMax, _usedSkillIDs);
+        if (newIDs.Count == 0) return;
+        int newID = newIDs[0];
+        _usedSkillIDs.Add(newID);
+        SkillPropertySO newSkillSo = ResourcesLoader.FindSkillSOByID(newID);
         AssignSkillData(skillSelectorUI, newSkillSo);
     }
 
-    List<int> GetBatchSkillIDS(int skillCount, int minID, int maxID)
+    List<int> GetBatchSkillIDS(int skillCount, int minID, int maxID, HashSet<int> excludeSet = null)
     {
-        skillIDList = RandomUtility.GetUniqueRandomList(skillCount, minID, maxID);
+        skillIDList = RandomUtility.GetUniqueRandomList(skillCount, minID, maxID, excludeSet);
         return skillIDList;
     }
 
     /// <summary>
     /// 结算当前面板中的技能选择 —— 用新随机技能替换现有技能项。
+    /// 保证刷新后的技能与本次面板弹出期间已展示过的所有技能各不相同。
     /// 仅当 skillSelectorUIs 已由 Show() 填充后才有效。
     /// </summary>
     public void SetttleSelect()
@@ -249,11 +243,13 @@ public class SkillSelectPanel : UIPanelBase
             DebugManager.LogWarning(EDebugCategory.UIPanel, "[SkillSelectPanel] SetttleSelect: skillSelectorUIs 为空，跳过。请确保 Show() 已先调用。");
             return;
         }
-        List<int> skillIDs = GetBatchSkillIDS(skillSelectorUIs.Count, skillIDMin, skillIDMax);
+        List<int> skillIDs = GetBatchSkillIDS(skillSelectorUIs.Count, skillIDMin, skillIDMax, _usedSkillIDs);
+        Debug.Log($"[SkillSelectPanel] SetttleSelect: generated IDs=[{string.Join(",", skillIDs)}], excludeCount={_usedSkillIDs.Count}, range=[{skillIDMin},{skillIDMax}]");
         for (int i = 0; i < skillSelectorUIs.Count; i++)
         {
             SkillPropertySO skillData = ResourcesLoader.FindSkillSOByID(skillIDs[i]);
             AssignSkillData(skillSelectorUIs[i], skillData);
         }
+        foreach (int id in skillIDs) _usedSkillIDs.Add(id);
     }
 }

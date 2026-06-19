@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: "Weakness_BOSS_\u6B66\u5723"
   m_EditorClassIdentifier: 
   characterType: 26
-  weaknesses: 0d0000000300000004000000
+  weaknesses: 080000000000000005000000
   initialShieldPoints: 5

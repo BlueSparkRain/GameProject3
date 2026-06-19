@@ -11,7 +11,7 @@ public class MenuButtonItem : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     void Start(){
         if (selectImage != null){
             _defaultColor = selectImage.color;
-            SetAlpha(0f);
+            //SetAlpha(0f);
         }
     }
 
@@ -19,12 +19,12 @@ public class MenuButtonItem : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     }
 
     public void OnPointerEnter(PointerEventData eventData){
-        if (selectImage != null)
-            SetAlpha(1f);
+        //if (selectImage != null)
+            //SetAlpha(1f);
     }
     public void OnPointerExit(PointerEventData eventData){
-        if (selectImage != null)
-            SetAlpha(0f);
+        //if (selectImage != null)
+            //SetAlpha(0f);
     }
     void SetAlpha(float a){
         var c = selectImage.color;

@@ -1,6 +1,7 @@
 using Core;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(BattleMVCHandler),
     typeof(BattleDamageHandler),
@@ -25,6 +26,7 @@ public class BattleHandler : MonoBehaviour{
     CharacterData characterDataRef;
 
     public TMP_Text NameText;
+    public Image CharacterIcon;
     bool start=false;
     public void InitBattler(CharacterData characterData){
         bool isplayer = (characterData.characterType == E_CharacterType.P_海螺骑士);
@@ -32,10 +34,17 @@ public class BattleHandler : MonoBehaviour{
         var damageHandler = GetComponentInChildren<BattleDamageHandler>();
         self = isplayer ? new Player(damageHandler) : new Enemy(damageHandler);
 
-        if (NameText == null) { }
-        else
-            NameText.text = characterData.Character_Name;
-         
+        if (NameText != null)
+        NameText.text = characterData.Character_Name;
+        if (CharacterIcon != null)
+        {
+            CharacterIcon.sprite = characterData.CharSOData.characterSprite;
+            CharacterIcon.SetNativeSize();
+            float scale = characterData.characterType.ToString().StartsWith("LE_") ? 0.35f
+                        : characterData.characterType.ToString().StartsWith("ME_") ? 0.3f : 0.35f;
+            CharacterIcon.transform.localScale = Vector3.one * scale;
+        }
+
         //注册战斗单位
         BattleTargetSelector.RegisteNewBattler(self);
         battlerStateTag = new BattlerStateTag { CharacterType = characterData.characterType };

@@ -116,8 +116,12 @@ public class MapMoverManager : MonoGlobalManager
     #endregion
 
     /// <summary>切换寻路状态——MapIcon点击和空格键共用入口</summary>
+    /// <summary>玩家加载完毕后才允许空格开启寻路（由 MapSceneSetUp 在 LoadCharacter 完成后设为 true）</summary>
+    public static bool PlayerReadyForPathfinding { get; set; }
+
     public void TogglePathFinding()
     {
+        if (!PlayerReadyForPathfinding) return;
         if (hexPathFindingManager.canPathFind)
         {
             hexPathFindingManager.SetPathFindState(false);
@@ -266,6 +270,13 @@ public class MapMoverManager : MonoGlobalManager
             if (mover is Robot_CharacterMapMover)
                 _robotQueue.Enqueue(mover);
         }
+    }
+
+    /// <summary>清除所有回合追踪（场景加载时调用，防止残留的旧Mover引用导致无法结束回合）</summary>
+    public void ClearRoundTracking()
+    {
+        roundMoveDic.Clear();
+        _robotQueue.Clear();
     }
 
     /// <summary>新回合开始时重置所有Mover状态，重建机器人队列</summary>

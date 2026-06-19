@@ -506,6 +506,8 @@ public enum E_EventType
     Player_RoundEnd,
     LoadMapStart,
     LoadMapEnd,
+    /// <summary>RegionTextureMapper 映射完成（面片+渐变就绪）</summary>
+    RegionMappingDone,
     MapRowCreated,
     SkillExcute,
 

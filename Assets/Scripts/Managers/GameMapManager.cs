@@ -51,10 +51,10 @@ public class GameMapManager : MonoGlobalManager
     MapSaveSOData mapSaveData;
     //地图数据后缀-动态资源加载
     public string mapdataBack;
-    //行批次延迟
-    float rowBatchInterval = 0.02f;
-    //相邻房间延迟
-    float bornRoomInterval = 0.005f;
+    //每帧创建房间数（20=轻量不卡帧）
+    int roomsPerFrame = 20;
+    //行间延迟（秒），0=无缝，0.03=细微节奏，0.1=清晰逐行感
+    float rowInterval = 0.03f;
     //地图锚点
     Vector3 MapPivotPos;
     // 缓存所有生成的地块
@@ -283,44 +283,39 @@ public class GameMapManager : MonoGlobalManager
     #region 正六边形地图生成
     IEnumerator MapCreateCoro()
     {
-        WaitForSeconds rowBatchDealy = new WaitForSeconds(rowBatchInterval);
-
-        int i = 0;
+        int frameCount = 0;
         bool fromleft = true;
+
         for (int row = 0; row < mapRow; row++)
         {
-            i++;
-            StartCoroutine(CreatRowRooms(row, fromleft));
+            GetRowColRange(row, out int startCol, out int endCol);
+
+            if (fromleft)
+            {
+                for (int col = startCol; col <= endCol; col++)
+                {
+                    CreateOneRoom(row, col);
+                    if (++frameCount >= roomsPerFrame) { frameCount = 0; yield return null; }
+                }
+            }
+            else
+            {
+                for (int col = endCol; col >= startCol; col--)
+                {
+                    CreateOneRoom(row, col);
+                    if (++frameCount >= roomsPerFrame) { frameCount = 0; yield return null; }
+                }
+            }
             fromleft = !fromleft;
-            //yield return i % 2 == 0 ? rowBatchDealy : null;
-            yield return null;
+            if (rowInterval > 0) yield return new WaitForSeconds(rowInterval);
         }
-        EventCenter.EventTrigger(E_EventType.LoadMapEnd);
-    }
-    IEnumerator CreatRowRooms(int row, bool fromleft)
-    {
-        WaitForSeconds roomDealy;
-      
-        roomDealy = new WaitForSeconds(bornRoomInterval);
 
-        GetRowColRange(row, out int startCol, out int endCol);
-
-        if (fromleft)
-        {
-            for (int col = startCol; col <= endCol; col++)
-            {
-                CreateOneRoom(row, col);
-                yield return roomDealy;
-            }
-        }
+        // 全部房间创建完毕 → 一次性启动纹理映射（shader per-face 随机延迟做散射）
+        var mapper = Object.FindObjectOfType<RegionTextureMapper>();
+        if (mapper != null)
+            mapper.FinalizeMapping();
         else
-        {
-            for (int col = endCol; col >= startCol; col--)
-            {
-                CreateOneRoom(row, col);
-                yield return roomDealy;
-            }
-        }
+            EventCenter.EventTrigger(E_EventType.RegionMappingDone);
     }
 
     private void GetRowColRange(int row, out int startCol, out int endCol)
@@ -387,7 +382,7 @@ public class GameMapManager : MonoGlobalManager
     {
         if (useCustomHexRoomMaterial)
         {
-            Debug.LogWarning("[GameMapManager] useCustomHexRoomMaterial=true，跳过材质设置");
+            //Debug.LogWarning("[GameMapManager] useCustomHexRoomMaterial=true，跳过材质设置");
             return;
         }
         MeshRenderer renderer = room.GetComponent<MeshRenderer>();

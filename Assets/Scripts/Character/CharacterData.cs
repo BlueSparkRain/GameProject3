@@ -17,6 +17,8 @@ public class CharacterData : ICanSave_And_Load{
     /// </summary>
     CharacterDataSO characterData;
 
+    public CharacterDataSO CharSOData => characterData;
+
     /// <summary>
     /// 角色属性成长数据
     /// </summary>
@@ -217,6 +219,7 @@ public class CharacterData : ICanSave_And_Load{
     public void InitBySaveData()
     {
         //Debug.Log("这份角色数据此前记录过，直接加载存档数据"+characterType);
+        characterData = Resources.Load<CharacterDataSO>(characterSO_ParentPath + characterType);
         var characterSaveData = JsonSaver.Load<Save_CharacterData>(characterType.ToString());
         phy_Flat_Penetration = characterSaveData.Phy_Flat_Penetration;
         mag_Flat_Penetration = characterSaveData.Mag_Flat_Penetration;

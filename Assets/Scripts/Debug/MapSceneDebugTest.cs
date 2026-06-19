@@ -11,13 +11,15 @@ public class MapSceneDebugTest : MonoBehaviour
 
     void Update()
     {
+
+        // ========== 金币 ==========
+        if (Input.GetKeyDown(KeyCode.G))
+            GameRoot.GetManager<GoldManager>()?.AddGold(500);
         //if (!Input.GetKey(KeyCode.LeftControl)) return;
 
         /***
     
-        // ========== 金币 ==========
-        if (Input.GetKeyDown(KeyCode.G))
-            GameRoot.GetManager<GoldManager>()?.AddGold(500);
+
         // ========== 活力 ==========
         if (Input.GetKeyDown(KeyCode.V))
             GameRoot.GetManager<VitalityPointsManager>()?.AdjustVolityPoints(-1);

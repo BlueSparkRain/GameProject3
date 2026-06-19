@@ -415,8 +415,10 @@ MonoBehaviour:
   canOpen: 1
   backgroundImage: {fileID: 0}
   eventNameText: {fileID: 0}
+  descriptionText: {fileID: 0}
   buttonsContent: {fileID: 0}
   optionItemPrefab: {fileID: 0}
+  confirmButton: {fileID: 0}
   emptyHintText: {fileID: 0}
 --- !u!1 &5033419887100214518
 GameObject:
@@ -1150,6 +1152,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1451777574809592608}
     m_Modifications:
+    - target: {fileID: 1695746697168854853, guid: 6057e246a867be04da8eb30d2229b6b5,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3889383177141029393, guid: 6057e246a867be04da8eb30d2229b6b5,
         type: 3}
       propertyPath: m_Name
@@ -1274,6 +1281,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1451777574809592608}
     m_Modifications:
+    - target: {fileID: 1695746697168854853, guid: 6057e246a867be04da8eb30d2229b6b5,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3889383177141029393, guid: 6057e246a867be04da8eb30d2229b6b5,
         type: 3}
       propertyPath: m_Name
@@ -1398,6 +1410,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1451777574809592608}
     m_Modifications:
+    - target: {fileID: 1695746697168854853, guid: 6057e246a867be04da8eb30d2229b6b5,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3889383177141029393, guid: 6057e246a867be04da8eb30d2229b6b5,
         type: 3}
       propertyPath: m_Name

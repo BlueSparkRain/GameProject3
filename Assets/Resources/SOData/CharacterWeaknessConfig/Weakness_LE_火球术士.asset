@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: "Weakness_LE_\u706B\u7403\u672F\u58EB"
   m_EditorClassIdentifier: 
   characterType: 7
-  weaknesses: 0d0000000300000004000000
+  weaknesses: 080000000000000005000000
   initialShieldPoints: 5

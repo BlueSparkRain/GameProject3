@@ -1,5 +1,6 @@
 using Core;
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,14 @@ public class BattlePanel : UIPanelBase
 {
     public Button battleButton;
     public Button guitButton;
+    public TMP_Text participantsText;
+
+    public override void Show()
+    {
+        base.Show();
+        if (participantsText != null)
+            participantsText.text = GameRoot.GetManager<GameBattleManager>()?.GetBattleParticipantsInfo() ?? "";
+    }
 
     void OnClickBattleButton(){
         GameRoot.GetManager<TimeManager>()?.SetTimeScale(1f, 0.3f);

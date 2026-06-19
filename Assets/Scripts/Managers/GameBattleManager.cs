@@ -14,7 +14,7 @@ public class GameBattleManager : IGlobalManager{
     List<CharacterData> playersData = new List<CharacterData>();
     List<CharacterData> enemysData = new List<CharacterData>();
     GameMapManager gameMapManager;
-    int battleRadius = 2;
+    int battleRadius = 3;
     int max_enemyNum = 3;
 
     /// <summary>当前触发的战斗房间（玩家踩上的那个，战败时用于踢出玩家）</summary>
@@ -53,10 +53,11 @@ public class GameBattleManager : IGlobalManager{
         List<Vector2Int> radiusRowCols = HexCoordinateUtility.GetRowColsInRadius(roomTag.row,roomTag.col, battleRadius);
         for (int i = 0; i < radiusRowCols.Count ; i++){
             HexRoomTag cur_room = gameMapManager.GetTargetRoom(radiusRowCols[i]);
-            if (cur_room && enemysData.Count< max_enemyNum) {
+            if (cur_room && enemysData.Count<= max_enemyNum) {
                 var roomType = cur_room.GetComponent<HexRoomStyleHandler>().RoomType;
                 if (roomType == E_HexRoomType.Battle_LowLevel ||
-                    roomType == E_HexRoomType.Battle_MidLevel) {
+                    roomType == E_HexRoomType.Battle_MidLevel ||
+                    roomType==E_HexRoomType.Battle_HighLevel ) {
                     var battleLogic = cur_room.RoomLogic as BattleRoomLogic;
                     if (battleLogic == null) continue;
                     CharacterData enemyData = new CharacterData(battleLogic.EnemyType);
@@ -168,6 +169,17 @@ public class GameBattleManager : IGlobalManager{
 
     /// <summary>战败踢出完成后清除标记</summary>
     public void ClearPendingKick() { _pendingKickOnLoad = false; }
+
+    /// <summary>获取战斗参战角色信息（供 BattlePanel 显示）</summary>
+    public string GetBattleParticipantsInfo()
+    {
+        var sb = new System.Text.StringBuilder();
+        foreach (var p in playersData)
+            sb.AppendLine(p.Character_Name);
+        foreach (var e in enemysData)
+            sb.AppendLine(e.Character_Name);
+        return sb.ToString();
+    }
 
     /// <summary>
     /// 根据之前注册的战斗信息，在战斗场景中生成战斗角色

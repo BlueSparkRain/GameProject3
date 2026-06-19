@@ -119,7 +119,7 @@ namespace Core
             while (!asyncOp.isDone)
             {
                 float progress = Mathf.Clamp01(asyncOp.progress / 0.9f); // Unity加载进度到0.9即完成
-                DebugManager.Log(EDebugCategory.General, $"[SceneSwitchManager]---场景 {sceneName} 加载进度：{progress:P0}");
+                //DebugManager.Log(EDebugCategory.General, $"[SceneSwitchManager]---场景 {sceneName} 加载进度：{progress:P0}");
                 yield return null;
             }
 

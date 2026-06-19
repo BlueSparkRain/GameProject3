@@ -83,19 +83,19 @@ public class HexRoomIcon : MonoBehaviour
     }
 
     /// <summary>为指定房间创建图标（由 HexRoomStyleHandler.SetRoomType 调用）</summary>
-    public static void CreateForRoom(Transform room, E_HexRoomType roomType)
+    public static HexRoomIcon CreateForRoom(Transform room, E_HexRoomType roomType)
     {
         var pool = GameRoot.GetManager<ObjectPoolManager>();
-        if (pool == null) return;
+        if (pool == null) return null;
 
         var go = pool.GetInstance(E_PoolType.HexRoomIcon_房间图标);
-        if (go == null) return;
+        if (go == null) return null;
 
         var stamp = go.GetComponent<HexRoomIcon>();
         if (stamp == null)
         {
             pool.ReturnPool(E_PoolType.HexRoomIcon_房间图标, go);
-            return;
+            return null;
         }
 
         var sprite = GetSprite(roomType);
@@ -103,6 +103,23 @@ public class HexRoomIcon : MonoBehaviour
             DebugManager.LogWarning(EDebugCategory.MapRoom, $"[HexRoomIcon] {roomType}: 精灵缺失，图标将以无精灵状态显示");
 
         stamp.AttachToRoom(room, sprite);
+        return stamp;
+    }
+
+    /// <summary>回收图标到对象池</summary>
+    public void Recycle()
+    {
+        _roomTransform = null;
+        _isHovered = false;
+        _currentScaleTarget = 1f;
+        if (_hoverCoroutine != null)
+        {
+            StopCoroutine(_hoverCoroutine);
+            _hoverCoroutine = null;
+        }
+        transform.localScale = _originalScale;
+        var pool = GameRoot.GetManager<ObjectPoolManager>();
+        pool?.ReturnPool(E_PoolType.HexRoomIcon_房间图标, gameObject);
     }
 
     public void AttachToRoom(Transform room, Sprite icon)

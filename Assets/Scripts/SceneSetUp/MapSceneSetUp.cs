@@ -46,9 +46,8 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load{
         gameMapManager.GameMapManagerInit(y_Offset, x_Offset, mapWidth, mapHeight, MapPivot.position);
 
         BindUI();
-        StartCoroutine(LoadAllPool());
-        StartCoroutine(LoadMap());
-        StartCoroutine(LoadCharacter(1));
+        HexRoomStyleHandler.DeferIconCreation = true;
+        StartCoroutine(LoadSequence(0f));
     }
 
     private void OnApplicationQuit(){
@@ -65,16 +64,45 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load{
         gameMapManager = GameRoot.GetManager<GameMapManager>();
         gameMapManager.GameMapManagerInit(y_Offset, x_Offset, mapWidth, mapHeight, MapPivot.position);
         BindUI();
-        StartCoroutine(LoadAllPool());
-        StartCoroutine(LoadMap());
-        StartCoroutine(LoadCharacter(4));
+        HexRoomStyleHandler.DeferIconCreation = true;
+        StartCoroutine(LoadSequence(0f));
         JsonSaver.Save(new FirstLoadMap(true));
     }
 
-    void BindUI()
+    /// <summary>顺序加载：地图格子动画 → RegionTextureMapper → 图标 + 玩家</summary>
+    IEnumerator LoadSequence(float characterDelay)
     {
-        if (EndRoundButton)
-        {
+        // 加载期间禁用空格寻路
+        MapMoverManager.PlayerReadyForPathfinding = false;
+
+        // 第一步：加载对象池 + 地图（房间逐个出现动画）
+        yield return StartCoroutine(LoadAllPool());
+        yield return StartCoroutine(LoadMap());
+
+        // 第二步：等待 RegionTextureMapper 完成面片映射+渐变
+        bool mappingDone = false;
+        UnityEngine.Events.UnityAction onMappingDone = () => mappingDone = true;
+        EventCenter.AddEventListener(E_EventType.RegionMappingDone, onMappingDone);
+        yield return new WaitUntil(() => mappingDone);
+        EventCenter.RemoveEventListener(E_EventType.RegionMappingDone, onMappingDone);
+
+        // 第三步：在地图完全就绪后，统一创建 HexRoomIcon
+        HexRoomStyleHandler.DeferIconCreation = false;
+        HexRoomStyleHandler.CreateAllDeferredIcons();
+
+        // 清理上轮残留的回合追踪（跨场景持久化导致旧 Mover 引用未释放）
+        GameRoot.GetManager<MapMoverManager>()?.ClearRoundTracking();
+
+        // 第四步：加载玩家角色（延迟控制出场节奏）
+        yield return new WaitForSeconds(characterDelay);
+        yield return StartCoroutine(LoadCharacter(0));
+
+        // 玩家就绪，允许空格寻路
+        MapMoverManager.PlayerReadyForPathfinding = true;
+    }
+
+    void BindUI(){
+        if (EndRoundButton){
             EndRoundButton.onClick.RemoveAllListeners();
             EndRoundButton.onClick.AddListener(() => EventCenter.EventTrigger(E_EventType.Player_RoundEnd));
         }
@@ -84,8 +112,7 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load{
 
         if (PlayerEquipmentButton){
             PlayerEquipmentButton.onClick.RemoveAllListeners();
-            PlayerEquipmentButton.onClick.AddListener(() =>
-            {
+            PlayerEquipmentButton.onClick.AddListener(() =>{
                 var uiMgr = GameRoot.GetManager<UIManager>();
                 if (uiMgr == null) return;
                 var panel = uiMgr.GetPanel<EquipmentPanel>(E_UIPanelType.EquipmentPanel);
@@ -115,8 +142,7 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load{
         var csd = JsonSaver.Load<CameraSaveData>();
         if (csd.IsValid()){
             var cam = Camera.main;
-            if (cam != null)
-            {
+            if (cam != null){
                 cam.transform.position = new Vector3(csd.cPosX, csd.cPosY, csd.cPosZ);
                 cam.orthographicSize = csd.cSize;
             }
@@ -149,8 +175,6 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load{
 
         JsonSaver.InitData<FirstLoadMap>(this, JsonSaver.Load<FirstLoadMap>().GetState);
 
-        //测试代码
-        //EventCenter.AddEventListener(E_EventType.NewRound, UpdateRoundText);
         EventCenter.AddEventListener(E_EventType.UpdateRoundState, UpdateRoundText);
         EventCenter.AddEventListener(E_EventType.UpdateUIVitalityPoints, UpdateValityText);
         EventCenter.AddEventListener<int>(E_EventType.ChaosLevelUP, UpdateChaosLevelUI);
@@ -179,11 +203,25 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load{
     void OnEnable()
     {
         EventCenter.AddEventListener<int, int>(E_EventType.CharacterLevelUp, OnPlayerLevelUp);
+        EventCenter.AddEventListener(E_EventType.Mover_PlayerStartMove, OnPlayerStartMove);
+        EventCenter.AddEventListener(E_EventType.Mover_MoveStop, OnPlayerMoveStop);
     }
 
     void OnDisable()
     {
         EventCenter.RemoveEventListener<int, int>(E_EventType.CharacterLevelUp, OnPlayerLevelUp);
+        EventCenter.RemoveEventListener(E_EventType.Mover_PlayerStartMove, OnPlayerStartMove);
+        EventCenter.RemoveEventListener(E_EventType.Mover_MoveStop, OnPlayerMoveStop);
+    }
+
+    void OnPlayerStartMove()
+    {
+        if (EndRoundButton != null) EndRoundButton.interactable = false;
+    }
+
+    void OnPlayerMoveStop()
+    {
+        if (EndRoundButton != null) EndRoundButton.interactable = true;
     }
 
     void OnPlayerLevelUp(int oldLevel, int newLevel)
@@ -220,7 +258,7 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load{
         var mover = player1.GetComponent<CharacterMapMoveHandle>().iMapMover as Player_CharacterMapMover;
         var battleMgr = GameRoot.GetManager<GameBattleManager>();
 
-        // 战败踢出：先站在战败房间上2秒，再用DoMoveFunc强制移动1格（模拟被踢开）
+        // 战败踢出：先站在战败房间上2秒，再用DoKickMove强制移动1格（不检查行动点）
         if (battleMgr != null && battleMgr.TryGetKickTarget(player1.transform.position, out HexRoomTag kickTarget))
         {
             battleMgr.SuppressBattleTrigger = true;
@@ -229,7 +267,10 @@ public class MapSceneSetUp : MonoBehaviour, ICanSave_And_Load{
 
             yield return new WaitForSeconds(2f);
 
-            mover.DoMoveFunc(new System.Collections.Generic.List<HexRoomTag> { kickTarget });
+            // 关闭寻路状态（防止2秒等待期间玩家按Space开启的寻路残留在地块上）
+            GameRoot.GetManager<HexPathFindingManager>()?.SetPathFindState(false);
+
+            mover.DoKickMove(new System.Collections.Generic.List<HexRoomTag> { kickTarget });
 
             battleMgr.ClearPendingKick();
         }

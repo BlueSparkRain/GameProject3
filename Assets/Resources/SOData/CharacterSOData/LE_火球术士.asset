@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: "LE_\u706B\u7403\u672F\u58EB"
   m_EditorClassIdentifier: 
   characterType: 4
-  characterSprite: {fileID: 21300000, guid: ec25ca2d0ab90fd4e89d15368f8a0915, type: 3}
+  characterSprite: {fileID: 61543383, guid: 6bbd5e80c55f77b44935d66f982df032, type: 3}
   characterName: "LE_\u706B\u7403\u672F\u58EB"
   Phy_Flat_Penetration: 0
   Mag_Flat_Penetration: 0
@@ -32,5 +32,7 @@ MonoBehaviour:
   Heal_Amplification: 0
   Shield_Amplification: 0
   Maximum_ATB: 8
+  CritRate: 0.05
+  CritDamage: 1.5
   autoSkillSlotCount: 6
   atbSkillSlotCount: 6

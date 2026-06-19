@@ -1,36 +1,50 @@
-using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public static class RandomUtility
 {
-    /// <summary>
-    /// Éú³ÉÖ¸¶¨³¤¶È¡¢Ö¸¶¨·¶Î§¡¢²»ÖØ¸´µÄËæ»úÕûÊıÁĞ±í
-    /// </summary>
-    /// <param name="count">ĞèÒªÉú³ÉµÄÊı×ÖÊıÁ¿</param>
-    /// <param name="min">×ó±ß½ç£¨°üº¬£©</param>
-    /// <param name="max">ÓÒ±ß½ç£¨°üº¬£©</param>
-    /// <returns>²»ÖØ¸´Ëæ»úÕûÊıÁĞ±í</returns>
     public static List<int> GetUniqueRandomList(int count, int min, int max)
     {
-        // 1. ±ß½ç²ÎÊıĞ£Ñé£¨±Ø¼Ó£¬·ÀÖ¹±¨´í£©
-        if (count <= 0) throw new ArgumentException("Éú³É³¤¶È±ØĞë´óÓÚ0");
-        if (max < min) throw new ArgumentException("ÓÒ±ß½ç²»ÄÜĞ¡ÓÚ×ó±ß½ç");
+        return GetUniqueRandomList(count, min, max, null);
+    }
 
-        int totalNumbers = max - min + 1;
-        if (count > totalNumbers) throw new ArgumentException($"Éú³ÉÊıÁ¿²»ÄÜ³¬¹ı·¶Î§×ÜÊı£¡·¶Î§×î¶àÓĞ{totalNumbers}¸ö²»ÖØ¸´Êı×Ö");
-
-        // 2. ÓÃHashSet×Ô¶¯È¥ÖØ
-        HashSet<int> resultSet = new HashSet<int>();
-        Random random = new Random();
-
-        // 3. Ñ­»·Éú³ÉÖ±µ½ÊıÁ¿´ï±ê
-        while (resultSet.Count < count)
+    public static List<int> GetUniqueRandomList(int count, int min, int max, HashSet<int> excludeSet)
+    {
+        if (count <= 0)
         {
-            int randomNum = random.Next(min, max + 1); // Next×ó±ÕÓÒ¿ª£¬+1°üº¬ÓÒ±ß½ç
-            resultSet.Add(randomNum);
+            Debug.LogError($"[RandomUtility] count={count} <= 0");
+            return new List<int>();
+        }
+        if (max < min)
+        {
+            Debug.LogError($"[RandomUtility] max={max} < min={min}");
+            return new List<int>();
         }
 
-        // 4. ×ªList·µ»Ø
-        return new List<int>(resultSet);
+        int totalAvailable = max - min + 1 - (excludeSet?.Count ?? 0);
+        if (totalAvailable < count)
+        {
+            Debug.LogWarning($"[RandomUtility] æ’é™¤åå¯ç”¨æ•°é‡({totalAvailable})ä¸è¶³ï¼Œå›é€€åˆ°å…¨èŒƒå›´");
+            excludeSet = null;
+        }
+
+        HashSet<int> resultSet = new HashSet<int>();
+        int safety = 0;
+        while (resultSet.Count < count)
+        {
+            int randomNum = Random.Range(min, max + 1);
+            if (excludeSet != null && excludeSet.Contains(randomNum))
+                continue;
+            resultSet.Add(randomNum);
+
+            if (++safety > count * 100)
+            {
+                Debug.LogError($"[RandomUtility] æ­»å¾ªç¯ï¼count={count}, min={min}, max={max}, excludeCount={excludeSet?.Count ?? 0}, resultCount={resultSet.Count}");
+                break;
+            }
+        }
+
+        var list = new List<int>(resultSet);
+        return list;
     }
 }

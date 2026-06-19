@@ -145,15 +145,11 @@ protected override void MgrOnInit()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            bool enteringPathFind = !GameRoot.GetManager<HexPathFindingManager>()?.canPathFind ?? false;
-            if (enteringPathFind)
-            {
-                var player = CharacterHandler.PlayerInstance;
+            // 每次按空格都聚焦玩家（无视手动漫游冷却）
+            var player = CharacterHandler.PlayerInstance;
+            if (player != null)
+                FocusOnTarget(player.gameObject, force: true);
 
-                if (player != null)
-                    FocusOnTarget(player.gameObject);
-            }
-            Debug.Log("woc----" + GameRoot.GetManager<MapMoverManager>() );
             GameRoot.GetManager<MapMoverManager>()?.TogglePathFinding();
         }
     }

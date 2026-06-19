@@ -118,8 +118,8 @@ public class ATBMode : ISkillMode
     {
         var caster = _skill.self;
 
-        // ATB检测+扣除：每层增幅多消耗一份基础 ATB 消耗
-        int totalAtbCost = SkillData.skill_atb_cost * (_enhanceLevel + 1);
+        // ATB检测+扣除：基础消耗 + 每层增幅额外+1点
+        int totalAtbCost = SkillData.skill_atb_cost + _enhanceLevel;
         if (totalAtbCost > 0)
         {
             var controller = caster.battleDamageHandler?.BattleController;
@@ -210,7 +210,7 @@ public class ATBMode : ISkillMode
 
     void CheckATBStatus()
     {
-        int neededAtb = SkillData.skill_atb_cost * (_enhanceLevel + 1);
+        int neededAtb = SkillData.skill_atb_cost + _enhanceLevel;
         bool noATB = neededAtb > 0
             && (Caster?.battleDamageHandler?.BattleController?.GetCharacterModelValue(E_BattleModelType.ATBPoints) ?? 0) < neededAtb;
         if (noATB != _lastNoATB)
