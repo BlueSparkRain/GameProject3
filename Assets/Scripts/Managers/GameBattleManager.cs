@@ -170,14 +170,13 @@ public class GameBattleManager : IGlobalManager{
     /// <summary>战败踢出完成后清除标记</summary>
     public void ClearPendingKick() { _pendingKickOnLoad = false; }
 
-    /// <summary>获取战斗参战角色信息（供 BattlePanel 显示）</summary>
+    /// <summary>获取战斗敌方角色信息（供 BattlePanel 显示，不含玩家）</summary>
     public string GetBattleParticipantsInfo()
     {
         var sb = new System.Text.StringBuilder();
-        foreach (var p in playersData)
-            sb.AppendLine(p.Character_Name);
+        int index = 1;
         foreach (var e in enemysData)
-            sb.AppendLine(e.Character_Name);
+            sb.AppendLine($"{index++}. {e.Character_Name}");
         return sb.ToString();
     }
 

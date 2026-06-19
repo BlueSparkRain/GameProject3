@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterType: 19
   characterSprite: {fileID: 561928484, guid: 2545cd9865605a342a70345a9833a565, type: 3}
-  characterName: "ME_\u4E09\u5668\u6597\u58EB"
+  characterName: "\u4E09\u5668\u6597\u58EB"
   Phy_Flat_Penetration: 0
   Mag_Flat_Penetration: 0
   Phy_Resistance: 150

@@ -145,10 +145,15 @@ protected override void MgrOnInit()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            // 每次按空格都聚焦玩家（无视手动漫游冷却）
-            var player = CharacterHandler.PlayerInstance;
-            if (player != null)
-                FocusOnTarget(player.gameObject, force: true);
+            // WASD 漫游中不聚焦，避免干扰手动操作
+            bool wasdIdle = Mathf.Approximately(Input.GetAxisRaw("Horizontal"), 0)
+                        && Mathf.Approximately(Input.GetAxisRaw("Vertical"), 0);
+            if (wasdIdle)
+            {
+                var player = CharacterHandler.PlayerInstance;
+                if (player != null)
+                    FocusOnTarget(player.gameObject, force: true);
+            }
 
             GameRoot.GetManager<MapMoverManager>()?.TogglePathFinding();
         }
