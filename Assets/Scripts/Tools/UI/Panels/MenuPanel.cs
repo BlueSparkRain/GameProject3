@@ -19,6 +19,7 @@ public class MenuPanel : UIPanelBase
     public Button newGameButton;
     public Button continueButton;
     public Button settingButton;
+    public Button closeButton;
 
     void OnClickGameButton(){
         GameRoot.GetManager<UIManager>().HidePanel(E_UIPanelType.MenuPanel);
@@ -34,13 +35,18 @@ public class MenuPanel : UIPanelBase
         }, true).SetUpdate(true);
     }
     void OnClickSettingButton(){
-        GameRoot.GetManager<UIManager>().OpenPanel<SettingsPanel>(E_UIPanelType.MenuPanel,null);
+        GameRoot.GetManager<UIManager>().OpenPanel<SettingsPanel>(E_UIPanelType.SettingsPanel,null);
+    }
+    void OnClickQuitButton()
+    {
+        Application.Quit();
     }
     public override void Init(E_UIPanelType type, string uniqueID){
         base.Init(type, uniqueID);
         if (newGameButton != null) newGameButton.onClick.AddListener(OnClickGameButton);
         if (continueButton != null) continueButton.onClick.AddListener(OnClickContinueButton);
         if (settingButton != null) settingButton.onClick.AddListener(OnClickSettingButton);
+        if (closeButton != null) closeButton.onClick.AddListener(OnClickQuitButton);
     }
     protected override void PlayEnterAnim(System.Action onComplete){
         StartCoroutine(EnterSequence(onComplete));
