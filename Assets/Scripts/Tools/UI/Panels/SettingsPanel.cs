@@ -123,8 +123,26 @@ public class SettingsPanel : UIPanelBase
         bool fs = fullscreenToggle != null && fullscreenToggle.isOn;
         bool vs = vsyncToggle != null && vsyncToggle.isOn;
 
-        // 全屏=无边框窗口(避免独占全屏的切换黑屏)；窗口化=可拖拽调整大小
-        Screen.fullScreenMode = fs ? FullScreenMode.FullScreenWindow : FullScreenMode.Windowed;
+        // 计算最适合当前显示器的 16:9 分辨率
+        Resolution native = Screen.currentResolution;
+        int targetW = Mathf.RoundToInt(native.height * 16f / 9f);
+
+        int w, h;
+        if (targetW <= native.width)
+        {
+            // 显示器 ≥16:9（16:9、21:9）→ 以高度为准
+            w = targetW;
+            h = native.height;
+        }
+        else
+        {
+            // 显示器比 16:9 更窄（16:10、4:3）→ 以宽度为准
+            w = native.width;
+            h = Mathf.RoundToInt(native.width * 9f / 16f);
+        }
+
+        // 全屏用独占模式，显卡驱动处理黑边/缩放
+        Screen.SetResolution(w, h, fs ? FullScreenMode.ExclusiveFullScreen : FullScreenMode.Windowed);
         QualitySettings.vSyncCount = vs ? 1 : 0;
 
         PlayerPrefs.SetInt(KEY_FULLSCREEN, fs ? 1 : 0);

@@ -11,7 +11,7 @@ public class FPSManager : MonoGlobalManager
 {
     [Header("FPS显示配置")]
     [Tooltip("是否开启FPS显示")]
-    public bool showFPS = true;
+    public bool showFPS = false;
     [Tooltip("帧率刷新间隔(秒)，越小越流畅")]
     public float refreshRate = 0.5f;
     [Tooltip("UI字体大小")]

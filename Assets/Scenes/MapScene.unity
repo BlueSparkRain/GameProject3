@@ -4328,8 +4328,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1255718281}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 33.826, y: -7.3, z: 15.5}
+  m_LocalRotation: {x: 0.700104, y: 0.09926937, z: -0.099269345, w: 0.700104}
+  m_LocalPosition: {x: 33.42, y: -7.3, z: 16.05}
   m_LocalScale: {x: 0.55, y: 0.55000013, z: 0.55000013}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4662,11 +4662,10 @@ MonoBehaviour:
   minCol: 5
   maxCol: 50
   regionTexture: {fileID: 2800000, guid: d426d1d36dd375d4488c122ac0fe873f, type: 3}
+  mapperShader: {fileID: 4800000, guid: cbf3980546e11f44eb1dd17415d2e6ed, type: 3}
   tiling: {x: 1, y: 1}
   offset: {x: 0, y: 0}
   textureOpacity: 0.95
-  fadeDuration: 0.5
-  maxRandomDelay: 2.5
   faceScale: {x: 0.55, y: 0.55, z: 0.55}
   faceHeight: -9.7
   mappingEnabled: 1
@@ -7498,7 +7497,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3108172550206068298}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -8209,7 +8208,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4689377682314068028}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -10559,7 +10558,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8498523661052470723}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 

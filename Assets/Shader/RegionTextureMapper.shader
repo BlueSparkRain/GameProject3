@@ -22,6 +22,7 @@ Shader "Custom/RegionTextureMapper"
             "RenderType" = "Transparent"
             "RenderPipeline" = "UniversalPipeline"
             "Queue" = "Transparent"
+            "SRPBatcher" = "False"
         }
 
         Pass
@@ -56,7 +57,7 @@ Shader "Custom/RegionTextureMapper"
             TEXTURE2D(_MainTex);
             SAMPLER(sampler_MainTex);
 
-            // 共享材质参数 — SRP Batcher 管理，不能通过 MPB 覆写
+            // 全部属性放入 UnityPerMaterial — 兼容 SRP Batcher
             CBUFFER_START(UnityPerMaterial)
                 float4 _MainTex_ST;
                 float _Opacity;
@@ -64,14 +65,12 @@ Shader "Custom/RegionTextureMapper"
                 float _FadeDuration;
                 float _FromOpacity;
                 float _TargetOpacity;
+                float2 _RegionMin;
+                float2 _RegionSize;
+                float2 _Tiling;
+                float2 _Offset;
+                float _MaxRandomDelay;
             CBUFFER_END
-
-            // 放在 CBUFFER 外的参数可以通过 MPB 逐对象覆写
-            float2 _RegionMin;
-            float2 _RegionSize;
-            float2 _Tiling;
-            float2 _Offset;
-            float _MaxRandomDelay;
 
             // 基于世界坐标的哈希，同一房间的所有顶点返回相同值
             float Hash21(float2 p)

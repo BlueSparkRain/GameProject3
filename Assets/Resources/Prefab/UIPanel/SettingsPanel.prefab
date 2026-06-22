@@ -147,8 +147,8 @@ MonoBehaviour:
   panelRoot: {fileID: 200001}
   Anim_Duration: 0.5
   Anim_EaseType: 35
-  Anim_BornPos: {x: 0, y: -50, z: 0}
-  Anim_TargetTrans: {x: 0, y: 50, z: 0}
+  Anim_BornPos: {x: 0, y: -800, z: 0}
+  Anim_TargetTrans: {x: 0, y: 800, z: 0}
   enableTimeScaleControl: 1
   Anim_DoFadeIn: 1
   Anim_NeedAlphaFadeIn: 1

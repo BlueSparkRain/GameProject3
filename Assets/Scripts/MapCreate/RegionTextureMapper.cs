@@ -17,6 +17,8 @@ public class RegionTextureMapper : MonoBehaviour
 
     [Header("纹理")]
     public Texture2D regionTexture;
+    [Tooltip("直接引用 RegionTextureMapper Shader，防止 Build 裁剪")]
+    public Shader mapperShader;
 
     [Header("运行时映射")]
     public Vector2 tiling = Vector2.one;
@@ -25,8 +27,8 @@ public class RegionTextureMapper : MonoBehaviour
     public float textureOpacity = 1f;
 
     [Header("渐变")]
-    public float fadeDuration = 0.5f;
-    public float maxRandomDelay = 1.5f;
+    float fadeDuration = 0.3f;
+    float maxRandomDelay = 0.8f;
 
     [Header("面片控制")]
     public Vector3 faceScale = Vector3.one;
@@ -39,7 +41,6 @@ public class RegionTextureMapper : MonoBehaviour
     List<Renderer> _faceRenderers = new List<Renderer>();
     List<Transform> _faceTransforms = new List<Transform>();
     Material _sharedMaterial;
-    MaterialPropertyBlock _sharedMPB;
     bool _materialInitialized;
 
     float _transitionStartTime = -1f;
@@ -100,14 +101,19 @@ public class RegionTextureMapper : MonoBehaviour
     }
     void InitMaterial(){
         if (_materialInitialized) return;
-        Shader shader = Shader.Find("Custom/RegionTextureMapper");
+
+        // 优先用 Inspector 序列化引用，防止 Build 裁剪
+        Shader shader = mapperShader;
+        if (shader == null)
+            shader = Shader.Find("Custom/RegionTextureMapper");
+
         if (shader == null){
             Debug.LogError("[RegionTextureMapper] 找不到 Custom/RegionTextureMapper 着色器");
             return;
         }
         _sharedMaterial = new Material(shader);
-        _sharedMPB = new MaterialPropertyBlock();
         _materialInitialized = true;
+        Debug.Log($"[RegionTextureMapper] 材质初始化成功 — shader: {shader.name}, supported: {shader.isSupported}");
     }
 
     /// <summary>全部房间创建完毕后由 MapCreateCoro 调用的最终映射 + 完成通知</summary>
@@ -165,6 +171,7 @@ public class RegionTextureMapper : MonoBehaviour
         }
 
         //Debug.Log($"[RegionTextureMapper] 找到 {_faceRenderers.Count} 个独立 HexFace Renderer");
+        Debug.Log($"[RegionTextureMapper] RefreshMapping 完成 — 总 HexFaceTag: {allFaces.Length}, 有效: {faceLookup.Count}, 匹配面片: {_faceRenderers.Count}, 区域纹理: {(regionTexture != null ? regionTexture.name : "NULL")}");
         ResetFadeTransition(fromZero: true);
         ApplySharedMPB();
         ApplyFaceTransforms();
@@ -173,18 +180,24 @@ public class RegionTextureMapper : MonoBehaviour
 
     public void ApplySharedMPB()
     {
+        if (_sharedMaterial == null)
+        {
+            Debug.LogWarning("[RegionTextureMapper] ApplySharedMPB 跳过 — _sharedMaterial 为 null");
+            return;
+        }
+
         GameMapManager map = GameRoot.GetManager<GameMapManager>();
         if (map == null) return;
 
         ComputeWorldRegion(map, out Vector2 regionMin, out Vector2 regionSize);
 
-        _sharedMPB.SetTexture(ShaderProp_MainTex, regionTexture);
-        _sharedMPB.SetVector(ShaderProp_RegionMin, new Vector4(regionMin.x, regionMin.y, 0f, 0f));
-        _sharedMPB.SetVector(ShaderProp_RegionSize, new Vector4(regionSize.x, regionSize.y, 0f, 0f));
-        _sharedMPB.SetVector(ShaderProp_Tiling, new Vector4(tiling.x, tiling.y, 0f, 0f));
-        _sharedMPB.SetVector(ShaderProp_Offset, new Vector4(offset.x, offset.y, 0f, 0f));
-        _sharedMPB.SetFloat(ShaderProp_MaxRandomDelay, maxRandomDelay);
-
+        // 全部通过共享材质直设，兼容 SRP Batcher，Build 下稳定
+        _sharedMaterial.SetTexture(ShaderProp_MainTex, regionTexture);
+        _sharedMaterial.SetVector(ShaderProp_RegionMin, new Vector4(regionMin.x, regionMin.y, 0f, 0f));
+        _sharedMaterial.SetVector(ShaderProp_RegionSize, new Vector4(regionSize.x, regionSize.y, 0f, 0f));
+        _sharedMaterial.SetVector(ShaderProp_Tiling, new Vector4(tiling.x, tiling.y, 0f, 0f));
+        _sharedMaterial.SetVector(ShaderProp_Offset, new Vector4(offset.x, offset.y, 0f, 0f));
+        _sharedMaterial.SetFloat(ShaderProp_MaxRandomDelay, maxRandomDelay);
         _sharedMaterial.SetFloat(ShaderProp_Opacity, textureOpacity);
         _sharedMaterial.SetFloat(ShaderProp_FadeDuration, Mathf.Max(0.001f, fadeDuration));
 
@@ -194,12 +207,6 @@ public class RegionTextureMapper : MonoBehaviour
         _sharedMaterial.SetFloat(ShaderProp_TransitionStart, _transitionStartTime);
         _sharedMaterial.SetFloat(ShaderProp_FromOpacity, _fromOpacity);
         _sharedMaterial.SetFloat(ShaderProp_TargetOpacity, _targetOpacity);
-
-        foreach (var rend in _faceRenderers)
-        {
-            if (rend != null)
-                rend.SetPropertyBlock(_sharedMPB);
-        }
     }
 
     void ResetFadeTransition(bool fromZero)
@@ -265,7 +272,6 @@ public class RegionTextureMapper : MonoBehaviour
         {
             if (rend != null)
             {
-                rend.SetPropertyBlock(null);
                 rend.sharedMaterial = null;  // 回退到预制体默认材质，避免残留已失效的 _sharedMaterial
             }
         }
