@@ -115,7 +115,7 @@ public class Skill_42 : SkillBase
     void ApplyBuff(float dur)
     {
         DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 42]{self.Camp}获得魔力收束BUFF，持续{dur}S");
-        var buff = new BuffBase(E_BuffType.魔力收束_正面, E_BuffPositive.正面, dur);
+        BuffBase buff = new BuffBase(E_BuffType.魔力收束_正面, E_BuffPositive.正面, dur);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }
@@ -208,7 +208,7 @@ public class Skill_45 : SkillBase
     {
         E_Camp enemyCamp = self.Camp == E_Camp.玩家方 ? E_Camp.敌方 : E_Camp.玩家方;
         DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 45]{self.Camp}获得火焰风暴BUFF，持续{buffDuration}S，倍率{rate}");
-        var buff = new Buff_AutoDamage(E_BuffType.烈焰风暴_正面, E_BuffPositive.正面, buffDuration,
+        BuffBase buff = new Buff_AutoDamage(E_BuffType.烈焰风暴_正面, E_BuffPositive.正面, buffDuration,
             self, enemyCamp, E_WeaknessType.火, rate, triggerInterval);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
@@ -233,7 +233,7 @@ public class Skill_46 : SkillBase
     {
         E_Camp enemyCamp = self.Camp == E_Camp.玩家方 ? E_Camp.敌方 : E_Camp.玩家方;
         DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 46]{self.Camp}获得冰雪风暴BUFF，持续{buffDuration}S，倍率{rate}");
-        var buff = new Buff_AutoDamage(E_BuffType.冰雪风暴_正面, E_BuffPositive.正面, buffDuration,
+        BuffBase buff = new Buff_AutoDamage(E_BuffType.冰雪风暴_正面, E_BuffPositive.正面, buffDuration,
             self, enemyCamp, E_WeaknessType.冰, rate, triggerInterval);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
@@ -255,7 +255,7 @@ public class Skill_47 : SkillBase
     void ApplyBuff(float dur)
     {
         DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 47]{self.Camp}获得无双BUFF，持续{dur}S");
-        var buff = new BuffBase(E_BuffType.无双_正面, E_BuffPositive.正面, dur);
+        BuffBase buff = new BuffBase(E_BuffType.无双_正面, E_BuffPositive.正面, dur);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }
@@ -408,7 +408,7 @@ public class Skill_53 : SkillBase
         var atk = new Attack_Skill();
         atk.SetAttackState(E_WeaknessType.无_, -1, baseAttackRate);
         atk.Excute(self, target);
-        var stunBuff = new BuffBase(E_BuffType.晕眩_负面, E_BuffPositive.负面, dur);
+        BuffBase stunBuff = new BuffBase(E_BuffType.晕眩_负面, E_BuffPositive.负面, dur);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, target.battleDamageHandler.BuffHandler, stunBuff);
     }
 }
@@ -459,7 +459,7 @@ public class Skill_55 : SkillBase
     void CreateBuff(float dur)
     {
         DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 55]{self.Camp}获得灼伤之剑BUFF，持续{dur}S");
-        var buff = new Buff_DotOnAttack(E_BuffType.灼伤之剑_正面, E_BuffPositive.正面, dur,
+        BuffBase buff = new Buff_DotOnAttack(E_BuffType.灼伤之剑_正面, E_BuffPositive.正面, dur,
             E_WeaknessType.剑, E_Dot.燃烧, self);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
@@ -481,7 +481,7 @@ public class Skill_56 : SkillBase
     void CreateBuff(float dur)
     {
         DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 56]{self.Camp}获得冻结之弓BUFF，持续{dur}S");
-        var buff = new Buff_DotOnAttack(E_BuffType.冻结之弓_正面, E_BuffPositive.正面, dur,
+        BuffBase buff = new Buff_DotOnAttack(E_BuffType.冻结之弓_正面, E_BuffPositive.正面, dur,
             E_WeaknessType.弓, E_Dot.冻结, self);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
@@ -503,7 +503,7 @@ public class Skill_57 : SkillBase
     void CreateBuff(float dur)
     {
         DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 57]{self.Camp}获得感电之枪BUFF，持续{dur}S");
-        var buff = new Buff_DotOnAttack(E_BuffType.感电之枪_正面, E_BuffPositive.正面, dur,
+        BuffBase buff = new Buff_DotOnAttack(E_BuffType.感电之枪_正面, E_BuffPositive.正面, dur,
             E_WeaknessType.枪, E_Dot.感电, self);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
@@ -527,7 +527,7 @@ public class Skill_58 : SkillBase
     void CreateBuff(int layers)
     {
         DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 58]{self.Camp}获得火焰场地BUFF，持续{buffDuration}S，层数{layers}");
-        var buff = new Buff_FieldDot(E_BuffType.火焰场地_正面, E_BuffPositive.正面, buffDuration,
+        BuffBase buff = new Buff_FieldDot(E_BuffType.火焰场地_正面, E_BuffPositive.正面, buffDuration,
             E_Dot.燃烧, self, tickInterval, layers);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
@@ -551,7 +551,7 @@ public class Skill_59 : SkillBase
     void CreateBuff(int layers)
     {
         DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 59]{self.Camp}获得雷电场地BUFF，持续{buffDuration}S，层数{layers}");
-        var buff = new Buff_FieldDot(E_BuffType.雷电场地, E_BuffPositive.正面, buffDuration,
+        BuffBase buff = new Buff_FieldDot(E_BuffType.雷电场地, E_BuffPositive.正面, buffDuration,
             E_Dot.感电, self, tickInterval, layers);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }

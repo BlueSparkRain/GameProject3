@@ -507,7 +507,7 @@ public class Skill_13 : SkillBase
         DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 13]{self.Camp}发动技能13-[魔攻+N（{level}）-BUFF]");
         BuffHandler.UnRegistBuff(E_BuffType.魔攻加N);
         float adjustValue = Controller.GetCharacterPropertyValue(E_CharacterPropertyType.Mag_Attack) * baseRiseRate * level;
-        var buff = new Buff_AdjustProperty(E_BuffType.魔攻加N, E_BuffPositive.正面, buff_duration, Controller, E_CharacterPropertyType.Mag_Attack, adjustValue);
+        BuffBase buff = new Buff_AdjustProperty(E_BuffType.魔攻加N, E_BuffPositive.正面, buff_duration, Controller, E_CharacterPropertyType.Mag_Attack, adjustValue);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }
@@ -534,7 +534,7 @@ public class Skill_14 : SkillBase
         DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 14]{self.Camp}发动技能14-[物防+N（{level}）-BUFF]");
         BuffHandler.UnRegistBuff(E_BuffType.物防加N);
         float adjustValue = Controller.GetCharacterPropertyValue(E_CharacterPropertyType.Phy_Resistance) * baseRiseRate * level;
-        var buff = new Buff_AdjustProperty(E_BuffType.物防加N, E_BuffPositive.正面, buff_duration, Controller, E_CharacterPropertyType.Phy_Resistance, adjustValue);
+        BuffBase buff = new Buff_AdjustProperty(E_BuffType.物防加N, E_BuffPositive.正面, buff_duration, Controller, E_CharacterPropertyType.Phy_Resistance, adjustValue);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }
@@ -561,7 +561,7 @@ public class Skill_15 : SkillBase
         DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 15]{self.Camp}发动技能15-[魔防+N（{level}）-BUFF]");
         BuffHandler.UnRegistBuff(E_BuffType.魔防加N);
         float adjustValue = Controller.GetCharacterPropertyValue(E_CharacterPropertyType.Mag_Resistance) * baseRiseRate * level;
-        var buff = new Buff_AdjustProperty(E_BuffType.魔防加N, E_BuffPositive.正面, buff_duration, Controller, E_CharacterPropertyType.Mag_Resistance, adjustValue);
+        BuffBase buff = new Buff_AdjustProperty(E_BuffType.魔防加N, E_BuffPositive.正面, buff_duration, Controller, E_CharacterPropertyType.Mag_Resistance, adjustValue);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }
@@ -588,7 +588,7 @@ public class Skill_16 : SkillBase
         DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 16]{self.Camp}发动技能16-[物攻-N（{level}）-BUFF]");
         BuffHandler.UnRegistBuff(E_BuffType.物攻减N);
         float adjustValue = Controller.GetCharacterPropertyValue(E_CharacterPropertyType.Phy_Attack) * baseRiseRate * level;
-        var buff = new Buff_AdjustProperty(E_BuffType.物攻减N, E_BuffPositive.负面, buff_duration, Controller, E_CharacterPropertyType.Phy_Attack, -adjustValue);
+        BuffBase buff = new Buff_AdjustProperty(E_BuffType.物攻减N, E_BuffPositive.负面, buff_duration, Controller, E_CharacterPropertyType.Phy_Attack, -adjustValue);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }
@@ -615,7 +615,7 @@ public class Skill_17 : SkillBase
         DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 17]{self.Camp}发动技能17-[魔攻-N（{level}）-BUFF]");
         BuffHandler.UnRegistBuff(E_BuffType.魔攻减N);
         float adjustValue = Controller.GetCharacterPropertyValue(E_CharacterPropertyType.Mag_Attack) * baseRiseRate * level;
-        var buff = new Buff_AdjustProperty(E_BuffType.魔攻减N, E_BuffPositive.负面, buff_duration, Controller, E_CharacterPropertyType.Mag_Attack, -adjustValue);
+        BuffBase buff = new Buff_AdjustProperty(E_BuffType.魔攻减N, E_BuffPositive.负面, buff_duration, Controller, E_CharacterPropertyType.Mag_Attack, -adjustValue);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }
@@ -642,7 +642,7 @@ public class Skill_18 : SkillBase
         DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 18]{self.Camp}发动技能18-[物防-N（{level}）-BUFF]");
         BuffHandler.UnRegistBuff(E_BuffType.物防减N);
         float adjustValue = Controller.GetCharacterPropertyValue(E_CharacterPropertyType.Phy_Resistance) * baseRiseRate * level;
-        var buff = new Buff_AdjustProperty(E_BuffType.物防减N, E_BuffPositive.负面, buff_duration, Controller, E_CharacterPropertyType.Phy_Resistance, -adjustValue);
+        BuffBase buff = new Buff_AdjustProperty(E_BuffType.物防减N, E_BuffPositive.负面, buff_duration, Controller, E_CharacterPropertyType.Phy_Resistance, -adjustValue);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }
@@ -669,7 +669,7 @@ public class Skill_19 : SkillBase
         DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 19]{self.Camp}发动技能19-[魔防-N（{level}）-BUFF]");
         BuffHandler.UnRegistBuff(E_BuffType.魔防减N);
         float adjustValue = Controller.GetCharacterPropertyValue(E_CharacterPropertyType.Mag_Resistance) * baseRiseRate * level;
-        var buff = new Buff_AdjustProperty(E_BuffType.魔防减N, E_BuffPositive.负面, buff_duration, Controller, E_CharacterPropertyType.Mag_Resistance, -adjustValue);
+        BuffBase buff = new Buff_AdjustProperty(E_BuffType.魔防减N, E_BuffPositive.负面, buff_duration, Controller, E_CharacterPropertyType.Mag_Resistance, -adjustValue);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }

@@ -298,7 +298,7 @@ public class Skill_28 : SkillBase
     void Apply(IBattlable target, float rate)
     {
         DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 28]{self.Camp}发动技能28-[退化]，伤害-25%，回复{rate*100}%最大生命值");
-        var buff = new Buff_DamageBoomer(E_BuffType.退化_负面, E_BuffPositive.负面, buffDuration, degradeRate);
+        BuffBase buff = new Buff_DamageBoomer(E_BuffType.退化_负面, E_BuffPositive.负面, buffDuration, degradeRate);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
         var heal = new ModelAdjust_Skill();
         heal.SetModelState(E_BattleModelType.HP, self.battleDamageHandler.GetMaxHealth(), rate);
@@ -541,7 +541,7 @@ public class Skill_35 : SkillBase
         DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 35]{self.Camp}延长目标击破状态{extendDur}S，施加易损{vulDur}S");
         float phyRes = targetController.GetCharacterPropertyValue(E_CharacterPropertyType.Phy_Resistance);
         float magRes = targetController.GetCharacterPropertyValue(E_CharacterPropertyType.Mag_Resistance);
-        var vulBuff = new Buff_Vulnerable(E_BuffType.脆弱_负面, E_BuffPositive.负面, vulDur,
+        BuffBase vulBuff = new Buff_Vulnerable(E_BuffType.脆弱_负面, E_BuffPositive.负面, vulDur,
             targetController, phyRes * vulRate, magRes * vulRate);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, targetHandler, vulBuff);
     }
@@ -597,7 +597,7 @@ public class Skill_37 : SkillBase
     void CreateBuff(float dur)
     {
         DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 37]{self.Camp}发动技能37-[迅雷连锁-BUFF]，持续{dur}S");
-        var buff = new Buff_AdditiveAttack(E_BuffType.迅雷之影_正面, E_BuffPositive.正面, dur,
+        BuffBase buff = new Buff_AdditiveAttack(E_BuffType.迅雷之影_正面, E_BuffPositive.正面, dur,
             this, E_WeaknessType.雷, damageRate);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
@@ -621,7 +621,7 @@ public class Skill_38 : SkillBase
     void CreateBuff(float dur)
     {
         DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 38]{self.Camp}发动技能38-[暴雪连锁-BUFF]，持续{dur}S");
-        var buff = new Buff_AdditiveAttack(E_BuffType.冰雪风暴_正面, E_BuffPositive.正面, dur,
+        BuffBase buff = new Buff_AdditiveAttack(E_BuffType.冰雪风暴_正面, E_BuffPositive.正面, dur,
             this, E_WeaknessType.冰, damageRate);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
@@ -643,7 +643,7 @@ public class Skill_39 : SkillBase
     public override void SkillEffect_Base(IBattlable target)
     {
         DebugManager.Log(EDebugCategory.SkillExecution,$"[Skill 39]{self.Camp}发动技能39-[超大魔法化-BUFF]，额外释放{recastCount}次");
-        var buff = new Buff_SkillRecast(E_BuffType.超大魔法化_正面, E_BuffPositive.正面, buffDuration, recastCount);
+        BuffBase buff = new Buff_SkillRecast(E_BuffType.超大魔法化_正面, E_BuffPositive.正面, buffDuration, recastCount);
         EventCenter.EventTrigger(E_EventType.Battle_RegisteBUFF, BuffHandler, buff);
     }
 }

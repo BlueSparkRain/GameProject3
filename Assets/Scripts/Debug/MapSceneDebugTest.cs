@@ -13,8 +13,8 @@ public class MapSceneDebugTest : MonoBehaviour
     {
 
         // ========== 金币 ==========
-        if (Input.GetKeyDown(KeyCode.G))
-            GameRoot.GetManager<GoldManager>()?.AddGold(500);
+        //if (Input.GetKeyDown(KeyCode.G))
+        //    GameRoot.GetManager<GoldManager>()?.AddGold(500);
         //if (!Input.GetKey(KeyCode.LeftControl)) return;
 
         /***
