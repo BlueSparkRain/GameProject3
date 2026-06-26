@@ -8,16 +8,16 @@ public class EquipmentPanelTestOpener : MonoBehaviour
 {
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            var uiMgr = GameRoot.GetManager<UIManager>();
-            if (uiMgr == null) return;
-            var panel = uiMgr.GetPanel<EquipmentPanel>(E_UIPanelType.EquipmentPanel);
-            if (panel != null && panel.IsAnimating) return;
-            if (panel != null && panel.gameObject.activeSelf)
-                panel.Hide();
-            else
-                uiMgr.OpenPanel<EquipmentPanel>(E_UIPanelType.EquipmentPanel);
-        }
+        //if (Input.GetKeyDown(KeyCode.O))
+        //{
+        //    var uiMgr = GameRoot.GetManager<UIManager>();
+        //    if (uiMgr == null) return;
+        //    var panel = uiMgr.GetPanel<EquipmentPanel>(E_UIPanelType.EquipmentPanel);
+        //    if (panel != null && panel.IsAnimating) return;
+        //    if (panel != null && panel.gameObject.activeSelf)
+        //        panel.Hide();
+        //    else
+        //        uiMgr.OpenPanel<EquipmentPanel>(E_UIPanelType.EquipmentPanel);
+        //}
     }
 }

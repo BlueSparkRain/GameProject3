@@ -17,28 +17,28 @@ public class SkillSystemDebugger : MonoBehaviour
 
     void Update()
     {
-        #region
-        //测试：空格 + 1随机技能
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            var sk = PlayerSkiller;
-            if (sk != null)
-                sk.GetNewSkill(Random.Range(0, 59));
-            else
-                DebugManager.LogWarning(EDebugCategory.General, "[SkillSystemDebugger] 玩家CharacterMapSkiller未就绪");
-        }
-        #endregion
+        //#region
+        ////测试：空格 + 1随机技能
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    var sk = PlayerSkiller;
+        //    if (sk != null)
+        //        sk.GetNewSkill(Random.Range(0, 59));
+        //    else
+        //        DebugManager.LogWarning(EDebugCategory.General, "[SkillSystemDebugger] 玩家CharacterMapSkiller未就绪");
+        //}
+        //#endregion
 
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            var sk = PlayerSkiller;
-            if (sk == null) return;
-            var data = sk.GetComponent<CharacterHandler>()?.CharacterData;
-            if (data != null)
-            {
-                data.UnlockAtbSlot(1);
-                DebugManager.Log(EDebugCategory.General, $"[SkillSystemDebugger] ATB槽数已解锁至 {data.AtbSkillSlotCount}/{CharacterData.maxAtbSkillSlotCount}");
-            }
-        }
+        //if (Input.GetKeyDown(KeyCode.I))
+        //{
+        //    var sk = PlayerSkiller;
+        //    if (sk == null) return;
+        //    var data = sk.GetComponent<CharacterHandler>()?.CharacterData;
+        //    if (data != null)
+        //    {
+        //        data.UnlockAtbSlot(1);
+        //        DebugManager.Log(EDebugCategory.General, $"[SkillSystemDebugger] ATB槽数已解锁至 {data.AtbSkillSlotCount}/{CharacterData.maxAtbSkillSlotCount}");
+        //    }
+        //}
     }
 }

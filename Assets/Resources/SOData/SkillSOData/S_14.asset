@@ -22,5 +22,5 @@ MonoBehaviour:
   skill_AtbCost_ATB: 1
   skill_ang_grow: 0
   skill_targetType_Auto: 0
-  skill_targetType_ATB: 0
+  skill_targetType_ATB: 1
   skill_DeliveryType: 2

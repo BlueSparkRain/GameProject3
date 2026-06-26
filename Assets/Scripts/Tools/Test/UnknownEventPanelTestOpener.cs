@@ -8,16 +8,16 @@ public class UnknownEventPanelTestOpener : MonoBehaviour
 {
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            var uiMgr = GameRoot.GetManager<UIManager>();
-            if (uiMgr == null) return;
-            var panel = uiMgr.GetPanel<UnknownEventPanel>(E_UIPanelType.UnknownEventPanel);
-            if (panel != null && panel.IsAnimating) return;
-            if (panel != null && panel.gameObject.activeSelf)
-                panel.Hide();
-            else
-                uiMgr.OpenPanel<UnknownEventPanel>(E_UIPanelType.UnknownEventPanel);
-        }
+        //if (Input.GetKeyDown(KeyCode.K))
+        //{
+        //    var uiMgr = GameRoot.GetManager<UIManager>();
+        //    if (uiMgr == null) return;
+        //    var panel = uiMgr.GetPanel<UnknownEventPanel>(E_UIPanelType.UnknownEventPanel);
+        //    if (panel != null && panel.IsAnimating) return;
+        //    if (panel != null && panel.gameObject.activeSelf)
+        //        panel.Hide();
+        //    else
+        //        uiMgr.OpenPanel<UnknownEventPanel>(E_UIPanelType.UnknownEventPanel);
+        //}
     }
 }
