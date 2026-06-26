@@ -19,7 +19,7 @@ MonoBehaviour:
   skill_Description: "\u56DE\u590D 30% \u6700\u5927\u751F\u547D\u503C\uFF0C\u6BCF\u6B21\u51FB\u7834\u540E
     ATB-2/\u5145\u80FD\u65F6\u95F4\u51CF\u5C1140S\uFF0C\u91CA\u653E\u540E\u91CD\u7F6E"
   skill_CoolDown_Auto: 27
-  skill_sp_cost: 100
+  skill_sp_cost: 200
   skill_AtbCost_ATB: 5
   skill_ang_grow: 0
   skill_targetType_Auto: 0

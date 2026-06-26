@@ -15,12 +15,12 @@ MonoBehaviour:
   skill_ID: 0
   skill_name: 0
   skill_Sprite: {fileID: -635372783, guid: ad017595f6aef2f43a740047dd433e39, type: 3}
-  skill_Name: "\u65A9\u51FB/\u523A\u51FB/\u5C04\u51FB"
+  skill_Name: "\u521D\u59CB\u65A9\u51FB"
   skill_Description: "\u9020\u6210\u5251\u5F31\u70B9\u7684\u8F83\u4F4E\u4F24\u5BB3"
   skill_CoolDown_Auto: 2
-  skill_sp_cost: 10
+  skill_sp_cost: 20
   skill_AtbCost_ATB: 1
-  skill_ang_grow: 10
+  skill_ang_grow: 20
   skill_targetType_Auto: 0
   skill_targetType_ATB: 0
   skill_DeliveryType: 0

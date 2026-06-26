@@ -24,7 +24,7 @@ public class ChaosLevelManager : MonoSceneManager, ICanSave_And_Load
 
     public void AdjustChaosLevelByRound(int round)
     {
-        int level = round / 10 + 1;
+        int level = round / 3 + 1;
         if (currentLevel != level)
         {
             currentLevel = level;

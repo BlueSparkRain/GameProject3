@@ -20,9 +20,9 @@ MonoBehaviour:
     10S\uFF0C\u6BCF\u6B21\u6218\u6597\u53EA\u53EF\u91CA\u653E1\u6B21\u6280\u80FD\uFF09\u6301\u7EED
     10S\uFF0C\u6BCF\u6B21\u6218\u6597\u53EA\u53EF\u91CA\u653E1\u6B21"
   skill_CoolDown_Auto: 22
-  skill_sp_cost: 200
+  skill_sp_cost: 400
   skill_AtbCost_ATB: 4
-  skill_ang_grow: 100
+  skill_ang_grow: 200
   skill_targetType_Auto: 0
   skill_targetType_ATB: 0
   skill_DeliveryType: 0

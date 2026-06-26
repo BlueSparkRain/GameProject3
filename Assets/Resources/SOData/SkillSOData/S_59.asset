@@ -18,7 +18,7 @@ MonoBehaviour:
   skill_Name: "\u96F7\u7535\u9886\u57DF"
   skill_Description: "\u83B7\u5F97\u3010\u96F7\u7535\u573A\u5730\u3011\u72B6\u6001\uFF08\u6BCF\u79D2\u4F7F\u654C\u65B9\u5168\u4F53\u83B7\u5F971\u5C42\u611F\u7535\uFF09\uFF0C\u6301\u7EED10S\uFF08\u4E2D\u8017\uFF09"
   skill_CoolDown_Auto: 12
-  skill_sp_cost: 100
+  skill_sp_cost: 200
   skill_AtbCost_ATB: 2
   skill_ang_grow: 0
   skill_targetType_Auto: 0
