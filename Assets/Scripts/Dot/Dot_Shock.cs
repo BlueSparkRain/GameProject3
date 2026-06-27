@@ -29,6 +29,6 @@ public class Dot_Shock : DotBase{
         else{
             DebugManager.Log(EDebugCategory.BattleDOT, $"{self.Camp}受{dot_type} Dot伤害,造成一次伤害:[已损失生命值]{lostHp}*[Dot层数]{dot_count}={baseDamage}");
         }
-        self.battleDamageHandler.GetDamage(E_Skill_DamageType.魔法, baseDamage);
+        self.battleDamageHandler.GetDamage(E_Skill_DamageType.魔法, -baseDamage);
     }
 }

@@ -104,6 +104,12 @@ public class Buff_AdditiveAttack : BuffBase
         BufferLogicBucket.AdditiveWeaknessAttack(skillBase.self, skillBase.targets, weaknessType, damageRate);
         base.OnBuffTrigger();
     }
+    /// <summary>
+    /// 对指定目标触发附加攻击（用于物理攻击事件携带当前目标）
+    /// </summary>
+    public void TriggerOnTarget(IBattlable target){
+        BufferLogicBucket.AdditiveWeaknessAttack(skillBase.self, new List<IBattlable> { target }, weaknessType, damageRate);
+    }
 }
 
 /// <summary>

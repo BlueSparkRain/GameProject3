@@ -28,6 +28,6 @@ public static class DamageCalculator
     {
         float value = _damageValue *  _resistanceRate;
         DebugManager.Log(EDebugCategory.General, $"收到实际伤害计算：[伤害值]{_damageValue}*[减伤率]{_resistanceRate}={value}");
-        return _damageValue * _resistanceRate;
+        return _damageValue * (1 - _resistanceRate);
     }
 }

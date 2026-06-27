@@ -12,24 +12,19 @@ public class BattleBuffHandler : MonoBehaviour
     public void InitBattleBuffHandle(IBattlable _self)
     {
         self = _self;
-        EventCenter.AddEventListener<BattleBuffHandler>(E_EventType.Do_PhyAttack, Check_Phy_AdditiveBuff);
+        EventCenter.AddEventListener<BattleBuffHandler, IBattlable>(E_EventType.Do_PhyAttack, Check_Phy_AdditiveBuff);
         EventCenter.AddEventListener<BattleBuffHandler, SkillBase, E_SkillLevel, int>(E_EventType.Do_MagAttack, OnMagAttackRecast);
         EventCenter.AddEventListener<BattleBuffHandler, BuffBase>(E_EventType.Battle_RegisteBUFF, RegistBuff);
         EventCenter.AddEventListener<BattleBuffHandler, E_WeaknessType, IBattlable>(E_EventType.Battle_ElementalAttack, OnElementalAttack);
     }
-    void Check_Phy_AdditiveBuff(BattleBuffHandler buffHandler)
+    void Check_Phy_AdditiveBuff(BattleBuffHandler buffHandler, IBattlable attackTarget)
     {
-        if (BuffDic.Count <= 0)
+        if (BuffDic.Count <= 0) return;
+        if (buffHandler != this) return;
+        foreach (var item in BuffDic)
         {
-            return;
-        }
-        if (buffHandler == this)
-        {
-            foreach (var item in BuffDic)
-            {
-                if (item.Key.Buff_Type == E_BuffType.炽焰连锁)
-                    item.Key.OnBuffTrigger();
-            }
+            if (item.Key is Buff_AdditiveAttack additive)
+                additive.TriggerOnTarget(attackTarget);
         }
     }
 

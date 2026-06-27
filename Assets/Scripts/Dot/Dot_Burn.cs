@@ -35,7 +35,7 @@ public class Dot_Burn : DotBase
         else{
             DebugManager.Log(EDebugCategory.BattleDOT, $"{self.Camp}的{dot_type} Dot触发,结算了一次伤害:[当前生命值]{curHp}*[Dot层数]{dot_count}={baseDamage}");
         }
-        self.battleDamageHandler.GetDamage(E_Skill_DamageType.魔法, baseDamage);
+        self.battleDamageHandler.GetDamage(E_Skill_DamageType.魔法, -baseDamage);
     }
 
     public override void OnDotUpdate(){

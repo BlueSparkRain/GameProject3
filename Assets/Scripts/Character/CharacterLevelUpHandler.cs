@@ -28,8 +28,8 @@ public class CharacterLevelUpHandler : MonoBehaviour{
     }
     //private void Update()
     //{
-        //if (Input.GetKeyDown(KeyCode.L))
-            //AdjustEXP(250);
+    //    if (Input.GetKeyDown(KeyCode.L))
+    //        AdjustEXP(500);
     //}
     public void AdjustEXP(float trans){
         bool skip = false;

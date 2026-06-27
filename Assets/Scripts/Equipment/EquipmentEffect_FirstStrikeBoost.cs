@@ -19,14 +19,14 @@ public class EquipmentEffect_FirstStrikeBoost : IEquipmentEffect{
         _ownerId = ctx.ownerId;
         _characterData = ctx.characterData;
         _lastTriggerTime = float.MinValue;
-        EventCenter.AddEventListener<BattleBuffHandler>(E_EventType.Do_PhyAttack, OnOwnerPhyAttack);
+        EventCenter.AddEventListener<BattleBuffHandler, IBattlable>(E_EventType.Do_PhyAttack, OnOwnerPhyAttack);
     }
     public void OnUnequip()
     {
-        EventCenter.RemoveEventListener<BattleBuffHandler>(E_EventType.Do_PhyAttack, OnOwnerPhyAttack);
+        EventCenter.RemoveEventListener<BattleBuffHandler, IBattlable>(E_EventType.Do_PhyAttack, OnOwnerPhyAttack);
         _ownerId = null;
     }
-    void OnOwnerPhyAttack(BattleBuffHandler buffHandler){
+    void OnOwnerPhyAttack(BattleBuffHandler buffHandler, IBattlable target){
         // 过滤：只响应本角色的攻击
         if (!IsOwner(buffHandler)) return;
 

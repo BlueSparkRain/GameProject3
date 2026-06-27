@@ -14,7 +14,7 @@ public class Dot_Freeze : DotBase{
     public override void OnDotTrigger(){
         base.OnDotTrigger();
         DebugManager.Log(EDebugCategory.BattleDOT, $"{self.Camp}的{dot_type} Dot触发,结算斩杀线[最大生命值%2*Dot层数]：{(int)(self.battleDamageHandler.GetMaxHealth() * 0.02f * dot_count)}");
-        self.battleDamageHandler.GetDamage(E_Skill_DamageType.魔法, self.battleDamageHandler.GetMaxHealth());
+        self.battleDamageHandler.GetDamage(E_Skill_DamageType.魔法, -self.battleDamageHandler.GetMaxHealth());
     }
     /// <summary>
     /// 检测角色是否达到斩杀线

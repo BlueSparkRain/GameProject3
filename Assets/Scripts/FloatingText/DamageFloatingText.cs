@@ -4,8 +4,9 @@ using TMPro;
 using UnityEngine;
 
 /// <summary>
-/// 单个跳字实例。动画：弹出 → 上浮 + 挤压拉伸 → 渐隐消失。
-/// 各阶段重叠衔接，避免段落感。
+/// 单个跳字实例。动画：弹出 → 上浮 + 随机偏移 → 渐隐消失。
+/// 所有偏移和随机化参数由脚本内部控制，不暴露给 Inspector。
+/// 同时生成多个跳字时，通过 staggerOffset / staggerIndex 防止位置和动画重叠。
 /// </summary>
 public class DamageFloatingText : MonoBehaviour
 {
@@ -15,37 +16,42 @@ public class DamageFloatingText : MonoBehaviour
     Action _onReturn;
     bool _returning;
 
-    [Header("弹出")]
-    [SerializeField] float _popDuration = 0.12f;
-    [SerializeField] float _settleDuration = 0.08f;
-    [SerializeField] float _popOvershoot = 1.35f;
-
-    [Header("上浮")]
-    [SerializeField] float _floatDistance = 120f;
-    [SerializeField] float _floatDuration = 0.5f;
-
-    [Header("淡出")]
-    [SerializeField] float _fadeOutDelay = 0.25f;   // 弹出后多久开始淡出
-    [SerializeField] float _fadeOutDuration = 0.35f;
-
-    [Header("水平偏移")]
-    [SerializeField] float _horizontalSpread = 40f;
-
-    [Header("挤压拉伸")]
-    [SerializeField] float _squashScaleX = 1.18f;
-    [SerializeField] float _squashScaleY = 0.82f;
-    [SerializeField] float _stretchScaleX = 0.88f;
-    [SerializeField] float _stretchScaleY = 1.15f;
-    [SerializeField] float _squashDuration = 0.08f;
-    [SerializeField] float _stretchDuration = 0.1f;
-    [SerializeField] float _restoreDuration = 0.1f;
-
     TMP_Text self_tmp;
-    [Header("目标TMP")]
     public TMP_Text _tmp;
 
-    public const float ScaleMin = 1.1f;
-    public const float ScaleMax = 1.6f;
+    // ── 内部动画参数（不暴露 Inspector）──
+    const float PopDuration       = 0.12f;
+    const float SettleDuration    = 0.08f;
+    const float PopOvershoot      = 1.35f;
+
+    const float FloatDistanceMin  = 90f;
+    const float FloatDistanceMax  = 140f;
+    const float FloatDurationMin  = 0.45f;
+    const float FloatDurationMax  = 0.65f;
+
+    const float FadeOutDelayMin   = 0.18f;
+    const float FadeOutDelayMax   = 0.32f;
+    const float FadeOutDuration   = 0.35f;
+
+    // 水平随机漂移
+    const float DriftMin = 25f;
+    const float DriftMax = 55f;
+
+    // 挤压拉伸
+    const float SquashScaleX   = 1.18f;
+    const float SquashScaleY   = 0.82f;
+    const float StretchScaleX  = 0.88f;
+    const float StretchScaleY  = 1.15f;
+    const float SquashDuration = 0.08f;
+    const float StretchDuration = 0.1f;
+    const float RestoreDuration = 0.1f;
+
+    // 字号随机
+    public const float ScaleMin = 0.95f;
+    public const float ScaleMax = 1.35f;
+
+    // ── 交错延迟：防止同时跳字动画完全同步 ──
+    const float StaggerAnimDelay = 0.04f; // 每个后续跳字额外延迟
 
     void Awake()
     {
@@ -54,12 +60,23 @@ public class DamageFloatingText : MonoBehaviour
         _canvasGroup = GetComponent<CanvasGroup>();
     }
 
+    /// <summary>
+    /// 播放跳字动画。
+    /// </summary>
+    /// <param name="screenPos">屏幕坐标基准点</param>
+    /// <param name="text">显示文字</param>
+    /// <param name="color">颜色</param>
+    /// <param name="fontSize">字号</param>
+    /// <param name="staggerOffset">由 Spawner 计算的交错偏移（屏幕坐标）</param>
+    /// <param name="staggerIndex">交错序号，用于微调动画 timing</param>
+    /// <param name="onReturn">回收回调</param>
     public void Play(Vector3 screenPos, string text, Color color, float fontSize,
-        float scale, Vector2 offset, Action onReturn)
+        Vector2 staggerOffset, int staggerIndex, Action onReturn)
     {
         _onReturn = onReturn;
 
-        _rect.position = screenPos + (Vector3)offset;
+        // 起始位置 = 基准点 + 交错偏移
+        _rect.position = screenPos + (Vector3)staggerOffset;
         _rect.localScale = Vector3.zero;
         _canvasGroup.alpha = 0f;
 
@@ -73,50 +90,63 @@ public class DamageFloatingText : MonoBehaviour
 
         gameObject.SetActive(true);
 
-        float drift = CalcHorizontalDrift();
+        // ── 每实例随机化动画参数，防止同时跳字完全同步 ──
+        float floatDist  = UnityEngine.Random.Range(FloatDistanceMin, FloatDistanceMax);
+        float floatDur   = UnityEngine.Random.Range(FloatDurationMin, FloatDurationMax);
+        float fadeDelay  = UnityEngine.Random.Range(FadeOutDelayMin, FadeOutDelayMax);
+        float drift      = CalcHorizontalDrift(staggerIndex);
+        float scale      = UnityEngine.Random.Range(ScaleMin, ScaleMax);
+
         float startY = _rect.anchoredPosition.y;
         float startX = _rect.anchoredPosition.x;
+
+        // 交错延迟：同一帧的后续跳字稍晚启动
+        float staggerDelay = staggerIndex * StaggerAnimDelay;
 
         _anim?.Kill();
         _anim = DOTween.Sequence();
 
-        // ── ① 弹出：0 → overshoot（OutBack 自带回弹感）──
+        // 交错启动延迟
+        if (staggerDelay > 0f)
+            _anim.AppendInterval(staggerDelay);
+
+        // ── ① 弹出：0 → overshoot ──
         _anim.Append(_canvasGroup.DOFade(1f, 0.06f));
-        _anim.Join(_rect.DOScale(scale * _popOvershoot, _popDuration).SetEase(Ease.OutBack));
+        _anim.Join(_rect.DOScale(scale * PopOvershoot, PopDuration).SetEase(Ease.OutBack));
 
-        // ── ② 归位 + 上浮起始（与弹出收尾重叠）──
-        _anim.Append(_rect.DOScale(scale, _settleDuration).SetEase(Ease.OutCubic));
-        _anim.Join(_rect.DOAnchorPosY(startY + _floatDistance, _floatDuration).SetEase(Ease.OutCubic));
-        _anim.Join(_rect.DOAnchorPosX(startX + drift, _floatDuration).SetEase(Ease.OutCubic));
+        // ── ② 归位 + 上浮（与弹出收尾重叠）──
+        _anim.Append(_rect.DOScale(scale, SettleDuration).SetEase(Ease.OutCubic));
+        _anim.Join(_rect.DOAnchorPosY(startY + floatDist, floatDur).SetEase(Ease.OutCubic));
+        _anim.Join(_rect.DOAnchorPosX(startX + drift, floatDur).SetEase(Ease.OutCubic));
 
-        // ── ③ 挤压拉伸（嵌入上浮过程，微妙有机感）──
-        float squashStart = _popDuration + _settleDuration * 0.5f;
-        _anim.Insert(squashStart, _rect.DOScaleX(scale * _squashScaleX, _squashDuration).SetEase(Ease.OutQuad));
-        _anim.Insert(squashStart, _rect.DOScaleY(scale * _squashScaleY, _squashDuration).SetEase(Ease.OutQuad));
+        // ── ③ 挤压拉伸 ──
+        float squashStart = PopDuration + SettleDuration * 0.5f + staggerDelay;
+        _anim.Insert(squashStart, _rect.DOScaleX(scale * SquashScaleX, SquashDuration).SetEase(Ease.OutQuad));
+        _anim.Insert(squashStart, _rect.DOScaleY(scale * SquashScaleY, SquashDuration).SetEase(Ease.OutQuad));
 
-        float stretchStart = squashStart + _squashDuration;
-        _anim.Insert(stretchStart, _rect.DOScaleX(scale * _stretchScaleX, _stretchDuration).SetEase(Ease.InOutSine));
-        _anim.Insert(stretchStart, _rect.DOScaleY(scale * _stretchScaleY, _stretchDuration).SetEase(Ease.InOutSine));
+        float stretchStart = squashStart + SquashDuration;
+        _anim.Insert(stretchStart, _rect.DOScaleX(scale * StretchScaleX, StretchDuration).SetEase(Ease.InOutSine));
+        _anim.Insert(stretchStart, _rect.DOScaleY(scale * StretchScaleY, StretchDuration).SetEase(Ease.InOutSine));
 
-        float restoreStart = stretchStart + _stretchDuration;
-        _anim.Insert(restoreStart, _rect.DOScaleX(scale, _restoreDuration).SetEase(Ease.OutCubic));
-        _anim.Insert(restoreStart, _rect.DOScaleY(scale, _restoreDuration).SetEase(Ease.OutCubic));
+        float restoreStart = stretchStart + StretchDuration;
+        _anim.Insert(restoreStart, _rect.DOScaleX(scale, RestoreDuration).SetEase(Ease.OutCubic));
+        _anim.Insert(restoreStart, _rect.DOScaleY(scale, RestoreDuration).SetEase(Ease.OutCubic));
 
-        // ── ④ 淡出（延迟后开始，与上浮尾部重叠）──
-        _anim.Insert(_fadeOutDelay, _canvasGroup.DOFade(0f, _fadeOutDuration).SetEase(Ease.OutQuad));
+        // ── ④ 淡出 ──
+        _anim.Insert(fadeDelay + staggerDelay, _canvasGroup.DOFade(0f, FadeOutDuration).SetEase(Ease.OutQuad));
 
         _anim.OnComplete(Return);
     }
 
-    float CalcHorizontalDrift()
+    /// <summary>基于 stagger 序号计算水平漂移方向，相邻序号走向相反方向。</summary>
+    float CalcHorizontalDrift(int staggerIndex)
     {
-        if (_horizontalSpread <= 0f) return 0f;
-        float r = UnityEngine.Random.value;
-        if (r < 0.4f)
-            return -UnityEngine.Random.Range(_horizontalSpread * 0.4f, _horizontalSpread);
-        if (r < 0.8f)
-            return UnityEngine.Random.Range(_horizontalSpread * 0.4f, _horizontalSpread);
-        return UnityEngine.Random.Range(-_horizontalSpread * 0.5f, _horizontalSpread * 0.5f);
+        float mag = UnityEngine.Random.Range(DriftMin, DriftMax);
+        // 偶数序号偏右，奇数序号偏左，避免重叠
+        bool goRight = (staggerIndex % 2 == 0);
+        // 加入少量随机避免机械感
+        float jitter = UnityEngine.Random.Range(-mag * 0.2f, mag * 0.2f);
+        return goRight ? (mag + jitter) : -(mag + jitter);
     }
 
     void Return()

@@ -50,7 +50,7 @@ public class Attack_Skill : ISkill
         E_Skill_DamageType damageType = DamageTypeChecker.GetDamageType(weaknessType);
 
         if (damageType == E_Skill_DamageType.物理)
-            EventCenter.EventTrigger(E_EventType.Do_PhyAttack, self.battleDamageHandler.BuffHandler);
+            EventCenter.EventTrigger(E_EventType.Do_PhyAttack, self.battleDamageHandler.BuffHandler, target);
 
         EventCenter.EventTrigger(E_EventType.Battle_ElementalAttack, self.battleDamageHandler.BuffHandler, weaknessType, target);
         Skill_41.RecordWeakness(weaknessType);

@@ -6,8 +6,7 @@ using UnityEngine.UI;
 /// 设置面板——画面(Windows)、音频、其他。
 /// 支持 ESC 呼出/关闭，动画期间不响应重复操作。
 /// </summary>
-public class SettingsPanel : UIPanelBase
-{
+public class SettingsPanel : UIPanelBase{
     #region 显示设置
     [Header("显示")]
     public Toggle fullscreenToggle;
@@ -15,20 +14,18 @@ public class SettingsPanel : UIPanelBase
 
     GameObject _displaySection;
     #endregion
-
     #region 音频设置
     [Header("音频")]
     public Slider bgmSlider;
     public Slider sfxSlider;
     #endregion
-
     #region 其他
     [Header("其他")]
     public Toggle fpsToggle;
     #endregion
-
     [Header("按钮")]
     public Button closeButton;
+    public Button exitButton;
 
     const string KEY_BGM = "Settings_BGM";
     const string KEY_SFX = "Settings_SFX";
@@ -73,11 +70,11 @@ public class SettingsPanel : UIPanelBase
         BindEvents();
     }
 
-    void BindEvents()
-    {
+    void BindEvents(){
         if (closeButton != null)
-            closeButton.onClick.AddListener(() => { if (canOpen) Hide(); });
-
+                closeButton.onClick.AddListener(() => { if (canOpen) Hide(); });
+        if (exitButton != null)
+            exitButton.onClick.AddListener(() => Application.Quit());
         if (fullscreenToggle != null)
             fullscreenToggle.onValueChanged.AddListener(_ => ApplyDisplay());
         if (vsyncToggle != null)
